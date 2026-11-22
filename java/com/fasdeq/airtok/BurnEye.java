@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-
 final class BurnEye {
     private BurnEye() {}
 
@@ -26,7 +25,6 @@ final class BurnEye {
 
     static final float VIDEO_X=0.218f,VIDEO_Y=0.0718f;
     private static final java.util.Map<Class<?>,Boolean> transientTypes=new java.util.HashMap<Class<?>,Boolean>();
-
 
     static View install(View rail) {
         if (!(rail instanceof ViewGroup) || !isFeedRail(rail, 0)) return null;
@@ -55,7 +53,6 @@ final class BurnEye {
         slot.stay();slot.active=true;slot.watch();slot.sync();slot.update();
         return slot;
     }
-
 
     static View installInbox(View root){
         if(!(root instanceof FrameLayout))return null;
@@ -121,7 +118,6 @@ final class BurnEye {
 
     static boolean eye(View view){return view instanceof Slot;}
 
-
     static boolean missing(View root){
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
         return slot==null || !slot.active || slot.getVisibility()!=View.VISIBLE;
@@ -131,7 +127,6 @@ final class BurnEye {
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
         if (slot != null) slot.fadeOut();
     }
-
 
     static void hideSoon(View root) {
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
@@ -147,7 +142,6 @@ final class BurnEye {
             slot.update();
         }
     }
-
 
     static boolean isFeedRail(View view, int depth) {
         if (view == null || !view.isShown() || depth > 40) return false;
@@ -167,7 +161,6 @@ final class BurnEye {
         }
         return false;
     }
-
 
     static boolean hasFeedHeader(View root) {
         int[] origin = new int[2];
@@ -190,8 +183,6 @@ final class BurnEye {
         }
         return false;
     }
-
-
 
     private static String toolbarTag(View view) {
         Object value=view.getTag(0x7f0a374f);
@@ -256,14 +247,13 @@ final class BurnEye {
         return null;
     }
 
-
     private static android.graphics.Bitmap openArt,closedArt;
     private static boolean artTried;
     private static synchronized void loadArt(Context context){
         if(artTried)return;
         artTried=true;
-        openArt=readArt(context,"airtok/burn_eye_open.png");
-        closedArt=readArt(context,"airtok/burn_eye_closed.png");
+        openArt=readArt(context,"margyt/burn_eye_open.png");
+        closedArt=readArt(context,"margyt/burn_eye_closed.png");
     }
     private static android.graphics.Bitmap readArt(Context context,String name){
         try(java.io.InputStream in=context.getAssets().open(name)){return android.graphics.BitmapFactory.decodeStream(in);}
@@ -366,7 +356,6 @@ final class BurnEye {
                 }else if(videoFallback){
                     View reference=placement.get();
 
-
                     left=Math.round(root.getWidth()*VIDEO_X-size/2f);top=Math.round(root.getHeight()*VIDEO_Y-size/2f);
 
                     if(!friends && reference!=null && reference.isShown()){reference.getLocationOnScreen(at);top=Math.round(at[1]-origin[1]+reference.getHeight()/2f-size/2f);}
@@ -415,7 +404,6 @@ final class BurnEye {
             }
             invalidate();
         }
-
 
         @Override protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);

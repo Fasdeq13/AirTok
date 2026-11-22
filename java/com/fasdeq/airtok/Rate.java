@@ -9,24 +9,19 @@ import android.view.Surface;
 import android.view.Window;
 import android.view.WindowManager;
 
-
 public final class Rate {
 
     static final String KEY = "fps_lock";
 
-
     public static final String AUTO = "";
 
     public static final String[] CHOICES = {AUTO, "60", "90", "120"};
-
 
     private static final float CLOSE = 1.5f;
 
     private static volatile String chosen;
 
     private Rate() {}
-
-
 
     public static String name() {
         String known = chosen;
@@ -44,7 +39,6 @@ public final class Rate {
         if (prefs != null) prefs.edit().putString(KEY, value).apply();
     }
 
-
     public static int wanted() {
         String value = name();
         if (value == null || value.length() == 0) return 0;
@@ -59,15 +53,11 @@ public final class Rate {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }
     }
-
-
-
-
 
     public static void apply(Activity activity) {
         int rate = wanted();
@@ -100,7 +90,6 @@ public final class Rate {
         }
     }
 
-
     public static boolean reachable(Activity activity) {
         int rate = wanted();
         if (rate <= 0 || activity == null || Build.VERSION.SDK_INT < 23) return true;
@@ -114,11 +103,6 @@ public final class Rate {
             return true;
         }
     }
-
-
-
-
-
 
     public static void setFrameRate(Surface surface, float rate, int compatibility) {
         int ours = wanted();

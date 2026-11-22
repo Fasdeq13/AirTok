@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-
 final class SimpleFeed {
 
     private SimpleFeed() {}
@@ -30,17 +29,16 @@ final class SimpleFeed {
         if (known != null) return known;
         Context c = AirTok.context();
         if (c == null) return false;
-        known = c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+        known = c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
         on = known;
         return known;
     }
 
     static void set(Context context, boolean value) {
         on = value;
-        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
         if (!value) restore();
     }
-
 
     static void attach(Activity activity) {
         if (activity == null || !activity.getClass().getName().equals("com.ss.android.ugc.aweme.main.MainActivity")) return;
@@ -95,7 +93,6 @@ final class SimpleFeed {
         }
     }
 
-
     private static void top(View row) {
         if (!(row instanceof ViewGroup)) { hide(row, View.INVISIBLE); return; }
         ViewGroup group = (ViewGroup) row;
@@ -138,7 +135,6 @@ final class SimpleFeed {
         if (view.getScaleY() != scale) view.setScaleY(scale);
     }
 
-
     private static void caption(View view) {
         if (!(view instanceof TextView)) return;
         TextView text = (TextView) view;
@@ -156,7 +152,6 @@ final class SimpleFeed {
         if (Math.abs(text.getTextSize() - size) > 0.5f) text.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, size);
         if (text.getMaxLines() > 2) text.setMaxLines(2);
     }
-
 
     private static void restore() {
         java.util.List<Map.Entry<View, Integer>> views;

@@ -18,20 +18,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 final class ProfileMd3 {
 
     private ProfileMd3() {}
 
-
     private static final int ORDER = 0x7e0c05a0, ACTIONS = 0x7e0c05a2, CHIP = 0x7e0c05a3,
             LOOK = 0x7e0c05a4, BUTTON_ROLE = 0x7e0c05a6, TINT = 0x7e0c05a7;
-
 
     static void column(ViewGroup column, boolean on, int headId, int editId, int handleId, int collegeId, int tabsId) {
         try {
             if (on) {
-
 
                 int before = shape(column);
                 if (Integer.valueOf(before).equals(column.getTag(ARRANGED))) return;
@@ -51,7 +47,6 @@ final class ProfileMd3 {
     }
 
     private static final int ARRANGED = 0x4D617291;
-
 
     private static int shape(ViewGroup column) {
         int sig = column.getChildCount();
@@ -108,7 +103,6 @@ final class ProfileMd3 {
             column.removeView(ownTools);
         }
 
-
         View root = column.getRootView();
         View edit = ProfileHead.edit(column);
         if (edit == null) edit = editId == 0 ? null : root.findViewById(editId);
@@ -149,7 +143,6 @@ final class ProfileMd3 {
         recolour(column, bio, tools, chips, actions);
     }
 
-
     private static void rememberOrder(ViewGroup column) {
         @SuppressWarnings("unchecked") List<View> was = column.getTag(ORDER) instanceof List
                 ? (List<View>) column.getTag(ORDER) : new ArrayList<>();
@@ -167,7 +160,6 @@ final class ProfileMd3 {
             if (was.get(i).getParent() != column) was.remove(i);
         column.setTag(ORDER, was);
     }
-
 
     private static final class Palette {
         java.lang.ref.WeakReference<View> bio, tools, actions;
@@ -215,7 +207,6 @@ final class ProfileMd3 {
 
     private static java.lang.ref.WeakReference<View> pencil;
 
-
     private static boolean buttons(View view) {
         if (!(view instanceof LinearLayout) || ((LinearLayout) view).getOrientation() != LinearLayout.HORIZONTAL) return false;
         ViewGroup row = (ViewGroup) view;
@@ -239,15 +230,11 @@ final class ProfileMd3 {
         return false;
     }
 
-
     private static boolean isList(View view) {
         for (Class<?> type = view.getClass(); type != null && type != View.class; type = type.getSuperclass())
             if (type.getName().endsWith("RecyclerView")) return true;
         return false;
     }
-
-
-
 
     private static void card(View bio, View tools, HorizontalScrollView chips) {
         View anchor = bio != null ? bio : tools;
@@ -286,7 +273,6 @@ final class ProfileMd3 {
             view.setLayoutParams(place);
         }
     }
-
 
     private static void set(View view, int sides, int top, int padSides, int padTop, int padSidesEnd, int padBottom) {
         ViewGroup.LayoutParams given = view.getLayoutParams();
@@ -342,10 +328,8 @@ final class ProfileMd3 {
                 ? accent : NavBar.mix(surface(anchor), accent, .6f);
     }
 
-
     private static void tintControl(View control, int fill) {
         int ink = Md3.ink(fill);
-
 
         tintBackground(control.getBackground(), fill);
         long colours = ((long) fill << 32) | (ink & 0xffffffffL);
@@ -376,7 +360,6 @@ final class ProfileMd3 {
             for (int i = 0; i < group.getChildCount(); i++) controlInk(group.getChildAt(i), ink, tintIcons);
         }
     }
-
 
     private static void remember(View view) {
         if (view.getTag(LOOK) != null) return;
@@ -410,9 +393,6 @@ final class ProfileMd3 {
         view.setClipToOutline((Boolean) was[3]);
         view.setTag(LOOK, null);
     }
-
-
-
 
     private static boolean chipsFor(HorizontalScrollView scroll, List<View> plates) {
         LinearLayout row = ProfileChips.mods(scroll);
@@ -478,7 +458,6 @@ final class ProfileMd3 {
         return chip;
     }
 
-
     private static void showPlate(Context context, View plate) {
         List<String> lines = new ArrayList<>();
         plateText(plate, lines);
@@ -523,9 +502,6 @@ final class ProfileMd3 {
             }
         return null;
     }
-
-
-
 
     private static View actions(final Context c, final View root, final int editId, final int handleId, final int tabsId) {
         float d = c.getResources().getDisplayMetrics().density;
@@ -594,7 +570,6 @@ final class ProfileMd3 {
         return button;
     }
 
-
     private static void tap(View root, View target) {
         if (target == null || !target.isShown()) return;
         int[] at = new int[2], base = new int[2];
@@ -609,7 +584,6 @@ final class ProfileMd3 {
         down.recycle();
         up.recycle();
     }
-
 
     private static View clickable(View view) {
         if (view == null) return null;
@@ -636,8 +610,6 @@ final class ProfileMd3 {
             }
         return null;
     }
-
-
 
     private static void undo(ViewGroup column) {
         Object order = column.getTag(ORDER);

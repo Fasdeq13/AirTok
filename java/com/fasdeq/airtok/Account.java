@@ -6,7 +6,6 @@ import com.ss.android.ugc.aweme.IAccountUserService;
 import com.ss.android.ugc.aweme.profile.model.User;
 import com.ss.android.ugc.profile.platform.base.data.UserProfileInfo;
 
-
 public final class Account {
 
     private Account() {}
@@ -36,8 +35,6 @@ public final class Account {
     private static String currentUserUid;
     private static long currentUserCapturedAt;
 
-
-
     public static String getCurUserId(IAccountUserService service) {
         if (service == null) return null;
         String answer = service.getCurUserId();
@@ -51,11 +48,9 @@ public final class Account {
         return answer;
     }
 
-
     private static final long LOOK_AGAIN = 1000L;
     private static volatile String lookedUid;
     private static volatile long lookedAt;
-
 
     static boolean numeric(String uid) {
         if (uid == null || uid.length() == 0 || uid.length() > 24) return false;
@@ -66,7 +61,6 @@ public final class Account {
         return true;
     }
 
-
     public static User getCurUser(IAccountUserService service) {
         if (service == null) return null;
         User user = service.getCurUser();
@@ -74,8 +68,6 @@ public final class Account {
             if (user == null) {activeId=null;lookedUid=null;AccountAppearance.select(null);return null;}
             String uid = user.getUid();
             long now = android.os.SystemClock.uptimeMillis();
-
-
 
             if (uid != null && uid.equals(lookedUid) && now - lookedAt < LOOK_AGAIN) return user;
             lookedUid = uid;
@@ -132,13 +124,11 @@ public final class Account {
         if (numeric) publishPending();
     }
 
-
     public static void rememberProfile(User user) {
         if (user == null) return;
         try { rememberProfile(user, user.getUid(), user.getNickname()); }
         catch (Throwable ignored) { }
     }
-
 
     public static void rememberProfile(UserProfileInfo user) {
         if (user == null) return;
@@ -207,7 +197,6 @@ public final class Account {
         } catch (Throwable ignored) { }
     }
 
-
     public static synchronized void rememberAvatar(String uid, String address) {
         if (uid == null || address == null || !uid.equals(id())) return;
         try {
@@ -261,9 +250,6 @@ public final class Account {
         return saved;
     }
 
-
-
-
     public static String id() {
         String known = id;
         if (known != null) return known;
@@ -271,7 +257,6 @@ public final class Account {
         id = known;
         return known;
     }
-
 
     public static String secId() {
         String known = secId;
@@ -293,6 +278,6 @@ public final class Account {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
     }
 }

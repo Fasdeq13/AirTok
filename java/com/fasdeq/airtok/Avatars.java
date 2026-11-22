@@ -8,7 +8,6 @@ import com.ss.android.ugc.aweme.profile.model.User;
 
 import java.util.List;
 
-
 public final class Avatars {
     static void reloadSettings(){cached=null;}
 
@@ -24,7 +23,7 @@ public static final String KEY = "save_avatars";
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return true;
-            boolean on = context.getSharedPreferences(AirTok.PREFS,
+            boolean on = context.getSharedPreferences("margyt",
                     android.content.Context.MODE_PRIVATE).getBoolean(KEY, true);
             cached = on;
             return on;
@@ -38,7 +37,7 @@ public static final String KEY = "save_avatars";
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
@@ -46,8 +45,6 @@ public static final String KEY = "save_avatars";
 
     private static volatile UrlModel latest;
     private static volatile String latestUid;
-
-
 
     public static UrlModel getAvatarLarger(User user) {
         return remember(user, user == null ? null : user.getAvatarLarger());
@@ -61,13 +58,11 @@ public static final String KEY = "save_avatars";
         return remember(user, user == null ? null : user.getAvatarMedium());
     }
 
-
     public static UrlModel getAvatarThumb(User user) {
         UrlModel url = user == null ? null : user.getAvatarThumb();
         if (user != null) Frames.saw(user.getUid(), url);
         return url;
     }
-
 
     public static void rememberCurrent(User user) {
         if (user == null) return;
@@ -107,9 +102,6 @@ public static final String KEY = "save_avatars";
     public static boolean have() {
         return latest != null;
     }
-
-
-
 
     public static void save(final Activity activity) {
         final UrlModel url = latest;

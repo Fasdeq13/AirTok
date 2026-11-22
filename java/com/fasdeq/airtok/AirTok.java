@@ -4,17 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 public final class AirTok {
 
     private AirTok() {}
 
-    public static final String PREFS = "airtok";
+    public static final String PREFS = "margyt";
     public static final String KEY_ENABLED = "region_enabled";
     public static final String KEY_COUNTRY = "region_country";
 
     public static final String DEFAULT_ISO = "kz";
-
 
     public static final String[][] COUNTRIES = {
             {"nl", "20408",  "KPN",        "Netherlands"},
@@ -132,7 +130,6 @@ public final class AirTok {
 
     public static final int ISO = 0, MCCMNC = 1, CARRIER = 2, LABEL = 3;
 
-
     public static String name(String[] row) {
         if ("xx".equals(row[ISO])) return Local.of("Страна невыученных уроков");
         if ("xa".equals(row[ISO])) return Local.of("Атлантида");
@@ -148,8 +145,6 @@ public final class AirTok {
 
     private static volatile Context sContext;
 
-
-
     public static Context context() {
         Context known = sContext;
         if (known != null) return known;
@@ -163,20 +158,17 @@ public final class AirTok {
             }
         } catch (Throwable ignored) {
 
-
         }
         return sContext;
     }
 
     private static volatile boolean likesWarmed;
 
-
     private static void warmLikes() {
         if (likesWarmed) return;
         likesWarmed = true;
         try { Accent.prewarmLikeAnimations(null); } catch (Throwable ignored) { }
     }
-
 
     public static void attach(Context context) {
         if (context != null) {
@@ -215,8 +207,6 @@ public final class AirTok {
         }
     }
 
-
-
     public static boolean isEnabled() {
         SharedPreferences p = prefs();
         return p != null && p.getBoolean(KEY_ENABLED, true);
@@ -240,7 +230,6 @@ public final class AirTok {
         frozen = row(iso);
     }
 
-
     public static String[] row(String iso) {
         if (iso != null) {
             for (String[] country : COUNTRIES) {
@@ -256,7 +245,6 @@ public final class AirTok {
     private static volatile String[] frozen;
     private static volatile Boolean frozenOn;
 
-
     public static String[] current() {
         String[] known = frozen;
         if (known != null) return known;
@@ -264,7 +252,6 @@ public final class AirTok {
         frozen = known;
         return known;
     }
-
 
     public static boolean active() {
         if (context() == null) return false;

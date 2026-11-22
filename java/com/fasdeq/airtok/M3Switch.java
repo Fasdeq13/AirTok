@@ -10,9 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-
 public final class M3Switch extends View {
-
 
     public static final long ANIMATION_DURATION_MS = 300L;
 
@@ -25,8 +23,6 @@ public final class M3Switch extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF box = new RectF();
-
-
 
     private boolean lightSurface;
     private int surface = 0xFF1D1D1D;
@@ -49,7 +45,6 @@ public final class M3Switch extends View {
 
     public void colours(int accent, int off, int surface) {
 
-
         lightSurface = luma(surface) > 0.55f;
         this.surface = surface;
         invalidate();
@@ -62,7 +57,6 @@ public final class M3Switch extends View {
     public void setChecked(boolean value, boolean animate) {
         if (checked == value && (position == (value ? 1f : 0f))) return;
         if (animator != null) {
-
 
             interruptingAnimation = true;
             animator.cancel();
@@ -140,7 +134,6 @@ public final class M3Switch extends View {
         }
     }
 
-
     @Override
     public boolean performClick() {
         if (!isEnabled()) return false;
@@ -171,7 +164,6 @@ public final class M3Switch extends View {
     }
 
     private final android.graphics.Path tick = new android.graphics.Path();
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -223,7 +215,6 @@ public final class M3Switch extends View {
             paint.setStyle(Paint.Style.FILL);
         }
     }
-
 
     private int on(int accent) {
         if (Math.abs(luma(accent) - luma(surface)) >= 0.2f) return accent;

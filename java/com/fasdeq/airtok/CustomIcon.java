@@ -29,12 +29,10 @@ import android.widget.TextView;
 
 import java.io.InputStream;
 
-
 final class CustomIcon {
     private CustomIcon() {}
 
     static final int PICK = 0x4D43;
-
 
     private static final int SIDE = 432, SHOWN = 288;
 
@@ -48,7 +46,6 @@ final class CustomIcon {
             Screen.say(Text.CUSTOM_ICON_FAILED);
         }
     }
-
 
     static void offer(final Activity activity, final Uri source) {
         Net.away("custom icon", () -> {
@@ -86,7 +83,6 @@ final class CustomIcon {
         }
     }
 
-
     static Bitmap render(Bitmap picture, boolean fill) {
         Bitmap out = Bitmap.createBitmap(SIDE, SIDE, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(out);
@@ -101,7 +97,6 @@ final class CustomIcon {
         return out;
     }
 
-
     private static int edge(Bitmap picture) {
         long r = 0, g = 0, b = 0;
         int n = 0, w = picture.getWidth(), h = picture.getHeight();
@@ -112,7 +107,6 @@ final class CustomIcon {
         }
         return Color.rgb((int) (r / n), (int) (g / n), (int) (b / n));
     }
-
 
     private static Bitmap preview(Bitmap rendered) {
         Bitmap out = Bitmap.createBitmap(SHOWN, SHOWN, Bitmap.Config.ARGB_8888);
@@ -186,7 +180,7 @@ final class CustomIcon {
             }
             String name = label == null || label.trim().length() == 0
                     ? String.valueOf(activity.getApplicationInfo().loadLabel(activity.getPackageManager())) : label.trim();
-            ShortcutInfo info = new ShortcutInfo.Builder(activity, "airtok_icon_" + System.currentTimeMillis())
+            ShortcutInfo info = new ShortcutInfo.Builder(activity, "margyt_icon_" + System.currentTimeMillis())
                     .setShortLabel(name)
                     .setIcon(Icon.createWithAdaptiveBitmap(icon))
                     .setIntent(opening(activity))
@@ -197,7 +191,6 @@ final class CustomIcon {
             Screen.say(Text.CUSTOM_ICON_FAILED);
         }
     }
-
 
     private static Intent opening(Context context) {
         PackageManager packages = context.getPackageManager();

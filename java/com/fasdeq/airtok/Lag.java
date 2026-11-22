@@ -10,21 +10,15 @@ import android.view.FrameMetrics;
 import android.view.View;
 import android.view.Window;
 
-
 public final class Lag {
-
 
     private static final long BAD = 700;
 
-
     private static final long SHORT = 100;
-
 
     private static final int ENOUGH = 12;
 
-
     private static final long LOOK = 50;
-
 
     private static final long ABSURD = 30000;
 
@@ -37,7 +31,6 @@ public final class Lag {
     private static int told;
     private static volatile long worst;
 
-
     private static volatile long asked;
 
     private static volatile int looks;
@@ -49,7 +42,6 @@ public final class Lag {
     private Lag() {}
 
     static final String KEY = "lag_watch";
-
 
     static boolean wanted() {
         if (Version.TEST || Version.PROFILE || DevMode.isOn()) return true;
@@ -69,7 +61,7 @@ public final class Lag {
 
     public static void watch() {
         try {
-            Thread watcher = new Thread(Lag::look, "airtok-lag");
+            Thread watcher = new Thread(Lag::look, "margyt-lag");
             watcher.setDaemon(true);
             watcher.setPriority(Thread.MIN_PRIORITY);
             watcher.start();
@@ -112,11 +104,8 @@ public final class Lag {
         }
     }
 
-
-
     private static final java.util.HashMap<String, int[]> BUSY_IN = new java.util.HashMap<String, int[]>();
     private static int samples, busy, ours;
-
 
     private static void sample(StackTraceElement[] stack) {
         if (stack == null || stack.length == 0) return;
@@ -161,7 +150,6 @@ public final class Lag {
         }
     }
 
-
     private static void answered() {
         try {
             long took = SystemClock.uptimeMillis() - asked;
@@ -170,12 +158,9 @@ public final class Lag {
             asked = 0;
             if (took < SHORT || took > ABSURD || stack == null || Watch.here() == null) return;
 
-
             if (seen < took / (LOOK * 4)) return;
             String where = where(stack);
             if (where.length() == 0) return;
-
-
 
             String plugin = plugin(stack);
             String mine = mine(stack);
@@ -191,7 +176,6 @@ public final class Lag {
         }
     }
 
-
     static void frames(Activity activity) {
         if (Build.VERSION.SDK_INT < 24 || activity == null || !wanted()) return;
         try {
@@ -200,7 +184,7 @@ public final class Lag {
             if (decor == null || decor.getTag(WATCHED) != null) return;
             decor.setTag(WATCHED, Boolean.TRUE);
             if (frames == null) {
-                HandlerThread thread = new HandlerThread("airtok-frames", android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                HandlerThread thread = new HandlerThread("margyt-frames", android.os.Process.THREAD_PRIORITY_BACKGROUND);
                 thread.start();
                 frames = new Handler(thread.getLooper());
             }
@@ -239,16 +223,12 @@ public final class Lag {
         }
     }
 
-
     static String report() {
-
-
 
         long watched = (SystemClock.elapsedRealtime() - BEGAN) / 1000L;
         return "since the app started: " + watched / 60L + " min " + watched % 60L + " s\n"
                 + memory() + TALLY.report() + (Probe.ON ? profile() : "");
     }
-
 
     static String memory() {
         try {
@@ -265,7 +245,6 @@ public final class Lag {
     }
 
     private static final long BEGAN = SystemClock.elapsedRealtime();
-
 
     static String plugin(StackTraceElement[] stack) {
         if (stack == null) return null;
@@ -295,7 +274,6 @@ public final class Lag {
         if (say) Diary.note("lag: plugin " + plugin + " has stalled the app for " + TOO_MUCH / 1000 + " s this run");
     }
 
-
     static long cost(String plugin) {
         synchronized (PLUGIN_COST) {
             for (java.util.Map.Entry<String, long[]> one : PLUGIN_COST.entrySet()) {
@@ -308,8 +286,6 @@ public final class Lag {
         }
     }
 
-
-
     static String outermost(StackTraceElement[] stack) {
         String found = null;
         for (StackTraceElement frame : stack) {
@@ -317,7 +293,6 @@ public final class Lag {
         }
         return found;
     }
-
 
     static String firstApp(StackTraceElement[] stack) {
         for (StackTraceElement frame : stack) {
@@ -338,13 +313,11 @@ public final class Lag {
         return null;
     }
 
-
     static String brief(String where) {
         int first = where.indexOf(" < ");
         int second = first < 0 ? -1 : where.indexOf(" < ", first + 3);
         return second < 0 ? where : where.substring(0, second);
     }
-
 
     static String where(StackTraceElement[] stack) {
         if (stack == null || stack.length == 0) return "";
@@ -370,12 +343,10 @@ public final class Lag {
         String type = frame.getClassName();
         int dot = type.lastIndexOf('.');
 
-
         String shortened = dot > 0 && !type.startsWith("X.") ? type.substring(dot + 1) : type;
         return shortened + "." + frame.getMethodName()
                 + (frame.getLineNumber() > 0 && frame.getLineNumber() < 100000 ? ":" + frame.getLineNumber() : "");
     }
-
 
     public static long worst() {
         return worst;

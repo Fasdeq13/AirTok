@@ -19,7 +19,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-
 public final class PluginEditorActivity extends Activity {
  private static final int PICK_ICON=71,PICK_FILE=72;
  private LinearLayout body,commands,namesBox,coloursBox,bar;
@@ -59,7 +58,6 @@ public final class PluginEditorActivity extends Activity {
   }catch(Exception error){Screen.say(error.getMessage());finish();}
  }
 
-
  private int dp(int value){return Math.round(value*getResources().getDisplayMetrics().density);}
  private int onAccent(){int c=Accent.colour();return (((c>>16)&255)*299+((c>>8)&255)*587+(c&255)*114)/1000>140?0xFF10221F:0xFFFFFFFF;}
  private TextView text(String value,int size){TextView v=new TextView(this);v.setText(value);v.setTextColor(skin.text);v.setTextSize(size);Fonts.apply(v);v.setPadding(0,dp(8),0,dp(4));return v;}
@@ -94,7 +92,6 @@ public final class PluginEditorActivity extends Activity {
  }
  private static void sync(LinearLayout c){c.getChildAt(0).setVisibility(c.getChildCount()>1?View.GONE:View.VISIBLE);}
 
-
  private void build(){
   LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(skin.page);
   ScrollView scroll=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(14),dp(4),dp(14),dp(20));scroll.addView(body);
@@ -107,7 +104,6 @@ public final class PluginEditorActivity extends Activity {
   top.addView(text(file?Local.of("Добавить в магазин"):binary!=null?Local.of("Данные плагина"):Local.of("Новый плагин"),20));body.addView(top);
   if(file&&note!=null){TextView n=small(note);n.setPadding(dp(4),0,0,dp(8));body.addView(n);}
   else if(binary!=null){TextView n=small(Local.of("Код сохраняется. После изменения плагин нужно включить заново."));n.setPadding(dp(4),0,0,dp(8));body.addView(n);}
-
 
   LinearLayout head=card(body);LinearLayout row=new LinearLayout(this);row.setOrientation(0);head.addView(row);
   LinearLayout.LayoutParams ip=new LinearLayout.LayoutParams(dp(92),dp(92));ip.rightMargin=dp(10);row.addView(iconBox(),ip);
@@ -137,7 +133,6 @@ public final class PluginEditorActivity extends Activity {
   else{addPill(bar,pill(Local.of("Сохранить"),!AdminAccess.current(),()->save(false)));if(AdminAccess.current())addPill(bar,pill(Local.of("В магазин"),true,()->save(true)));}
  }
 
-
  private FrameLayout iconBox(){
   FrameLayout f=new FrameLayout(this);GradientDrawable g=new GradientDrawable();g.setColor(0x33888888);g.setCornerRadius(dp(20));f.setBackground(g);
   image=new ImageView(this);image.setScaleType(ImageView.ScaleType.FIT_CENTER);image.setPadding(dp(10),dp(10),dp(10),dp(10));f.addView(image,new FrameLayout.LayoutParams(-1,-1));
@@ -160,7 +155,6 @@ public final class PluginEditorActivity extends Activity {
   rows.add(c);sync(commands);
  }
 
-
  private void addPair(LinearLayout parent,List<Two> list,JSONObject row,boolean isName){
   Two t=new Two();t.box=line(parent);
   if(isName){
@@ -179,7 +173,6 @@ public final class PluginEditorActivity extends Activity {
   }
   t.box.addView(x(()->{list.remove(t);parent.removeView(t.box);sync(parent);}));list.add(t);sync(parent);
  }
-
 
  private JSONObject value()throws Exception{
   JSONObject value=new JSONObject(source.toString());value.put("id",id.getText().toString().trim()).put("name",name.getText().toString().trim()).put("version",version.getText().toString().trim()).put("author",author.getText().toString().trim());
@@ -217,7 +210,6 @@ public final class PluginEditorActivity extends Activity {
    }catch(Exception e){runOnUiThread(()->{busy=false;Popup.show(this,Local.of("Не сохранено"),e.getMessage());});}finally{if(temporary!=null)temporary.delete();}});
   }catch(Exception e){Popup.show(this,Local.of("Проверьте поля"),e.getMessage());}
  }
-
 
  private void paintIcon(){image.setImageBitmap(icon==null?null:BitmapFactory.decodeByteArray(icon,0,icon.length));plus.setVisibility(icon==null?View.VISIBLE:View.GONE);}
  private static byte[] smallIcon(byte[] raw)throws Exception{

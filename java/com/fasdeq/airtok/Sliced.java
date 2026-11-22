@@ -7,16 +7,13 @@ import android.view.ViewGroup;
 import java.util.ArrayDeque;
 import java.util.WeakHashMap;
 
-
 final class Sliced {
 
     private Sliced() {}
 
-
     interface Visit {
         void view(View view);
     }
-
 
     private static final long STRETCH = 2;
     private static final int MOST = 12000;
@@ -111,7 +108,6 @@ final class Sliced {
 
     private static final WeakHashMap<View, Walk> running = new WeakHashMap<View, Walk>();
 
-
     static void walk(View root, Visit... visits) {
         if (root == null || visits.length == 0) return;
         Walk walk;
@@ -125,7 +121,6 @@ final class Sliced {
             running.put(root, walk);
         }
         walk.begin();
-
 
         walk.run();
     }

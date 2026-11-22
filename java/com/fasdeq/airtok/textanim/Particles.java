@@ -50,7 +50,6 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -74,7 +73,6 @@ public final class Particles {
     static final float GLIDE_REF_FRAMES = 40.0f;
 
     static final float GLIDE_MIN_PX = 60.0f;
-
 
     public static final int SEND_CLASSIC = 0;
     public static final int SEND_RISE = 1;
@@ -129,7 +127,6 @@ public final class Particles {
         return out;
     }
 
-
     static final String[] SHAPE_NAMES_RU = {
         "Как в эффекте", "Точки", "Штрихи-искры", "Снежинки", "Лепестки сакуры", "Пузыри",
         "Сердечки", "Конфетти", "Буквы"
@@ -151,8 +148,6 @@ public final class Particles {
         sendArc = arc;
         sendWave = wave;
     }
-
-
 
     void routeSend(Particle particle) {
         if (sendMotion == MOTION_PRESET || particle.homing) return;
@@ -313,7 +308,6 @@ public final class Particles {
         return count > before;
     }
 
-
     public boolean burstSend(EditText view, Config config, List<Ghost> cells, float bx, float by,
                              int preset, int palette, int amount, int speed) {
         if (count >= LIMIT) return false;
@@ -343,7 +337,6 @@ public final class Particles {
         int per = Math.max(1, Math.min(Config.MAX_AMOUNT, amount));
         per = Math.max(1, Math.min(per, (LIMIT - count) / Math.max(1, total)));
         int before = count;
-
 
         float minX = Float.MAX_VALUE, maxX = -Float.MAX_VALUE, minY = Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
         for (int c = 0; c < total; c++) {
@@ -599,7 +592,6 @@ public final class Particles {
         points[index * 2 + 1] = position[1];
     }
 
-
     void glyph(TextPaint paint, Config config, Ghost cell, float ox, float oy, int baseColor) {
         int[] mask = mask(paint, cell.text, cell.width);
         int total = mask.length / 2;
@@ -651,7 +643,6 @@ public final class Particles {
                 return baseColor;
         }
     }
-
 
     int[] mask(TextPaint paint, String text, float width) {
         String key = text + '|' + paint.getTextSize() + '|' + System.identityHashCode(paint.getTypeface());
@@ -728,7 +719,6 @@ public final class Particles {
         tint(fill, lighten(tone, 0.30f), alpha * 0.26f * (0.4f + 0.6f * age));
         canvas.drawCircle(particle.x - radius * 0.15f, particle.y - radius * 0.2f, radius * 0.5f, fill);
     }
-
 
     void spark(Canvas canvas, Particle particle, int alpha) {
         float size = Math.max(1.5f, particle.size * (0.65f * particle.life + 0.35f));

@@ -11,13 +11,11 @@ import android.provider.MediaStore;
 import java.io.File;
 import java.io.OutputStream;
 
-
 public final class Gallery {
 
     private Gallery() {}
 
     public static final String FOLDER = "FasdMod";
-
 
     public static String save(Context context, byte[] data, String name, String mime) {
         if (data == null || data.length == 0) return null;
@@ -69,7 +67,6 @@ public final class Gallery {
         }
         return file.getAbsolutePath();
     }
-
 
     public static String name(String prefix, String url, String fallback) {
         String extension = fallback;

@@ -18,19 +18,12 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-
 public final class SettingsRow implements Application.ActivityLifecycleCallbacks {
-
 
     public static final String SETTINGS_ACTIVITY =
             "com.ss.android.ugc.aweme.setting.ui.SettingContainerActivity";
 
-
-
     private static final int TAG = 0x4D617267;
-
-
-
 
     private static final String[] AVATAR_SCREENS = {
             "com.ss.android.ugc.profile.business.ur.enlarge.EnlargeAvatarActivity",
@@ -79,7 +72,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
         if (!SETTINGS_ACTIVITY.equals(name)) {
 
-
             if (name.toLowerCase(Locale.US).contains("setting")) Diary.note("saw " + name);
             return;
         }
@@ -91,7 +83,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
         decor.getViewTreeObserver().addOnGlobalLayoutListener(new Injector(activity));
     }
-
 
     private static void addSaveAvatar(final Activity activity) {
         try {
@@ -124,7 +115,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
                     new android.widget.FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
-
 
             params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
             params.topMargin = (int) (activity.getResources()
@@ -162,7 +152,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityDestroyed(Activity activity) {}
-
 
     private final class Injector implements ViewTreeObserver.OnGlobalLayoutListener {
 
@@ -205,9 +194,7 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
     }
 
-
     private static final int FOLDED = 0x4D617253;
-
 
     private static void fold(View box, boolean away) {
         try {
@@ -228,8 +215,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
     }
 
-
-
     private void inject(Injector injector) {
         Activity activity = injector.activity;
         ViewGroup container = fragmentContainer(activity);
@@ -249,9 +234,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         column.setTag(TAG, Boolean.TRUE);
         column.setBackgroundColor(skin.page);
 
-
-
-
         parent.removeViewAt(index);
         final View box = row(activity, skin);
         column.addView(box, new LinearLayout.LayoutParams(
@@ -263,7 +245,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         injector.box = box;
         injector.container = container;
 
-
         if (SettingsCell.likely()) {
             fold(box, true);
             box.postDelayed(() -> {
@@ -272,7 +253,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
         Diary.note("row added above " + container.getClass().getName());
     }
-
 
     private ViewGroup fragmentContainer(Activity activity) {
         try {
@@ -295,8 +275,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
         return null;
     }
-
-
 
     private View row(final Activity activity, Skin skin) {
         LinearLayout row = new LinearLayout(activity);
@@ -357,7 +335,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 56)));
         return box;
     }
-
 
     private void keepClearOfTheStatusBar(final LinearLayout column, final View box,
                                          final ViewGroup screen, final Skin skin) {

@@ -32,7 +32,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public final class Frames {
 
     private Frames() {}
@@ -52,7 +51,6 @@ public final class Frames {
             this.shapes = shapes;
         }
 
-
         String picture() {
             String own = shapes.get(AvatarShape.chosen());
             return own != null && own.length() > 0 ? own : image;
@@ -69,15 +67,12 @@ public final class Frames {
     private static String lastUid;
     private static int lastInk;
 
-
     private static volatile String ownChoice;
     private static volatile String ownUid;
     private static volatile long ownUntil;
 
     private static volatile List<String> mine = new ArrayList<>();
     private static volatile String mineWorn = "";
-
-
 
     static void learn(JSONObject root) {
         JSONArray list = root.optJSONArray("frames");
@@ -114,7 +109,6 @@ public final class Frames {
         new android.os.Handler(android.os.Looper.getMainLooper()).post(Frames::refresh);
     }
 
-
     private static void refresh() {
         for (View view : new ArrayList<>(hanging)) {
             Object tag = view.getTag(TAG);
@@ -132,7 +126,6 @@ public final class Frames {
         return translated.length() > 0 ? translated : one.optString(field, "");
     }
 
-
     public static Frame of(String uid) {
         if (uid == null) return null;
         String id = ownChoice != null && uid.equals(ownUid) ? ownChoice : worn.get(uid);
@@ -140,7 +133,6 @@ public final class Frames {
     }
 
     static Frame byId(String id) { return frames.get(id); }
-
 
     static void readMine(JSONObject answer) {
         JSONArray list = answer.optJSONArray("frames");
@@ -156,7 +148,6 @@ public final class Frames {
 
     private static volatile String wanted;
     private static boolean saving;
-
 
     static void wear(final String id, final Mine.Said then) {
         mineWorn = id;
@@ -212,9 +203,6 @@ public final class Frames {
         });
     }
 
-
-
-
     static void saw(String uid, UrlModel url) {
         try {
             if (uid == null || url == null) return;
@@ -230,14 +218,12 @@ public final class Frames {
         } catch (Throwable ignored) {}
     }
 
-
     public static UrlModel contact(Object model) {
         Object url = NativeRead.get(model, "getAvatarThumb");
         UrlModel found = url instanceof UrlModel ? (UrlModel) url : null;
         if (found != null && !frames.isEmpty()) saw(NativeRead.string(NativeRead.get(model, "getUid")), found);
         return found;
     }
-
 
     private static String key(String url) {
         if (url == null) return null;
@@ -252,8 +238,6 @@ public final class Frames {
         String key = url.substring(start, end);
         return key.equals(NOBODY) ? null : key;
     }
-
-
 
     private static Field requestView, requestImage, requestUrls, urlsList, requestUri;
     private static boolean fieldsTried;
@@ -272,7 +256,6 @@ public final class Frames {
             Diary.note("frames: request: " + error);
         }
     }
-
 
     public static void display(Object request) {
         try {
@@ -311,7 +294,6 @@ public final class Frames {
         String key = uri == null ? null : key(uri.toString());
         return key == null ? null : pictures.get(key);
     }
-
 
     private static final class Hung extends Drawable {
         final View view;
@@ -378,7 +360,6 @@ public final class Frames {
         place(view);
     }
 
-
     private static void place(View view) {
         Object tag = view.getTag(TAG);
         if (!(tag instanceof Hung)) return;
@@ -396,9 +377,7 @@ public final class Frames {
         view.invalidate();
     }
 
-
     private static void unclip(View view, Rect wanted, boolean pinned) {
-
 
         float left = view.getX() + wanted.left, top = view.getY() + wanted.top;
         float right = view.getX() + wanted.right, bottom = view.getY() + wanted.bottom;
@@ -406,7 +385,6 @@ public final class Frames {
         for (int depth = 0; depth < 8 && at.getParent() instanceof ViewGroup; depth++) {
             ViewGroup parent = (ViewGroup) at.getParent();
             if (isList(parent)) {
-
 
                 if (!parent.getClass().getName().contains("ViewPager")) parent.setClipChildren(false);
                 return;
@@ -429,11 +407,8 @@ public final class Frames {
         return false;
     }
 
-
-
     private static final Map<String, Bitmap> art = new HashMap<>();
     private static final Map<String, Long> asked = new HashMap<>();
-
 
     static Bitmap picture(final Context context, final String path) {
         if (path == null || path.length() == 0) return null;
@@ -445,7 +420,7 @@ public final class Frames {
             if (when != null && now - when < 60000) return null;
             asked.put(path, now);
         }
-        final File cache = new File(context.getFilesDir(), "airtok/frames/" + path.replaceAll("[^A-Za-z0-9.]", "_"));
+        final File cache = new File(context.getFilesDir(), "margyt/frames/" + path.replaceAll("[^A-Za-z0-9.]", "_"));
         Net.away("frame picture", () -> {
             byte[] raw = Net.read(cache);
             if (raw == null || remember(path, raw) == null) {
@@ -462,9 +437,6 @@ public final class Frames {
         return bitmap;
     }
 
-
-
-
     static void profile(LinearLayout block, String uid, int ink) {
         try {
             lastBlock = new java.lang.ref.WeakReference<>(block);
@@ -478,7 +450,6 @@ public final class Frames {
             Diary.note("frames: profile: " + error);
         }
     }
-
 
     private static View nearest(View from) {
         View at = from;
@@ -578,7 +549,6 @@ public final class Frames {
         return row;
     }
 
-
     private static Bitmap tight(Bitmap art) {
         Rect solid = solid(art);
         return solid == null ? art : Bitmap.createBitmap(art, solid.left, solid.top, solid.width(), solid.height());
@@ -588,7 +558,6 @@ public final class Frames {
 
     private static volatile Bitmap face;
     private static boolean faceAsked;
-
 
     private static Bitmap face(final View waiting) {
         Bitmap known = face;
@@ -608,7 +577,6 @@ public final class Frames {
 
     private static final Map<String, float[]> covered = new HashMap<>();
 
-
     private static float[] covers(Frame frame, Bitmap art) {
         float[] known = covered.get(frame.picture());
         if (known != null) return known;
@@ -619,7 +587,6 @@ public final class Frames {
         covered.put(frame.picture(), out);
         return out;
     }
-
 
     private static Rect solid(Bitmap art) {
         int width = art.getWidth(), height = art.getHeight();
@@ -636,7 +603,6 @@ public final class Frames {
         }
         return r < l ? null : new Rect(l, t, r + 1, b + 1);
     }
-
 
     static final class Preview extends View {
         private final Paint plain = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);

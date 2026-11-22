@@ -55,10 +55,9 @@ public final class VideoActions {
 
     static final String WINDOW_KEY = "download_window";
 
-
     static boolean windowOn() {
         try {
-            return AirTok.context().getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE).getBoolean(WINDOW_KEY, true);
+            return AirTok.context().getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE).getBoolean(WINDOW_KEY, true);
         } catch (Throwable ignored) {
             return true;
         }
@@ -66,7 +65,7 @@ public final class VideoActions {
 
     static void setWindow(boolean on) {
         try {
-            AirTok.context().getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE).edit().putBoolean(WINDOW_KEY, on).apply();
+            AirTok.context().getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE).edit().putBoolean(WINDOW_KEY, on).apply();
         } catch (Throwable ignored) {
         }
     }
@@ -74,7 +73,6 @@ public final class VideoActions {
  static void chooseDownload(Context c,Object post){
   if(post==null){Screen.say(Text.VIDEO_NOT_READY);return;}
   java.util.List<DownloadQuality.Choice> photos=DownloadQuality.photos(post,Download.isEnabled());
-
 
   final boolean photoPost=!photos.isEmpty();
   Object video=photoPost?null:NativeRead.get(post,"getVideo");
@@ -124,7 +122,7 @@ public final class VideoActions {
     if(!Net.download(address,temporary,(percent,got,size)->{int overall=(slot*100+percent)/count;DownloadTasks.progress(key,overall);Screen.progress(key,Text.DOWNLOADING,overall);},control)){last=new java.io.IOException("Download failed or cancelled");continue;}
     String[] format=audio?DownloadQuality.audioFormat(temporary):image?DownloadQuality.imageFormat(temporary):DownloadQuality.videoFormat(temporary);
     String base=aid==null||aid.length()==0?"post":aid.replaceAll("[^A-Za-z0-9_-]","_");
-    return MediaFiles.save(c,temporary,"airtok_"+base+suffix+"_"+java.util.UUID.randomUUID()+"."+format[0],format[1],control);
+    return MediaFiles.save(c,temporary,"margyt_"+base+suffix+"_"+java.util.UUID.randomUUID()+"."+format[0],format[1],control);
    }catch(Throwable error){last=error;Diary.note("media source failed: "+error);}
   }
   if(last instanceof Exception)throw (Exception)last;
@@ -136,7 +134,7 @@ public final class VideoActions {
   final Context c=context.getApplicationContext();final String aid=NativeRead.aid(post);
   final java.util.List<DownloadQuality.Choice> list=new java.util.ArrayList<>(photos);
   final String key="media_"+java.util.UUID.randomUUID();
-  final DownloadTasks.Control control=DownloadTasks.begin(key,Text.photosCount(list.size()),"airtok",()->saveAllPhotos(post,list));
+  final DownloadTasks.Control control=DownloadTasks.begin(key,Text.photosCount(list.size()),"margyt",()->saveAllPhotos(post,list));
   control.limit=320L*1024L*1024L;Screen.progress(key,Text.DOWNLOADING,0);
   boolean queued=MediaQueue.add(()->{
    int saved=0;String where=null;java.io.File temporary=new java.io.File(c.getCacheDir(),key+".media");
@@ -158,7 +156,7 @@ public final class VideoActions {
  private static void transfer(Context c,java.util.List<String> addresses,int kind,String aid){
   final boolean audio=kind==1,image=kind==2;
   final String key="media_"+java.util.UUID.randomUUID();
-  final DownloadTasks.Control control=DownloadTasks.begin(key,audio?Text.SAVE_AUDIO:image?Text.SAVE_IMAGE:Text.SAVE_VIDEO,"airtok",()->transfer(c,addresses,kind,aid));
+  final DownloadTasks.Control control=DownloadTasks.begin(key,audio?Text.SAVE_AUDIO:image?Text.SAVE_IMAGE:Text.SAVE_VIDEO,"margyt",()->transfer(c,addresses,kind,aid));
   control.limit=320L*1024L*1024L;Screen.progress(key,Text.DOWNLOADING,0);
   boolean queued=MediaQueue.add(()->{
    boolean success=false;String savedTo=null;java.io.File temporary=new java.io.File(c.getCacheDir(),key+".media");

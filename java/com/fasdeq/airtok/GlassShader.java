@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class GlassShader {
     private GlassShader() {}
     static final String LENS = """

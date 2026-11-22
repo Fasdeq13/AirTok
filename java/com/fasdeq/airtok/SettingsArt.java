@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.PathInterpolator;
 
-
 final class SettingsArt {
     private SettingsArt() {}
 
@@ -28,7 +27,6 @@ final class SettingsArt {
     static float dp(Context context, float value) {
         return value * context.getResources().getDisplayMetrics().density;
     }
-
 
     private static final class Eased {
         float value;
@@ -54,9 +52,6 @@ final class SettingsArt {
         }
     }
 
-
-
-
     static final class Phone extends View {
 
         private static final java.util.HashMap<String, float[]> MEMORY = new java.util.HashMap<String, float[]>();
@@ -73,26 +68,19 @@ final class SettingsArt {
         private final float[] wantRail;
         private Bitmap avatar;
 
-
         interface RailTapped { void tapped(int kind); }
         private RailTapped railTapped;
         private final float[] railCentres = new float[8];
 
-
         Phone liked(boolean on) { wantLiked = on ? 1f : 0f; return this; }
-
 
         Phone capsule(boolean on) { wantCapsule = on ? 1f : 0f; return this; }
 
-
         Phone seekbar(boolean on) { wantSeek = on ? 1f : 0f; return this; }
-
 
         Phone date(boolean on) { wantDate = on ? 1f : 0f; return this; }
 
-
         Phone rail(int kind, boolean shown) { wantRail[kind] = shown ? 1f : 0f; return this; }
-
 
         Phone onRail(RailTapped listener) {
             railTapped = listener;
@@ -121,7 +109,6 @@ final class SettingsArt {
             this(context, skin, "phone");
         }
 
-
         Phone(Context context, Skin skin, String key) {
             super(context);
             this.skin = skin;
@@ -141,7 +128,6 @@ final class SettingsArt {
             setMinimumHeight(Math.round(dp(context, 250)));
         }
 
-
         Phone burn(boolean on, int strength, boolean keepBar) {
             float faint = on ? Math.max(0.1f, 1f - strength / 100f) : 1f;
             wantUi = faint;
@@ -150,12 +136,10 @@ final class SettingsArt {
             return this;
         }
 
-
         Phone simple(boolean on) {
             wantSimple = on ? 1f : 0f;
             return this;
         }
-
 
         void settle() {
             ui.to(this, wantUi, 320, EMPHASIZED);
@@ -231,7 +215,6 @@ final class SettingsArt {
             canvas.restore();
         }
 
-
         private void status(Canvas canvas, float w, float h) {
             words(canvas, "12:00", 7 * u, 6.6f * u, 4.2f * u, 255, true, Paint.Align.LEFT);
             paint.setStyle(Paint.Style.FILL);
@@ -256,7 +239,6 @@ final class SettingsArt {
             box.set(w / 2f - 15 * u, h - 2.6f * u, w / 2f + 15 * u, h - 1.6f * u);
             canvas.drawRoundRect(box, 0.5f * u, 0.5f * u, paint);
         }
-
 
         private void video(Canvas canvas, RectF screen) {
             int accent = Accent.colour();
@@ -315,7 +297,6 @@ final class SettingsArt {
             canvas.drawCircle(89 * u, y - 0.5f * u, 3.2f * u, paint);
             canvas.drawLine(91.4f * u, y + 1.9f * u, 93.5f * u, y + 4f * u, paint);
         }
-
 
         private void eyeAt(Canvas canvas, float cx, float cy, float r) {
             paint.setStyle(Paint.Style.FILL);
@@ -511,9 +492,6 @@ final class SettingsArt {
         }
     }
 
-
-
-
     static final class Chat extends View {
         private static float lastShown = 0f;
 
@@ -640,9 +618,6 @@ final class SettingsArt {
         }
     }
 
-
-
-
     static final class Profile extends View {
         private static String lastShape;
 
@@ -662,7 +637,6 @@ final class SettingsArt {
             to = AvatarShape.chosen();
             from = lastShape == null ? to : lastShape;
         }
-
 
         void shape(String shape) {
             if (shape.equals(to)) return;
@@ -741,9 +715,6 @@ final class SettingsArt {
             canvas.drawText(said, x, y, text);
         }
     }
-
-
-
 
     static final class Style extends View {
         private final Skin skin;
@@ -863,9 +834,6 @@ final class SettingsArt {
             }
         }
     }
-
-
-
 
     static final class Loader extends View {
         private static float lastOn = 0f;

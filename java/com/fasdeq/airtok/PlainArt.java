@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-
 final class PlainArt {
 
     private PlainArt() {}
@@ -23,9 +22,8 @@ final class PlainArt {
     private static boolean loaded, dirty, saving;
 
     private static File file(Context context) {
-        return new File(context.getFilesDir(), "airtok/plain-art");
+        return new File(context.getFilesDir(), "margyt/plain-art");
     }
-
 
     private static int key(Resources resources, int id) {
         boolean night = resources != null

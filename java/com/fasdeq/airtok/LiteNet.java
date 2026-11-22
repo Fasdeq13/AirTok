@@ -1,12 +1,10 @@
 package com.fasdeq.airtok;
 
-
 public final class LiteNet {
 
     private static boolean told;
 
     private LiteNet() {}
-
 
     public static boolean drops() {
         if (!Version.LITE) return true;

@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -40,6 +45,56 @@ public final class AppLock {
     private static final int LOCK_OVERLAY_TAG = 0x4149524C;
     private static Object focusRequest = null;
     private static CancellationSignal currentBioSignal = null;
+
+    static Bitmap createLockBitmap(Context context, int sizeDp, int color) {
+        int px = dp(context, sizeDp);
+        Bitmap bitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        float stroke = px * 0.08f;
+        float bodyTop = px * 0.44f;
+        float bodyBottom = px * 0.90f;
+        float bodyLeft = px * 0.16f;
+        float bodyRight = px * 0.84f;
+        float bodyRadius = px * 0.14f;
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(color);
+        RectF bodyRect = new RectF(bodyLeft, bodyTop, bodyRight, bodyBottom);
+        canvas.drawRoundRect(bodyRect, bodyRadius, bodyRadius, paint);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(stroke);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setColor(color);
+        float shackleLeft = px * 0.28f;
+        float shackleRight = px * 0.72f;
+        float shackleTop = px * 0.14f;
+        float shackleBottom = px * 0.54f;
+        RectF shackleArc = new RectF(shackleLeft, shackleTop, shackleRight, shackleBottom);
+        Path shackle = new Path();
+        shackle.arcTo(shackleArc, 180, 180, false);
+        shackle.lineTo(shackleRight, bodyTop);
+        shackle.moveTo(shackleLeft, (shackleTop + shackleBottom) / 2f);
+        shackle.lineTo(shackleLeft, bodyTop);
+        canvas.drawPath(shackle, paint);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(0xFFFFFFFF);
+        float cy = (bodyTop + bodyBottom) / 2f - px * 0.02f;
+        float keyRadius = px * 0.065f;
+        canvas.drawCircle(px / 2f, cy, keyRadius, paint);
+        Path slot = new Path();
+        slot.moveTo(px / 2f - keyRadius * 0.6f, cy);
+        slot.lineTo(px / 2f + keyRadius * 0.6f, cy);
+        slot.lineTo(px / 2f + keyRadius * 0.35f, cy + px * 0.12f);
+        slot.lineTo(px / 2f - keyRadius * 0.35f, cy + px * 0.12f);
+        slot.close();
+        canvas.drawPath(slot, paint);
+
+        return bitmap;
+    }
 
     private static void cancelBiometric() {
         if (currentBioSignal != null) {
@@ -288,7 +343,7 @@ public final class AppLock {
 
         ImageView logo = new ImageView(activity);
         int logoSize = dp(activity, 64);
-        logo.setImageBitmap(Badges.note());
+        logo.setImageBitmap(createLockBitmap(activity, 64, 0xFFA855F7));
         centerBox.addView(logo, new LinearLayout.LayoutParams(logoSize, logoSize));
 
         final TextView title = new TextView(activity);

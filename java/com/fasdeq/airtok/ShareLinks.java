@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public final class ShareLinks {
 
     private ShareLinks() {}
@@ -18,12 +17,12 @@ public final class ShareLinks {
 
     static boolean enabled() {
         Context c = AirTok.context();
-        return c == null || c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, true);
+        return c == null || c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, true);
     }
 
     static void setEnabled(boolean on) {
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
     }
 
     private static final Pattern URL_IN_TEXT = Pattern.compile("https?://[^\\s]+");
@@ -43,7 +42,6 @@ public final class ShareLinks {
                 manager.setPrimaryClip(clean.equals(text) ? clip : ClipData.newPlainText(label, clean));
                 return;
             }
-
 
             final String original = text;
             Net.away("clean-link", () -> {
@@ -76,12 +74,10 @@ public final class ShareLinks {
         return text == null ? null : text.toString();
     }
 
-
     private static String trim(String url) {
         while (url.length() > 0 && ".,!?)]}»\"'".indexOf(url.charAt(url.length() - 1)) >= 0) url = url.substring(0, url.length() - 1);
         return url;
     }
-
 
     static String cleanLong(String text) {
         Matcher m = URL_IN_TEXT.matcher(text);
@@ -106,7 +102,6 @@ public final class ShareLinks {
         }
     }
 
-
     static String strip(String url) {
         try {
             URL parsed = new URL(url);
@@ -121,7 +116,6 @@ public final class ShareLinks {
             return url;
         }
     }
-
 
     private static String follow(String url) {
         String at = url;

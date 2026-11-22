@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-
 final class InboxMd3 {
     private InboxMd3() {}
 
@@ -59,7 +58,6 @@ final class InboxMd3 {
 
     private static long fullPass;
 
-
     static void tick() {
         if (!enabled()) return;
         long now = android.os.SystemClock.uptimeMillis();
@@ -86,7 +84,6 @@ final class InboxMd3 {
             }
         }
     }
-
 
     static void frame() {
         if(!enabled())return;
@@ -140,7 +137,6 @@ final class InboxMd3 {
 
         private int done;
 
-
         void updateIfChanged() {
             ViewGroup list = this.list.get();
             if (list == null) return;
@@ -192,9 +188,7 @@ final class InboxMd3 {
                 if(!target.available())targets[i]=null;
             }
 
-
             if (header != null) { header.restore(); header = null; }
-
 
             top(list.getRootView());
             compose(list);
@@ -208,7 +202,6 @@ final class InboxMd3 {
             if (!(row.getBackground() instanceof FlatRipple)) row.setBackground(new FlatRipple(Accent.colour()));
             size(row, null, dp(row, 76));
             View nickname = named(row, "user_name");
-
 
             text(nickname, 16.5f, AppearanceColors.forView(nickname, ink), true);
             text(named(row, "mv1"), 14, muted, false);
@@ -251,7 +244,6 @@ final class InboxMd3 {
                 if(original.maxWidth>=0&&name.getMaxWidth()!=original.maxWidth)name.setMaxWidth(original.maxWidth);
                 else if(original.maxWidth<0&&name.getMaxEms()!=original.maxEms)name.setMaxEms(original.maxEms);
             }
-
 
             int right = dp(row,16);
             for (String name : new String[]{"gdi", "gdm"}) {
@@ -311,14 +303,11 @@ final class InboxMd3 {
             ViewGroup strip = (ViewGroup) block;
             keep(strip);
 
-
             if(strip.getParent()==list.get())size(strip,ViewGroup.LayoutParams.MATCH_PARENT,null);
             strip.setClipChildren(false);strip.setClipToPadding(false);strip.setClipToOutline(false);
             for (int i = 0; i < strip.getChildCount(); i++) {
                 View cell = strip.getChildAt(i), avatar = named(cell, "wq0");
                 if (avatar == null) continue;
-
-
 
                 keep(cell);unclip(avatar,strip);
                 if(cell instanceof ViewGroup)((ViewGroup)cell).setClipToOutline(false);
@@ -403,7 +392,6 @@ final class InboxMd3 {
 
         FrameLayout composeHost(ViewGroup list){
 
-
             Object parent=list.getParent();
             if(!(parent instanceof FrameLayout))return null;
             FrameLayout host=(FrameLayout)parent;
@@ -432,7 +420,6 @@ final class InboxMd3 {
             folders.clear();
         }
     }
-
 
     private static final class Header {
         final Session session;
@@ -607,7 +594,6 @@ final class InboxMd3 {
             int count=((Number)view.getClass().getMethod("getCount").invoke(view)).intValue();
             if(count<=0)return "";
 
-
             try{
                 Object drawable=view.getClass().getField("LL").get(view);
                 if(drawable!=null)for(String field:new String[]{"LJII","LJFF"}){
@@ -632,7 +618,6 @@ final class InboxMd3 {
     private static GradientDrawable shape(int colour,float radius){GradientDrawable shape=new GradientDrawable();shape.setColor(colour);shape.setCornerRadius(radius);return shape;}
     private static void background(View view,int colour,float radius){Drawable drawable=view.getBackground();if(drawable instanceof RippleDrawable){android.graphics.drawable.LayerDrawable layers=(android.graphics.drawable.LayerDrawable)drawable;for(int i=0;i<layers.getNumberOfLayers();i++)if(layers.getId(i)!=android.R.id.mask){if(layers.getDrawable(i)instanceof GradientDrawable){GradientDrawable shape=(GradientDrawable)layers.getDrawable(i);shape.setColor(colour);shape.setCornerRadius(radius);}else layers.setDrawable(i,shape(colour,radius));return;}}if(drawable instanceof GradientDrawable){GradientDrawable shape=(GradientDrawable)drawable;shape.setColor(colour);shape.setCornerRadius(radius);}else view.setBackground(shape(colour,radius));}
 
-
     static int nativeInk(TextView text){
         int current=text.getCurrentTextColor();Object painted=text.getTag(PAINTED_INK),nativeColour=text.getTag(NATIVE_INK);
         if(painted instanceof Integer&&((Integer)painted)==current&&nativeColour instanceof Integer)return(Integer)nativeColour;
@@ -644,7 +629,6 @@ final class InboxMd3 {
         if(painted==current&&nativeBack instanceof Object[])return(Drawable)((Object[])nativeBack)[0];
         view.setTag(NATIVE_BG,new Object[]{current});return current;
     }
-
 
     static void folderFrame(ViewGroup list){
         if(list==null||!enabled()||!visible(list))return;

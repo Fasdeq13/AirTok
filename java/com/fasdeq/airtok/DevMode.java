@@ -2,14 +2,12 @@ package com.fasdeq.airtok;
 
 import android.content.Context;
 
-
 final class DevMode {
     private DevMode() {}
 
     static final String KEY = "developer";
     private static final int NEEDED = 5;
     private static final long GAP = 1000L;
-
 
     private static volatile int state;
     private static int taps;
@@ -22,7 +20,7 @@ final class DevMode {
         if (context == null) return false;
         boolean on = false;
         try {
-            on = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+            on = context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                     .getBoolean(KEY, false);
         } catch (Throwable ignored) { }
         state = on ? 2 : 1;
@@ -35,11 +33,10 @@ final class DevMode {
         Context context = AirTok.context();
         if (context == null) return;
         try {
-            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, on).apply();
         } catch (Throwable ignored) { }
     }
-
 
     static synchronized boolean tapped() {
         long now = android.os.SystemClock.uptimeMillis();

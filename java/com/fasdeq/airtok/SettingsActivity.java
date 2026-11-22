@@ -33,7 +33,6 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
-
 public class SettingsActivity extends Activity {
     void accountAppearanceChanged(){skin=Skin.forSettings(this);rebuild();}
 
@@ -64,17 +63,15 @@ public class SettingsActivity extends Activity {
         }
     };
 
-
     private static boolean pending;
 
-
-    private static final String CHANNEL = "https://t.me/airtokiktok";
+    private static final String CHANNEL = "https://t.me/margytiktok";
     private static final String FORUM = "https://t.me/margeletforum";
     private static final String OWNER_TELEGRAM = "https://t.me/narezany";
     private static final String OWNER_TIKTOK =
             "https://tiktok.com/@narezany?_r=1&_t=ZT-99hPDJ26hji_";
 
-    private static final String CHANNEL_WRITE = "https://t.me/airtokiktok?direct";
+    private static final String CHANNEL_WRITE = "https://t.me/margytiktok?direct";
     private static final String TTCUZ = "https://t.me/ttcuzmod";
     private static final String GIT = "https://git.narez.xyz/narezany/MargyT";
     private static final String DOCS_PLUGINS =
@@ -98,7 +95,6 @@ public class SettingsActivity extends Activity {
     private int settingsGroup;
 
     private String settingsPage;
-
 
     private static final class Shelf {
         final int group; final String id, icon, title, note; final String[] sections;
@@ -166,16 +162,11 @@ public class SettingsActivity extends Activity {
         AirTok.attach(this);
         Accent.reload();
 
-
         skin = Skin.forSettings(this);
         Unsaved.look(this);
         dressTheWindow();
 
-
         Badges.tell(badgeUpdates);
-
-
-
 
         Mine.ask(() -> {
             if (isFinishing() || isDestroyed()) return;
@@ -203,14 +194,13 @@ public class SettingsActivity extends Activity {
         Design.page(this, root, skin.page);
         rebuild();
         maybeAskForSupport();
-        if(getIntent().getBooleanExtra("airtok_tutorial",false))root.postDelayed(()->Tutorial.show(this),350L);
+        if(getIntent().getBooleanExtra("margyt_tutorial",false))root.postDelayed(()->Tutorial.show(this),350L);
         openPluginFile(getIntent());
         openStyleFile(getIntent());
         openStats(getIntent());
     }
 
     private Bundle stats;
-
 
     private void openStats(Intent intent) {
         Bundle given = intent == null ? null : intent.getBundleExtra(VideoStats.EXTRA);
@@ -246,7 +236,6 @@ public class SettingsActivity extends Activity {
         return row;
     }
 
-
     private View ratioRow(String picture, String title, long part, long of, long best) {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
@@ -280,7 +269,6 @@ public class SettingsActivity extends Activity {
         return "https://www.tiktok.com/@" + (handle.length() > 0 ? handle : "_") + (s.getInt("images") > 0 ? "/photo/" : "/video/") + s.getString("aid", "");
     }
 
-
     private String statsText(Bundle s) {
         long views = s.getLong("play");
         StringBuilder out = new StringBuilder();
@@ -305,7 +293,6 @@ public class SettingsActivity extends Activity {
         send.putExtra(Intent.EXTRA_TEXT, statsText(stats));
         startActivity(Intent.createChooser(send, Local.of("Поделиться статистикой")));
     }
-
 
     private View tile(String picture, String name, long value, String under) {
         LinearLayout tile = new LinearLayout(this);
@@ -351,7 +338,6 @@ public class SettingsActivity extends Activity {
 
     private int chartKind = 1;
     private long[][] chartPoints;
-
 
     private final class Chart extends View {
         final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG), area = new Paint(Paint.ANTI_ALIAS_FLAG),
@@ -431,7 +417,6 @@ public class SettingsActivity extends Activity {
             topBar.addView(send, new LinearLayout.LayoutParams(dp(48), dp(48)));
         }
 
-
         LinearLayout head = card();
         LinearLayout who = row();
         who.addView(icon("account_circle"));
@@ -458,7 +443,6 @@ public class SettingsActivity extends Activity {
         }
         column.addView(wrap(head));
 
-
         LinearLayout grid = card();
         grid.addView(pair(tile("play_circle", Local.of("Просмотры"), views,
                 hours > 0 ? compact(Math.round(views / hours)) + " " + Local.of("в час") : null),
@@ -473,7 +457,6 @@ public class SettingsActivity extends Activity {
         if (reposts > 0 || downloads > 0) grid.addView(pair(tile("repeat", Local.of("Репосты"), reposts, null),
                 downloads > 0 ? tile("download", Local.of("Скачали"), downloads, null) : null));
         column.addView(wrap(grid));
-
 
         column.addView(section(Local.of("Динамика")));
         LinearLayout chartCard = card();
@@ -494,7 +477,6 @@ public class SettingsActivity extends Activity {
             chartPoints = points;
             chart.invalidate();
         });
-
 
         column.addView(section(Local.of("Подробно")));
         LinearLayout more = card();
@@ -529,10 +511,9 @@ public class SettingsActivity extends Activity {
         if (topBar == null) column.addView(wrap(actionRow("share", Local.of("Поделиться статистикой"), null, this::shareStats)));
     }
 
+    static final String OPEN_PLUGIN = "margyt_open_plugin";
 
-    static final String OPEN_PLUGIN = "airtok_open_plugin";
-
-    static final String OPEN_STYLE = "airtok_open_style";
+    static final String OPEN_STYLE = "margyt_open_style";
 
     private void openStyleFile(Intent intent) {
         if (intent == null || !intent.getBooleanExtra(OPEN_STYLE, false) || intent.getData() == null) return;
@@ -601,8 +582,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
-
     private void rebuild() {
         navigating=false;
         collapsing=false;
@@ -612,7 +591,6 @@ public class SettingsActivity extends Activity {
         revealAnimationRequested = false;
         revealAnimationUsed = !animateReveal;
         final int previousScroll = page == null ? 0 : page.getScrollY();
-
 
         if (!keepPages) built = null;
         keepPages = false;
@@ -732,7 +710,6 @@ public class SettingsActivity extends Activity {
         }
         if (settingsGroup != 0 && open == null) {
 
-
             java.util.Set<String> small = smallSections(contentStart);
             java.util.List<Shelf> long_ = new java.util.ArrayList<>();
             java.util.Set<String> inline = new java.util.HashSet<>();
@@ -752,7 +729,6 @@ public class SettingsActivity extends Activity {
         restoreScroll(previousScroll);
     }
 
-
     private void buildContent() {
         column.addView(section(Text.DESIGN));
         column.addView(wrap(designPicker()));
@@ -771,7 +747,6 @@ public class SettingsActivity extends Activity {
         LinearLayout fonts = card();
         fonts.addView(fontCarousels());
         column.addView(wrap(fonts));
-
 
         column.addView(section(MOTION_BLUR));
         LinearLayout blur = card();
@@ -1006,7 +981,6 @@ public class SettingsActivity extends Activity {
         fps.addView(quiet(Text.FPS_ABOUT));
         if (!Rate.reachable(this)) fps.addView(quiet(Text.FPS_UNSUPPORTED));
         column.addView(wrap(fps));
-
 
         column.addView(section(MOTION));
         LinearLayout cues = card();
@@ -1263,7 +1237,6 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(reposts));
     }
 
-
     private View fatCat() {
         final ImageView cat = new ImageView(this);
         cat.setAdjustViewBounds(true);
@@ -1302,7 +1275,6 @@ public class SettingsActivity extends Activity {
     }
 
     private static android.graphics.Bitmap fatCatPicture;
-
 
     private View chipRow(String picture, String title, String[] chips, final Runnable action) {
         LinearLayout row = row();
@@ -1349,7 +1321,6 @@ public class SettingsActivity extends Activity {
             return;
         }
 
-
         scrollRestoreListener = new android.view.ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
                 page.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -1360,7 +1331,6 @@ public class SettingsActivity extends Activity {
         };
         page.getViewTreeObserver().addOnPreDrawListener(scrollRestoreListener);
     }
-
 
     private void showRestartBar() {
         if (pending && restartBar == null) {
@@ -1391,7 +1361,6 @@ public class SettingsActivity extends Activity {
                 dp(32) + (pending ? dp(92) + navigationBar() : 0));
     }
 
-
     private void styleRestartBar(LinearLayout bar) {
         GradientDrawable shape = new GradientDrawable();
         shape.setColor(Expressive.mix(skin.card, Accent.colour(), 0.22f));
@@ -1400,15 +1369,12 @@ public class SettingsActivity extends Activity {
         bar.setElevation(dp(6));
     }
 
-
-
     static void restartOwed() {
         pending = true;
         Unsaved.other();
     }
 
     private void markChanged() {
-
 
         pending = Unsaved.after(this);
         showRestartBar();
@@ -1423,11 +1389,6 @@ public class SettingsActivity extends Activity {
         return super.dispatchTouchEvent(event);
     }
 
-
-
-
-
-
     private static final String VISITS = "settings_visits";
     private static final String ASKED = "settings_asked";
     private static final int ON_VISIT = 3;
@@ -1435,18 +1396,13 @@ public class SettingsActivity extends Activity {
     private java.util.List<Integer> gradientColours;
     private int gradientSlot;
 
-
-
     private boolean donateClosed;
 
-
     static final String BANNER_ALWAYS = "donate_banner_always";
-
 
     private boolean bannerAlways() {
         return false;
     }
-
 
     private static boolean supporter() {
         try {
@@ -1458,7 +1414,6 @@ public class SettingsActivity extends Activity {
     }
 
     private View donateBanner() {
-
 
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -1523,7 +1478,6 @@ public class SettingsActivity extends Activity {
         return holder;
     }
 
-
     private void maybeAskForSupport() {
         return;
     }
@@ -1533,7 +1487,6 @@ public class SettingsActivity extends Activity {
         Screen.say(ok ? Text.FREE_BADGE_GOT : Text.MINE_TOO_OFTEN);
         rebuild();
     }
-
 
     private View framesCard() {
         LinearLayout card = card();
@@ -1590,7 +1543,6 @@ public class SettingsActivity extends Activity {
         return card;
     }
 
-
     private View proveRow() {
         boolean done = Proof.proved();
         LinearLayout row = row();
@@ -1606,7 +1558,6 @@ public class SettingsActivity extends Activity {
         if (!done) row.setOnClickListener(v -> proveAccount());
         return sized(row, 64);
     }
-
 
     private void proveAccount() {
         if (!BioProof.available()) {
@@ -1628,7 +1579,6 @@ public class SettingsActivity extends Activity {
         });
     }
 
-
     private void proveByHand() {
         String already = Proof.waiting();
         if (already.length() > 0) {
@@ -1644,7 +1594,6 @@ public class SettingsActivity extends Activity {
             askToCheck(Proof.waiting());
         });
     }
-
 
     private boolean needsProof(boolean ok, String trouble) {
         if (ok || !Mine.PROVE.equals(trouble)) return false;
@@ -1768,7 +1717,6 @@ public class SettingsActivity extends Activity {
         return badge.text;
     }
 
-
     private static String spaced(String digits) {
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < digits.length(); i++) {
@@ -1778,14 +1726,11 @@ public class SettingsActivity extends Activity {
         return out.toString();
     }
 
-
-
     private static final int DONATE_PAGE = 99;
 
     private void showDonations() {
         return;
     }
-
 
     private void donatePage() {
         LinearLayout what = card();
@@ -1822,8 +1767,6 @@ public class SettingsActivity extends Activity {
         else rebuildQueued = true;
         column.postDelayed(delayedRebuild, M3Switch.ANIMATION_DURATION_MS);
     }
-
-
 
     private View switchRow() {
         LinearLayout row = row();
@@ -1863,7 +1806,6 @@ public class SettingsActivity extends Activity {
         row.addView(text, grow());
         row.addView(away());
 
-
         if (AirTok.isEnabled()) row.setOnClickListener(v -> showCountries());
         return sized(row, 60);
     }
@@ -1890,7 +1832,6 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
-
     private View flag(String iso) {
         TextView view = new TextView(this);
         StringBuilder out = new StringBuilder();
@@ -1906,7 +1847,6 @@ public class SettingsActivity extends Activity {
             out.appendCodePoint(0x1F1E6 + letter);
         }
         view.setText(out.toString());
-
 
         android.graphics.Typeface flags = Fonts.twemoji(this);
         if (flags != null) view.setTypeface(flags);
@@ -1962,11 +1902,7 @@ public class SettingsActivity extends Activity {
         return sized(row, 52);
     }
 
-
-
-
     private int badgesTab;
-
 
     private View badgeTabs() {
         LinearLayout strip = new LinearLayout(this);
@@ -2001,7 +1937,6 @@ public class SettingsActivity extends Activity {
         }
         return strip;
     }
-
 
     private void badgesToGet() {
         if (!Proof.proved()) {
@@ -2038,7 +1973,6 @@ public class SettingsActivity extends Activity {
         }
         return card;
     }
-
 
     private void askChatCode() {
         if (!Proof.proved()) {
@@ -2107,9 +2041,6 @@ public class SettingsActivity extends Activity {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
 
-
-
-
         if (Mine.tookFresh() && !rearranged) ordering = null;
         if (ordering == null) ordering = Mine.held();
         rows.addView(proveRow());
@@ -2129,10 +2060,7 @@ public class SettingsActivity extends Activity {
             Badges.Badge badge = Badges.byId(one.id);
             row.addView(badgeDot(badge));
 
-
             row.addView(label(badge == null ? one.id : named(badge)), grow());
-
-
 
             row.addView(mover(true, at > 0, () -> {
                 java.util.Collections.swap(ordering, at, at - 1);
@@ -2172,7 +2100,6 @@ public class SettingsActivity extends Activity {
                 })));
         return rows;
     }
-
 
     private View button(String title, final Runnable action) {
         TextView view = new TextView(this);
@@ -2226,7 +2153,6 @@ public class SettingsActivity extends Activity {
             view.setImageBitmap(picture);
         } else {
 
-
             view.setImageBitmap(Badges.note());
         }
         if (badge.colour != 0) {
@@ -2234,7 +2160,6 @@ public class SettingsActivity extends Activity {
         }
         return view;
     }
-
 
     private View freeBanner() {
         LinearLayout card = new LinearLayout(this);
@@ -2290,16 +2215,13 @@ public class SettingsActivity extends Activity {
         return holder;
     }
 
-
-
     private android.content.SharedPreferences animPrefs() {
-        return getSharedPreferences("airtok_text_animation", MODE_PRIVATE);
+        return getSharedPreferences("margyt_text_animation", MODE_PRIVATE);
     }
 
     private static String ta(String ru) {
         return com.fasdeq.airtok.textanim.Strings.t(ru);
     }
-
 
     private TextView subhead(String words) {
         TextView view = new TextView(this);
@@ -2328,7 +2250,6 @@ public class SettingsActivity extends Activity {
             rebuild();
         }).show());
     }
-
 
     private void textAnimationCards() {
         column.addView(subhead(ta("Свечение текста (Glow)")));
@@ -2390,9 +2311,7 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(send));
     }
 
-
     private static int seedScroll;
-
 
     private View seedPicker() {
         android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this) {
@@ -2459,8 +2378,6 @@ public class SettingsActivity extends Activity {
         return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
 
-
-
     private View wallpaperRow() {
         final int colour = Accent.fromWallpaper();
         LinearLayout row = row();
@@ -2474,7 +2391,6 @@ public class SettingsActivity extends Activity {
         });
         return sized(row, 52);
     }
-
 
     private View appear(View view) {
         boolean animated=!revealAnimationUsed && Motion.enabled(this);
@@ -2504,12 +2420,6 @@ public class SettingsActivity extends Activity {
         revealAnimationRequested=expanded;rebuild();disclosureKey=null;
     }
 
-
-
-
-
-
-
     private static final int CREATE_BACKUP = 0x4D42;
     private static final int PICK_BACKUP = 0x4D49;
 
@@ -2518,7 +2428,7 @@ public class SettingsActivity extends Activity {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/json");
-            intent.putExtra(Intent.EXTRA_TITLE, "airtok-settings.json");
+            intent.putExtra(Intent.EXTRA_TITLE, "margyt-settings.json");
             startActivityForResult(intent, CREATE_BACKUP);
         } catch (Throwable error) {
             Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
@@ -2591,7 +2501,6 @@ public class SettingsActivity extends Activity {
                 .show();
     }
 
-
     private interface Chosen {
         void at(int value);
     }
@@ -2600,11 +2509,9 @@ public class SettingsActivity extends Activity {
         return slider(title, now, most, 0, "", chosen);
     }
 
-
     private View slider(String title, int now, int most, final int shift, final String unit, final Chosen chosen) {
         return slider("tune", title, now, most, shift, unit, chosen);
     }
-
 
     private View slider(String picture, String title, int now, int most, final int shift, final String unit, final Chosen chosen) {
         return slider(picture,title,now,most,shift,unit,chosen,false);
@@ -2615,7 +2522,6 @@ public class SettingsActivity extends Activity {
     private View slider(String picture, String title, int now, int most, final int shift, final String unit, final Chosen chosen, final boolean live) {
         return slider(picture, title, now, most, shift, unit, chosen, live, null);
     }
-
 
     private View slider(String picture, String title, int now, int most, final int shift, final String unit,
                         final Chosen chosen, final boolean live, final Chosen moving) {
@@ -2665,15 +2571,9 @@ public class SettingsActivity extends Activity {
         return rows;
     }
 
-
-
-
     private static final int PICK_FONT = 0x4D46;
     private static final int PICK_EMOJI = 0x4D45;
     private static final int PICK_PROFILE_BADGE = 0x5450;
-
-
-
 
     private GradientDrawable colourPreview(int colour) {
         GradientDrawable preview = new Design.ColourSample();
@@ -2688,9 +2588,6 @@ public class SettingsActivity extends Activity {
                 + 0.114f * Color.blue(colour)) / 255f;
         return luminance > 0.55f ? Color.BLACK : Color.WHITE;
     }
-
-
-
 
     private View fontHead() {
         LinearLayout row = row();
@@ -2775,7 +2672,6 @@ public class SettingsActivity extends Activity {
         return rows;
     }
 
-
     private View fontCarousels() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -2805,7 +2701,6 @@ public class SettingsActivity extends Activity {
         centre(one, chosen);
         return box;
     }
-
 
     private static final class SampleIcon extends TextView {
         SampleIcon(Context context) { super(context); }
@@ -2858,7 +2753,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private View pickRow(String title, boolean chosen, String preview, final Runnable action) {
         LinearLayout row = row();
         row.setPadding(edge(), 0, edge(), 0);
@@ -2888,11 +2782,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
-
-
-
-
     private View labeled(String words, View control) {
         LinearLayout tile = new LinearLayout(this);
         tile.setOrientation(LinearLayout.VERTICAL);
@@ -2906,7 +2795,6 @@ public class SettingsActivity extends Activity {
         tile.addView(control);
         return tile;
     }
-
 
     private View tilcayoSkins() {
         android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
@@ -2968,9 +2856,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private interface Picked { void picked(int index); }
-
 
     private View segmented(final String[] labels, int chosen, final Picked picked) {
         LinearLayout box = new LinearLayout(this);
@@ -3016,7 +2902,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private View chips(final String[] labels, int chosen, final Picked picked) {
         LinearLayout strip = new LinearLayout(this);
         final java.util.List<TextView> all = new java.util.ArrayList<TextView>();
@@ -3058,7 +2943,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private SettingsArt.Phone phone(String card) {
         SettingsArt.Phone art = new SettingsArt.Phone(this, skin, card)
                 .burn(false, 0, true).simple(false)
@@ -3066,7 +2950,6 @@ public class SettingsActivity extends Activity {
         for (int i = 0; i < 4; i++) art.rail(i, FeedRail.shown(i));
         return art;
     }
-
 
     private static M3Switch switchIn(View row) {
         if (row instanceof M3Switch) return (M3Switch) row;
@@ -3080,9 +2963,6 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
-
-
-
     private android.widget.HorizontalScrollView carousel(LinearLayout strip) {
         final android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
         scroll.setHorizontalScrollBarEnabled(false);
@@ -3093,13 +2973,11 @@ public class SettingsActivity extends Activity {
         return scroll;
     }
 
-
     private void centre(final android.widget.HorizontalScrollView scroll, final View chosen) {
         if (chosen == null) return;
         scroll.post(() -> scroll.scrollTo(Math.max(0,
                 chosen.getLeft() - (scroll.getWidth() - chosen.getWidth()) / 2), 0));
     }
-
 
     private View iconCarousel() {
         LinearLayout box = new LinearLayout(this);
@@ -3184,7 +3062,6 @@ public class SettingsActivity extends Activity {
         return tile;
     }
 
-
     private void ring(java.util.List<View> frames, String chosen) {
         for (View frame : frames) {
             boolean on = chosen.equals(frame.getTag());
@@ -3200,7 +3077,6 @@ public class SettingsActivity extends Activity {
             }
         }
     }
-
 
     private View avatarShapes() {
         LinearLayout box = new LinearLayout(this);
@@ -3279,8 +3155,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
-
     private static final int[] DARKS = {
             0xFF000000, 0xFF0B0B0F, 0xFF121212, 0xFF161823, 0xFF1B1B1B,
             0xFF0D1B2A, 0xFF12232E, 0xFF1A1423, 0xFF14261C, 0xFF241A1A,
@@ -3290,7 +3164,6 @@ public class SettingsActivity extends Activity {
             0xFFFFFFFF, 0xFFF6F6F6, 0xFFEDEDED, 0xFFE8E4DA, 0xFFDCDCDC,
             0xFFCFD8DC, 0xFFB0B8C4, 0xFF8A8A8A, 0xFF5A5A5A, 0xFF2E2E2E,
     };
-
 
     private interface ColourPicked { void set(int colour); }
 
@@ -3333,7 +3206,6 @@ public class SettingsActivity extends Activity {
                 });
         panel.quiet(Text.CANCEL,null); panel.show();
     }
-
 
     private void chooseThemePreset() {
         final String[] choices = {Text.THEME_PRESET_DARK, Text.THEME_PRESET_BLUE,
@@ -3395,11 +3267,9 @@ public class SettingsActivity extends Activity {
         strip.addView(picker,new LinearLayout.LayoutParams(dp(48),dp(48)));scroll.addView(strip);return scroll;
     }
 
-
     private View icon(String name) {
         return icon(name, false, 40);
     }
-
 
     private static final java.util.Map<String, Integer> SHAPES = new java.util.HashMap<String, Integer>();
     static {
@@ -3416,7 +3286,6 @@ public class SettingsActivity extends Activity {
         Integer fixed = SHAPES.get(name);
         return fixed != null ? fixed : (name.hashCode() & 0x7FFFFFFF) % Expressive.KINDS;
     }
-
 
     private View icon(String name, boolean toggle, int sizeDp) {
         if (!Design.frosted()) {
@@ -3477,7 +3346,6 @@ public class SettingsActivity extends Activity {
     private static final java.util.Map<String, Bitmap> ICONS =
             new java.util.HashMap<String, Bitmap>();
 
-
     private interface Setting {
         void set(boolean on);
     }
@@ -3515,8 +3383,6 @@ public class SettingsActivity extends Activity {
         });
         return sized(row, 48);
     }
-
-
 
     private View betaRow(String picture, String title, boolean on, final Setting setting) {
         LinearLayout row = row();
@@ -3591,7 +3457,6 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
-
     private View stickerChoices() {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
@@ -3647,7 +3512,6 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
-
     private View actionRow(String picture, String title, String detail, final Runnable action) {
         LinearLayout row = row();
         row.addView(icon(picture));
@@ -3691,7 +3555,6 @@ public class SettingsActivity extends Activity {
         }
         return sized(row, detail == null || value ? 48 : 60);
     }
-
 
     private View versions() {
         LinearLayout box = new LinearLayout(this);
@@ -3746,8 +3609,6 @@ public class SettingsActivity extends Activity {
         return value.substring(0, 14) + "…" + value.substring(value.length() - 8);
     }
 
-
-
     private void showPluginAdd(){
         Panel panel=Panel.with(this,skin,Local.of("Добавить плагин"));
         panel.primary(Local.of("Создать из кнопок"),()->ScriptPlugins.edit(this,ScriptPlugins.SAMPLE,this::rebuild));
@@ -3759,9 +3620,6 @@ public class SettingsActivity extends Activity {
     }
 
     private static final int PICK_PLUGIN = 0x4D50;
-
-
-
 
     private View pluginSettingRow(final Plugins.Row item,
                                   final android.content.SharedPreferences store) {
@@ -3834,7 +3692,6 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
-
     private View pluginRow(final Plugins.Info info) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -3899,8 +3756,6 @@ public class SettingsActivity extends Activity {
 
     private void activatePlugin(final Plugins.Info info,boolean enabled){
 
-
-
         if(!enabled){Net.away("plugin stop",()->{Plugins.setEnabled(info.id,false);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});return;}
 
         Net.away("plugin start",()->{Plugins.setEnabled(info.id,true);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});
@@ -3912,7 +3767,7 @@ public class SettingsActivity extends Activity {
         if(info.safety!=null&&!info.safety.isEmpty())panel.text(info.safety);
         LinearLayout body=new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
-        android.content.SharedPreferences store=getSharedPreferences("airtok_plugin_"+info.id,MODE_PRIVATE);
+        android.content.SharedPreferences store=getSharedPreferences("margyt_plugin_"+info.id,MODE_PRIVATE);
         int count=0;
         if(Plugins.isEnabled(info.id)) for(Plugins.Row item:Plugins.rows()) {
             if(!info.id.equals(item.plugin))continue;
@@ -4031,8 +3886,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
-
     private View linkRow(String picture, String title, String handle, final String url) {
         LinearLayout row = row();
         row.addView(icon(picture));
@@ -4073,7 +3926,6 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
-
     private View channelBanner() {
         ChannelBanner banner = new ChannelBanner(this);
         banner.setOnClickListener(v -> open(ChannelBanner.URL));
@@ -4083,9 +3935,6 @@ public class SettingsActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return box;
     }
-
-
-
 
     private View space() {
         java.util.List<ThanksSpace.Person> people = new java.util.ArrayList<>();
@@ -4106,7 +3955,6 @@ public class SettingsActivity extends Activity {
         return new ThanksSpace(this, people, planets,
                 Local.of("нажми на имя · зажми, чтобы открыть ссылку"), Text.DONATE);
     }
-
 
     private void showThanks() {
         final android.app.Dialog sky = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -4142,7 +3990,6 @@ public class SettingsActivity extends Activity {
         sky.show();
     }
 
-
     private void ownerLinks() {
         try {
             new ModDialog.Builder(this, skin)
@@ -4156,9 +4003,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
-
-
     private View away() {
 
         if (!Design.frosted()) { View none = new View(this); none.setVisibility(View.GONE); return none; }
@@ -4166,7 +4010,6 @@ public class SettingsActivity extends Activity {
         arrow.setRotation(-90f);
         return arrow;
     }
-
 
     private TextView quiet(String message) {
         TextView view = new TextView(this);
@@ -4179,19 +4022,13 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
-
-
-
     private void open(String url) {
-
-
 
         url = inApp(url);
         if (url.contains("tiktok.com") && openWith(url, getPackageName())) return;
         if (openWith(url, null)) return;
         Toast.makeText(this, Text.NO_BROWSER, Toast.LENGTH_SHORT).show();
     }
-
 
     private static String inApp(String url) {
         if (url.startsWith("https://tiktok.com/")) {
@@ -4223,7 +4060,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private void developerTap() {
         if (!DevMode.tapped()) return;
         if (DevMode.isOn()) {
@@ -4235,7 +4071,6 @@ public class SettingsActivity extends Activity {
         Toast.makeText(this, Text.DEV_ON, Toast.LENGTH_SHORT).show();
         rebuild();
     }
-
 
     private void addDeveloperRows(LinearLayout into) {
         into.addView(line());
@@ -4251,7 +4086,6 @@ public class SettingsActivity extends Activity {
             }
         }));
     }
-
 
     private void chooseAvatarShape() {
         final Panel panel = Panel.with(this, skin, Text.AVATAR_SHAPE);
@@ -4294,8 +4128,6 @@ public class SettingsActivity extends Activity {
         panel.show();
     }
 
-
-
     private static final int COUNTRY_PAGE = 97;
     private int countryFromGroup;
     private String countryFromPage;
@@ -4316,7 +4148,6 @@ public class SettingsActivity extends Activity {
             navigating = false;
         });
     }
-
 
     private void countriesPage() {
         LinearLayout field = new LinearLayout(this);
@@ -4344,7 +4175,6 @@ public class SettingsActivity extends Activity {
         box.setPadding(edge(), dp(4), edge(), dp(8));
         box.addView(sized(field, 56));
         column.addView(box);
-
 
         java.util.List<String[]> all = new java.util.ArrayList<>(java.util.Arrays.asList(AirTok.COUNTRIES));
         final java.text.Collator order = java.text.Collator.getInstance();
@@ -4400,7 +4230,6 @@ public class SettingsActivity extends Activity {
         rebuild();
     }
 
-
     private void flagsPage() {
         LinearLayout warning = card();
         warning.addView(quiet(Text.FLAGS_WARNING));
@@ -4426,7 +4255,6 @@ public class SettingsActivity extends Activity {
             if (flagsLoading) return;
             flagsLoading = true;
 
-
             new Thread(() -> {
                 final java.util.List<Flags.Known> all = Flags.catalogue();
                 runOnUiThread(() -> {
@@ -4434,7 +4262,7 @@ public class SettingsActivity extends Activity {
                     flagsLoading = false;
                     if (settingsGroup == FLAGS_PAGE && !isFinishing()) rebuild();
                 });
-            }, "airtok-flags").start();
+            }, "margyt-flags").start();
             return;
         }
 
@@ -4528,7 +4356,6 @@ public class SettingsActivity extends Activity {
         return box;
     }
 
-
     private View flagRow(final Flags.Known flag, final Object mine) {
         LinearLayout row = row();
         row.setPadding(dp(16), dp(10), dp(16), dp(10));
@@ -4609,7 +4436,6 @@ public class SettingsActivity extends Activity {
         rebuild();
     }
 
-
     private View fullReportView() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -4627,8 +4453,6 @@ public class SettingsActivity extends Activity {
     private View diaryHead() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
-
-
 
         LinearLayout row = row();
         row.addView(icon("article"));
@@ -4703,7 +4527,6 @@ public class SettingsActivity extends Activity {
         return box;
     }
 
-
     private void restartTikTok() {
         try {
             android.content.Intent intent = getPackageManager()
@@ -4732,8 +4555,6 @@ public class SettingsActivity extends Activity {
             Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
         }
     }
-
-
 
     private View backArrow() {
         LinearLayout bar = new LinearLayout(this);
@@ -4799,7 +4620,6 @@ public class SettingsActivity extends Activity {
         return new android.graphics.drawable.BitmapDrawable(getResources(), launcherIcon);
     }
 
-
     private LinearLayout topBar;
 
     private boolean searchOpen;
@@ -4844,7 +4664,6 @@ public class SettingsActivity extends Activity {
         });
         return view;
     }
-
 
     private View searchBox() {
         if (!Design.frosted() && topBar != null && topBar.getParent() == column) {
@@ -4957,7 +4776,6 @@ public class SettingsActivity extends Activity {
         rebuild();
     }
 
-
     private void chooseSeekStep(){
         new ModDialog.Builder(this).setItems(new String[]{"5","10","15","30","60",Text.CUSTOM_SPEED},(dialog,index)->{
             if(index<5){AccountAppearance.prefs(this).edit().putInt(PlayerTools.STEP,new int[]{5,10,15,30,60}[index]).apply();rebuild();return;}
@@ -5008,12 +4826,10 @@ public class SettingsActivity extends Activity {
         panel.view(rows);panel.quiet(Text.CLOSE,null);panel.show();
     }
 
-
     private static final class Found {
         final String section, title, words;
         Found(String section, String title, String words) { this.section = section; this.title = title; this.words = words; }
     }
-
 
     private java.util.List<Found> harvest(int from) {
         java.util.List<Found> out = new java.util.ArrayList<>();
@@ -5060,11 +4876,9 @@ public class SettingsActivity extends Activity {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) texts(((ViewGroup) view).getChildAt(i), into);
     }
 
-
     private static String plain(String words) {
         return words == null ? "" : words.toLowerCase(Locale.ROOT).replace('ё', 'е');
     }
-
 
     private boolean matches(String haystack) {
         String hay = plain(haystack);
@@ -5126,7 +4940,6 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(results));
     }
 
-
     private void openFound(Found one) {
         searchQuery = "";
         settingsGroup = groupOf(one.section);
@@ -5150,7 +4963,6 @@ public class SettingsActivity extends Activity {
             Motion.change(row);
         });
     }
-
 
     private static View shown(View view, String text) {
         if (view == null || view.getVisibility() != View.VISIBLE) return null;
@@ -5248,7 +5060,6 @@ public class SettingsActivity extends Activity {
                 Local.of("Автопродление серий и уведомления"),
                 ""};
 
-
         int[] shelf = new int[] {1, 3, 4, 6, 7, 5};
         for (int n = 0; n < shelf.length; n++) {
             final int i = shelf[n];
@@ -5279,12 +5090,10 @@ public class SettingsActivity extends Activity {
         return wrap(list);
     }
 
-
     private int groupOf(String section) {
         Shelf one = shelfOfSection(section);
         return one == null ? 4 : one.group;
     }
-
 
     private View shelfList(java.util.List<Shelf> pages) {
         LinearLayout list = card();
@@ -5313,7 +5122,6 @@ public class SettingsActivity extends Activity {
         return wrap(list);
     }
 
-
     private View lead(String words) {
         TextView view = new TextView(this);
         view.setText(words);
@@ -5323,7 +5131,6 @@ public class SettingsActivity extends Activity {
         view.setPadding(dp(24), 0, dp(24), dp(10));
         return view;
     }
-
 
     private java.util.Set<String> smallSections(int contentStart) {
         java.util.Map<String, Integer> rows = new java.util.HashMap<>();
@@ -5357,12 +5164,10 @@ public class SettingsActivity extends Activity {
         for (java.util.Map.Entry<String, Integer> one : rows.entrySet())
             if (one.getValue() >= 1 && one.getValue() <= 2 && !odd.contains(one.getKey())) small.add(one.getKey());
 
-
         small.add(MOTION_BLUR);
         small.add(CLEAN_LINKS);
         return small;
     }
-
 
     private static boolean holdsSlider(View row) {
         if (row instanceof android.widget.SeekBar) return true;
@@ -5371,7 +5176,6 @@ public class SettingsActivity extends Activity {
         for (int i = 0; i < group.getChildCount() && i < 4; i++) if (group.getChildAt(i) instanceof android.widget.SeekBar) return true;
         return false;
     }
-
 
     private void filterSections(int from, java.util.Set<String> sections) {
         boolean shown = false;
@@ -5402,7 +5206,6 @@ public class SettingsActivity extends Activity {
         }
     }
     private static final int LEAD = 0x7e0c0340;
-
 
     private static boolean inLite(String section) {
         return section.equals(Text.REGION) || section.equals(Text.COUNTRY)
@@ -5446,7 +5249,6 @@ public class SettingsActivity extends Activity {
     private java.util.List<View> built;
     private boolean keepPages;
 
-
     private void prebuild() {
         if (built != null || isFinishing()) return;
         LinearLayout real = column;
@@ -5468,7 +5270,6 @@ public class SettingsActivity extends Activity {
             column = real;
         }
     }
-
 
     private void navigate() {
         keepPages = true;
@@ -5509,7 +5310,6 @@ public class SettingsActivity extends Activity {
         view.setPadding(dp(16), dp(12), dp(16), dp(4));
         return view;
     }
-
 
     private View designPicker() {
         LinearLayout box = new LinearLayout(this);
@@ -5658,9 +5458,7 @@ public class SettingsActivity extends Activity {
         return new Expressive.Group(this, skin.card, (Accent.colour() & 0xFFFFFF) | 0x33000000);
     }
 
-
     private static final int CAPTION = 0x7e0c0440, INFO = 0x7e0c0441;
-
 
     private void explain(ViewGroup card) {
         for (int i = 0; i < card.getChildCount(); i++) {
@@ -5675,7 +5473,6 @@ public class SettingsActivity extends Activity {
             info(row, (String) note);
         }
     }
-
 
     private LinearLayout functionRow(View view) {
         if (!(view instanceof LinearLayout) || view.getVisibility() != View.VISIBLE) return null;
@@ -5727,7 +5524,6 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
-
     private View wrap(View card) {
         if (card instanceof Expressive.Group) explain((ViewGroup) card);
         LinearLayout box = new LinearLayout(this);
@@ -5743,22 +5539,18 @@ public class SettingsActivity extends Activity {
         return box;
     }
 
-
     private int edge() {
         return dp(Design.frosted() ? 12 : 16);
     }
-
 
     private int accentInk() {
         return skin.dark() ? Expressive.mix(Accent.colour(), 0xFFFFFFFF, 0.45f)
                 : Expressive.mix(Accent.colour(), 0xFF000000, 0.35f);
     }
 
-
     private int iconInk() {
         return Expressive.mix(skin.card, skin.text, 0.78f);
     }
-
 
     private int accentTonal() {
         return Expressive.mix(skin.card, Accent.colour(), 0.24f);
@@ -5817,7 +5609,6 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
-
     private View restartBar() {
         LinearLayout bar = new LinearLayout(this);
         bar.setOrientation(LinearLayout.VERTICAL);
@@ -5861,14 +5652,12 @@ public class SettingsActivity extends Activity {
         return bar;
     }
 
-
     private int onAccent() {
         int colour = Accent.colour();
         int red = (colour >> 16) & 0xFF, green = (colour >> 8) & 0xFF, blue = colour & 0xFF;
         int brightness = (red * 299 + green * 587 + blue * 114) / 1000;
         return brightness > 150 ? 0xFF1C2C24 : 0xFFFFFFFF;
     }
-
 
     private int navigationBar() {
         try {
@@ -5905,10 +5694,7 @@ public class SettingsActivity extends Activity {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
-
-
     private interface ColourChanged { void changed(int colour); }
-
 
     private static final class AccentColourPicker extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -5989,7 +5775,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     private static final class Check extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -6016,7 +5801,6 @@ public class SettingsActivity extends Activity {
             canvas.drawLine(unit * 9, y + unit * 5.5f, unit * 18, y - unit * 5f, paint);
         }
     }
-
 
     private static final class Dot extends View {
         private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);

@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class InputTracker implements TextWatcher {
     final Main main;
@@ -79,7 +75,6 @@ public final class InputTracker implements TextWatcher {
 
     final boolean originalCursorVisible;
 
-
     String oldRegion;
     int oldStart;
     int diffPrefix;
@@ -92,13 +87,8 @@ public final class InputTracker implements TextWatcher {
 
     static final int QUIET = 0x80000;
 
-
-
     final ArrayList<AnimatedSpan> active = new ArrayList<AnimatedSpan>();
     boolean ticking;
-
-
-
 
     final android.text.style.CharacterStyle poke = new PokeSpan();
 
@@ -299,8 +289,6 @@ public final class InputTracker implements TextWatcher {
         long now = AnimationUtils.currentAnimationTimeMillis();
         Config config = main.configFor(ref.get());
 
-
-
         int delFrom = start;
         int delTo = start + before;
         int insFrom = start + before;
@@ -372,8 +360,6 @@ public final class InputTracker implements TextWatcher {
         Config config = main.configFor(ref.get());
         long now = AnimationUtils.currentAnimationTimeMillis();
 
-
-
         if (cur == null || prevText == null) {
             prevText = cur;
             active.clear();
@@ -391,7 +377,6 @@ public final class InputTracker implements TextWatcher {
             while (sf < limit - p && prevText.charAt(pl - 1 - sf) == cur.charAt(cl - 1 - sf)) sf++;
             if (sf > 0 && sf < cl && Character.isLowSurrogate(cur.charAt(cl - sf))) sf--;
             int delta = cl - pl;
-
 
             for (int i = active.size() - 1; i >= 0; i--) {
                 AnimatedSpan span = active.get(i);
@@ -418,7 +403,6 @@ public final class InputTracker implements TextWatcher {
                     s.setSpan(span, na, na + len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE | QUIET);
                 }
             }
-
 
             int from = p;
             int to = cl - sf;

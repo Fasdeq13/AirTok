@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-
 final class ProfileVerdict {
 
     private ProfileVerdict() {}
@@ -24,8 +23,6 @@ final class ProfileVerdict {
     private static final Map<Class<?>, Method[]> roads = new java.util.HashMap<>();
 
     static void bind(Object component, View view) {
-
-
 
         View block = column(component, view);
         if (block == null) return;
@@ -42,7 +39,6 @@ final class ProfileVerdict {
     }
 
     private static View column(Object component, View view) {
-
 
         View header = named(view, "t7l", 0);
         if (vertical(header)) return header;
@@ -64,7 +60,6 @@ final class ProfileVerdict {
         }
         return null;
     }
-
 
     static boolean plate(View view) { return view != null && (view.getTag(PLATE) != null || Frames.isPlate(view)); }
 
@@ -100,11 +95,8 @@ final class ProfileVerdict {
             int side = dp(block.getContext(), 16);
             where.setMargins(side, dp(block.getContext(), 10), side, dp(block.getContext(), 4));
 
-
-
             final View made = plate;
             block.setTag(PENDING, made);
-
 
             block.post(() -> {
                 if (block.getTag(PENDING) == made) block.setTag(PENDING, null);
@@ -141,7 +133,6 @@ final class ProfileVerdict {
         return null;
     }
 
-
     private static String uid(Object component) {
         Method[] road;
         synchronized (roads) { road = roads.get(component.getClass()); }
@@ -174,7 +165,6 @@ final class ProfileVerdict {
         return null;
     }
 
-
     private static View chip(Context c) {
         TextView chip = new TextView(c);
         chip.setText(Text.ADMIN);
@@ -190,14 +180,11 @@ final class ProfileVerdict {
         return chip;
     }
 
-
     private static int ground = 0xFF121212;
-
 
     private static int ink() {
         return Md3.ink(ground);
     }
-
 
     private static void recolour(View plate) {
         int ink = ink();

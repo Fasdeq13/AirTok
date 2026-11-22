@@ -9,7 +9,6 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-
 public final class Themes {
 
     private Themes() {}
@@ -25,11 +24,8 @@ public final class Themes {
 
     public static final String KEY_AMOLED = "theme_amoled";
 
-
     private static final int TEXT = 0xFFFFFFFF;
     private static final int BACKGROUND = 0xFF121212;
-
-
 
     public static boolean isEnabled() {
         return current().on;
@@ -61,7 +57,6 @@ public final class Themes {
         return current().background;
     }
 
-
     public static int strength() {
         return current().strength;
     }
@@ -72,16 +67,13 @@ public final class Themes {
         put(KEY_STRENGTH, percent);
     }
 
-
     public static int backgroundInUse() {
         return current().ground;
     }
 
-
     public static boolean available() {
         return fromSystem(true) != 0 && fromSystem(false) != 0;
     }
-
 
     private static int toned(int chosen, int percent, boolean dark) {
         try {
@@ -102,7 +94,6 @@ public final class Themes {
         }
     }
 
-
     private static final class Settled {
         final boolean on;
         final boolean material;
@@ -111,7 +102,6 @@ public final class Themes {
         final int background;
         final int strength;
         final boolean amoled;
-
 
         final int ground;
 
@@ -138,9 +128,6 @@ public final class Themes {
     private static Settled read() {
         boolean dark = isDark();
 
-
-
-
         boolean on = flag(KEY_ON, available());
         boolean material = flag(KEY_MATERIAL, true);
         int chosenText = 0;
@@ -163,7 +150,6 @@ public final class Themes {
         boolean amoled = false;
         Settled fresh = new Settled(on, material, dark,
                 chosenText, chosenBackground, strength, amoled);
-
 
         if (AirTok.context() != null) settled = fresh;
         return fresh;
@@ -194,13 +180,11 @@ public final class Themes {
         AppearanceColors.reset();
     }
 
-
     public static int currentPreset() {
         SharedPreferences p = prefs();
         if (p == null || !p.getBoolean(KEY_ON, false) || p.getBoolean(KEY_MATERIAL, true)) return -1;
         return p.getInt(KEY_PRESET, -1);
     }
-
 
     public static void forgetPreset() {
         SharedPreferences p = prefs();
@@ -208,7 +192,6 @@ public final class Themes {
             p.edit().remove(KEY_PRESET).remove(KEY_GRADIENT).apply();
         forget();
     }
-
 
     private static int presetAccent(int chosen) {
         return chosen == 1 ? 0xFF3D8BFF : chosen == 2 ? 0xFFFF4FA3 : 0;
@@ -223,7 +206,6 @@ public final class Themes {
     private static int presetText(int chosen, boolean dark) {
         return dark ? 0xFFFFFFFF : chosen == 2 ? 0xFF2A1240 : 0xFF161823;
     }
-
 
     public static void preset(int chosen) {
         boolean dark = isDark();
@@ -241,7 +223,6 @@ public final class Themes {
         forget();
     }
 
-
     private static int fromSystem(boolean forText) {
         Context context = AirTok.context();
         if (context == null || Build.VERSION.SDK_INT < 31) return 0;
@@ -256,18 +237,12 @@ public final class Themes {
         }
     }
 
-
-
-
-
     public static int recolour(int colour, boolean fromTheme) {
         Settled now = current();
         if (!now.on) return colour;
         if (!(fromTheme ? Nightly.owns(colour) : Nightly.unmistakable(colour))) {
             return colour;
         }
-
-
 
         float level = brightness(colour);
         if (!isDark()) level = 1.0f - level;
@@ -280,7 +255,6 @@ public final class Themes {
         return false;
     }
 
-
     public static boolean amoledChosen() {
         return false;
     }
@@ -288,14 +262,12 @@ public final class Themes {
     public static void setAmoled(boolean on) {
     }
 
-
     private static float brightness(int colour) {
         int red = (colour >> 16) & 0xFF;
         int green = (colour >> 8) & 0xFF;
         int blue = colour & 0xFF;
         return (0.2126f * red + 0.7152f * green + 0.0722f * blue) / 255.0f;
     }
-
 
     private static int mix(int from, int to, float how) {
         if (how < 0f) how = 0f;
@@ -310,13 +282,9 @@ public final class Themes {
         return (int) (from + (to - from) * how + 0.5f);
     }
 
-
-
-
     public static void repaint(View root) {
         repaint(root, BUDGET);
     }
-
 
     public static void repaint(View root, int budget) {
         Settled now = settled;
@@ -334,9 +302,7 @@ public final class Themes {
     private static final ArrayList<WeakReference<View>> watchedRoots =
             new ArrayList<WeakReference<View>>();
 
-
     public static void repaintVisible() {
-
 
         Accent.epoch++;
         synchronized (watchedRoots) {
@@ -356,12 +322,10 @@ public final class Themes {
         }
     }
 
-
     private static final int DEEP = 40;
     private static final int BUDGET = 12000;
 
     private static int seen;
-
 
     private static boolean isExempt(View view) {
         if (view == null) return true;
@@ -417,7 +381,6 @@ public final class Themes {
         if (view != null && isExempt(view)) return;
         try {
 
-
             android.graphics.drawable.Drawable first = brushed.get(drawable);
             if (first != null) drawable = first;
             if (drawable instanceof android.graphics.drawable.ShapeDrawable) {
@@ -435,7 +398,6 @@ public final class Themes {
                 }
                 int now = recolour(was, true);
 
-
                 if (view != null && ViceGradient.wanted(now)) {
                     view.setBackground(new ViceGradient(view, was, null));
                     return;
@@ -444,9 +406,6 @@ public final class Themes {
                 if (view != null) {
                     view.setBackground(new android.graphics.drawable.ColorDrawable(now));
                 } else {
-
-
-
 
                     ((android.graphics.drawable.ColorDrawable) drawable.mutate()).setColor(now);
                 }
@@ -489,7 +448,6 @@ public final class Themes {
                 android.graphics.drawable.LayerDrawable layers =
                         (android.graphics.drawable.LayerDrawable) drawable;
 
-
                 if (view != null && depth == 0 && Build.VERSION.SDK_INT >= 23 && gradientOn()) {
                     for (int i = 0; i < layers.getNumberOfLayers(); i++) {
                         if (layers.getId(i) == android.R.id.mask) continue;
@@ -520,7 +478,6 @@ public final class Themes {
             }
             if (drawable instanceof android.graphics.drawable.DrawableContainer) {
 
-
                 android.graphics.drawable.Drawable.ConstantState state =
                         drawable.getConstantState();
                 if (state instanceof android.graphics.drawable.DrawableContainer
@@ -546,13 +503,11 @@ public final class Themes {
 
     private static final java.util.Set<String> told = new java.util.HashSet<String>();
 
-
     private static void unknown(android.graphics.drawable.Drawable drawable, View view) {
         String what = drawable.getClass().getName() + " on " + view.getClass().getName()
                 + " " + view.getWidth() + "x" + view.getHeight();
         if (told.size() < 80 && told.add(what)) android.util.Log.e("MargyT", "background: " + what);
     }
-
 
     private static void fade(android.graphics.drawable.GradientDrawable shape, View view) {
         if (Build.VERSION.SDK_INT < 24) return;
@@ -586,7 +541,6 @@ public final class Themes {
         }
     }
 
-
     private static final java.util.Map<android.graphics.drawable.Drawable,
             android.graphics.drawable.Drawable> brushed = java.util.Collections.synchronizedMap(
             new java.util.WeakHashMap<android.graphics.drawable.Drawable,
@@ -594,9 +548,7 @@ public final class Themes {
 
     private static final int SAMPLES = 32;
 
-
     private static boolean later;
-
 
     private static void brush(android.graphics.drawable.ShapeDrawable shape, View view) {
         android.graphics.Paint paint = shape.getPaint();
@@ -616,7 +568,6 @@ public final class Themes {
             return;
         }
 
-
         int wide = view.getWidth(), tall = view.getHeight();
         if (wide <= 0 || tall <= 0) {
             later = true;
@@ -629,7 +580,6 @@ public final class Themes {
         android.graphics.Bitmap square = android.graphics.Bitmap.createBitmap(
                 SAMPLES, SAMPLES, android.graphics.Bitmap.Config.ARGB_8888);
         try {
-
 
             android.graphics.Canvas canvas = new android.graphics.Canvas(square);
             canvas.scale(SAMPLES / (float) bounds.width(), SAMPLES / (float) bounds.height());
@@ -655,10 +605,8 @@ public final class Themes {
         for (int i = 0; i < SAMPLES; i++) {
             int was = down ? seen[i * SAMPLES] : seen[i];
 
-
             int solid = recolour(was | 0xFF000000, true);
             stops[i] = (was & 0xFF000000) | (solid & 0x00FFFFFF);
-
 
             if (stops[i] != was && (was >>> 24) > 40) moved = true;
         }
@@ -671,7 +619,6 @@ public final class Themes {
         view.setBackground(rebuilt);
     }
 
-
     private static boolean near(int one, int two) {
         return Math.abs((one >>> 24) - (two >>> 24)) <= 6
                 && Math.abs(((one >> 16) & 0xFF) - ((two >> 16) & 0xFF)) <= 6
@@ -679,11 +626,9 @@ public final class Themes {
                 && Math.abs((one & 0xFF) - (two & 0xFF)) <= 6;
     }
 
-
     private static final java.util.concurrent.ConcurrentHashMap<Class<?>, Object[]> colourOf =
             new java.util.concurrent.ConcurrentHashMap<Class<?>, Object[]>();
     private static final Object[] NONE = new Object[0];
-
 
     private static void other(android.graphics.drawable.Drawable drawable) throws Exception {
         Class<?> type = drawable.getClass();
@@ -723,10 +668,6 @@ public final class Themes {
         }
     }
 
-
-
-
-
     private static final int WORE = 0x4D617270;
     private static final int UNDER = 0x4D617271;
 
@@ -758,7 +699,6 @@ public final class Themes {
             for (int i = 0; i < many; i++) walk(group.getChildAt(i), depth + 1);
         }
     }
-
 
     public static void watch(final android.app.Activity activity) {
         if (activity == null || activity.getClass().getName().startsWith("com.fasdeq.airtok.")) return;
@@ -829,12 +769,6 @@ public final class Themes {
                             long now = android.os.SystemClock.uptimeMillis();
                             if (now - updated < QUIET) {
 
-
-
-
-
-
-
                                 if (!owed) {
                                     owed = true;
                                     root.postDelayed(later, QUIET - (now - updated) + 20);
@@ -845,16 +779,12 @@ public final class Themes {
                         }
                         private void look() {
 
-
-
                             isDark();
                             long probe = Probe.start();
                             int next=shape(root, 0);
                             Probe.stop(Probe.DIM_PRINT, probe);
                             if(next==shape)return;shape=next;
                             updated = android.os.SystemClock.uptimeMillis();
-
-
 
                             repaint(root);
                             Fonts.applyTree(root);
@@ -876,7 +806,6 @@ public final class Themes {
         }
     }
 
-
     private static final Sliced.Visit ACCENT = new Sliced.Visit() {
         @Override
         public void view(View view) {
@@ -889,7 +818,6 @@ public final class Themes {
             AppearanceColors.look(view);
         }
     };
-
 
     private static int shape(View view, int depth) {
         if (view == null || depth > 40) return 0;
@@ -914,21 +842,10 @@ public final class Themes {
     private static volatile long last;
     private static final long QUIET = 80;
 
-
-
-
-
-
-
-
     private static final int WATCHING = 0x4D61726A;
-
-
 
     private static volatile int mode;
     private static volatile long asked;
-
-
 
     static void relook() {
         asked = 0;
@@ -940,22 +857,17 @@ public final class Themes {
         if (mode != 0 && now - asked < 1000) return mode == 1;
         Boolean seen = painted();
 
-
-
-
         boolean dark = seen != null ? seen.booleanValue() : mode != 0 ? mode == 1 : configured();
         int was = mode;
         mode = dark ? 1 : 2;
         asked = now;
         if (was != 0 && was != mode) {
 
-
             settled = null;
             Accent.forget();
         }
         return dark;
     }
-
 
     private static Boolean painted() {
         try {
@@ -982,7 +894,6 @@ public final class Themes {
         }
     }
 
-
     private static boolean configured() {
         try {
             Context context = AirTok.context();
@@ -995,8 +906,6 @@ public final class Themes {
         }
         return true;
     }
-
-
 
     private static volatile Boolean gradient;
 
@@ -1014,8 +923,6 @@ public final class Themes {
         gradient = null;
         Accent.forget();
     }
-
-
 
     private static boolean flag(String key, boolean fallback) {
         try {

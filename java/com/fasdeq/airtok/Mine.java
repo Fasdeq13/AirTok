@@ -9,14 +9,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public final class Mine {
 
     private Mine() {}
 
     private static final String KEY_TOKEN = "badge_token";
     private static final String KEY_UID = "badge_uid";
-
 
     public static final class Held {
         public final String id;
@@ -31,7 +29,6 @@ public final class Mine {
     private static volatile List<Held> held = new ArrayList<Held>();
     private static volatile boolean asked;
 
-
     private static volatile boolean fresh;
 
     public static boolean tookFresh() {
@@ -43,7 +40,6 @@ public final class Mine {
     public static List<Held> held() {
         return new ArrayList<Held>(held);
     }
-
 
     public static boolean holds(String id) {
         if (id == null) return false;
@@ -57,8 +53,6 @@ public final class Mine {
         return !held.isEmpty();
     }
 
-
-
     static String token() {
         SharedPreferences prefs = prefs();
         if (prefs == null) return "";
@@ -68,14 +62,12 @@ public final class Mine {
         return prefs.getString(KEY_TOKEN, "");
     }
 
-
     static void gotKey(String uid, String token) {
         SharedPreferences prefs = prefs();
         if (prefs != null) {
             prefs.edit().putString(KEY_UID, uid).putString(KEY_TOKEN, token).apply();
         }
     }
-
 
     public static void ask(final Runnable then) {
         final String uid = Account.id();
@@ -120,9 +112,6 @@ public final class Mine {
         held = built;
     }
 
-
-
-
     public static void save(final List<Held> order, final Said then) {
         final String uid = Account.id();
         final String token = token();
@@ -161,7 +150,6 @@ public final class Mine {
         });
     }
 
-
     public static final String PROVE = "prove";
 
     static boolean asksForProof(Net.Said said) {
@@ -175,7 +163,6 @@ public final class Mine {
         }
         return false;
     }
-
 
     public static void takeFree(final Said then) {
         final String uid = Account.id();
@@ -206,7 +193,6 @@ public final class Mine {
             }
         });
     }
-
 
     public static void takeChatBadge(final String code, final Said then) {
         final String uid = Account.id();
@@ -255,7 +241,6 @@ public final class Mine {
         });
     }
 
-
     public static boolean hasFree() {
         for (Held one : held) {
             if ("old".equals(one.id)) return true;
@@ -266,6 +251,6 @@ public final class Mine {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 }

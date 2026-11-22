@@ -27,11 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 final class RepostPurge {
 
     private RepostPurge() {}
-
 
     private static final int PAGE = 50, PAGES = 400;
 
@@ -45,9 +43,6 @@ final class RepostPurge {
         String item = "", repost = "";
         int carrier;
     }
-
-
-
 
     static void begin(final Activity activity) {
         if (counting || running) return;
@@ -91,7 +86,7 @@ final class RepostPurge {
                     }
                 });
             }
-        }, "airtok-repost-count").start();
+        }, "margyt-repost-count").start();
     }
 
     private static void confirm(final Activity activity, final List<Entry> entries) {
@@ -107,15 +102,11 @@ final class RepostPurge {
                 null, null);
     }
 
-
-
-
     private static final class Page {
         List<?> posts;
         boolean more;
         Throwable failure;
     }
-
 
     private static List<Entry> list(String uid, final Activity activity, final Waiting waiting) throws Throwable {
         final Object service = Class.forName("com.ss.android.ugc.aweme.upvote.service.UpvoteServiceImpl")
@@ -173,7 +164,6 @@ final class RepostPurge {
         }
     }
 
-
     private static void shown(Activity activity, final Waiting waiting, final int counted) {
         activity.runOnUiThread(new Runnable() {
             @Override public void run() {
@@ -197,7 +187,6 @@ final class RepostPurge {
         return entry.item.length() == 0 ? null : entry;
     }
 
-
     private static void take(Entry entry, Object operator, Method delete, Method wait) throws Throwable {
         Object response = call(wait, call(delete, operator, entry.carrier, entry.item, entry.repost));
         Diary.note("repost purge: " + entry.item + " -> " + describe(response));
@@ -216,8 +205,6 @@ final class RepostPurge {
         String text = String.valueOf(thing);
         return thing.getClass().getSimpleName() + (text.length() > 160 ? text.substring(0, 160) : text);
     }
-
-
 
     private static void remove(final Activity activity, final List<Entry> entries) {
         if (running) return;
@@ -275,11 +262,8 @@ final class RepostPurge {
                     }
                 });
             }
-        }, "airtok-repost-purge").start();
+        }, "margyt-repost-purge").start();
     }
-
-
-
 
     private static Waiting screen(final Activity activity, String text) {
         Skin skin = Skin.remembered(activity);
@@ -348,7 +332,6 @@ final class RepostPurge {
         return new Waiting(dialog, words);
     }
 
-
     private static final class Waiting {
         final Dialog dialog;
         final TextView words;
@@ -358,7 +341,6 @@ final class RepostPurge {
             this.words = words;
         }
     }
-
 
     private static final class Ring extends View {
         private static final long SPIN = 1568L, CYCLE = 1333L, RIPPLE = 900L;
@@ -394,14 +376,12 @@ final class RepostPurge {
             float start = turn + tail + (laps % 360) * 250f;
             float sweep = 30f + head - tail;
 
-
             float gap = (float) Math.toDegrees((stroke * 1.6f) / radius);
             paint.setStrokeWidth(stroke);
             paint.setColor((accent & 0x00FFFFFF) | 0x38000000);
             box.set(centre - radius, centre - radius, centre + radius, centre + radius);
             float room = 360f - sweep - 2f * gap;
             if (room > 0f) canvas.drawArc(box, start + sweep + gap, room, false, paint);
-
 
             int waves = Math.max(6, Math.round((float) (2 * Math.PI * radius) / (14f * unit)));
             float ripple = (now % RIPPLE) / (float) RIPPLE * (float) (2 * Math.PI);

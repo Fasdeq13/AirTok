@@ -3,7 +3,6 @@ package com.fasdeq.airtok;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-
 final class NativeJson {
     private static volatile Codec codec;
     private static final class Codec {

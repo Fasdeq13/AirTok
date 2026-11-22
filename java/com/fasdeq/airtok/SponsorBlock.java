@@ -29,18 +29,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-
 final class SponsorBlock {
 
     private SponsorBlock() {}
 
     static final String KEY_SKIP = "sb_skip", KEY_MARKS = "sb_marks", KEY_ON = "sb_on", KEY_MOBILE = "sb_mobile";
 
-
     static boolean enabled() {
         return false;
     }
-
 
     static boolean mobileOn() {
         return false;
@@ -65,9 +62,6 @@ final class SponsorBlock {
         }
     }
 
-
-
-
     private static final Map<String, long[][]> known = new LinkedHashMap<String, long[][]>(64, 0.75f, true) {
         @Override protected boolean removeEldestEntry(Map.Entry<String, long[][]> eldest) {
             return size() > 400;
@@ -89,7 +83,6 @@ final class SponsorBlock {
         if (parts.length > 0) wake();
     }
 
-
     private static void wake() {
         main.post(() -> {
             if (!ticking && enabled()) {
@@ -99,12 +92,10 @@ final class SponsorBlock {
         });
     }
 
-
     static void playing(String aid) {
         if (aid == null || aid.length() == 0 || !enabled()) return;
         playing = aid;
         ask(aid, false);
-
 
         main.postDelayed(() -> { if (aid.equals(playing)) listen(aid); }, 6000);
         if (!ticking) {
@@ -146,8 +137,6 @@ final class SponsorBlock {
         return out;
     }
 
-
-
     private static long[] lastSkipped;
 
     private static final Runnable tick = new Runnable() {
@@ -165,7 +154,6 @@ final class SponsorBlock {
             main.postDelayed(this, next);
         }
     };
-
 
     private static long look() {
         if (!enabled() || !skipOn() || Watch.here() == null) return -1;
@@ -190,7 +178,6 @@ final class SponsorBlock {
         return 75L;
     }
 
-
     private static void undo(final String aid, final long[] part) {
         Activity activity = Watch.here();
         if (activity == null) return;
@@ -201,7 +188,6 @@ final class SponsorBlock {
         if (oldBar != null) decor.removeView(oldBar);
 
         float unit = activity.getResources().getDisplayMetrics().density;
-
 
         final View redLine = new View(activity);
         redLine.setTag(TAG_RED_BAR);
@@ -249,10 +235,8 @@ final class SponsorBlock {
         pill.postDelayed(() -> pill.animate().alpha(0f).setDuration(240).withEndAction(() -> decor.removeView(pill)).start(), 4000);
     }
 
-    private static final String TAG_UNDO = "airtok-sponsor-undo";
-    private static final String TAG_RED_BAR = "airtok-sponsor-redbar";
-
-
+    private static final String TAG_UNDO = "margyt-sponsor-undo";
+    private static final String TAG_RED_BAR = "margyt-sponsor-redbar";
 
     private static final int TAG_MARKED = 0x7e0c0450;
     private static long lookedForBars;
@@ -287,7 +271,6 @@ final class SponsorBlock {
             for (int i = 0; i < group.getChildCount(); i++) bars(group.getChildAt(i), depth + 1);
         }
     }
-
 
     private static final class Red extends Drawable {
         private final WeakReference<SeekBar> bar;
@@ -327,8 +310,6 @@ final class SponsorBlock {
         }
     }
 
-
-
     static final String KEY_SOUND = "sb_sound";
 
     static boolean soundOn() {
@@ -343,13 +324,12 @@ final class SponsorBlock {
     private static long printsUntil, printsAsked;
     private static final java.util.concurrent.ExecutorService listener = java.util.concurrent.Executors.newSingleThreadExecutor(quiet());
 
-
     static java.util.concurrent.ThreadFactory quiet() {
         return work -> {
             Thread thread = new Thread(() -> {
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                 work.run();
-            }, "airtok-sponsor");
+            }, "margyt-sponsor");
             thread.setDaemon(true);
             return thread;
         };
@@ -358,9 +338,8 @@ final class SponsorBlock {
     private static boolean printsLoaded;
 
     private static java.io.File printsFile() {
-        return new java.io.File(AirTok.context().getFilesDir(), "airtok-sb-prints.json");
+        return new java.io.File(AirTok.context().getFilesDir(), "margyt-sb-prints.json");
     }
-
 
     private static void prints() {
         long now = android.os.SystemClock.uptimeMillis();
@@ -401,7 +380,6 @@ final class SponsorBlock {
         });
     }
 
-
     private static volatile boolean unmeteredKnown;
     private static volatile long unmeteredAt;
 
@@ -423,7 +401,6 @@ final class SponsorBlock {
         }
     }
 
-
     private static void listen(final String aid) {
         if (!soundOn()) return;
         prints();
@@ -433,7 +410,7 @@ final class SponsorBlock {
             if (!listened.add(aid)) return;
         }
         listener.execute(() -> {
-            java.io.File file = new java.io.File(AirTok.context().getCacheDir(), "airtok-sb-hear-" + aid + ".mp4");
+            java.io.File file = new java.io.File(AirTok.context().getCacheDir(), "margyt-sb-hear-" + aid + ".mp4");
             try {
 
                 if (!aid.equals(PlayerTools.aid())) {
@@ -467,7 +444,6 @@ final class SponsorBlock {
         });
     }
 
-
     static boolean fetchSmallest(Object post, java.io.File into) {
         if (into.length() > 0) return true;
         Object video = NativeRead.get(post, "getVideo");
@@ -478,16 +454,12 @@ final class SponsorBlock {
         return false;
     }
 
-
-
-
     static boolean photos(Object post) {
         if (post == null) return false;
         if (NativeRead.get(post, "getPhotoModeImageInfo") != null) return true;
         Object images = NativeRead.get(post, "getImageInfos");
         return images instanceof java.util.List && !((java.util.List<?>) images).isEmpty();
     }
-
 
     static void mark(final Context context, final Object post) {
         final String aid = NativeRead.aid(post);
@@ -540,7 +512,7 @@ final class SponsorBlock {
 
         java.io.File kept = null;
         if (sound != null && sound.length() > 0 && !wrong) {
-            java.io.File aside = new java.io.File(sound.getParentFile(), "airtok-sb-send-" + aid + ".mp4");
+            java.io.File aside = new java.io.File(sound.getParentFile(), "margyt-sb-send-" + aid + ".mp4");
             if (sound.renameTo(aside)) kept = aside;
         }
         final java.io.File heardFile = kept;
@@ -590,9 +562,6 @@ final class SponsorBlock {
         });
     }
 
-
-
-
     static final class Frames {
         final java.io.File file;
         private android.media.MediaMetadataRetriever reader;
@@ -604,7 +573,7 @@ final class SponsorBlock {
 
         Frames(Context context, final Object post, final Runnable changed) {
             String aid = NativeRead.aid(post);
-            file = new java.io.File(context.getCacheDir(), "airtok-sb-" + aid + ".mp4");
+            file = new java.io.File(context.getCacheDir(), "margyt-sb-" + aid + ".mp4");
             width = Math.round(context.getResources().getDisplayMetrics().density * 180);
             worker.execute(() -> {
                 try {
@@ -620,7 +589,6 @@ final class SponsorBlock {
                 main.post(changed);
             });
         }
-
 
         android.graphics.Bitmap at(final long ms, final boolean exact, final boolean strip, final Runnable changed) {
             final long key = (ms / (exact ? 100 : 500)) * 2 + (exact ? 1 : 0);
@@ -660,9 +628,6 @@ final class SponsorBlock {
         }
     }
 
-
-
-
     static final class Marker extends android.widget.LinearLayout {
         final Frames frames;
         final Range range;
@@ -683,7 +648,6 @@ final class SponsorBlock {
             range.invalidate();
         }
 
-
         void edge(long at, boolean moving, boolean isStart) {
             preview.still(at, !moving, isStart);
         }
@@ -694,7 +658,6 @@ final class SponsorBlock {
             frames.close();
         }
     }
-
 
     static final class Preview extends FrameLayout implements android.view.TextureView.SurfaceTextureListener {
         private final Marker marker;
@@ -872,7 +835,6 @@ final class SponsorBlock {
 
         @Override public void onSurfaceTextureUpdated(android.graphics.SurfaceTexture texture) {}
     }
-
 
     static final class Range extends View {
         final long length;

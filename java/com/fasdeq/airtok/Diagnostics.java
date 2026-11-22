@@ -1,10 +1,7 @@
 package com.fasdeq.airtok;
 
-
 final class Diagnostics {
     private Diagnostics() {}
-
-
 
     private static String region(android.content.Context context) {
         StringBuilder out = new StringBuilder();

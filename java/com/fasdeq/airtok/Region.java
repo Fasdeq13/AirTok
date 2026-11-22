@@ -3,7 +3,6 @@ package com.fasdeq.airtok;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
-
 public final class Region {
 
     private Region() {}
@@ -50,7 +49,6 @@ public final class Region {
         return Plugins.region("network_operator_name", answer);
     }
 
-
     private static boolean realCard(TelephonyManager tm) {
         if (tm == null) return false;
         try {
@@ -80,14 +78,10 @@ public final class Region {
         return true;
     }
 
-
     public static boolean isNetworkRoaming(TelephonyManager tm) {
         if (!AirTok.active()) return tm != null && tm.isNetworkRoaming();
         return false;
     }
-
-
-
 
     public static int getPhoneCount(TelephonyManager tm) {
         if (!AirTok.active() || realCard(tm)) return tm == null ? 0 : tm.getPhoneCount();
@@ -101,7 +95,6 @@ public final class Region {
         return 1;
     }
 
-
     public static int getPhoneType(TelephonyManager tm) {
         if (!AirTok.active() || realCard(tm)) {
             return tm == null ? TelephonyManager.PHONE_TYPE_NONE : tm.getPhoneType();
@@ -114,7 +107,6 @@ public final class Region {
         if (!AirTok.active()) return subs == null ? 0 : subs.getActiveSubscriptionInfoCount();
         return 1;
     }
-
 
     public static int getDefaultDataSubscriptionId() {
         if (!AirTok.active()) {
@@ -143,7 +135,6 @@ public final class Region {
         }
         return 1;
     }
-
 
     public static int getSimCarrierId(TelephonyManager tm) {
         if (!AirTok.active()) return tm == null ? -1 : tm.getSimCarrierId();

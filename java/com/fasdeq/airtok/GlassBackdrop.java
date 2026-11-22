@@ -11,7 +11,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
-
 final class GlassBackdrop {
     private static final WeakHashMap<View,Session> WINDOWS=new WeakHashMap<>();
     private static final Handler MAIN=new Handler(Looper.getMainLooper());
@@ -144,7 +143,6 @@ final class GlassBackdrop {
             animating=false;
             if(!videoVisible())return;
 
-
             if(time-vsync>=VIDEO_FRAME_NS && !copying){
                 vsync=time;View source=video.get();
                 if(source instanceof TextureView){
@@ -194,9 +192,6 @@ final class GlassBackdrop {
             String state="sources="+candidates.size()+", selected="+(selected==null?"none":selected.getClass().getSimpleName())+", media="+mediaPresent;
             if(!state.equals(diagnostic)){diagnostic=state;android.util.Log.w("MargyTGlass","Feed capture "+state);}
 
-
-
-
             if(selected==null && holding()){recheck();return;}
             bind(selected);
             if(selected==null || pixels==null){
@@ -222,7 +217,6 @@ final class GlassBackdrop {
             if(!active())return;
             prepare();if(frame.bitmap==null)return;
             if(layout){
-
 
                 long now=SystemClock.uptimeMillis(),left=CAPTURE_MS-(now-captured);
                 if(left>0){MAIN.removeCallbacks(refresh);queued=true;MAIN.postDelayed(refresh,left);}
@@ -272,7 +266,6 @@ final class GlassBackdrop {
             frame.canvas.drawBitmap(pixels,null,box,paint);frame.canvas.restoreToCount(save);
             frame.ready=true;frame.version++;sceneDirty=true;shownVideo=SystemClock.uptimeMillis();invalidateOwners();
         }
-
 
         private void recheck(){MAIN.removeCallbacks(again);MAIN.postDelayed(again,1250L);}
         private final Runnable again=()->{layout=true;request(false,false);};

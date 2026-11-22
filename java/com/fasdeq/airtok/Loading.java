@@ -10,7 +10,6 @@ import android.view.View;
 
 import java.lang.reflect.Method;
 
-
 public final class Loading {
 
     private Loading() {}
@@ -30,7 +29,7 @@ public final class Loading {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return true;
-            boolean on = context.getSharedPreferences(AirTok.PREFS,
+            boolean on = context.getSharedPreferences("margyt",
                     android.content.Context.MODE_PRIVATE).getBoolean(KEY, true);
             cached = on;
             return on;
@@ -44,18 +43,14 @@ public final class Loading {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
     }
 
-
-
-
     private static boolean asking;
     private static boolean complained;
-
 
     public static boolean draw(View view, Canvas canvas) {
 
@@ -72,7 +67,6 @@ public final class Loading {
             else if(Design.controlsGlass())glass(canvas,width,height);
             else shape(canvas, width, height);
 
-
             if (view.isShown()) view.postInvalidateOnAnimation();
             return true;
         } catch (Throwable error) {
@@ -83,7 +77,6 @@ public final class Loading {
             return false;
         }
     }
-
 
     static void preview(Canvas canvas, int width, int height) {
         if (Design.controlsFluent()) fluent(canvas, width, height);
@@ -96,7 +89,6 @@ public final class Loading {
     private static Canvas probeCanvas;
     private static final int[] seen = new int[PROBE * PROBE];
     private static Method onDraw;
-
 
     private static boolean wouldDraw(View view, int width, int height) throws Exception {
         if (probe == null) {
@@ -121,9 +113,6 @@ public final class Loading {
         }
         return false;
     }
-
-
-
 
     private static final long STEP = 650;
     private static final int SHAPES = 7;
@@ -163,9 +152,6 @@ public final class Loading {
         int to = (from + 1) % SHAPES;
         float eased = settle(along - from);
 
-
-
-
         long steps = now / STEP;
         float angle = (float) Math.toRadians(((steps % 360) + eased) * TURN);
 
@@ -189,13 +175,11 @@ public final class Loading {
         canvas.drawPath(path, paint);
     }
 
-
     private static float settle(float t) {
         if (t <= 0f) return 0f;
         if (t >= 1f) return 1f;
         return 1f - (float) (Math.exp(-6.0 * t) * Math.cos(8.0 * t));
     }
-
 
     private static float radius(int shape, double around) {
         switch (shape) {
@@ -216,13 +200,11 @@ public final class Loading {
         }
     }
 
-
     private static float sided(int sides, double around) {
         double slice = 2 * Math.PI / sides;
         double within = around % slice;
         if (within < 0) within += slice;
         double flat = Math.cos(Math.PI / sides) / Math.cos(within - slice / 2);
-
 
         double cap = 0.92;
         double sharp = 36.0;

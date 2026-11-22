@@ -5,7 +5,6 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.Adler32;
 
-
 public final class PluginAudit {
     private PluginAudit() {}
     public static final int MAX_DEX=16*1024*1024;
@@ -63,8 +62,8 @@ public final class PluginAudit {
             if((owner.equals("Ljava/lang/Runtime;")&&name.equals("exec"))||(owner.equals("Ljava/lang/ProcessBuilder;")&&name.equals("start")))report.add(Local.of("Запуск системных команд"),true);
             if((owner.equals("Ljava/lang/System;")||owner.equals("Ljava/lang/Runtime;"))&&(name.equals("load")||name.equals("loadLibrary")))report.add(Local.of("Загрузка нативных библиотек"),true);
             if(owner.equals("Ljava/lang/Class;")&&name.equals("forName"))report.add(Local.of("Поиск классов по имени: возможна скрытая загрузка API"),false);
-            if((owner.equals("Lcat/narezany/airtok/plugin/PluginContext;")&&(name.equals("fetch")||name.equals("download")))||owner.equals("Lcat/narezany/airtok/Net;"))report.add(Local.of("Сеть через API мода"),false);
-            if((owner.equals("Lcat/narezany/airtok/plugin/PluginContext;")&&name.equals("context"))||(owner.equals("Lcat/narezany/airtok/AirTok;")&&name.equals("context")))report.add(Local.of("Доступ к контексту TikTok"),false);
+            if((owner.equals("Lcom/fasdeq/airtok/plugin/PluginContext;")&&(name.equals("fetch")||name.equals("download")))||owner.equals("Lcom/fasdeq/airtok/Net;"))report.add(Local.of("Сеть через API мода"),false);
+            if((owner.equals("Lcom/fasdeq/airtok/plugin/PluginContext;")&&name.equals("context"))||(owner.equals("Lcom/fasdeq/airtok/AirTok;")&&name.equals("context")))report.add(Local.of("Доступ к контексту TikTok"),false);
             if(owner.equals("Ljava/lang/ClassLoader;")&&name.equals("loadClass"))report.add(Local.of("Загрузка классов по имени"),false);
         }
 
@@ -105,7 +104,6 @@ public final class PluginAudit {
             int offset=u32(stringOff+index*4);String ready=decoded.get(offset);if(ready!=null)return ready;
             int[] pos={offset};uleb(pos);int start=pos[0];
             while(true){range(pos[0],1);if(b[pos[0]++]==0)break;
-
 
             if(++textBytes>MAX_DEX)throw new IOException(Local.of("Слишком большие строки DEX"));}
             ready=new String(b,start,pos[0]-start-1,java.nio.charset.StandardCharsets.UTF_8);decoded.put(offset,ready);return ready;

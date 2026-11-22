@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public final class Streaks {
 
     private Streaks() {}
@@ -29,20 +28,16 @@ public final class Streaks {
     public static final String KEY_MODE = "streak_mode";
     public static final String KEY_TEXT = "streak_text";
 
-
     public static final String BY_STICKER = "sticker";
     public static final String BY_TEXT = "text";
 
     public static final String DEFAULT_TEXT = "Это авто серия!";
 
-
     private static final String GREY = "SECONDARY_ACTIVE";
-
 
     private static final int SHOWN_FROM = 3;
 
     private static final long EVERY = 15 * 60 * 1000L;
-
 
     private static final int MAX_ATTEMPTS = 1;
 
@@ -51,13 +46,10 @@ public final class Streaks {
     private static final long VERIFY = 15000L;
     private static final long DAY = 24 * 60 * 60 * 1000L;
 
-
     private static final String SOURCE = "AUTO_CONSECUTIVE_SA_STICKERS";
-
 
     private static final Map<String, StreakData> known =
             new LinkedHashMap<String, StreakData>();
-
 
     private static final Map<String, StickerItem> seenStickers =
             new LinkedHashMap<String, StickerItem>();
@@ -74,8 +66,6 @@ public final class Streaks {
         timer.removeCallbacks(timedRound);
         if(isEnabled())timer.postDelayed(timedRound,StreakSchedule.delay(System.currentTimeMillis(),EVERY));
     }
-
-
 
     public static boolean isEnabled() {
         return flag(KEY_ON, true);
@@ -186,17 +176,12 @@ public final class Streaks {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
-
-
-
 
     private static volatile IStreakService service;
 
-
     private static final Map<String, Long> asked = new LinkedHashMap<String, Long>();
-
 
     public static StreakData streakOf(IStreakService from, String conversation, boolean fresh) {
         StreakData data = readStreak(from,conversation,fresh);
@@ -208,7 +193,6 @@ public final class Streaks {
         }
         return data;
     }
-
 
     public static boolean hasStreak(IStreakService from, String conversation) {
         note(from, conversation);
@@ -260,15 +244,10 @@ public final class Streaks {
         return false;
     }
 
-
     public static boolean showsStreak(IStreakService from, String conversation, boolean flag) {
         note(from, conversation);
         try{if(from==null)return false;Method m;try{m=from.getClass().getMethod("n0",String.class,boolean.class);}catch(NoSuchMethodException e){try{m=from.getClass().getMethod("LJJJI",String.class,boolean.class);}catch(NoSuchMethodException e2){m=from.getClass().getMethod("h0",String.class,boolean.class);}}m.setAccessible(true);return Boolean.TRUE.equals(m.invoke(from,conversation,flag));}catch(Throwable error){Diary.note("streak visibility: "+error);return false;}
     }
-
-
-
-
 
     public static int streakCount(IStreakService from, String conversation) {
         note(from, conversation);
@@ -307,12 +286,10 @@ public final class Streaks {
         }, 1500L);
     }
 
-
     static boolean ready() {
         NativeStreaks.prepare();
         return service != null && Account.liveId() != null;
     }
-
 
     static boolean ready(long waitMillis) {
         long end = System.currentTimeMillis() + waitMillis;
@@ -321,7 +298,6 @@ public final class Streaks {
         }
         return ready();
     }
-
 
     static boolean runNow(Context context) {
         if (!isEnabled()) return false;
@@ -349,7 +325,6 @@ public final class Streaks {
         } catch (Throwable ignored) {
         }
     }
-
 
     public static StickerBase stickerBase(StickerItem sticker) {
         StickerBase base = sticker == null ? null : sticker.stickerBase;
@@ -399,14 +374,12 @@ public final class Streaks {
         return (uid != null && uid.length() > 0) ? ("streak_conversations_" + uid) : "streak_conversations_common";
     }
 
-
     private static String idOf(StickerBase base) {
         if (base == null) return null;
         if (base.id != null) return String.valueOf(base.id);
         StickerImage image = base.image != null ? base.image : base.thumbnail;
         return image == null || image.uri == null ? null : image.uri;
     }
-
 
     public static List<String> offered() {
         FavouriteStickers.read();
@@ -440,7 +413,6 @@ public final class Streaks {
         return null;
     }
 
-
     public static android.graphics.Bitmap thumbnail(Context context, String id) {
         return thumbnail(context,id,null);
     }
@@ -472,7 +444,7 @@ public final class Streaks {
         });return null;
     }
     private static final java.util.concurrent.ExecutorService thumbnailWorkers=java.util.concurrent.Executors.newFixedThreadPool(2,r->{
-        Thread thread=new Thread(r,"airtok-sticker-thumbnail");thread.setDaemon(true);thread.setPriority(Thread.MIN_PRIORITY);return thread;
+        Thread thread=new Thread(r,"margyt-sticker-thumbnail");thread.setDaemon(true);thread.setPriority(Thread.MIN_PRIORITY);return thread;
     });
     private static final Map<String,android.graphics.Bitmap> thumbnails=new LinkedHashMap<String,android.graphics.Bitmap>();
     private static final java.util.Set<String> loading=new java.util.HashSet<String>();
@@ -485,7 +457,6 @@ public final class Streaks {
             StickerBase base = sticker == null ? null : sticker.stickerBase;
             if (base == null) return null;
 
-
             StickerImage image = base.thumbnail != null ? base.thumbnail : base.image;
             if (image == null || image.urlList == null || image.urlList.isEmpty()) image=base.image;
             if (image == null || image.urlList == null || image.urlList.isEmpty()) return null;
@@ -494,8 +465,6 @@ public final class Streaks {
             return null;
         }
     }
-
-
 
     public static synchronized void start(Context context) {
         if (started) return;
@@ -506,20 +475,13 @@ public final class Streaks {
         timer=handler;timerContext=application==null?context:application;
         try {
 
-
-
             StreakAlarm.channel(application);
-
-
-
-
 
             if (isEnabled()) StreakAlarm.schedule(application, false);
         } catch (Throwable ignored) { }
         rescheduleForeground();
         handler.postDelayed(()->round(timerContext),30000L);
     }
-
 
     public static void round(final Context context) {
         if (!isEnabled()) return;
@@ -533,7 +495,6 @@ public final class Streaks {
 
     private static final java.util.concurrent.atomic.AtomicBoolean roundRunning =
             new java.util.concurrent.atomic.AtomicBoolean();
-
 
     private static boolean roundWorker(final Context context) {
         return roundWorker(context, true);
@@ -587,9 +548,6 @@ public final class Streaks {
             }
             if(data.convId!=null && !conversation.equals(data.convId)){unknown++;again=true;continue;}
 
-
-
-
             if(data.streak<SHOWN_FROM){none++;continue;}
             String state = statusOf(data);
             if (GREY.equals(state)) {
@@ -606,7 +564,6 @@ public final class Streaks {
                 }
             } else if ("ACTIVE".equals(state)) {
                 lit++;
-
 
                 if (StreakSchedule.minute() >= 0 && automaticAttempts(conversation, now) == 0) due.add(conversation);
             } else if (state == null) {
@@ -640,11 +597,9 @@ public final class Streaks {
             }
         }
 
-
         if (!submitted.isEmpty() && (!verifyImmediately || !verify(submitted))) failed = true;
         return failed || again;
     }
-
 
     private static boolean verify(List<String> sent) {
         List<String> left = new ArrayList<String>(sent);
@@ -663,7 +618,6 @@ public final class Streaks {
         if (!left.isEmpty()) Diary.note("streak not confirmed yet, " + left.size() + " still grey -- will look again");
         return left.isEmpty();
     }
-
 
     private static String statusOf(StreakData data) {
         IStreakService from = service;
@@ -698,7 +652,6 @@ public final class Streaks {
 
     private static final java.util.concurrent.atomic.AtomicBoolean allRunning =
             new java.util.concurrent.atomic.AtomicBoolean();
-
 
     public static void sendAll(final Context context) {
         currentAccount();
@@ -764,19 +717,16 @@ public final class Streaks {
         });
     }
 
-
     private static boolean deliver(Context context, StickerItem sticker,
                                    String conversation) {
         if (BY_TEXT.equals(mode())) return sendText(context, conversation, text());
         return send(context, sticker, conversation);
     }
 
-
     private static boolean sendText(Context context, String conversation, String words) {
         Diary.note("streak text: not available in this build");
         return false;
     }
-
 
     private static List<String> conversations() {
         java.util.Set<String> set = new java.util.LinkedHashSet<String>();
@@ -803,7 +753,6 @@ public final class Streaks {
     }
 
     private static volatile boolean persistQueued;
-
 
     private static void persistConversations() {
         if (persistQueued) return;
@@ -839,7 +788,6 @@ public final class Streaks {
         }
     }
 
-
     private static StreakData readStreak(IStreakService from,String conversation,boolean fresh){
         if(from==null)return null;
         try{return from.O(conversation,fresh);}catch(Throwable ignored){}
@@ -874,7 +822,6 @@ public final class Streaks {
     private static int automaticAttempts(String conversation,long now){if(StreakSchedule.minute()<0)return attemptsToday(conversation,now);SharedPreferences p=prefs();if(p==null)return MAX_ATTEMPTS;if(!StreakSchedule.sameDay(now,automaticLast(conversation)))return 0;return p.getInt(automaticKey(conversation)+"_count",1);}
     private static void rememberAutomatic(String conversation){int minute=StreakSchedule.minute();if(minute<0){remember(conversation);return;}SharedPreferences p=prefs();if(p==null)return;long now=System.currentTimeMillis();int count=automaticAttempts(conversation,now)+1;String key=automaticKey(conversation);p.edit().putLong(key+"_at",now).putInt(key+"_count",count).apply();}
 
-
     private static int attemptsToday(String conversation, long now) {
         SharedPreferences prefs = prefs();
         if (prefs == null || conversation == null) return MAX_ATTEMPTS;
@@ -891,9 +838,6 @@ public final class Streaks {
                     .putInt("streak_attempts_" + Account.liveId()+"_"+conversation, made).apply();
         }
     }
-
-
-
 
     public static boolean send(Context context, StickerItem sticker, String conversation) {
         if (Looper.myLooper() == Looper.getMainLooper())
@@ -940,17 +884,6 @@ public final class Streaks {
                 return false;
             }
 
-
-
-
-
-
-
-
-
-
-
-
             Class<?>[] types = sender.getParameterTypes();
             if (sourceFor(types[3]) == null) {
                 Diary.note("streak send: source enum absent on this release");
@@ -982,7 +915,6 @@ public final class Streaks {
         }
     }
 
-
     public static void describe() {
         Object service = messageService();
         if (service == null) {
@@ -1005,7 +937,6 @@ public final class Streaks {
             if (++shown > 40) break;
         }
     }
-
 
     private static Object messageService() {
         try {
@@ -1073,7 +1004,6 @@ public final class Streaks {
         }
     }
 
-
     private static Object blank(Class<?> type) {
         if (!type.isPrimitive()) return null;
         if (type == boolean.class) return Boolean.FALSE;
@@ -1081,7 +1011,6 @@ public final class Streaks {
         if (type == long.class) return Long.valueOf(0);
         return Integer.valueOf(0);
     }
-
 
     private static Object maybe(Class<?> type) {
         try {

@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.*;
 
-
 final class OfflineCommentArchive {
  static final int MAX_COUNT=1000, MAX_BYTES=16*1024*1024;
  static final class Row {

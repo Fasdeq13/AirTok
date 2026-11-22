@@ -15,7 +15,6 @@ public final class DownloadChoice {
   if(view instanceof ViewGroup){ViewGroup group=(ViewGroup)view;for(int i=0;i<group.getChildCount();i++)bind(group.getChildAt(i),dialog,post,depth+1,budget);}
  }
 
-
  static boolean cell(View target){
   View root=target.getRootView();int across=root==null?0:root.getWidth();
   return across<=0||target.getWidth()<=0||target.getWidth()<across*0.45f;

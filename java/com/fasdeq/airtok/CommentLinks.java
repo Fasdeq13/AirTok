@@ -16,15 +16,12 @@ import android.widget.TextView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 final class CommentLinks {
 
     private CommentLinks() {}
 
-
     private static final int BLUE = 0xFF2F9BFF;
     private static final int WATCHED = 0x7e0c0391;
-
 
     private static final Pattern ADDRESS = Pattern.compile(
             "(?<![@\\p{L}\\p{N}._-])(?:(?:https?://|www\\.)[^\\s<>\"«»]+"
@@ -33,7 +30,6 @@ final class CommentLinks {
                     + "(?![\\p{L}\\p{N}-])(?::\\d+)?(?:/[^\\s<>\"«»]*)?)",
             Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
-
     static void bind(Object cell) {
 
         Object body = NativeRead.field(cell, "LLLF");
@@ -41,8 +37,6 @@ final class CommentLinks {
         final TextView view = (TextView) body;
         if (view.getTag(WATCHED) == null) {
             view.setTag(WATCHED, Boolean.TRUE);
-
-
 
             view.addTextChangedListener(new TextWatcher() {
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -76,7 +70,6 @@ final class CommentLinks {
         }
     }
 
-
     private static boolean touched(View v, MotionEvent event) {
         if (!(v instanceof TextView)) return false;
         TextView view = (TextView) v;
@@ -96,7 +89,6 @@ final class CommentLinks {
         return true;
     }
 
-
     private static boolean looksLikeIt(CharSequence text) {
         for (int i = 1, n = text.length() - 1; i < n; i++) {
             char c = text.charAt(i);
@@ -104,7 +96,6 @@ final class CommentLinks {
         }
         return false;
     }
-
 
     private static int trimmed(CharSequence text, int start, int end) {
         while (end > start) {

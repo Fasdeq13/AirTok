@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
-
 public final class AppearanceColors {
     private AppearanceColors() {}
 
@@ -133,7 +132,6 @@ public final class AppearanceColors {
         Themes.repaintVisible();
     }
 
-
     public static int forView(View view, int fallback) {
         if (view == null) return fallback;
         String name = Names.of(view);
@@ -175,17 +173,12 @@ public final class AppearanceColors {
         }
     }
 
-
     static void repaint(View root) {
         int[] visited = {0};
         repaintText(root, 0, visited);
     }
 
-
-
-
     private static final int LOOKED = 0x4D617273;
-
 
     private static final int RECOLOURED = 0x4D417443;
 
@@ -202,7 +195,6 @@ public final class AppearanceColors {
         }
         return all;
     }
-
 
     static void look(View view) {
         Object last = view.getTag(LOOKED);
@@ -229,7 +221,6 @@ public final class AppearanceColors {
         }
         boolean animatedDots = loadingDots(view);
 
-
         if (view instanceof android.widget.EditText) Accent.tintTextCursor((TextView) view);
         if (view instanceof TextView) {
             if (!animatedDots) accentCreatorLabel((TextView) view);
@@ -244,11 +235,6 @@ public final class AppearanceColors {
                     if (COMMENT_LIKE.equals(role)
                             && !activeLikeColour(text.getCurrentTextColor())) chosen = 0;
                     if (chosen == 0 && accentElement(textName, role)) chosen = Accent.colour();
-
-
-
-
-
 
                     boolean ours = view.getTag(RECOLOURED) != null;
                     int now = text.getCurrentTextColor();
@@ -349,7 +335,6 @@ public final class AppearanceColors {
         return name.length() == 0 ? null : name;
     }
 
-
     static boolean loadingDots(View view) {
         if (view == null) return false;
         try {
@@ -360,7 +345,6 @@ public final class AppearanceColors {
             return has(type, "loadingdots", "loading_dots", "dotindicator", "dotsindicator");
         } catch (Throwable ignored) { return false; }
     }
-
 
     private static boolean activeLikeColour(int colour) {
         return Palette.captures(colour, Accent.TIKTOK)
@@ -460,8 +444,6 @@ public final class AppearanceColors {
 
     private static boolean mediaName(String name) {
         if (isStreakName(name)) return true;
-
-
 
         if (interactiveAccentName(name)) return false;
         return has(name, "video", "photo", "avatar", "thumbnail", "cover",

@@ -14,7 +14,6 @@ import android.widget.SeekBar;
 
 import java.lang.ref.WeakReference;
 
-
 final class WavySeek {
 
     private WavySeek() {}
@@ -60,7 +59,6 @@ final class WavySeek {
             Diary.note("wavy seek: " + error);
         }
     }
-
 
     private static View find(View view, int depth, int[] budget) {
         if (view == null || depth > 40 || budget[0]-- <= 0) return null;
@@ -125,7 +123,6 @@ final class WavySeek {
             if (moving) phase = (phase + dt * length * 1.2f) % length;
             int accent = Accent.colour();
 
-
             line.setStrokeWidth(thick);
             line.setColor((accent & 0xFFFFFF) | 0x4D000000);
             float restFrom = Math.min(right, at + gap + unit * 2f);
@@ -134,7 +131,6 @@ final class WavySeek {
             line.setColor(accent);
             canvas.drawCircle(right - thick / 2, cy, thick / 2.4f, line);
             line.setStyle(Paint.Style.STROKE);
-
 
             float waveTo = at - gap;
             if (waveTo > left + thick / 2) {
@@ -152,13 +148,11 @@ final class WavySeek {
                 canvas.drawPath(path, line);
             }
 
-
             line.setStyle(Paint.Style.FILL);
             line.setColor(accent);
             float half = unit * (dragging ? 2.5f : 2f), tall = unit * (dragging ? 12f : 9f);
             canvas.drawRoundRect(at - half, cy - tall, at + half, cy + tall, half, half, line);
             line.setStyle(Paint.Style.STROKE);
-
 
             if (seek.isShown() && (moving || Math.abs(amplitude - target) > 0.1f)) scheduleSelf(this::invalidateSelf, now + 33);
         }

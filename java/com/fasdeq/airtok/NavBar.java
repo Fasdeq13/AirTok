@@ -25,7 +25,6 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
-
 final class NavBar {
 
     private NavBar() {}
@@ -58,7 +57,6 @@ final class NavBar {
         }
         return false;
     }
-
 
     private static final String HOME_ON = "M160-200v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23"
             + ".5 56.5T720-120H600q-17 0-28.5-11.5T560-160v-200q0-17-11.5-28.5T520-400h-80q-17 0-28.5 11.5T400-360v"
@@ -100,15 +98,11 @@ final class NavBar {
             {HOME_OFF, HOME_ON}, {FRIENDS_OFF, FRIENDS_ON}, null, {INBOX_OFF, INBOX_ON}, {PROFILE_OFF, PROFILE_ON}, null};
     private static final Path[][] DRAWN = new Path[OUTLINES.length][2];
 
-
     private static final long OPENING = 350L;
 
     private static final long LOOK_AGAIN = 400L;
     private static final int TRIES = 20;
     private static final long BETWEEN = 600L;
-
-
-
 
     private static volatile Boolean enabled;
 
@@ -121,7 +115,6 @@ final class NavBar {
         enabled = on;
         return on;
     }
-
 
     static void reloadSettings() {
         enabled = null;
@@ -137,20 +130,16 @@ final class NavBar {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }
     }
 
-
     static boolean wears(View view) {
         Capsule capsule = capsuleOf(view);
         return capsule != null && capsule.worn;
     }
-
-
-
 
     private static final WeakHashMap<View, Boolean> BARS = new WeakHashMap<View, Boolean>();
     private static final int CAPSULE = 0x4D41634E;
@@ -186,7 +175,6 @@ final class NavBar {
         return true;
     };
 
-
     static void attach(Activity activity) {
         try {
             if (isEnabled()) look(activity.getWindow().getDecorView(), 0);
@@ -214,8 +202,6 @@ final class NavBar {
                 bar.invalidate();
             } else if (attempt < TRIES) {
 
-
-
                 root.postDelayed(() -> look(root, attempt + 1), BETWEEN);
             }
         } catch (Throwable error) {
@@ -233,7 +219,6 @@ final class NavBar {
         }
         return null;
     }
-
 
     private static boolean isBar(ViewGroup group, View root) {
         int wide = group.getWidth(), tall = group.getHeight();
@@ -256,9 +241,6 @@ final class NavBar {
         return tabs >= 3 && tabs <= 6 && named >= 2 && selected == 1 && width > 0;
     }
 
-
-
-
     private static String name(ViewGroup tab) {
         for (int i = 0; i < tab.getChildCount(); i++) {
             View child = tab.getChildAt(i);
@@ -280,7 +262,6 @@ final class NavBar {
         return null;
     }
 
-
     private static String count(ViewGroup tab) {
         for (int i = 0; i < tab.getChildCount(); i++) {
             View child = tab.getChildAt(i);
@@ -291,7 +272,6 @@ final class NavBar {
         }
         return null;
     }
-
 
     private static boolean dot(ViewGroup tab, float unit) {
         for (int i = 1; i < tab.getChildCount(); i++) {
@@ -320,7 +300,6 @@ final class NavBar {
     private static volatile String portraitOf;
     private static String asked;
     private static long askedAt;
-
 
     private static Bitmap face(final View bar) {
         final String address = Account.profileAvatar();
@@ -369,8 +348,6 @@ final class NavBar {
         return path;
     }
 
-
-
     private static final class Tab {
         ViewGroup view;
         int kind;
@@ -386,8 +363,6 @@ final class NavBar {
         float left, right;
     }
 
-
-
     private static final class Capsule extends Drawable {
         private WeakReference<View> glassHost=new WeakReference<View>(null);
 
@@ -396,7 +371,7 @@ final class NavBar {
         private float dragX, dragDownX;
         private Tab dragFrom;
 
-        private final android.graphics.RenderNode barNode = new android.graphics.RenderNode("airtok-tab-bar");
+        private final android.graphics.RenderNode barNode = new android.graphics.RenderNode("margyt-tab-bar");
         private LiveGlass bubbleGlass;
 
         private float dropX = Float.NaN, hold;
@@ -440,7 +415,6 @@ final class NavBar {
             small.setTextAlign(Paint.Align.CENTER);
         }
 
-
         private long readAt;
         private boolean animates = true;
         private static final long READ_EVERY = 250L;
@@ -470,9 +444,6 @@ final class NavBar {
                     changed = true;
                     if (tab.open != tab.to) moving = true;
                 }
-
-
-
 
                 if (!read) {
                     float shown = Math.max(0f, Math.min(1f, tab.view.getAlpha()));
@@ -512,7 +483,6 @@ final class NavBar {
                 }
             }
 
-
             boolean dimmed = false;
             for (Tab tab : tabs) if (tab.shown < 0.99f) dimmed = true;
 
@@ -520,7 +490,6 @@ final class NavBar {
             if (!listening) {
                 listening = true;
                 bar.setOnTouchListener((touched, event) -> {
-
 
                     if (awayTo < 1f || event.getActionMasked() != android.view.MotionEvent.ACTION_DOWN) return false;
                     peekUntil = SystemClock.uptimeMillis() + PEEK;
@@ -577,7 +546,6 @@ final class NavBar {
             if (changed || moving) bar.invalidate();
         }
 
-
         void leave(ViewGroup bar) {
             if (!worn) return;
             worn = false;
@@ -599,7 +567,6 @@ final class NavBar {
             tab.setClipBounds(null);
             tab.setOnTouchListener(null);
         }
-
 
         private void hold(final Tab tab, final ViewGroup bar) {
             final int slop = android.view.ViewConfiguration.get(bar.getContext()).getScaledTouchSlop();
@@ -639,7 +606,6 @@ final class NavBar {
             });
         }
 
-
         private boolean settleDrop() {
 
             if (dragging && SystemClock.uptimeMillis() - dragTouched > 4000L) dragging = false;
@@ -675,7 +641,6 @@ final class NavBar {
             return null;
         }
 
-
         private boolean gather(ViewGroup bar) {
             int count = 0;
             boolean same = true;
@@ -703,13 +668,11 @@ final class NavBar {
             return true;
         }
 
-
         private int under(View bar, long now) {
             if (now - sampledAt < LOOK_AGAIN) return ground;
             sampledAt = now;
             return Md3.under(bar) | 0xFF000000;
         }
-
 
         private void arrange(ViewGroup bar) {
             if (tabs.length == 0) return;
@@ -735,7 +698,6 @@ final class NavBar {
             int centre = tabs.length / 2;
             if (tabs.length % 2 == 1 && tabs[centre].kind == CREATE) {
 
-
                 float half = Math.min(32f * unit, (right - left) / tabs.length / 2f);
                 tabs[centre].left = body.centerX() - half;
                 tabs[centre].right = body.centerX() + half;
@@ -745,7 +707,6 @@ final class NavBar {
                 share(0, tabs.length, left, right);
             }
         }
-
 
         private void share(int from, int to, float left, float right) {
             float[] open = new float[to - from], extra = new float[to - from];
@@ -760,7 +721,6 @@ final class NavBar {
                 tabs[i].right = left + edges[i - from + 1];
             }
         }
-
 
         private void place() {
             for (int i = 0; i < tabs.length; i++) {
@@ -832,7 +792,6 @@ final class NavBar {
 
             float middle = body.centerY(), icon = 24f * unit, gap = 6f * unit;
 
-
             boolean peeking = SystemClock.uptimeMillis() < peekUntil;
             for (Tab tab : tabs) {
                 int saved = -1;
@@ -879,7 +838,6 @@ final class NavBar {
                     }
                     if (tab.count != null) {
 
-
                         float high = 16f * unit;
                         float shutLeft = start + icon - 9f * unit, shutUp = Math.max(body.top + unit, middle - icon / 2f - 5f * unit);
                         float openLeft = start + icon + gap + text + 4f * unit, openUp = middle - high / 2f;
@@ -892,7 +850,6 @@ final class NavBar {
             }
             if (veil >= 0) canvas.restoreToCount(veil);
         }
-
 
         private void glassBar(Canvas canvas, int ink, int shell, int lit) {
             float round = body.height() / 2f;
@@ -959,7 +916,6 @@ final class NavBar {
             }
         }
 
-
         private void emblem(Canvas canvas, Tab tab, float left, float top, float size, int colour) {
             Path path = outline(tab.kind, tab.open > 0.5f);
             int saved = canvas.save();
@@ -1005,7 +961,6 @@ final class NavBar {
             canvas.restoreToCount(saved);
         }
 
-
         private void create(Canvas canvas, float centre, float middle, int ink, int lit) {
             float half = 15f * unit, round = 11f * unit;
             fill.setColor(lit);
@@ -1021,8 +976,6 @@ final class NavBar {
             canvas.drawLine(centre, middle - 6.5f * unit, centre, middle + 6.5f * unit, line);
             line.setStrokeCap(Paint.Cap.BUTT);
         }
-
-
 
         private float badge(Tab tab) {
             return tab.count == null ? 0f : Math.max(16f * unit, small.measureText(tab.count) + 8f * unit) + 4f * unit;

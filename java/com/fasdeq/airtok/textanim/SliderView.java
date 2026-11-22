@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class SliderView extends View {
     public interface Listener {
@@ -195,7 +191,6 @@ public final class SliderView extends View {
         growAnim.start();
     }
 
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -308,7 +303,6 @@ public final class SliderView extends View {
             rect.set(left, cy - trackH / 2.0f, x, cy + trackH / 2.0f);
             canvas.drawRoundRect(rect, trackH / 2.0f, trackH / 2.0f, paint);
         }
-
 
         float defX = left + (right - left) * fraction(def);
         float near = Math.min(1.0f, Math.abs(defX - x) / (16.0f * density));

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-
 public final class Backup {
 
     private Backup() {}
@@ -60,7 +59,7 @@ public final class Backup {
     public static boolean write(Context context, Uri where) {
         if (context == null || where == null) return false;
         try {
-            SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
             java.util.Map<String, ?> all = prefs.getAll();
             java.util.Map<String,?> appearance=AccountAppearance.prefs(context).getAll();
             org.json.JSONObject settings = new org.json.JSONObject();
@@ -89,7 +88,6 @@ public final class Backup {
             return false;
         }
     }
-
 
     public static Review review(Context context, Uri source) {
         if (context == null || source == null) return new Review(null, "no file");
@@ -147,12 +145,11 @@ public final class Backup {
         }
     }
 
-
     public static boolean apply(Context context, Review review) {
         if (context == null || review == null || !review.fits()) return false;
         try {
             SharedPreferences.Editor global = context.getSharedPreferences(
-                    AirTok.PREFS, Context.MODE_PRIVATE).edit();
+                    "margyt", Context.MODE_PRIVATE).edit();
             SharedPreferences.Editor appearance=AccountAppearance.prefs(context).edit();
             for (String key : review.values.keySet()) {
                 SharedPreferences.Editor edit=AccountAppearance.appearanceKey(key)?appearance:global;
@@ -175,7 +172,6 @@ public final class Backup {
             return false;
         }
     }
-
 
     public static void reset(Context context, int group) {
         if (context == null) return;
@@ -207,7 +203,7 @@ public final class Backup {
         };
         else keys = SAFE;
         SharedPreferences.Editor edit = context.getSharedPreferences(
-                AirTok.PREFS, Context.MODE_PRIVATE).edit();
+                "margyt", Context.MODE_PRIVATE).edit();
         SharedPreferences.Editor appearance=AccountAppearance.prefs(context).edit();
         for (String key : keys) (AccountAppearance.appearanceKey(key)?appearance:edit).remove(key);
         appearance.apply();AppearanceColors.reload();

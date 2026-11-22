@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-
 final class ProfilePage {
     private ProfilePage() {}
 

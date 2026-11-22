@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class AnimatedSpan extends ReplacementSpan {
     public final String text;
@@ -106,7 +102,6 @@ public final class AnimatedSpan extends ReplacementSpan {
     static long lastInvalidate;
     static int lastInvalidateView;
 
-
     public final long delayMs;
     final long entranceMs;
     final int slideDir;
@@ -146,12 +141,9 @@ public final class AnimatedSpan extends ReplacementSpan {
         this.tiltSign = sign;
     }
 
-
     public long lifeMs() {
         return delayMs + entranceMs + (config.glow ? config.glowMs : 0L) + 4000L;
     }
-
-
 
     static void detach(Editable text, AnimatedSpan span) {
         if (text.getSpanStart(span) < 0) return;
@@ -198,7 +190,6 @@ public final class AnimatedSpan extends ReplacementSpan {
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         long now = AnimationUtils.currentAnimationTimeMillis();
-
 
         if (lastDraw == 0L) {
             virtualElapsed = 0L;
@@ -294,8 +285,6 @@ public final class AnimatedSpan extends ReplacementSpan {
             float glowFade = 1.0f - Motion.clamp(glowProgress);
             int glowColor = config.getGlowColor(now, charOffset, accent, origColor);
 
-
-
             if (config.aura && glowFade > 0.12f) {
                 glowPaint.set(paint);
                 glowPaint.setColor(glowColor);
@@ -309,7 +298,6 @@ public final class AnimatedSpan extends ReplacementSpan {
                 glowPaint.setAlpha((int) (origAlpha * glowFade * 0.30f));
                 canvas.drawText(text, start, end, x, y, glowPaint);
             }
-
 
             int textColor = Motion.mixColors(origColor, glowColor, glowFade);
             paint.setColor(textColor);
@@ -328,7 +316,6 @@ public final class AnimatedSpan extends ReplacementSpan {
 
         requestFrame(now);
     }
-
 
     void requestFrame(long now) {
         int viewId = System.identityHashCode(view);

@@ -5,10 +5,9 @@ import android.widget.EditText;
 import org.json.*;
 import java.util.*;
 
-
 public final class ScriptPlugins {
  private ScriptPlugins(){}
- static final String STORE="airtok_scripts";
+ static final String STORE="margyt_scripts";
  static volatile Program[] active=new Program[0];
  static final class Program {
   final JSONObject source;final String id,name;final Map<String,String> names=new HashMap<>();final int[] colourFrom,colourTo;

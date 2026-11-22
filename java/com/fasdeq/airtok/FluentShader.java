@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class FluentShader {
     private FluentShader() {}
     static final String ACRYLIC = """

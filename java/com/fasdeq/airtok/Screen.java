@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
-
 public final class Screen {
 
     private Screen() {}
@@ -27,7 +26,6 @@ public final class Screen {
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
     private static final long LINGER = 120000;
-
 
     private static final long AFTER = 550;
 
@@ -48,13 +46,11 @@ public final class Screen {
         }
     }
 
-
     private static volatile Dialog showing;
 
     public static Activity now() {
         return current.get();
     }
-
 
     public static void say(final String message) {
         MAIN.post(new Runnable() {
@@ -67,11 +63,9 @@ public final class Screen {
         });
     }
 
-
     public static void offer(String label, Runnable action) {
         offer(label, 0.52f, action);
     }
-
 
     public static void offer(final String label, final float where, final Runnable action) {
         MAIN.postDelayed(new Runnable() {
@@ -92,7 +86,6 @@ public final class Screen {
                     window.setDimAmount(0f);
                     window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                             | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-
 
                             | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 
@@ -125,7 +118,6 @@ public final class Screen {
                     params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
-
                     params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
                     params.y = (int) (activity.getResources().getDisplayMetrics()
                             .heightPixels * where);
@@ -143,7 +135,6 @@ public final class Screen {
             }
         }, AFTER);
     }
-
 
     public static TextView pill(Activity activity, String label, final Runnable action) {
         TextView pill = new TextView(activity);
@@ -174,8 +165,6 @@ public final class Screen {
         }
     }
 
-
-
     private static volatile Dialog bar;
     private static volatile TextView barText;
     private static volatile android.widget.ProgressBar barProgress;
@@ -197,7 +186,6 @@ public final class Screen {
         if(old!=null)close(old);
     }
 
-
     public static void progress(final String what, final int percent) {
         progress("default",what,percent);
     }
@@ -212,7 +200,6 @@ public final class Screen {
             }
         });
     }
-
 
     private static void progressWindow() {
                 try {
@@ -319,7 +306,6 @@ public final class Screen {
         final long hold=note!=null&&note.length()>0?3800L:2400L;
         MAIN.postDelayed(()->{if(bar==finished && progressLine==null){if(Motion.enabled(owner)){Dialog n=noteDialog;if(n!=null&&n.getWindow()!=null)n.getWindow().getDecorView().animate().alpha(0).setDuration(180L).start();mark.animate().alpha(0).setDuration(180L).withEndAction(()->{if(bar==finished && progressLine==null)hideProgressWindow();}).start();}else hideProgressWindow();}},hold);
     }
-
 
     private static void showNote(final Activity owner,final Dialog finished,final String where){
         try{

@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 import java.lang.reflect.*;
 final class GhostReflect {
  static Class<?> type(String name)throws Exception{return Class.forName(name,false,GhostReflect.class.getClassLoader());}

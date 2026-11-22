@@ -4,7 +4,6 @@ import android.graphics.*;
 import android.os.Build;
 import android.view.View;
 
-
 final class GlassOptics {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final RectF local = new RectF();
@@ -18,7 +17,6 @@ final class GlassOptics {
     void draw(Canvas canvas, View view, RectF bounds, float top, float bottom, int colour, float press) {
         float density = view.getResources().getDisplayMetrics().density;
         if (Color.alpha(colour) < 255) {
-
 
             boolean dark = Themes.isDark();
             if (surfaceColour == null || surfaceDark != dark) { surfaceColour = Skin.remembered(view.getContext()).card; surfaceDark = dark; }
@@ -39,14 +37,12 @@ final class GlassOptics {
             try { now_ = LiveGlass.worthIt(view, bounds.left, bounds.top, local.width(), local.height()); }
             catch (Throwable ignored) { }
 
-
             if (now_) { worth = true; misses = 0; }
             else if (++misses >= 6) worth = false;
         }
         if (worth && LiveGlass.available() && canvas.isHardwareAccelerated() && !failed) {
             try {
                 if (live == null) live = new LiveGlass();
-
 
                 int tint = (colour & 0xffffff) | (Design.fluent() ? 0x99000000 : 0x2E000000);
                 if (live.draw(canvas, view, bounds.left, bounds.top, local.width(), local.height(), top, bottom,
@@ -80,7 +76,6 @@ final class GlassOptics {
     private boolean worth;
     private int misses;
 
-
     private void rim(Canvas canvas, float radius, float density, float press) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(Math.max(1f, density * .8f));
@@ -103,7 +98,6 @@ final class GlassOptics {
     private Bitmap busyBitmap;
     private float busyX = Float.NaN, busyY = Float.NaN;
     private boolean busyAnswer;
-
 
     private boolean busy(GlassBackdrop.Frame frame, float x, float y, float w, float h) {
         if (frame.version == busyVersion && frame.bitmap == busyBitmap && Math.abs(x - busyX) < 2 && Math.abs(y - busyY) < 2) return busyAnswer;
@@ -148,7 +142,6 @@ final class GlassOptics {
         canvas.drawPath(veilPath, paint);
     }
 
-
     private static final class Lens {
         private static final String BLUR="uniform shader content;uniform float2 axis;half4 main(float2 p){return content.eval(p)*.4026+(content.eval(p+axis)+content.eval(p-axis))*.2442+(content.eval(p+axis*2.)+content.eval(p-axis*2.))*.0545;}";
         private RuntimeShader shader;
@@ -168,10 +161,6 @@ final class GlassOptics {
             }
             matrix.setScale(1/frame.scale,1/frame.scale);matrix.postTranslate(-x,-y);
             input.setLocalMatrix(matrix);
-
-
-
-
 
             float blur=dp*Design.style().blur;
             blurX.setInputShader("content",input);blurX.setFloatUniform("axis",blur,0);

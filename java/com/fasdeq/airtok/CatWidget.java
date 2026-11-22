@@ -9,9 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.RemoteViews;
 
-
 public final class CatWidget extends AppWidgetProvider {
-
 
     static final int LAYOUT = 0x31010000;
 
@@ -38,7 +36,7 @@ public final class CatWidget extends AppWidgetProvider {
             } finally {
                 pending.finish();
             }
-        }, "airtok-widget").start();
+        }, "margyt-widget").start();
     }
 
     private static Bitmap cat(Context context) {

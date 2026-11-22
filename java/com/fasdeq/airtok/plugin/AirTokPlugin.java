@@ -3,35 +3,25 @@ package com.fasdeq.airtok.plugin;
 import android.app.Activity;
 import android.content.Context;
 
-
 public abstract class AirTokPlugin {
-
 
     public static final int API = 5;
 
-    private PluginContext airtok;
-
+    private PluginContext margyt;
 
     public final void attach(PluginContext context) {
-        this.airtok = context;
+        this.margyt = context;
     }
 
-
-    public final PluginContext airtok() {
-        return airtok;
+    public final PluginContext margyt() {
+        return margyt;
     }
-
-
-
 
     public void onStart(Context context) {}
 
-
     public void onActivityCreated(Activity activity) {}
 
-
     public void onActivityResumed(Activity activity) {}
-
 
     public void onActivityPaused(Activity activity) {}
 
@@ -40,32 +30,23 @@ public abstract class AirTokPlugin {
     public void onAccountChanged(String uid) {}
     public void onSettingsChanged(String key) {}
 
-
     public int onColour(int colour) {
         return colour;
     }
-
 
     public String onRegion(String key, String value) {
         return value;
     }
 
-
-
-
-
     public void onScreen(Activity activity, String name) {}
-
 
     public java.util.List onFeed(java.util.List posts) {
         return posts;
     }
 
-
     public String onName(String uid, String name) {
         return name;
     }
-
 
     public CharSequence onText(CharSequence text) {
         return text;

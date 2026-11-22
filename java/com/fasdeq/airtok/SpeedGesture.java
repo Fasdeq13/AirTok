@@ -6,16 +6,13 @@ import android.view.View;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-
 public final class SpeedGesture {
 
     private SpeedGesture() {}
 
-
     private static final float NATIVE = 2f;
 
     private static Runnable watching;
-
 
     public static boolean onTouch(Object listener, final View target, MotionEvent event) {
         try {
@@ -25,7 +22,6 @@ public final class SpeedGesture {
             Object inside = read(listener, "l0");
             final Object component = inside == null ? listener : inside;
             if (watching != null) target.removeCallbacks(watching);
-
 
             watching = new Runnable() {
                 private int looks;

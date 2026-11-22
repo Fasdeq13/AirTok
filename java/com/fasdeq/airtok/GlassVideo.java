@@ -7,7 +7,6 @@ import android.view.*;
 import android.graphics.SurfaceTexture;
 import java.lang.ref.WeakReference;
 
-
 public final class GlassVideo {
     private static final Handler MAIN=new Handler(Looper.getMainLooper());
     private static WeakReference<Object> controller=new WeakReference<>(null),manager=new WeakReference<>(null);

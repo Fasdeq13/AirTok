@@ -10,9 +10,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public final class Looks {
-
 
     static final int MOST = 64;
 
@@ -42,11 +40,8 @@ public final class Looks {
         if (c != null) register(alias, c);
     }
 
-
     private static final String[] slots = new String[MOST];
     private static int taken;
-
-
 
     static void learn(JSONObject root) {
 
@@ -68,12 +63,9 @@ public final class Looks {
         return gradients.get("fasdeq13");
     }
 
-
-
     private static char first() {
         return Badges.looksFirst();
     }
-
 
     public static synchronized String mark(String uid) {
         if (uid == null) return "";
@@ -99,15 +91,11 @@ public final class Looks {
         return found != null && found.length >= 2 ? found : null;
     }
 
-
-
-
     private static final int PAINTED = 0x4D61726C;
 
     public static void paint(TextView view, int[] colours) {
         paint(view, colours, view == null ? null : view.getText());
     }
-
 
     public static void paint(final TextView view, final int[] colours, CharSequence text) {
         if (view == null || colours == null || colours.length < 2) return;
@@ -133,7 +121,6 @@ public final class Looks {
         } catch (Throwable ignored) {
         }
     }
-
 
     public static void clear(TextView view) {
         if (view == null) return;

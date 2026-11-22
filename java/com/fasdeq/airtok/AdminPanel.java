@@ -11,12 +11,10 @@ import org.json.JSONObject;
 import java.util.HashSet;
 import java.util.Set;
 
-
 final class AdminPanel {
     private AdminPanel() {}
 
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
-
 
     static boolean owner() {
         try {
@@ -26,7 +24,6 @@ final class AdminPanel {
         }
         return false;
     }
-
 
     static void open(final Context c, final String target, final View block) {
         Net.away("admin look", () -> {
@@ -46,9 +43,6 @@ final class AdminPanel {
     private static void say(String why) {
         Screen.say("prove".equals(why) ? Text.VERDICT_PROVE : Text.ADMIN_FAILED);
     }
-
-
-
 
     private static void approve(final Context c, final Runnable then) {
         Net.away("admin device", () -> {
@@ -94,8 +88,6 @@ final class AdminPanel {
         panel.quiet(Text.CANCEL, null).show();
     }
 
-
-
     private static void sheet(final Context c, final String target, final JSONObject look, final View block) {
         Panel panel = Panel.with(c, Skin.remembered(c), Text.ADMIN);
         String name = look.optString("name", "");
@@ -137,7 +129,6 @@ final class AdminPanel {
         panel.quiet(Text.CLOSE, null).show();
     }
 
-
     private static void reason(final Context c, final String target, final boolean good, JSONObject verdict, final View block) {
         Panel panel = Panel.with(c, Skin.remembered(c), good ? Text.VERDICT_GOOD : Text.VERDICT_BAD);
         final android.widget.EditText why = panel.field(Text.VERDICT_REASON);
@@ -176,9 +167,6 @@ final class AdminPanel {
             }
         });
     }
-
-
-
 
     static void devices(final Context c) {
         Net.away("admin devices", () -> {

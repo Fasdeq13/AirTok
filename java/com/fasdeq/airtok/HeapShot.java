@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 final class HeapShot {
 
     private HeapShot() {}
@@ -19,7 +18,6 @@ final class HeapShot {
     private static final long MARK = 280L * 1024 * 1024;
     private static boolean taken;
     private static long checked, written;
-
 
     static void tick(java.util.function.Supplier<String> profiler) {
 
@@ -33,9 +31,9 @@ final class HeapShot {
 
                 try {
                     String text = "uptime " + (at / 1000) + " s\n" + profile + "\n--- probes ---\n" + Probe.recent();
-                    File temp = new File(AirTok.context().getCacheDir(), "airtok-profile.txt");
+                    File temp = new File(AirTok.context().getCacheDir(), "margyt-profile.txt");
                     Net.save(temp, text.getBytes("UTF-8"));
-                    publish(temp, "airtok-profile.txt", "text/plain");
+                    publish(temp, "margyt-profile.txt", "text/plain");
                 } catch (Throwable error) {
                     Diary.note("profile file: " + error);
                 }
@@ -54,16 +52,16 @@ final class HeapShot {
             if (profile != null && profile.length() > 0) {
                 written = now;
                 String text = "heap " + (used >> 20) + " MB of " + (runtime.maxMemory() >> 20) + " MB, uptime " + (now / 1000) + " s\n" + profile;
-                File temp = new File(AirTok.context().getCacheDir(), "airtok-profile.txt");
+                File temp = new File(AirTok.context().getCacheDir(), "margyt-profile.txt");
                 Net.save(temp, text.getBytes("UTF-8"));
-                publish(temp, "airtok-profile.txt", "text/plain");
+                publish(temp, "margyt-profile.txt", "text/plain");
             }
             if (!taken && used > MARK) {
                 taken = true;
                 Diary.note("heap: " + (used >> 20) + " MB, taking a snapshot");
-                File dump = new File(AirTok.context().getCacheDir(), "airtok-heap.hprof");
+                File dump = new File(AirTok.context().getCacheDir(), "margyt-heap.hprof");
                 android.os.Debug.dumpHprofData(dump.getAbsolutePath());
-                publish(dump, "airtok-heap-" + (used >> 20) + "mb.hprof", "application/octet-stream");
+                publish(dump, "margyt-heap-" + (used >> 20) + "mb.hprof", "application/octet-stream");
                 dump.delete();
             }
         } catch (Throwable error) {

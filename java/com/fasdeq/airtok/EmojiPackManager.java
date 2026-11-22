@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public final class EmojiPackManager {
     private EmojiPackManager() {}
 
@@ -40,7 +39,7 @@ public final class EmojiPackManager {
         found.add(new Pack(Fonts.SYSTEM, "System", "device", null, 1));
         if (context != null) {
             try {
-                InputStream input = context.getAssets().open("airtok/emoji/packs.json");
+                InputStream input = context.getAssets().open("margyt/emoji/packs.json");
                 byte[] raw;
                 try {
                     java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
@@ -85,7 +84,7 @@ public final class EmojiPackManager {
 
     public static String asset(Context context, String id) {
         Pack pack = find(context, id);
-        return pack == null || pack.asset == null ? null : "airtok/" + pack.asset;
+        return pack == null || pack.asset == null ? null : "margyt/" + pack.asset;
     }
 
     public static boolean ready(Context context, String id) {
@@ -97,7 +96,7 @@ public final class EmojiPackManager {
         if (android.os.Build.VERSION.SDK_INT < pack.minAndroid || context == null) return false;
         InputStream input = null;
         try {
-            input = context.getAssets().open("airtok/" + pack.asset);
+            input = context.getAssets().open("margyt/" + pack.asset);
             return true;
         } catch (Throwable ignored) { return false; }
         finally { if (input != null) try { input.close(); } catch (Throwable ignored) {} }

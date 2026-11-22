@@ -10,16 +10,22 @@ final class CrashReports {
 
  private static final int FIELD_LIMIT=120;
  private static boolean installed;private static Context app;
- static boolean enabled(Context c){return c.getSharedPreferences(AirTok.PREFS,0).getBoolean(KEY,false);}
+ static boolean enabled(Context c){return c.getSharedPreferences("margyt",0).getBoolean(KEY,false);}
  static synchronized void start(Context c){app=c.getApplicationContext();if(installed)return;installed=true;
   Thread.UncaughtExceptionHandler previous=Thread.getDefaultUncaughtExceptionHandler();
   Thread.setDefaultUncaughtExceptionHandler((thread,error)->{
-   try{if(capturing.compareAndSet(false,true)&&enabled(app))save(error);}catch(Throwable ignored){}
+   try{
+    android.util.Log.e("AirTok", "FATAL CRASH on thread " + thread.getName(), error);
+    File crashFile = new File(app.getFilesDir(), "airtok_last_crash.txt");
+    try (PrintWriter pw = new PrintWriter(new FileWriter(crashFile, false))) {
+     error.printStackTrace(pw);
+    }
+    if(capturing.compareAndSet(false,true)&&enabled(app))save(error);
+   }catch(Throwable ignored){}
    finally{if(previous!=null)previous.uncaughtException(thread,error);else{android.os.Process.killProcess(android.os.Process.myPid());System.exit(10);}}});
   flush();
  }
- private static File directory(){return new File(app.getFilesDir(),"airtok-crashes");}
-
+ private static File directory(){return new File(app.getFilesDir(),"margyt-crashes");}
 
  private static String payload(JSONObject body,String trace)throws Exception{
   JSONObject frame=body.put("stack",trace);
@@ -40,7 +46,6 @@ final class CrashReports {
   File dir=directory();if(!dir.exists()&&!dir.mkdirs())return;File[] files=dir.listFiles();if(files!=null&&files.length>=5){java.util.Arrays.sort(files,java.util.Comparator.comparingLong(File::lastModified));for(int i=0;i<=files.length-5;i++)files[i].delete();}
   Thread dying=Thread.currentThread();Throwable root=error;java.util.Set<Throwable> seen=java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Throwable,Boolean>());
 
-
   for(int depth=0;root!=null&&root.getCause()!=null&&depth<5&&seen.add(root);depth++)root=root.getCause();
   final Throwable thrown=error;
   JSONObject body=new JSONObject().put("id",java.util.UUID.randomUUID().toString()).put("version",Version.MOD).put("sdk",android.os.Build.VERSION.SDK_INT).put("time",System.currentTimeMillis());
@@ -59,7 +64,6 @@ final class CrashReports {
   try(FileOutputStream out=new FileOutputStream(new File(dir,body.getString("id")+".json"))){out.write(encoded.getBytes("UTF-8"));out.getFD().sync();}
  }
 
-
  private static String site(Throwable error){
   try{StackTraceElement[] frames=error==null?null:error.getStackTrace();if(frames==null||frames.length==0)return "";
 
@@ -67,7 +71,6 @@ final class CrashReports {
     if(!type.startsWith("android.")&&!type.startsWith("java.")&&!type.startsWith("com.android.")&&!type.startsWith("dalvik.")&&!type.startsWith("libcore."))return frames[i].toString();}
    return frames[0].toString();}catch(Throwable ignored){return "";}
  }
-
 
  private static JSONArray threads(){
   JSONArray out=new JSONArray();
@@ -102,5 +105,5 @@ final class CrashReports {
  static void flush(){if(app==null||!enabled(app)||!sending.compareAndSet(false,true))return;
   Net.away("crash-reports",()->{try{File[] files=directory().listFiles();if(files==null)return;for(File file:files){if(!enabled(app))return;if(file.length()>PAYLOAD_LIMIT){file.delete();continue;}byte[] bytes=new byte[(int)file.length()];try(DataInputStream in=new DataInputStream(new FileInputStream(file))){in.readFully(bytes);}String answer=Net.post(Badges.SERVER+"/crash",new String(bytes,"UTF-8"));if(answer!=null&&new JSONObject(answer).optBoolean("ok"))file.delete();else break;}}catch(Throwable ignored){}finally{sending.set(false);}});
  }
- static void set(Context c,boolean on){c.getSharedPreferences(AirTok.PREFS,0).edit().putBoolean(KEY,on).putBoolean(ASKED,true).apply();if(on)flush();else{File[] files=directory().listFiles();if(files!=null)for(File f:files)f.delete();}}
+ static void set(Context c,boolean on){c.getSharedPreferences("margyt",0).edit().putBoolean(KEY,on).putBoolean(ASKED,true).apply();if(on)flush();else{File[] files=directory().listFiles();if(files!=null)for(File f:files)f.delete();}}
 }

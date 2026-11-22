@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 
-
 public final class LikeColors {
     private LikeColors() {}
 
@@ -57,24 +56,15 @@ public final class LikeColors {
         int target = name.contains("comment") ? commentColour() : colour();
         int mapped = Palette.map(source, Accent.TIKTOK, target);
 
-
-
-
-
         if ((view.isSelected() || view.isActivated()) && mapped == source)
             return (source & 0xFF000000) | (target & 0x00FFFFFF);
         return mapped == source ? fallback : mapped;
     }
 
-
-
-
-
     private static final java.util.WeakHashMap<android.widget.TextView, Mark> painted =
             new java.util.WeakHashMap<>();
     private static final java.util.WeakHashMap<android.widget.TextView, android.content.res.ColorStateList> originals =
             new java.util.WeakHashMap<>();
-
 
     static boolean liked(int source) {
         return Palette.captures(source, Accent.TIKTOK)
@@ -84,7 +74,6 @@ public final class LikeColors {
     static boolean inComment(View view) {
         View at = view;
         for (int i = 0; at != null && i < 8; i++) {
-
 
             try { if (Boolean.TRUE.equals(at.getTag(0x5454434D))) return true; }
             catch (Throwable ignored) { }
@@ -108,7 +97,6 @@ public final class LikeColors {
                 android.view.ViewParent next = at.getParent();
                 at = next instanceof View ? (View) next : null;
             }
-
 
             android.view.ViewParent actionParent = parent;
             for (int level=0;level<4 && actionParent instanceof android.view.ViewGroup;level++) {
@@ -182,7 +170,6 @@ public final class LikeColors {
                 && Character.isDigit(value.charAt(0));
     }
 
-
     private static final class Mark {
         int colour;
         final long until;
@@ -211,7 +198,6 @@ public final class LikeColors {
             }
         }
     }
-
 
     private static void guard(final android.widget.TextView text, final Mark mark) {
         final android.view.ViewTreeObserver tree = text.getViewTreeObserver();

@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-
 public final class ViewEditor {
 
     private ViewEditor() {}
@@ -47,9 +46,6 @@ public final class ViewEditor {
     private static final String PREF = "ui_editor_rules";
     private static final int BASE = 0x7e0c03B0, PRIOR = 0x7e0c03B1, ONCE = 0x7e0c03B2,
             TEXT_WAS = 0x7e0c03B3, FILL_DONE = 0x7e0c03B4, ICON_DONE = 0x7e0c03B5, CLIPPED = 0x7e0c03B6;
-
-
-
 
     static final class Rule {
         final String key, lead;
@@ -76,7 +72,7 @@ public final class ViewEditor {
 
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
-        return context == null ? null : context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context == null ? null : context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 
     private static synchronized void load() {
@@ -87,7 +83,6 @@ public final class ViewEditor {
         String saved = prefs.getString(PREF, null);
         if (saved != null) parse(saved);
     }
-
 
     private static String serialise() {
         try {
@@ -112,7 +107,6 @@ public final class ViewEditor {
             return "{}";
         }
     }
-
 
     private static void parse(String saved) {
         try {
@@ -144,10 +138,7 @@ public final class ViewEditor {
         if (prefs != null) prefs.edit().putString(PREF, serialise()).apply();
     }
 
-
-
     private static final ArrayList<String> past = new ArrayList<String>(), future = new ArrayList<String>();
-
 
     static void remember() {
         past.add(serialise());
@@ -175,7 +166,6 @@ public final class ViewEditor {
         restore(future.remove(future.size() - 1));
     }
 
-
     private static void restore(String copy) {
         parse(copy);
         for (View v : new ArrayList<View>(tracked.keySet())) {
@@ -197,11 +187,8 @@ public final class ViewEditor {
         for (Rule rule : rules.values()) leads.add(rule.lead);
     }
 
-
-
     private static final SparseArray<String> idNames = new SparseArray<String>();
     private static final Map<Class<?>, String> classNames = new HashMap<Class<?>, String>();
-
 
     private static String lead(View v) {
         int id = v.getId();
@@ -277,16 +264,12 @@ public final class ViewEditor {
         return key.toString();
     }
 
-
     static String title(View v) {
         String lead = lead(v);
         if (lead.charAt(0) == '#') return lead;
         String name = lead.substring(1);
         return name.substring(name.lastIndexOf('.') + 1);
     }
-
-
-
 
     static void frame() {
         if (tracked.isEmpty()) return;
@@ -339,7 +322,6 @@ public final class ViewEditor {
         }
     }
 
-
     private static void unclip(View v) {
         Object up = v.getParent();
         for (int i = 0; i < 40 && up instanceof ViewGroup; i++) {
@@ -379,7 +361,6 @@ public final class ViewEditor {
         }
     }
 
-
     private static void release(View v) {
         hide(v, false);
         reclip(v);
@@ -401,7 +382,6 @@ public final class ViewEditor {
         v.setTag(ICON_DONE, null);
     }
 
-
     private static void refresh(Rule rule) {
         List<View> views = new ArrayList<View>(tracked.keySet());
         for (View v : views) {
@@ -414,7 +394,6 @@ public final class ViewEditor {
             }
         }
     }
-
 
     private static void walk(View v, int depth) {
         if (depth > 60) return;
@@ -431,12 +410,9 @@ public final class ViewEditor {
         }
     }
 
-
-
     public static boolean isEditing() {
         return editing;
     }
-
 
     public static void begin() {
         load();
@@ -465,8 +441,6 @@ public final class ViewEditor {
         for (Rule rule : all) refresh(rule);
         save();
     }
-
-
 
     private static final class Watching implements ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnPreDrawListener {
         final WeakReference<View> decor;
@@ -517,7 +491,6 @@ public final class ViewEditor {
         }
     }
 
-
     static void attach(Activity activity) {
         try {
             if (activity == null || activity.getClass().getName().startsWith("cat.narezany")) return;
@@ -553,11 +526,7 @@ public final class ViewEditor {
         return null;
     }
 
-
-
     private static final int PICK = 0, MOVE = 1, USE = 2;
-
-
 
     private static final String UNDO = "M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z";
     private static final String REDO = "M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z";
@@ -599,7 +568,6 @@ public final class ViewEditor {
         return path;
     }
 
-
     private static final class Icon extends View {
         private final Path path;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -622,7 +590,6 @@ public final class ViewEditor {
         }
     }
 
-
     private static final class Capped extends android.widget.ScrollView {
         private final int most;
 
@@ -637,7 +604,6 @@ public final class ViewEditor {
             super.onMeasure(widthSpec, MeasureSpec.makeMeasureSpec(most, MeasureSpec.AT_MOST));
         }
     }
-
 
     private static int cardX = -1, cardY = -1;
     private static boolean collapsed;
@@ -728,7 +694,6 @@ public final class ViewEditor {
             return hits.get(cursor).get();
         }
 
-
         @Override
         protected void onDraw(Canvas canvas) {
             drawGrid(canvas);
@@ -747,7 +712,6 @@ public final class ViewEditor {
         }
 
         private final Paint thin = new Paint(Paint.ANTI_ALIAS_FLAG), mark = new Paint(Paint.ANTI_ALIAS_FLAG);
-
 
         private void drawGrid(Canvas canvas) {
             int across = GRIDS[grid];
@@ -768,7 +732,6 @@ public final class ViewEditor {
             thin.setColor(0x99FFFFFF);
             canvas.drawLine(0, getHeight() / 2f, getWidth(), getHeight() / 2f, thin);
         }
-
 
         private void drawGuides(Canvas canvas) {
             int colour = accent();
@@ -810,7 +773,6 @@ public final class ViewEditor {
             mark.setColor(0xFFFFFFFF);
             canvas.drawText(words, x, y, mark);
         }
-
 
         @Override
         public boolean onTouchEvent(MotionEvent e) {
@@ -880,7 +842,6 @@ public final class ViewEditor {
             }
         }
 
-
         private void pick(float x, float y) {
             hits.clear();
             cursor = 0;
@@ -930,7 +891,6 @@ public final class ViewEditor {
             return rule;
         }
 
-
         private void place() {
             FrameLayout.LayoutParams at = (FrameLayout.LayoutParams) card.getLayoutParams();
             int wide = getWidth() > 0 ? getWidth() : activity.getResources().getDisplayMetrics().widthPixels;
@@ -951,7 +911,6 @@ public final class ViewEditor {
             card.post(this::clampCard);
         }
 
-
         private void clampCard() {
             if (cardX < 0 || card.getWidth() == 0 || getWidth() == 0) return;
             int x = Math.max(0, Math.min(cardX, getWidth() - card.getWidth()));
@@ -965,7 +924,6 @@ public final class ViewEditor {
                 card.setLayoutParams(at);
             }
         }
-
 
         private final View.OnTouchListener dragging = new View.OnTouchListener() {
             float lx, ly;
@@ -1004,7 +962,6 @@ public final class ViewEditor {
                 }
             }
         };
-
 
         private void rebuild() {
             card.removeAllViews();
@@ -1062,7 +1019,6 @@ public final class ViewEditor {
             LinearLayout body = new LinearLayout(activity);
             body.setOrientation(LinearLayout.VERTICAL);
             View v = selected();
-
 
             body.addView(label(Local.of("РЕЖИМ")));
             body.addView(segments());
@@ -1142,7 +1098,6 @@ public final class ViewEditor {
             return Local.of("Касания идут в TikTok: листайте и переходите на другие экраны. Правки остаются.");
         }
 
-
         private View segments() {
             LinearLayout track = new LinearLayout(activity);
             track.setOrientation(LinearLayout.HORIZONTAL);
@@ -1175,7 +1130,6 @@ public final class ViewEditor {
             track.setLayoutParams(p);
             return track;
         }
-
 
         private View tile(View v) {
             LinearLayout tile = new LinearLayout(activity);
@@ -1212,7 +1166,6 @@ public final class ViewEditor {
             return tile;
         }
 
-
         private View position(View v) {
             LinearLayout box = new LinearLayout(activity);
             box.setOrientation(LinearLayout.HORIZONTAL);
@@ -1228,7 +1181,6 @@ public final class ViewEditor {
                     + Math.round(at.exactCenterY() / unit) + " dp", 12, MUTED, false), spaced(0, 6));
             words.addView(text(Local.of("сдвиг") + "  " + Math.round(dx / unit) + ", " + Math.round(dy / unit) + " dp", 12, MUTED, false), spaced(0, 2));
             box.addView(words, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-
 
             LinearLayout pad = new LinearLayout(activity);
             pad.setOrientation(LinearLayout.VERTICAL);
@@ -1264,7 +1216,6 @@ public final class ViewEditor {
             return all;
         }
 
-
         private View figures(String a, int x, String b, int y) {
             LinearLayout line = new LinearLayout(activity);
             line.setGravity(Gravity.BOTTOM);
@@ -1278,7 +1229,6 @@ public final class ViewEditor {
             return line;
         }
 
-
         private Rect boxOf(View v) {
             int[] at = new int[2];
             v.getLocationOnScreen(at);
@@ -1291,7 +1241,6 @@ public final class ViewEditor {
             int across = GRIDS[grid];
             return across == 0 || getWidth() == 0 ? 0f : getWidth() / (float) across;
         }
-
 
         private void nudge(int sx, int sy) {
             View v = selected();
@@ -1312,18 +1261,15 @@ public final class ViewEditor {
             });
         }
 
-
         private float nextLine(float from, int way, float cell) {
             double lines = from / cell;
             double next = way > 0 ? Math.floor(lines + 0.01) + 1 : Math.ceil(lines - 0.01) - 1;
             return (float) (next * cell);
         }
 
-
         private float nearestLine(float from, float cell) {
             return Math.round(from / cell) * cell;
         }
-
 
         private View choice(Path icon, String[] names, int chosen, final java.util.function.IntConsumer pick) {
             LinearLayout line = new LinearLayout(activity);
@@ -1362,7 +1308,6 @@ public final class ViewEditor {
             return line;
         }
 
-
         private View toggle(Path icon, String words, boolean on, final Runnable flip) {
             LinearLayout line = new LinearLayout(activity);
             line.setGravity(Gravity.CENTER_VERTICAL);
@@ -1384,7 +1329,6 @@ public final class ViewEditor {
             return line;
         }
 
-
         private View round(Path icon, boolean strong, final Runnable action) {
             FrameLayout b = new FrameLayout(activity);
             GradientDrawable back = new GradientDrawable();
@@ -1398,7 +1342,6 @@ public final class ViewEditor {
             b.setLayoutParams(p);
             return b;
         }
-
 
         private View sizeControl() {
             View v = selected();
@@ -1503,7 +1446,6 @@ public final class ViewEditor {
                     }).setNegativeButton(Local.of("Отмена"), null).show();
         }
 
-
         private static final int[] SWATCHES = {0xFFFFFFFF, 0xFF000000, 0xFFE53935, 0xFFFB8C00, 0xFFFDD835, 0xFF43A047,
                 0xFF1E88E5, 0xFF8E24AA, 0xFFEC407A, 0xFF9E9E9E};
 
@@ -1562,7 +1504,6 @@ public final class ViewEditor {
                     .setNegativeButton(Local.of("Отмена"), null).show();
         }
 
-
         private LinearLayout row() {
             LinearLayout row = new LinearLayout(activity);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -1582,7 +1523,6 @@ public final class ViewEditor {
             p.setMargins(dp(left), dp(top), 0, 0);
             return p;
         }
-
 
         private TextView label(String words) {
             TextView t = text(words, 11, MUTED, true);

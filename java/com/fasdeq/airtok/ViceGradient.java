@@ -13,9 +13,7 @@ import android.view.View;
 
 import java.lang.ref.WeakReference;
 
-
 final class ViceGradient extends Drawable {
-
 
     private static final int[] DARK = {0xFF1A1450, 0xFF2C1350, 0xFF481444};
 
@@ -24,7 +22,6 @@ final class ViceGradient extends Drawable {
 
     private static final int[] DARK_CARD = {0xFF100C38, 0xFF1E0E3A, 0xFF320D31};
     private static final int[] LIGHT_CARD = {0xFFD8D2FF, 0xFFEACFF2, 0xFFFFC8DE};
-
 
     static Shader cardShader(View view) {
         if (view == null || !Themes.gradientOn()) return null;
@@ -48,7 +45,6 @@ final class ViceGradient extends Drawable {
     private int shaderX = Integer.MIN_VALUE, shaderY, shaderW, shaderH;
     private boolean shaderDark;
 
-
     private final Drawable original;
 
     ViceGradient(View view, int was, float[] radii) {
@@ -62,10 +58,8 @@ final class ViceGradient extends Drawable {
         this.original = original;
     }
 
-
     private static final java.util.Map<Drawable, Boolean> CHECKED =
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Drawable, Boolean>());
-
 
     static boolean tryReplace(Drawable drawable, View view) {
         if (drawable == null || view == null || drawable instanceof ViceGradient || !Themes.gradientOn()) return false;
@@ -116,14 +110,12 @@ final class ViceGradient extends Drawable {
 
     private static final int GUARDED = 0x56434732;
 
-
     private static final class Held {
         final Class<?> kind;
         final int was;
         final float[] radii;
         Held(Class<?> kind, int was, float[] radii) { this.kind = kind; this.was = was; this.radii = radii; }
     }
-
 
     static void guard(final View view, Class<?> kind, int was, float[] radii) {
         boolean first = view.getTag(GUARDED) == null;
@@ -151,7 +143,6 @@ final class ViceGradient extends Drawable {
                 && Math.abs((one & 0xFF) - (two & 0xFF)) <= 14;
     }
 
-
     static float[] radiiOf(android.graphics.drawable.GradientDrawable shape) {
         if (android.os.Build.VERSION.SDK_INT < 24) return null;
         try {
@@ -173,7 +164,6 @@ final class ViceGradient extends Drawable {
         outline.addRoundRect(area, radii, android.graphics.Path.Direction.CW);
         canvas.drawPath(outline, paint);
     }
-
 
     static boolean wanted(int colour) {
         return Themes.gradientOn() && (colour | 0xFF000000) == (Themes.backgroundInUse() | 0xFF000000)

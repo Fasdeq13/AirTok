@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-
 final class Panel {
 
     interface Click { void on(); }
@@ -91,7 +90,6 @@ final class Panel {
         return new Panel(context, skin, title);
     }
 
-
     Panel compact() {
         compact = true;
         card.setPadding(dp(14), dp(8), dp(14), dp(10));
@@ -104,7 +102,6 @@ final class Panel {
         }
         return this;
     }
-
 
     Panel text(String words) {
         TextView body = new TextView(context);
@@ -129,7 +126,6 @@ final class Panel {
         return this;
     }
 
-
     Panel view(View content) {
         LinearLayout.LayoutParams where = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -139,9 +135,6 @@ final class Panel {
         if (content != group) group = null;
         return this;
     }
-
-
-
 
     Panel subtitle(String words) {
         if (head == null || words == null || words.length() == 0) return this;
@@ -159,7 +152,6 @@ final class Panel {
         card.addView(line, card.indexOfChild(head) + 1);
         return this;
     }
-
 
     Panel section(String heading) {
         group = null;
@@ -192,22 +184,18 @@ final class Panel {
         return group;
     }
 
-
     Panel item(String icon, String title, String detail, Click then) {
         return row(icon, title, detail, "chevron_right", false, false, then);
     }
-
 
     Panel item(String icon, String title, String detail, String trailing, Click then) {
         return row(icon, title, detail, trailing, false, false, then);
     }
 
-
     Panel hero(String icon, String title, String detail, String trailing, Click then) {
         group = null;
         return row(icon, title, detail, trailing, true, false, then);
     }
-
 
     Panel info(String icon, String value, String label, Click then) {
         stayOpen = true;
@@ -218,11 +206,9 @@ final class Panel {
         }
     }
 
-
     Panel danger(String icon, String title, String detail, Click then) {
         return row(icon, title, detail, null, false, true, then);
     }
-
 
     Panel option(String title, boolean chosen, boolean stay, Click then) {
         LinearLayout row = new LinearLayout(context);
@@ -371,12 +357,10 @@ final class Panel {
         return this;
     }
 
-
     private static int shapeFor(String icon) {
         int[] kinds = {Expressive.COOKIE9, Expressive.CLOVER4, Expressive.SUNNY, Expressive.FLOWER6, Expressive.COOKIE7};
         return kinds[Math.abs(icon == null ? 0 : icon.hashCode()) % kinds.length];
     }
-
 
     android.widget.EditText field(String hint) {
         android.widget.EditText field = new android.widget.EditText(context);
@@ -406,18 +390,13 @@ final class Panel {
         return field;
     }
 
-
     Panel primary(String label, Click then) { return button(label, then, true, false); }
-
 
     Panel primaryKeepOpen(String label, Click then) { return button(label, then, true, true); }
 
-
     Panel quiet(String label, Click then) { return button(label, then, false, false); }
 
-
     Panel keepOpen(String label, Click then) { return button(label, then, false, true); }
-
 
     TextView action(String label, boolean main) {
         button(label,null,main,true);
@@ -523,9 +502,6 @@ final class Panel {
             Diary.note("panel: " + error);
         }
     }
-
-
-
 
     static LinearLayout tile(Context context, Skin skin, android.graphics.Bitmap picture,
                              int colour, String name, boolean selected) {

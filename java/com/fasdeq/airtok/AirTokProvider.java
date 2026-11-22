@@ -10,7 +10,6 @@ import android.os.ParcelFileDescriptor;
 
 import java.io.File;
 
-
 public final class AirTokProvider extends ContentProvider {
 
     @Override
@@ -65,13 +64,10 @@ public final class AirTokProvider extends ContentProvider {
         return true;
     }
 
-
-
-
     public static Uri share(Context context, File file) {
         try {
             if (!file.isFile()) return null;
-            return Uri.parse("content://" + context.getPackageName() + ".airtok/"
+            return Uri.parse("content://" + context.getPackageName() + ".margyt/"
                     + file.getName());
         } catch (Throwable ignored) {
             return null;
@@ -85,9 +81,8 @@ public final class AirTokProvider extends ContentProvider {
             if (context == null) return null;
             String name = uri.getLastPathSegment();
 
-
             if (name == null || name.contains("/") || name.contains("..")) return null;
-            File file = new File(new File(context.getFilesDir(), "airtok"), name);
+            File file = new File(new File(context.getFilesDir(), "margyt"), name);
             if (!file.isFile()) return null;
             return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
         } catch (Throwable error) {

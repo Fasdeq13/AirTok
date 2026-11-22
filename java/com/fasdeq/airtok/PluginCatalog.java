@@ -2,24 +2,22 @@ package com.fasdeq.airtok;
 import android.content.Context;
 import java.net.URI;
 
-
 final class PluginCatalog {
     private PluginCatalog() {}
     private static final String DEFAULT=Badges.SERVER+"/plugins";
     static String endpoint(Context context){
-        android.content.SharedPreferences prefs=context.getSharedPreferences("airtok_store",0);
+        android.content.SharedPreferences prefs=context.getSharedPreferences("margyt_store",0);
         if(prefs.contains("catalog_enabled")&&!prefs.getBoolean("catalog_enabled",true))return "";
         String address=prefs.getString("catalog",null);
         return address==null||address.isEmpty()?DEFAULT:address;
     }
     static void endpoint(Context context,String address)throws Exception{
         address=address.trim();if(!address.isEmpty())https(address);
-        context.getSharedPreferences("airtok_store",0).edit().putString("catalog",address)
+        context.getSharedPreferences("margyt_store",0).edit().putString("catalog",address)
                 .putBoolean("catalog_enabled",!address.isEmpty()).apply();
     }
     static String resolve(String base,String path)throws Exception{
         if(path==null||path.isEmpty())throw new Exception(Local.of("Нет ссылки на файл плагина"));
-
 
         if(path.startsWith("/")&&!path.startsWith("//")&&base.startsWith(Badges.SERVER+"/"))return https(Badges.SERVER+path);
         return https(new URI(https(base)).resolve(path).toString());

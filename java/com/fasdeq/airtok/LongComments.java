@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class LongComments {
 
     private static final String CONFIG = "com.ss.android.ugc.aweme.comment.commentlist.ui.CommentCharLimitConfig";

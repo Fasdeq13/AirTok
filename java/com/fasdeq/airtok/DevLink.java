@@ -43,7 +43,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-
 public final class DevLink {
 
     private DevLink() {}
@@ -51,7 +50,7 @@ public final class DevLink {
     static final String MARGYCODE = "cat.narezany.margycode";
 
     private static final String SIGNED_BY = "5821624A80C17D15CE684D2657BC42098A948336242E5FA9F85D973F761E2474";
-    private static final String PREFS = "airtok_devlink";
+    private static final String PREFS = "margyt_devlink";
     private static final int LOG_KEEP = 1500;
 
     private static ServerSocket server;
@@ -66,11 +65,9 @@ public final class DevLink {
         return prefs(context).getString("token", "").length() > 0;
     }
 
-
     static void start(Context context) {
         if (linked(context)) listen(context.getApplicationContext());
     }
-
 
     static boolean genuine(Context context, String caller) {
         if (!MARGYCODE.equals(caller)) return false;
@@ -89,7 +86,6 @@ public final class DevLink {
         }
         return false;
     }
-
 
     static synchronized Object[] pair(Context context) throws Exception {
         byte[] raw = new byte[32];
@@ -117,7 +113,6 @@ public final class DevLink {
         server = null;
     }
 
-
     static void heard(String line) {
         if (server == null) return;
         synchronized (log) {
@@ -141,19 +136,17 @@ public final class DevLink {
             while (!listening.isClosed()) {
                 try {
                     final Socket client = listening.accept();
-                    Thread one = new Thread(() -> serve(context, client), "airtok-devlink-call");
+                    Thread one = new Thread(() -> serve(context, client), "margyt-devlink-call");
                     one.setDaemon(true);
                     one.start();
                 } catch (Throwable error) {
                     return;
                 }
             }
-        }, "airtok-devlink");
+        }, "margyt-devlink");
         thread.setDaemon(true);
         thread.start();
     }
-
-
 
     private static void serve(Context context, Socket client) {
         try {
@@ -227,8 +220,6 @@ public final class DevLink {
         if (now == null) throw new Exception("No screen of TikTok is showing: it's in the background. Bring it to the front.");
         return now;
     }
-
-
 
     private static JSONObject call(Context context, String tool, JSONObject a) throws Exception {
         switch (tool) {
@@ -336,8 +327,6 @@ public final class DevLink {
         }, 300);
         return said("Restarting. Wait about 10 seconds before the next call.");
     }
-
-
 
     private static float scale(View root) {
         return 1280f / Math.max(1, Math.max(root.getWidth(), root.getHeight()));
@@ -469,7 +458,7 @@ public final class DevLink {
         final Bitmap full = Bitmap.createBitmap(root.getWidth(), root.getHeight(), Bitmap.Config.ARGB_8888);
         final CountDownLatch done = new CountDownLatch(1);
         final int[] result = {-1};
-        android.os.HandlerThread thread = new android.os.HandlerThread("airtok-devlink-shot");
+        android.os.HandlerThread thread = new android.os.HandlerThread("margyt-devlink-shot");
         thread.start();
         MAIN.post(() -> {
             try {
@@ -484,7 +473,7 @@ public final class DevLink {
         Bitmap small = Bitmap.createScaledBitmap(full, width, height, true);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         small.compress(Bitmap.CompressFormat.JPEG, 80, out);
-        return said("Picture is " + width + "x" + height + "; airtok_tap uses this space. Dialogs are separate windows and don't appear here.")
+        return said("Picture is " + width + "x" + height + "; margyt_tap uses this space. Dialogs are separate windows and don't appear here.")
                 .put("image", Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP));
     }
 
@@ -541,9 +530,6 @@ public final class DevLink {
         else now.startActivity(intent);
         return said("Opened.");
     }
-
-
-
 
     private static synchronized File classList(Context context) throws Exception {
         File file = new File(context.getCacheDir(), "devlink-classes-" + Version.MOD + ".txt");

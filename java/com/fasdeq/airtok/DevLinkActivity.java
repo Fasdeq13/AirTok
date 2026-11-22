@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 public final class DevLinkActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {

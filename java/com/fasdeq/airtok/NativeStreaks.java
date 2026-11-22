@@ -4,7 +4,6 @@ import java.util.*;
 import java.lang.reflect.*;
 import com.ss.android.ugc.aweme.im.streak.api.IStreakService;
 
-
 final class NativeStreaks {
     private static String account;
     private static long last;
@@ -76,7 +75,6 @@ final class NativeStreaks {
                 } catch (Throwable ignored) {}
             });
 
-
             if (now - lastDiscovered >= 15000L) {
                 lastDiscovered = now;
                 Net.away("streak discover", () -> {
@@ -118,7 +116,6 @@ final class NativeStreaks {
                         }
                     } catch (Throwable ignored) {}
 
-
                     try {
                         Class<?> dh8Cls = Class.forName("X.0Dh8");
                         Field l1Field = dh8Cls.getField("LIZIZ");
@@ -140,7 +137,6 @@ final class NativeStreaks {
                             }
                         }
                     } catch (Throwable ignored) {}
-
 
                     try {
                         Class<?> ys0 = Class.forName("X.0YS0");

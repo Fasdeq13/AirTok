@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import com.fasdeq.airtok.textanim.Main;
 
-
 final class TextAnim {
 
     private TextAnim() {}
@@ -28,7 +27,6 @@ final class TextAnim {
         if (main == null) return;
         try { main.onActivityDestroyed(activity); } catch (Throwable ignored) {}
     }
-
 
     static void set(boolean on) {
         TypingAnim.set(TypingAnim.ON, on);

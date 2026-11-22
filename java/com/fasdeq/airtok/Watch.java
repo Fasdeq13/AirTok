@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-
 public final class Watch implements Application.ActivityLifecycleCallbacks {
 
     private Watch() {}
-
 
     private static volatile java.lang.ref.WeakReference<Activity> here =
             new java.lang.ref.WeakReference<Activity>(null);

@@ -26,17 +26,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
-
 final class Expressive {
 
     private Expressive() {}
 
-
-
     static final int COOKIE9 = 0, CLOVER4 = 1, SUNNY = 2, FLOWER6 = 3,
             BURST12 = 4, PENTAGON = 5, ARCH3 = 6, COOKIE7 = 7;
     static final int KINDS = 8;
-
 
     private static final int[] LOBES = {9, 4, 8, 6, 12, 5, 3, 7};
 
@@ -49,7 +45,6 @@ final class Expressive {
     private static int wrap(int kind) {
         return ((kind % KINDS) + KINDS) % KINDS;
     }
-
 
     static void shape(Path out, int kind, float cx, float cy, float radius, float amount, float turn) {
         int k = wrap(kind);
@@ -70,7 +65,6 @@ final class Expressive {
         }
         out.close();
     }
-
 
     static float reach(int kind, float amount, float turn, double angle) {
         int k = wrap(kind);
@@ -93,9 +87,6 @@ final class Expressive {
     private static float dp(Context context, float value) {
         return value * context.getResources().getDisplayMetrics().density;
     }
-
-
-
 
     static final class Tile extends Drawable {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -152,7 +143,6 @@ final class Expressive {
             motion.start();
         }
 
-
         float[] corners(float height) {
             float limit = height / 2f;
             float t = Math.min(top, limit), b = Math.min(bottom, limit);
@@ -192,16 +182,12 @@ final class Expressive {
         @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     }
 
-
     static Drawable tile(Context context, int fill, int ripple, float top, float bottom, float pressed) {
         boolean animate = Motion.enabled(context);
         return new RippleDrawable(ColorStateList.valueOf(ripple),
                 new Tile(fill, top, bottom, pressed, false, animate),
                 new Tile(0xFFFFFFFF, top, bottom, pressed, true, false));
     }
-
-
-
 
     static final class Group extends LinearLayout {
         private final int fill, ripple;
@@ -212,8 +198,6 @@ final class Expressive {
             setOrientation(VERTICAL);
             this.fill = fill;
             this.ripple = ripple;
-
-
 
             boolean m3 = !Design.frosted();
 
@@ -278,9 +262,6 @@ final class Expressive {
         }
     }
 
-
-
-
     static final class Badge extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Path path = new Path();
@@ -305,7 +286,6 @@ final class Expressive {
             this.inkOn = inkOn;
             setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
-
 
         void set(boolean on, boolean animated) {
             float target = on ? 1f : 0f;
@@ -361,9 +341,6 @@ final class Expressive {
         }
     }
 
-
-
-
     static View roundButton(Context context, Drawable glyph, int fill, int ripple, int ink, int sizeDp) {
         final int size = Math.round(dp(context, sizeDp));
         final int pad = Math.round(dp(context, sizeDp * 0.27f));
@@ -376,9 +353,6 @@ final class Expressive {
         box.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         return box;
     }
-
-
-
 
     static void slider(SeekBar bar, int accent, int quiet) {
         Context context = bar.getContext();
@@ -418,9 +392,6 @@ final class Expressive {
         bar.setPadding(side, 0, side, 0);
         bar.setSplitTrack(false);
     }
-
-
-
 
     static final class Magnifier extends Drawable {
         private final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);

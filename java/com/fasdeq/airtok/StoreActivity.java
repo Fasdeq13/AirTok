@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class StoreActivity extends Activity {
 
     private Skin skin;
@@ -31,8 +30,7 @@ public class StoreActivity extends Activity {
     private String endpoint="";
     private int generation;
     private boolean loading;
-    private final java.util.concurrent.ThreadPoolExecutor icons=new java.util.concurrent.ThreadPoolExecutor(2,2,15,java.util.concurrent.TimeUnit.SECONDS,new java.util.concurrent.ArrayBlockingQueue<Runnable>(64),r->{Thread t=new Thread(r,"airtok-store-icon");t.setDaemon(true);return t;},new java.util.concurrent.ThreadPoolExecutor.DiscardPolicy());
-
+    private final java.util.concurrent.ThreadPoolExecutor icons=new java.util.concurrent.ThreadPoolExecutor(2,2,15,java.util.concurrent.TimeUnit.SECONDS,new java.util.concurrent.ArrayBlockingQueue<Runnable>(64),r->{Thread t=new Thread(r,"margyt-store-icon");t.setDaemon(true);return t;},new java.util.concurrent.ThreadPoolExecutor.DiscardPolicy());
 
     private static final class Plugin {
         String id = "", name = "", version = "", author = "", about = "", tiktok = "";
@@ -69,8 +67,6 @@ public class StoreActivity extends Activity {
         rebuild();
         fetch();
     }
-
-
 
     private void fetch() {
         endpoint=PluginCatalog.endpoint(this);
@@ -249,8 +245,6 @@ public class StoreActivity extends Activity {
         });
     }
 
-
-
     private void install(final Plugin plugin) {
         final android.content.Context app=getApplicationContext();
         installTask(app,plugin);
@@ -308,8 +302,6 @@ public class StoreActivity extends Activity {
     }
     private static String shortText(String value,int max){return value.length()>max?value.substring(0,max):value;}
     @Override protected void onDestroy(){generation++;icons.shutdownNow();super.onDestroy();}
-
-
 
     private View back() {
         TextView view = new TextView(this);

@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class Motion {
     public static final float SLIDE_DP = 8.0f;
@@ -86,7 +82,6 @@ public final class Motion {
         canvas.translate(-cx, -cy);
     }
 
-
     public static void slide(Canvas canvas, int dir, float dist) {
         switch (dir) {
             case 1:
@@ -104,7 +99,6 @@ public final class Motion {
         }
     }
 
-
     public static float scaleFrom(int easing) {
         return easing >= 3 ? SPRING_SCALE_FROM : SCALE_FROM;
     }
@@ -119,10 +113,7 @@ public final class Motion {
         return filter;
     }
 
-
     static final int BLUR_STEPS = 8;
-
-
 
     public static void drawBlurred(Canvas canvas, Paint base, Paint tmp, CharSequence text,
                                    int start, int end, float x, float y,

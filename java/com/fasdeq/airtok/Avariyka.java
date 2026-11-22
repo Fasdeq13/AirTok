@@ -20,7 +20,6 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.util.Random;
 
-
 final class Avariyka {
 
     private Avariyka() {}
@@ -33,14 +32,13 @@ final class Avariyka {
     private static final Runnable SHOW = Avariyka::show;
 
     static boolean isOn(Context c) {
-        return c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+        return c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
     }
 
     static void set(Context c, boolean on) {
-        c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+        c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
         if (!on) MAIN.removeCallbacks(SHOW);
     }
-
 
     static void resumed(Activity activity) {
         if (activity == null || activity.getClass().getName().startsWith("com.fasdeq.airtok.")) return;
@@ -103,7 +101,7 @@ final class Avariyka {
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
         TextView words = new TextView(c);
-        words.setText("МЫ ЖРЁМ ГОВНО!!! ВЫШЛО ОБНОВЛЕНИЕ MARGYT 6.7.6.7!!! БЫСТРЕЕ СКАЧИВАЙ В НАШЕМ ТЕЛЕГРАМ КАНАЛЕ @airtokiktok ИНАЧЕ ТВОЙ АККАУНТ ЗАБАНЯТ НАВСЕГДА!!!");
+        words.setText("МЫ ЖРЁМ ГОВНО!!! ВЫШЛО ОБНОВЛЕНИЕ MARGYT 6.7.6.7!!! БЫСТРЕЕ СКАЧИВАЙ В НАШЕМ ТЕЛЕГРАМ КАНАЛЕ @margytiktok ИНАЧЕ ТВОЙ АККАУНТ ЗАБАНЯТ НАВСЕГДА!!!");
         words.setTextColor(0xFFC40000);
         words.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
         words.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
@@ -144,7 +142,6 @@ final class Avariyka {
         cardWhere.topMargin = px(unit, 14);
         cardWhere.rightMargin = px(unit, 10);
         frame.addView(card, cardWhere);
-
 
         final TextView cross = new TextView(c);
         cross.setGravity(Gravity.CENTER);

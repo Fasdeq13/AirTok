@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public final class Net {
 
     private Net() {}
@@ -29,7 +28,6 @@ public final class Net {
         }
     }
 
-
     public static void away(final String what, final Runnable work) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -40,13 +38,11 @@ public final class Net {
                     Diary.note(what + ": " + error);
                 }
             }
-        }, "airtok-" + what);
+        }, "margyt-" + what);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.setDaemon(true);
         thread.start();
     }
-
-
 
     public static final class Answer {
         public final byte[] body;
@@ -59,7 +55,6 @@ public final class Net {
             this.unchanged = unchanged;
         }
     }
-
 
     public static Answer fetch(String url, String tag) {
         java.net.HttpURLConnection link = null;
@@ -96,11 +91,9 @@ public final class Net {
         }
     }
 
-
     public static String post(String url, String json) {
         return postWire(url, json, false);
     }
-
 
     public static String postResult(String url, String json) {
         return postWire(url, json, true);
@@ -151,7 +144,6 @@ public final class Net {
         }
     }
 
-
     public static final class Said {
         public final int code;
         public final String body;
@@ -165,7 +157,6 @@ public final class Net {
             return code == 200;
         }
     }
-
 
     public static Said talk(String url, String json) {
         java.net.HttpURLConnection link = null;
@@ -205,12 +196,10 @@ public final class Net {
         }
     }
 
-
     public static String send(String url, String kind, byte[] body) {
         Said said = deliver(url, kind, body);
         return said.ok() ? said.body : null;
     }
-
 
     public static Said deliver(String url, String kind, byte[] body) {
         java.net.HttpURLConnection link = null;
@@ -287,11 +276,9 @@ public final class Net {
         }
     }
 
-
     public interface Along {
         void at(int percent, long got, long total);
     }
-
 
     public static boolean download(String url, File into, Along along) {return download(url,into,along,null);}
     public static boolean download(String url,File into,Along along,DownloadTasks.Control control) {
@@ -355,7 +342,6 @@ public final class Net {
             if(control!=null)control.connection=null;partial.delete();
         }
     }
-
 
     public static boolean save(File file, byte[] data) {
         if (data == null) return false;

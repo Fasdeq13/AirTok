@@ -27,7 +27,6 @@ import com.fasdeq.airtok.plugin.PluginContext;
 
 import dalvik.system.DexClassLoader;
 
-
 public final class Plugins {
 
     private Plugins() {}
@@ -42,13 +41,10 @@ public final class Plugins {
     public static final String ICON = "icon.png";
     public static final String EXTENSION = ".mtp";
 
-    private static final String PREFS = "airtok_plugins";
-
-
+    private static final String PREFS = "margyt_plugins";
 
     private static final java.util.concurrent.ConcurrentHashMap<String, String> PACKAGES =
             new java.util.concurrent.ConcurrentHashMap<String, String>();
-
 
     private static void claim(Info info) {
         int dot = info.entry.lastIndexOf('.');
@@ -62,7 +58,6 @@ public final class Plugins {
 
         if (before != null && !before.equals(info.id)) PACKAGES.put(prefix, before + " / " + info.id);
     }
-
 
     static String owner(String className) {
         if (className == null || PACKAGES.isEmpty()) return null;
@@ -84,7 +79,6 @@ public final class Plugins {
         public final String tiktok;
         public final File folder;
 
-
         public String trouble;
         public String safety;
 
@@ -104,7 +98,6 @@ public final class Plugins {
             this.folder = folder;
         }
 
-
         public Bitmap icon() {
             if (!iconRead) {
                 iconRead = true;
@@ -123,7 +116,6 @@ public final class Plugins {
         }
     }
 
-
     private static final class Live {
         final Info info;
         AirTokPlugin instance;
@@ -139,8 +131,6 @@ public final class Plugins {
     private static volatile AirTokPlugin[] running = new AirTokPlugin[0];
     private static boolean read;
 
-
-
     private static File home(Context context) {
         File folder = new File(context.getFilesDir(), FOLDER);
         if (!folder.isDirectory()) folder.mkdirs();
@@ -150,7 +140,6 @@ public final class Plugins {
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
-
 
     public static synchronized List<Info> list() {
         Context context = AirTok.context();
@@ -170,7 +159,6 @@ public final class Plugins {
     public static synchronized boolean openSettings(String id,Activity activity) {
         for(Live live:installed) if(live.info.id.equals(id)) {
             AirTokPlugin target=live.instance!=null?live.instance:live.settings;
-
 
             if(target==null && isEnabled(id)) {
                 Context context=AirTok.context();
@@ -196,18 +184,15 @@ public final class Plugins {
         return false;
     }
 
-
     public static synchronized boolean isRunning(String id) {
         for(Live live:installed) if(live.info.id.equals(id))return live.instance!=null;
         return false;
     }
 
-
     public static synchronized String problem(String id) {
         for(Live live:installed) if(live.info.id.equals(id))return live.info.trouble;
         return null;
     }
-
 
     public static synchronized boolean revive(String id) {
         Context context=AirTok.context();
@@ -221,7 +206,6 @@ public final class Plugins {
         }
         return false;
     }
-
 
     public static synchronized void setEnabled(String id, boolean enabled) {
         Context context = AirTok.context();
@@ -284,9 +268,6 @@ public final class Plugins {
                         + ", this one is " + AirTokPlugin.API;
             }
 
-
-
-
             if (info.tiktok.length() > 0 && !info.tiktok.equals(Version.TIKTOK)) {
                 info.trouble = "written for TikTok " + info.tiktok
                         + ", this is " + Version.TIKTOK;
@@ -299,16 +280,12 @@ public final class Plugins {
         }
     }
 
-
     private static String localised(JSONObject json, String field, String fallback) {
         String language = Locale.getDefault().getLanguage();
         String translated = json.optString(field + "_" + language, "");
         if (!translated.isEmpty()) return translated;
         return json.optString(field, fallback);
     }
-
-
-
 
     public static synchronized void startAll(Context context) {
         ScriptPlugins.reload(context);
@@ -370,7 +347,6 @@ public final class Plugins {
         }
     }
 
-
     private static void publish() {
         List<AirTokPlugin> live = new ArrayList<>();
         for (Live one : installed) {
@@ -378,7 +354,6 @@ public final class Plugins {
         }
         running = live.toArray(new AirTokPlugin[0]);
     }
-
 
     private static synchronized void drop(AirTokPlugin plugin, Throwable error) {
         for (Live live : installed) {
@@ -391,12 +366,9 @@ public final class Plugins {
         publish();
     }
 
-
     public static boolean anyRunning() {
         return running.length > 0;
     }
-
-
 
     public static void onActivityCreated(Activity activity) {
         for (AirTokPlugin plugin : running) {
@@ -436,10 +408,6 @@ public final class Plugins {
         if(plugin!=null)try{plugin.onSettingsChanged(key);}catch(Throwable error){drop(plugin,error);}
     }
 
-
-
-
-
     public static void screen(Activity activity) {
         AirTokPlugin[] plugins = running;
         if (activity == null || plugins.length == 0) return;
@@ -452,7 +420,6 @@ public final class Plugins {
             }
         }
     }
-
 
     public static java.util.List feed(java.util.List posts) {
         AirTokPlugin[] plugins = running;
@@ -469,7 +436,6 @@ public final class Plugins {
         return out;
     }
 
-
     public static String name(String uid, String name) {
         name=ScriptPlugins.name(uid,name);
         AirTokPlugin[] plugins = running;
@@ -485,7 +451,6 @@ public final class Plugins {
         }
         return out;
     }
-
 
     public static final class Row {
         public static final int ACTION = 0, TOGGLE = 1, CHOICE = 2, SLIDER = 3, SECTION = 4;
@@ -594,9 +559,6 @@ public final class Plugins {
         return value;
     }
 
-
-
-
     public static synchronized PluginAudit.Report inspectInstalled(String id)throws Exception{
         for(Info info:list())if(info.id.equals(id))return PluginAudit.folder(info.folder);
         throw new Exception(Local.of("Плагин не найден"));
@@ -646,7 +608,6 @@ public final class Plugins {
         }
     }
 
-
     public static synchronized void uninstall(Context context, String id) {
         setEnabled(id, false);
         prefs(context).edit().remove(id).apply();
@@ -659,7 +620,6 @@ public final class Plugins {
         if(raw==null)throw new Exception(Local.of("Невозможно прочитать плагин"));
         PluginPackage.unpack(raw,into);
     }
-
 
     private static String safe(String name) {
         StringBuilder out = new StringBuilder();

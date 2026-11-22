@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
 public final class Dim {
     static void reloadSettings(){on=null;how=-1;refresh();}
 
@@ -17,7 +16,6 @@ public final class Dim {
 
     public static final String KEY_ON = "dim_on";
     public static final String KEY_HOW = "dim_how";
-
 
     public static final int DEFAULT = 35;
 
@@ -49,7 +47,6 @@ public final class Dim {
         refresh();
     }
 
-
     static void toggleOpacity() {
         if (!isConfigured()) return;
         paused = !paused;
@@ -73,19 +70,14 @@ public final class Dim {
         refresh();
     }
 
-
     public static boolean isShiftEnabled() { return false; }
     public static int shiftDp(){return 0;}
     public static void setShiftDp(int ignored){}
     public static void setShiftEnabled(boolean ignored){}
 
-
-
-
     public static void apply(Activity activity) {
         apply(activity, false);
     }
-
 
     public static void applyNow(Activity activity) {
         apply(activity, true);
@@ -112,15 +104,12 @@ public final class Dim {
             if(!isConfigured()){retryEye=false;BurnEye.hide(root);restore();return;}
             if(ProfileLayout.visible(root)){retryEye=false;BurnEye.hide(root);restore();return;}
 
-
             if(!RailPresence.onScreen(root)){retryEye=false;BurnEye.hideSoon(root);restore();return;}
             inspection=passInspection;inspection.clear();commentSources.clear();commentZone=Integer.MAX_VALUE;
             int protection=protectedFlags(root,0,new int[]{10000});
 
-
             panels.put(root,(protection&(64|128))!=0);
             if((protection&(32|64))!=0){retryEye=false;BurnEye.hide(root);restore();return;}
-
 
             if (!activity.hasWindowFocus()) {
                 if (!isEnabled()) restore();
@@ -136,7 +125,6 @@ public final class Dim {
             boolean friendsScreen=feedTab&&(tabs&TAB_FRIENDS)!=0;
             boolean homeScreen=feedTab&&!friendsScreen;
             boolean header=BurnEye.hasFeedHeader(root)||feedTab;
-
 
             boolean search=!header&&hasSearchHeader(root,0);
             View video=search||!header?surface(root,0):null;
@@ -167,7 +155,6 @@ public final class Dim {
             Probe.stop(Probe.DIM_PASS,probe);
         }
     }
-
 
     private static final java.util.IdentityHashMap<View,Integer> passInspection=new java.util.IdentityHashMap<>();
     private static java.util.Map<View,Integer> inspection;
@@ -235,8 +222,6 @@ public final class Dim {
         if(depth>40 || budget[0]--<=0)return 15;
         View anchor=commentBoundary(view);
         if(anchor!=null || blockedPanel(view)) {
-
-
 
             int flags=4|(chatInput(view)||(anchor!=null&&chatInput(anchor))?32:0)|(actualCommentPanel(view)?64:0)|(commentField(view)?128:0);commentSources.put(view,anchor==null?view:anchor);inspection.put(view,flags);
             if((flags&128)!=0)markZone(view,true);
@@ -333,10 +318,6 @@ public final class Dim {
     private static boolean chatInput(View view){
         if(view instanceof android.widget.EditText){CharSequence hint=((android.widget.EditText)view).getHint();String text=hint==null?"":hint.toString().trim().toLowerCase(java.util.Locale.ROOT);if(text.contains("коммент") || text.contains("comment"))return false;return text.startsWith("написать") || text.startsWith("сообщение") || text.startsWith("message");}
 
-
-
-
-
         String name=typeName(view);
         if(name.contains(CHAT))return view.isAttachedToWindow() && view.getGlobalVisibleRect(new android.graphics.Rect());
         return name.contains("messagelist") || name.contains("chatinput") || name.contains("chatroom");
@@ -387,12 +368,10 @@ public final class Dim {
     private static volatile int viewportWidth;
     private static volatile int viewportHeight;
 
-
     private static final long QUIET = 120;
 
     private static final java.util.Map<View, Boolean> ticking =
             new java.util.WeakHashMap<View, Boolean>();
-
 
     public static void watch(Activity activity) {
         if (activity == null || activity.getClass().getName().startsWith("com.fasdeq.airtok.")) return;
@@ -404,7 +383,6 @@ public final class Dim {
         }
         final java.lang.ref.WeakReference<Activity> held =
                 new java.lang.ref.WeakReference<Activity>(activity);
-
 
         final boolean[] dirty = {false};
         final int[] shape={layoutFingerprint(root,0)};
@@ -422,9 +400,6 @@ public final class Dim {
                 settleDeferred();
                 if(!isConfigured()){dirty[0]=false;return true;}
 
-
-
-
                 long at=android.os.SystemClock.uptimeMillis();
                 if (dirty[0] && at-printed[0]>=48L && root.hasWindowFocus()) {
                     Activity current = held.get();printed[0]=at;
@@ -434,7 +409,6 @@ public final class Dim {
                 long probe=Probe.start();
                 reconcile();
                 Probe.stop(Probe.DIM_FRAME,probe);
-
 
                 return true;
             }
@@ -460,9 +434,6 @@ public final class Dim {
                     boolean lost;
                     if(next!=shape[0]){shape[0]=next;applyNow(current);lost=eyeShouldBeBack(root);}
 
-
-
-
                     else if(eyeShouldBeBack(root)){applyNow(current);lost=eyeShouldBeBack(root);}
                     else if(misses[0]<RECHECK_LIMIT && mediaEyeMissing(root)){applyNow(current);lost=mediaEyeMissing(root);}
                     else lost=false;
@@ -475,8 +446,6 @@ public final class Dim {
             }
         }, TICK);
     }
-
-
 
     private static boolean lookForExclusions=true;
     static int layoutFingerprint(View view,int depth){
@@ -498,8 +467,6 @@ public final class Dim {
 
     private static final int RECHECK_LIMIT = 20;
 
-
-
     private static boolean mediaEyeMissing(View root){
         if(!BurnEye.missing(root) || ProfileLayout.visible(root) || Boolean.TRUE.equals(panels.get(root)))return false;
         int tabs=selectedTabs(root,0);
@@ -512,7 +479,6 @@ public final class Dim {
         if((tabs&(TAB_PROFILE|TAB_INBOX))!=0 || Boolean.TRUE.equals(panels.get(root)) || hasSearchHeader(root,0))return false;
         return BurnEye.hasFeedHeader(root);
     }
-
 
     private static View surface(View root, int unused) {
         java.util.List<View> all = new java.util.ArrayList<View>();
@@ -528,8 +494,6 @@ public final class Dim {
             if (!one.getGlobalVisibleRect(where)) continue;
             if (where.contains(middleX, middleY)) return one;
         }
-
-
 
         return null;
     }
@@ -547,7 +511,6 @@ public final class Dim {
         }
     }
 
-
     private static void over(View video, View root, float alpha) {
         View cell = video;
         java.util.List<View> spine = new java.util.ArrayList<View>();
@@ -561,14 +524,10 @@ public final class Dim {
             spine.add(cell);
         }
 
-
         topBar(root, alpha);
         bottomBar(root, alpha);
         if (cell == video) return;
         inside(cell, spine, alpha, 0);
-
-
-
 
     }
 
@@ -586,13 +545,11 @@ public final class Dim {
         }
     }
 
-
     private static boolean scrolls(View view) {
         String name = view.getClass().getName();
         return name.contains("RecyclerView") || name.contains("ViewPager")
                 || name.contains("ListView");
     }
-
 
     private static void topBar(View root, float alpha) {
         chrome(root, alpha, true);
@@ -601,7 +558,6 @@ public final class Dim {
     private static void bottomBar(View root, float alpha) {
         chrome(root, alpha, false);
     }
-
 
     private static void chrome(View root, float alpha, boolean top) {
         java.lang.ref.WeakReference<View> remembered = top ? topRail : bottomRail;
@@ -660,7 +616,6 @@ public final class Dim {
     private static volatile long lastBottomSearch;
     private static final long SEARCH_AGAIN = 800;
 
-
     private static final float RAIL_HEIGHT = 0.18f;
 
     private static View lookRail(ViewGroup group, int rootTop, int tall, int wide,
@@ -679,8 +634,6 @@ public final class Dim {
                     ? where[1] >= rootTop && where[1] + height / 2f <= rootTop + tall * 0.14f
                     : where[1] + height / 2f >= rootTop + tall * 0.93f
                         && where[1] + height >= rootTop + tall * 0.96f;
-
-
 
             if (thin && full && atEdge && child instanceof ViewGroup
                     && ((ViewGroup) child).getChildCount() >= 2
@@ -713,7 +666,6 @@ public final class Dim {
         return false;
     }
 
-
     private static boolean isMedia(View view) {
         if (view instanceof SurfaceView || view instanceof TextureView) return true;
         String name = typeName(view);
@@ -725,7 +677,6 @@ public final class Dim {
                     || name.contains("zoomimage")));
         if (!image || viewportWidth <= 0 || viewportHeight <= 0) return false;
         float w = view.getWidth(), h = view.getHeight();
-
 
         return w >= viewportWidth * 0.45f || h >= viewportHeight * 0.25f
                 || (h >= viewportHeight * 0.08f
@@ -744,13 +695,11 @@ public final class Dim {
         return false;
     }
 
-
     private static boolean mediaSizedContainer(View view) {
         return view instanceof ViewGroup && viewportWidth > 0 && viewportHeight > 0
                 && view.getWidth() >= viewportWidth * 0.45f
                 && view.getHeight() >= viewportHeight * 0.12f;
     }
-
 
     private static boolean isLikeEffect(View view) {
         String type=typeName(view);
@@ -768,7 +717,6 @@ public final class Dim {
         }
         return false;
     }
-
 
     private static boolean bottomBacking(View view) {
         try {
@@ -794,8 +742,6 @@ public final class Dim {
         if (isMedia(view)) return;
         if (inCommentZone(view)) return;
 
-
-
         boolean backing = bottomBacking(view);
         if (backing && !(view instanceof ViewGroup && ((ViewGroup) view).getChildCount() > 0)) {
 
@@ -812,8 +758,6 @@ public final class Dim {
                 return;
             }
 
-
-
             if(hasBlockedPanel(group,0) && boundedSheet(group,inspection!=null?protectedFlags(group,depth,new int[]{10000}):0)
                     && !hasMedia(group,0,new int[]{10000}))return;
             if (!hasMedia(view, 0, new int[] {10000})
@@ -829,7 +773,6 @@ public final class Dim {
         fade(view, alpha);
     }
 
-
     private static void reconcile() {
         BottomChrome.repair();
         if(faded.isEmpty())return;
@@ -840,7 +783,6 @@ public final class Dim {
             View view = entry.getKey();
             Dimmed state = entry.getValue();
             if (view == null || state == null) continue;
-
 
             int children=view instanceof ViewGroup?((ViewGroup)view).getChildCount():0;int shape=childShape(view);
             boolean inspect=view.getWidth()!=state.width || view.getHeight()!=state.height || children!=state.children || shape!=state.shape
@@ -860,7 +802,6 @@ public final class Dim {
             }
         }
     }
-
 
     private static void restoreOne(View view) {
         Dimmed previous = faded.remove(view);
@@ -886,16 +827,13 @@ public final class Dim {
         }
     }
 
-
     private static final java.util.Map<View,Boolean> flattened=new java.util.WeakHashMap<>();
-
 
     private static void flat(View view, float applied) {
         if (android.os.Build.VERSION.SDK_INT < 24 || applied >= 0.999f || flattened.containsKey(view)) return;
         flattened.put(view, Boolean.TRUE);
         view.forceHasOverlappingRendering(false);
     }
-
 
     private static boolean covered(View view) {
         View current = view;
@@ -929,12 +867,10 @@ public final class Dim {
         return false;
     }
 
-
     static void retry(){
         Activity activity=Screen.now();
         if(activity!=null)applyNow(activity);
     }
-
 
     private static void refresh() {
         if(!isEnabled())restore();
@@ -943,10 +879,7 @@ public final class Dim {
         if (activity != null) applyNow(activity);
     }
 
-
     public static float alphaFor(View view, float asked) {
-
-
 
         if (android.os.Looper.myLooper() != android.os.Looper.getMainLooper()) return asked;
         try {
@@ -960,7 +893,6 @@ public final class Dim {
             return asked;
         }
     }
-
 
     static float undimmed(View view) {
         if (view == null) return 0f;
@@ -987,7 +919,6 @@ public final class Dim {
 
     private static final java.util.Map<View, Dimmed> faded =
             new java.util.WeakHashMap<View, Dimmed>();
-
 
     private static void restore() {
         BottomChrome.restore();
@@ -1032,8 +963,6 @@ public final class Dim {
 
     private static void restoreSmooth(View view,float original){
 
-
-
         if(!view.isAttachedToWindow() || !view.isShown()){deferred.put(view,new float[]{view.getAlpha(),original});return;}
         deferred.remove(view);
         Returning state=new Returning(view.getAlpha(),original);returns.put(view,state);
@@ -1051,6 +980,6 @@ public final class Dim {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 }

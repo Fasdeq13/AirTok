@@ -19,18 +19,14 @@ import android.widget.TextView;
 import com.ss.android.ugc.aweme.profile.model.User;
 import com.ss.android.ugc.profile.platform.base.data.UserProfileInfo;
 
-
 public final class Badge {
 
     private Badge() {}
-
 
     private static final int MINT = 0xFF8DD1B0;
 
     private static volatile Drawable note;
     private static volatile boolean noteTried;
-
-
 
     public static String getNickname(User user) {
         if (user == null) return null;
@@ -49,7 +45,6 @@ public final class Badge {
         }
     }
 
-
     public static String nickname(User user) {
         if (user == null) return null;
         String name = user.nickname;
@@ -63,7 +58,6 @@ public final class Badge {
             return name;
         }
     }
-
 
     public static String getNickname(UserProfileInfo user) {
         if (user == null) return null;
@@ -85,7 +79,6 @@ public final class Badge {
             return name;
         }
     }
-
 
     private static String marked(String name, String uid, boolean fromProfile) {
         return marked(name, uid, null, fromProfile);
@@ -129,9 +122,6 @@ public final class Badge {
         }
     }
 
-
-
-
     public static String getDisplayName(Object contact) {
         return chatName(contact, "getDisplayName");
     }
@@ -166,9 +156,6 @@ public final class Badge {
         }
     }
 
-
-
-
     private static volatile String lastName;
     private static volatile String lastUid;
     private static volatile String lastUniqueId;
@@ -176,7 +163,6 @@ public final class Badge {
     private static volatile long lastRewriteAt;
 
     private static final long RECENT = 6000;
-
 
     private static void remember(String uid, String name, String uniqueId, boolean fromProfile) {
         if (!fromProfile || name == null || name.length() == 0) return;
@@ -389,7 +375,6 @@ public final class Badge {
         }
     }
 
-
     private static final int DEEP = 40;
     private static final int BUDGET = 4000;
 
@@ -403,9 +388,6 @@ public final class Badge {
 
     private static void walk(View view, int depth, String name, String uid) {
         if (view == null || depth > DEEP || ++seen > BUDGET) return;
-
-
-
 
         if (inAList(view)) return;
         if (Boolean.TRUE.equals(view.getTag(0x4D61726C))) return;
@@ -442,7 +424,6 @@ public final class Badge {
             for (int i = 0; i < many; i++) walk(group.getChildAt(i), depth + 1, name, uid);
         }
     }
-
 
     private static CharSequence typed(TextView view, CharSequence text) {
         watch(view);
@@ -503,9 +484,7 @@ public final class Badge {
         return text;
     }
 
-
     private static final int WATCHED = 0x4D61726B;
-
 
     public static void setText(TextView view, CharSequence text) {
         Looks.clear(view);
@@ -518,8 +497,6 @@ public final class Badge {
         text = cleanFasdeqNick(text);
         CharSequence out = cleanFasdeqNick(marked(view, text));
         Probe.stop(Probe.TEXT, probe);
-
-
 
         if (out != text) {
             view.setText(out, TextView.BufferType.SPANNABLE);
@@ -549,9 +526,6 @@ public final class Badge {
 
         Looks.clear(view);
 
-
-
-
         boolean any = false;
         for (int i = text.length() - 1; i >= 0 && !any; i--) {
             char c = text.charAt(i);
@@ -563,7 +537,6 @@ public final class Badge {
             String clean = str.trim().toLowerCase(java.util.Locale.ROOT);
             boolean isHandle = clean.startsWith("@");
             if (isHandle) clean = clean.substring(1).trim();
-
 
             if (clean.length() > 0 && !clean.contains("подпис") && !clean.contains("лайк")
                     && !clean.contains("сообщ") && !clean.contains("отмен") && !clean.contains("редакт")
@@ -596,13 +569,6 @@ public final class Badge {
         if (!any) return text;
 
         try {
-
-
-
-
-
-
-
 
             SpannableStringBuilder out = new SpannableStringBuilder(text);
             boolean drew = false;
@@ -651,11 +617,9 @@ public final class Badge {
             return out;
         } catch (Throwable ignored) {
 
-
             return strip(text.toString());
         }
     }
-
 
     private static String strip(String plain) {
         if (plain == null || plain.isEmpty()) return plain;
@@ -716,7 +680,6 @@ public final class Badge {
         return res;
     }
 
-
     private static String tidy(String name) {
         if (name == null) return null;
         int end = name.length();
@@ -727,7 +690,6 @@ public final class Badge {
         }
         return end < name.length() ? name.substring(0, end) : name;
     }
-
 
     private static Drawable large(View view, Badges.Badge badge) {
         try {
@@ -753,6 +715,24 @@ public final class Badge {
         }
     }
 
+    public static Bitmap round(Bitmap src) {
+        if (src == null) return null;
+        try {
+            int w = src.getWidth();
+            int h = src.getHeight();
+            Bitmap out = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            android.graphics.Canvas canvas = new android.graphics.Canvas(out);
+            android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG | android.graphics.Paint.FILTER_BITMAP_FLAG);
+            android.graphics.Path path = new android.graphics.Path();
+            float r = Math.min(w, h) * 0.26f;
+            path.addRoundRect(new android.graphics.RectF(0, 0, w, h), r, r, android.graphics.Path.Direction.CW);
+            canvas.clipPath(path);
+            canvas.drawBitmap(src, 0, 0, paint);
+            return out;
+        } catch (Throwable t) {
+            return src;
+        }
+    }
 
     private static Drawable picture(TextView view, Badges.Badge badge) {
         Bitmap bitmap = badge.image.length() == 0
@@ -760,6 +740,7 @@ public final class Badge {
 
         Drawable drawable;
         if (bitmap != null) {
+            bitmap = round(bitmap);
             drawable = new BitmapDrawable(view.getResources(), bitmap);
             if (badge.colour != 0 && !"client".equals(badge.image) && !"emblem".equals(badge.image) && !"fasd".equals(badge.image) && !"fasdeq".equals(badge.image)) {
                 drawable.setColorFilter(badge.colour, PorterDuff.Mode.SRC_IN);
@@ -776,17 +757,12 @@ public final class Badge {
         int size = Math.round(view.getTextSize());
         if (size <= 0) size = Math.round(14 * view.getResources().getDisplayMetrics().density);
 
-
-
-
-
         int wide = drawable.getIntrinsicWidth();
         int tall = drawable.getIntrinsicHeight();
         int across = wide > 0 && tall > 0 ? Math.round(size * (float) wide / tall) : size;
         drawable.setBounds(0, 0, Math.max(1, across), size);
         return drawable;
     }
-
 
     private static Drawable note() {
         Drawable known = note;
@@ -797,7 +773,7 @@ public final class Badge {
             byte[] png = Base64.decode(Emblem.PNG, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(png, 0, png.length);
             if (bitmap == null) return null;
-            known = new BitmapDrawable(crop(bitmap));
+            known = new BitmapDrawable(round(crop(bitmap)));
             note = known;
             return known;
         } catch (Throwable error) {
@@ -805,8 +781,6 @@ public final class Badge {
             return null;
         }
     }
-
-
 
     private static final class Tap extends ClickableSpan {
         private final Badges.Badge badge;
@@ -832,7 +806,6 @@ public final class Badge {
         }
     }
 
-
     private static void listen(TextView view) {
         if (Boolean.TRUE.equals(view.getTag(LISTENING))) return;
         try {
@@ -841,7 +814,6 @@ public final class Badge {
         } catch (Throwable ignored) {
         }
     }
-
 
     private static final int LISTENING = 0x4D617268;
 
@@ -867,13 +839,10 @@ public final class Badge {
             return true;
         }
 
-
         private ClickableSpan span(View v, MotionEvent event) {
             try {
                 TextView view = (TextView) v;
                 CharSequence text = view.getText();
-
-
 
                 if (!(text instanceof Spanned)) return null;
                 Layout layout = view.getLayout();
@@ -883,11 +852,6 @@ public final class Badge {
                 int y = (int) event.getY() - view.getTotalPaddingTop() + view.getScrollY();
                 if (y < 0 || y > layout.getHeight()) return null;
                 int line = layout.getLineForVertical(y);
-
-
-
-
-
 
                 Spanned spanned = (Spanned) text;
                 int start = layout.getLineStart(line), end = layout.getLineEnd(line);
@@ -917,7 +881,6 @@ public final class Badge {
             }
         }
     }
-
 
     static Bitmap crop(Bitmap bitmap) {
         int width = bitmap.getWidth(), height = bitmap.getHeight();

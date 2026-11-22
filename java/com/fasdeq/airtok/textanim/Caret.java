@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class Caret {
     public static final long IDLE = -1L;
@@ -294,7 +290,6 @@ public final class Caret {
         shapeL[3] = body - strL; shapeT[3] = t; shapeR[3] = body + charW + strR; shapeB[3] = b;
         shapeRad[3] = 3.0f * density;
 
-
         int want = config.caretShape;
         if (!shapeInit) {
             for (int i = 0; i < 4; i++) shapeW[i] = i == want ? 1.0f : 0.0f;
@@ -368,7 +363,6 @@ public final class Caret {
         return blinking ? untilFade(now) : IDLE;
     }
 
-
     static boolean metrics(EditText view, Layout layout, int offset, float[] out) {
         try {
             int at = Math.max(0, Math.min(offset, view.getText().length()));
@@ -386,8 +380,6 @@ public final class Caret {
             return false;
         }
     }
-
-
 
     public long drawSelection(EditText view, Canvas canvas, Config config, int color, boolean active, long now) {
         Layout layout = view.getLayout();

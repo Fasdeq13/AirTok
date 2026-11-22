@@ -1,7 +1,5 @@
 package com.fasdeq.airtok;
 
-
-
 final class CommentLimit {
  static Object withLimit(Object original,int limit)throws Exception{
   if(limit<1)throw new IllegalArgumentException("limit");

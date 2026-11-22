@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-
 public final class Recalled {
 
     private Recalled() {}
 
     static final String KEY = "keep_recalled";
-    private static final String STORE = "airtok_recalled";
+    private static final String STORE = "margyt_recalled";
     private static final int MOST = 4000;
     private static final float FADED = 0.68f;
     private static final int FADED_ROW = 0x7e0c0381, WATCHED_ROW = 0x7e0c0383;
@@ -36,7 +35,7 @@ public final class Recalled {
     static void setEnabled(boolean value) {
         on = value;
         Context context = AirTok.context();
-        if (context != null) context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (context != null) context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
     }
 
     private static SharedPreferences store() {
@@ -53,7 +52,6 @@ public final class Recalled {
         kept = out;
         return out;
     }
-
 
     public static void arrived(Object domain, Object message, String recaller, Object after) throws Throwable {
         try {
@@ -101,7 +99,6 @@ public final class Recalled {
         });
     }
 
-
     private static void fade(final View row) {
         row.setTag(FADED_ROW, Boolean.TRUE);
         row.setAlpha(FADED);
@@ -129,7 +126,6 @@ public final class Recalled {
             throw error.getCause() == null ? error : error.getCause();
         }
     }
-
 
     static void bound(View row, Object message) {
         try {

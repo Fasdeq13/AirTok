@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-
 final class Screamer {
 
     private Screamer() {}
@@ -34,30 +33,29 @@ final class Screamer {
 
     static boolean isOn(Context context) {
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
         } catch (Throwable error) {
             return false;
         }
     }
 
     static void set(Context context, boolean on) {
-        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
         due = 0;
         if (on) plan(context);
     }
 
     static boolean loud(Context context) {
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY_SOUND, true);
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY_SOUND, true);
         } catch (Throwable error) {
             return true;
         }
     }
 
     static void setLoud(Context context, boolean on) {
-        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_SOUND, on).apply();
+        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY_SOUND, on).apply();
     }
-
 
     static void attach(Activity activity) {
         if (!isOn(activity)) return;
@@ -97,7 +95,6 @@ final class Screamer {
         });
     }
 
-
     static void now(final Activity activity) {
         try {
             if (cat == null) {
@@ -132,7 +129,6 @@ final class Screamer {
             Diary.note("screamer: " + error);
         }
     }
-
 
     static short[] voice() {
         int length = RATE;
@@ -175,6 +171,6 @@ final class Screamer {
             } catch (Throwable error) {
                 Diary.note("screamer: " + error);
             }
-        }, "airtok-yell").start();
+        }, "margyt-yell").start();
     }
 }

@@ -9,7 +9,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
-
 final class CommentStyle {
     static final String KEY="design_comments";
     private static final int WATCH=0x4d674c39;
@@ -18,8 +17,8 @@ final class CommentStyle {
     private static final int ROW=0x7f0a1b88,NAME=0x7f0a87e8,INPUT=0x7f0a45e2;
     private static final WeakHashMap<View,Observer> WINDOWS=new WeakHashMap<>();
     private CommentStyle(){}
-    static boolean enabled(){Context context=AirTok.context();return context==null || context.getSharedPreferences(AirTok.PREFS,0).getBoolean(KEY,true);}
-    static void set(boolean value){Context context=AirTok.context();if(context!=null)context.getSharedPreferences(AirTok.PREFS,0).edit().putBoolean(KEY,value).apply();refresh();}
+    static boolean enabled(){Context context=AirTok.context();return context==null || context.getSharedPreferences("margyt",0).getBoolean(KEY,true);}
+    static void set(boolean value){Context context=AirTok.context();if(context!=null)context.getSharedPreferences("margyt",0).edit().putBoolean(KEY,value).apply();refresh();}
     static void refresh(){for(Observer observer:new ArrayList<>(WINDOWS.values()))observer.schedule();}
     static boolean open(View root){
         Observer observer=WINDOWS.get(root);View sheet=observer==null?null:observer.sheet.get();
@@ -130,8 +129,6 @@ final class CommentStyle {
             int card=Expressive.mix(page,dark?0xffffffff:0xff000000,Design.style().cardLift);
             int colour=sheet?card:blend(card,Accent.colour(),.12f);
             float radius=(sheet?Design.style().sheet:Design.style().small)*dp;
-
-
 
             if(sheet || !Design.draw(canvas,this,view,rect,radius,sheet?0:radius,colour,view.isPressed()?1:0)){
                 paint.setColor(colour);float[] corners={radius,radius,radius,radius,sheet?0:radius,sheet?0:radius,sheet?0:radius,sheet?0:radius};

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Random;
 
-
 final class Rubble {
 
     private Rubble() {}
@@ -34,7 +33,6 @@ final class Rubble {
     private static final int MOST = 90;
     private static final int TAG = 0x7e0c0338;
 
-
     private static volatile boolean armed;
     private static volatile boolean running;
 
@@ -42,14 +40,12 @@ final class Rubble {
 
     static boolean running() { return running; }
 
-
     static boolean on() { return armed || running; }
 
     static void arm(Activity settings) {
         armed = true;
         try { settings.finish(); } catch (Throwable ignored) {}
     }
-
 
     static void stop() {
         armed = false;
@@ -144,7 +140,6 @@ final class Rubble {
             }
         }
 
-
         private void giveBack() {
             for (Piece p : pieces) {
                 try {
@@ -166,14 +161,11 @@ final class Rubble {
             if (parent != null) parent.removeView(this);
         }
 
-
         private void tick() {
             if (ticking) return;
             ticking = true;
             Choreographer.getInstance().postFrameCallback(this);
         }
-
-
 
         void collect() {
             collected = android.os.SystemClock.uptimeMillis();
@@ -204,7 +196,6 @@ final class Rubble {
                 for (int i = 0; i < parent.getChildCount(); i++) walk(parent.getChildAt(i), depth + 1, budget);
             }
         }
-
 
         private boolean medium(View view, int depth) {
             if (view instanceof TextureView || view instanceof SurfaceView) return true;
@@ -256,8 +247,6 @@ final class Rubble {
             return true;
         }
 
-
-
         @Override public void onSensorChanged(SensorEvent event) {
             float ax = event.values[0], ay = event.values[1], az = event.values[2];
 
@@ -298,7 +287,6 @@ final class Rubble {
 
         private final Rect seen = new Rect();
 
-
         private void watch() {
             for (int i = pieces.size() - 1; i >= 0; i--) {
                 Piece p = pieces.get(i);
@@ -313,8 +301,6 @@ final class Rubble {
                 p.away = !p.source.isShown() || !p.source.getGlobalVisibleRect(seen);
             }
         }
-
-
 
         private Piece held;
         private boolean swallowing, forwarding;
@@ -360,7 +346,6 @@ final class Rubble {
             return false;
         }
 
-
         private void tap(Piece piece) {
             int[] at = new int[2], origin = new int[2];
             piece.source.getLocationOnScreen(at);
@@ -396,7 +381,6 @@ final class Rubble {
             }
 
             int n = pieces.size();
-
 
             for (int i = 0; i < n; i++) {
                 Piece a = pieces.get(i);

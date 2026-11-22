@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import java.io.File;
 
-
 public final class AccountAppearance {
     private static volatile String selected;
     private static volatile long revision;
@@ -16,7 +15,7 @@ public final class AccountAppearance {
     }
 
     private static String last(Context context) {
-        String saved=context.getSharedPreferences(AirTok.PREFS,0).getString(Account.KEY_ID,"");
+        String saved=context.getSharedPreferences("margyt",0).getString(Account.KEY_ID,"");
         return valid(saved)?saved:"guest";
     }
     private static boolean valid(String uid){return uid!=null && uid.matches("[0-9]{1,24}");}
@@ -26,7 +25,7 @@ public final class AccountAppearance {
         final long change=++revision;
         Context context=AirTok.context();
         if(context==null){selected=next;return;}
-        if(selected==null && valid(context.getSharedPreferences(AirTok.PREFS,0).getString(Account.KEY_ID,"")))prefs(context);
+        if(selected==null && valid(context.getSharedPreferences("margyt",0).getString(Account.KEY_ID,"")))prefs(context);
         selected=next;
         prefs(context);
         Accent.reload();AppearanceColors.reload();Fonts.reload();Themes.forget();LikeColors.reload();
@@ -42,21 +41,21 @@ public final class AccountAppearance {
         });
     }
     public static SharedPreferences prefs(Context context) {
-        SharedPreferences own=context.getSharedPreferences("airtok_appearance_"+SHARED,0);
+        SharedPreferences own=context.getSharedPreferences("margyt_appearance_"+SHARED,0);
         if(!own.getBoolean("_initialized",false))synchronized(AccountAppearance.class) {
             if(!own.getBoolean("_initialized",false)) {
-                SharedPreferences legacy=context.getSharedPreferences(AirTok.PREFS,0);
+                SharedPreferences legacy=context.getSharedPreferences("margyt",0);
                 SharedPreferences.Editor edit=own.edit();
                 String uid=last(context);
-                SharedPreferences theirs=context.getSharedPreferences("airtok_appearance_"+uid,0);
+                SharedPreferences theirs=context.getSharedPreferences("margyt_appearance_"+uid,0);
                 if(!theirs.getBoolean("_initialized",false)&&!uid.equals("guest")){
-                    SharedPreferences guest=context.getSharedPreferences("airtok_appearance_guest",0);
+                    SharedPreferences guest=context.getSharedPreferences("margyt_appearance_guest",0);
                     if(guest.getBoolean("_initialized",false)){theirs=guest;uid="guest";}
                 }
                 if(theirs.getBoolean("_initialized",false)) {
 
                     for(java.util.Map.Entry<String,?> entry:theirs.getAll().entrySet())copy(edit,entry.getKey(),entry.getValue());
-                    File from=new File(context.getFilesDir(),"airtok/accounts/"+uid),to=new File(context.getFilesDir(),"airtok/accounts/"+SHARED);
+                    File from=new File(context.getFilesDir(),"margyt/accounts/"+uid),to=new File(context.getFilesDir(),"margyt/accounts/"+SHARED);
                     File[] files=from.listFiles();
                     if(files!=null)for(File file:files)if(file.isFile())move(file,new File(to,file.getName()));
                     Diary.note("settings: one set for every account now, taken from "+(uid.equals("guest")?"the signed-out one":"the account last signed in"));
@@ -64,9 +63,9 @@ public final class AccountAppearance {
 
                     for(java.util.Map.Entry<String,?> entry:legacy.getAll().entrySet())
                         if(appearanceKey(entry.getKey()))copy(edit,entry.getKey(),entry.getValue());
-                    for(String path:new String[]{"airtok/font","airtok/emoji-emoji_file"}) {
+                    for(String path:new String[]{"margyt/font","margyt/emoji-emoji_file"}) {
                         String name=path.endsWith("emoji-emoji_file")?"emoji-custom":new File(path).getName();
-                        move(new File(context.getFilesDir(),path),new File(context.getFilesDir(),"airtok/accounts/"+SHARED+"/"+name));
+                        move(new File(context.getFilesDir(),path),new File(context.getFilesDir(),"margyt/accounts/"+SHARED+"/"+name));
                     }
                     legacy.edit().putBoolean("appearance_uid_migrated",true).apply();
                 }
@@ -97,6 +96,6 @@ public final class AccountAppearance {
         else if(value instanceof Float)edit.putFloat(key,(Float)value);
     }
     static File file(Context context,String name) {
-        return new File(context.getFilesDir(),"airtok/accounts/"+scope(context)+"/"+name);
+        return new File(context.getFilesDir(),"margyt/accounts/"+scope(context)+"/"+name);
     }
 }

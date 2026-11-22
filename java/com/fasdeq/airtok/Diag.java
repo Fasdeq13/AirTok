@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-
 final class Diag {
 
     private Diag() {}
@@ -19,7 +18,6 @@ final class Diag {
 
     private static java.io.Writer file;
 
-
     static synchronized void say(String line) {
         if (!ON || said > 800) return;
         said++;
@@ -27,7 +25,7 @@ final class Diag {
         try {
             if (file == null) {
                 java.io.File dir = AirTok.context().getExternalFilesDir(null);
-                file = new java.io.OutputStreamWriter(new java.io.FileOutputStream(new java.io.File(dir, "airtok-diag.txt"), true), "UTF-8");
+                file = new java.io.OutputStreamWriter(new java.io.FileOutputStream(new java.io.File(dir, "margyt-diag.txt"), true), "UTF-8");
             }
             file.write(System.currentTimeMillis() + " " + line + "\n");
             file.flush();
@@ -45,10 +43,7 @@ final class Diag {
         }
     }
 
-
-
     private static boolean adapterTold;
-
 
     static void adapter(final ViewGroup list) {
         if (!ON || adapterTold) return;
@@ -84,7 +79,6 @@ final class Diag {
         }
         throw new NoSuchFieldException(name);
     }
-
 
     private static void items(Object adapter) throws Exception {
         List<?> list = (List<?>) read(read(adapter, "LL"), "LJFF");
@@ -165,7 +159,6 @@ final class Diag {
         return text.length() > 300 ? text.substring(0, 300) : text;
     }
 
-
     private static void describeItem(Object item, String where) {
         try {
             for (Class<?> c = item.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
@@ -182,10 +175,7 @@ final class Diag {
         }
     }
 
-
-
     private static long sheetTold;
-
 
     static void sheet(final View anywhere) {
         if (!ON) return;

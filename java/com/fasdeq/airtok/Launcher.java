@@ -11,16 +11,13 @@ import android.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public final class Launcher {
 
     private Launcher() {}
 
     public static final String KEY = "icon";
 
-
     public static final String DEFAULT = "";
-
 
     static final String CLASSIC = "classic";
 
@@ -34,9 +31,7 @@ public final class Launcher {
         return out;
     }
 
-
     static final String[] LEGACY = {"materialyou", "material3"};
-
 
     private static final String[] REDRAWN = {"margyrialyou", "margyrial3"};
 
@@ -46,7 +41,6 @@ public final class Launcher {
         for (String old : LEGACY) if (old.equals(which)) return true;
         return false;
     }
-
 
     static String[] shown() {
         java.util.List<String> out = new java.util.ArrayList<String>();
@@ -62,10 +56,9 @@ public final class Launcher {
         return out.toArray(new String[0]);
     }
 
-
     static void settle(Context context) {
         try {
-            SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
             if (prefs.contains(KEY_LEGACY)) return;
             android.content.pm.PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             boolean updated = info.lastUpdateTime - info.firstInstallTime > 60000L;
@@ -91,7 +84,6 @@ public final class Launcher {
         return indexOf(which) < 0 ? DEFAULT : which;
     }
 
-
     public static void route(android.content.Intent intent) {
         try {
             ComponentName wanted = intent == null ? null : intent.getComponent();
@@ -103,7 +95,6 @@ public final class Launcher {
 
         }
     }
-
 
     public static void choose(Context context, String which) {
         if (context == null) return;
@@ -134,7 +125,6 @@ public final class Launcher {
                    : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
     }
-
 
     public static Bitmap preview(String which) {
         if ("tilcayo".equals(which) || "fasdeq".equals(which) || "avatar".equals(which)) {
@@ -174,6 +164,6 @@ public final class Launcher {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 }

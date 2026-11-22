@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import java.io.File;
 
-
 public final class Fonts {
 
     private Fonts() {}
@@ -15,19 +14,16 @@ public final class Fonts {
     public static final String KEY = "font";
     public static final String KEY_EMOJI = "font_emoji";
 
-
     public static final String TWEMOJI = "twemoji";
     public static final String NOTO = "noto";
     public static final String BLOBMOJI = "blobmoji";
     public static final String EMOJI_FILE = "emoji_file";
 
-
-    public static final String TWEMOJI_ASSET = "airtok/twemoji.ttf";
+    public static final String TWEMOJI_ASSET = "margyt/twemoji.ttf";
 
     private static String packAsset(Context context, String which) {
         return EmojiPackManager.asset(context, which);
     }
-
 
     public static final String SYSTEM = "";
     public static final String SANS = "sans-serif";
@@ -39,7 +35,7 @@ public final class Fonts {
     public static final String FILE = "file";
 
     public static final String ROUNDED = "nunito";
-    static final String ROUNDED_ASSET = "airtok/fonts/nunito.ttf";
+    static final String ROUNDED_ASSET = "margyt/fonts/nunito.ttf";
 
     private static final int[] ROUNDED_WEIGHTS = {400, 500, 600, 700, 800};
 
@@ -54,14 +50,10 @@ public final class Fonts {
     private static volatile Typeface face;
     private static volatile boolean looked;
 
-
-
     public static String name() {
         String known = chosen;
         if (known != null) return known;
         SharedPreferences prefs = prefs();
-
-
 
         if (prefs == null) return SYSTEM;
 
@@ -111,11 +103,9 @@ public final class Fonts {
         forget();
     }
 
-
     public static boolean emojiReady(Context context) {
         return EmojiPackManager.ready(context, emoji());
     }
-
 
     public static Typeface twemoji(Context context) {
         Typeface known = bundled;
@@ -134,11 +124,9 @@ public final class Fonts {
 
     private static volatile Typeface bundled;
 
-
     public static File file(Context context) {
         return AccountAppearance.file(context,"font");
     }
-
 
     public static boolean take(Context context, android.net.Uri uri) {
         return take(context, uri, false);
@@ -170,7 +158,6 @@ public final class Fonts {
                 in.close();
             }
 
-
             Typeface test = Typeface.createFromFile(temporary);
             if (test == null) return false;
             if (!temporary.renameTo(out)) return false;
@@ -187,14 +174,10 @@ public final class Fonts {
 
     static File emojiFile(Context context, String which) {
         if(EMOJI_FILE.equals(which))return AccountAppearance.file(context,"emoji-custom");
-        return new File(context.getFilesDir(), "airtok/emoji-" + which);
+        return new File(context.getFilesDir(), "margyt/emoji-" + which);
     }
 
-
-
-
     public static Typeface chosenFace() {
-
 
         if (looked) return face;
         return lookedUp();
@@ -203,18 +186,15 @@ public final class Fonts {
     private static synchronized Typeface lookedUp() {
         if (looked) return face;
 
-
         face = build();
         looked = true;
         return face;
     }
 
-
     private static Typeface build() {
         Context context = AirTok.context();
         return build(context, name(), emoji());
     }
-
 
     public static Typeface preview(Context context, String emojiPack) {
         return build(context, name(), emojiPack);
@@ -230,8 +210,6 @@ public final class Fonts {
                 File font = context == null ? null : file(context);
                 if (font != null && font.isFile()) plain = Typeface.createFromFile(font);
             } else if (!SYSTEM.equals(letters)) {
-
-
 
                 File font = systemFont(letters);
                 if (font != null) plain = Typeface.createFromFile(font);
@@ -254,7 +232,6 @@ public final class Fonts {
         if (!pack.isFile()) return plain;
         return hybrid(context, letters, pack, null);
     }
-
 
     private static Typeface hybrid(Context context, String letters, File pack,
                                    String asset) {
@@ -284,7 +261,6 @@ public final class Fonts {
         }
     }
 
-
     private static android.graphics.fonts.FontFamily roundedFamily(Context context) throws java.io.IOException {
         android.graphics.fonts.FontFamily.Builder family = null;
         for (int weight : ROUNDED_WEIGHTS) {
@@ -298,7 +274,6 @@ public final class Fonts {
         return family.build();
     }
 
-
     static Typeface rounded(Context context) {
         if (context == null) return null;
         try {
@@ -310,7 +285,6 @@ public final class Fonts {
             return null;
         }
     }
-
 
     private static File systemFont(String family) {
         for (String path : filesFor(family)) {
@@ -365,7 +339,6 @@ public final class Fonts {
         };
     }
 
-
     private static final class OwnedFont {
         Typeface original,applied;OwnedFont(Typeface original){this.original=original;}
     }
@@ -379,13 +352,11 @@ public final class Fonts {
         long probe=Probe.start();applyTree(root,0,new int[]{4000});Probe.stop(Probe.FONTS,probe);
     }
 
-
     private static final java.util.concurrent.ConcurrentHashMap<Class<?>,Boolean> glyphs=
             new java.util.concurrent.ConcurrentHashMap<Class<?>,Boolean>();
     private static boolean drawsGlyphs(android.view.View view){
         Class<?> type=view.getClass();Boolean known=glyphs.get(type);
         if(known==null){
-
 
             String kind=type.getName().toLowerCase(java.util.Locale.ROOT);
             known=Boolean.valueOf(kind.contains("icon") || kind.contains("emoji"));glyphs.put(type,known);
@@ -423,8 +394,6 @@ public final class Fonts {
     public static void setTextAppearance(TextView view,int resource){view.setTextAppearance(resource);apply(view);}
     public static void setTextAppearance(TextView view,Context context,int resource){view.setTextAppearance(context,resource);apply(view);}
 
-
-
     public static void setTypeface(TextView view, Typeface face) {
         Typeface wanted=chosenFace();
         if(wanted==null && ownedFonts.isEmpty()){view.setTypeface(face);return;}
@@ -446,7 +415,6 @@ public final class Fonts {
         Typeface wanted = chosenFace();
         return paint.setTypeface(wanted == null ? face : keep(wanted, face));
     }
-
 
     private static Typeface keep(Typeface wanted, Typeface theirs) {
         try {

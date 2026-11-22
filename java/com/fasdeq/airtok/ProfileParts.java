@@ -4,12 +4,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
-
 public final class ProfileParts {
     private ProfileParts() {}
 
     static final int BIO = 0x7e0c05c0, TOOLS = 0x7e0c05c1;
-
 
     public static void attaching(Object component, View child, ViewGroup parent) {
         if (component == null || parent == null) return;

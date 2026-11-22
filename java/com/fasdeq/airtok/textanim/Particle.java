@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class Particle {
     static final float TWO_PI = (float) (Math.PI * 2.0);
@@ -84,7 +80,6 @@ public final class Particle {
     public float delay;
     public float expand;
 
-
     boolean homing;
     float tx;
     float ty;
@@ -92,7 +87,6 @@ public final class Particle {
     float swirlK;
     float spinDir;
     float arrive;
-
 
     boolean gliding;
     float gx0;
@@ -189,7 +183,6 @@ public final class Particle {
         }
     }
 
-
     void confetti(Random random, float base) {
         vx = range(random, -1.0f, 1.0f);
         vy = -range(random, 2.0f, 4.0f);
@@ -205,7 +198,6 @@ public final class Particle {
         turbulenceFx = range(random, 0.06f, 0.14f);
         turbulenceFy = range(random, 0.05f, 0.12f);
     }
-
 
     void heart(Random random, float base) {
         vx = range(random, -0.9f, 0.9f);
@@ -224,7 +216,6 @@ public final class Particle {
         turbulenceFy = range(random, 0.04f, 0.10f);
     }
 
-
     public void launch(float vx, float vy, float gravity, float drag, float decay, float turbulence, float stretch) {
         this.vx = vx;
         this.vy = vy;
@@ -234,7 +225,6 @@ public final class Particle {
         if (turbulence >= 0.0f) this.turbulence = turbulence;
         if (stretch > 0.0f && style == Config.STYLE_SPARKS) this.stretch = stretch;
     }
-
 
     public void home(float tx, float ty, float pull, float swirl, float dir, float arrive) {
         this.homing = true;
@@ -251,7 +241,6 @@ public final class Particle {
         this.decay = 0.004f;
         this.wind = 0.0f;
     }
-
 
     public void tune(float speed, float life, float windAdd) {
         vx *= speed;
@@ -280,11 +269,6 @@ public final class Particle {
         return value * value * (3.0f - 2.0f * value);
     }
 
-
-
-
-
-
     boolean stepHoming(float scale) {
         float dx = tx - x;
         float dy = ty - y;
@@ -308,8 +292,6 @@ public final class Particle {
         if (life > fade) life = fade;
         return life > 0.0f;
     }
-
-
 
     public void glide(float x1, float y1, float frames, int curve, float arc, float turns, float dir) {
         gliding = true;
@@ -508,7 +490,6 @@ public final class Particle {
         bounded = true;
     }
 
-
     void sand(Random random, float base) {
         vx = range(random, 0.5f, 2.2f);
         vy = range(random, -1.3f, 0.35f);
@@ -522,7 +503,6 @@ public final class Particle {
         turbulenceFy = range(random, 0.09f, 0.18f);
         spin = range(random, -3.0f, 3.0f);
     }
-
 
     void smoke(Random random, float base) {
         vx = range(random, -0.30f, 0.30f);
@@ -539,7 +519,6 @@ public final class Particle {
         turbulenceFy = range(random, 0.04f, 0.10f);
     }
 
-
     public void smokeTune(float rise, float spread, float swirl) {
         vy *= rise;
         gravity *= rise;
@@ -547,7 +526,6 @@ public final class Particle {
         turbulence *= swirl;
         wobble *= swirl;
     }
-
 
     void bubbles(Random random, float base) {
         vx = range(random, -0.35f, 0.35f);
@@ -562,7 +540,6 @@ public final class Particle {
         turbulenceFx = range(random, 0.05f, 0.12f);
         turbulenceFy = range(random, 0.04f, 0.10f);
     }
-
 
     void sparks(Random random, float base) {
         float angle = random.nextFloat() * TWO_PI;

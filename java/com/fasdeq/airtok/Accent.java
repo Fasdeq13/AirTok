@@ -26,11 +26,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public final class Accent {
 
     private Accent() {}
-
 
     public static final int TIKTOK = 0xFFFE2C55;
 
@@ -55,7 +53,6 @@ public final class Accent {
     static int custom() { SharedPreferences p = prefs(); return p == null ? 0 : p.getInt("accent_custom", 0); }
     static void setCustom(int colour) { SharedPreferences p = prefs(); if (p != null) p.edit().putInt("accent_custom", colour).apply(); set(colour); }
 
-
     public static int fromWallpaper() {
         Context context = AirTok.context();
         if (context == null || android.os.Build.VERSION.SDK_INT < 31) return 0;
@@ -78,7 +75,7 @@ public final class Accent {
         if (prefs == null) {
             Context ctx = AirTok.context();
             if (ctx != null) {
-                try { prefs = ctx.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE); } catch (Throwable ignored) {}
+                try { prefs = ctx.getSharedPreferences("margyt", Context.MODE_PRIVATE); } catch (Throwable ignored) {}
             }
         }
         if (prefs == null) return BUILT_WITH;
@@ -88,7 +85,7 @@ public final class Accent {
             if (chosen == 0) chosen = prefs.getInt(KEY, 0);
             if (chosen == 0) {
                 Context ctx = AirTok.context();
-                if (ctx != null) chosen = ctx.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getInt(KEY, 0);
+                if (ctx != null) chosen = ctx.getSharedPreferences("margyt", Context.MODE_PRIVATE).getInt(KEY, 0);
             }
         } catch (Throwable ignored) {
         }
@@ -100,7 +97,6 @@ public final class Accent {
     private static boolean follows(SharedPreferences prefs) {
         return prefs.getBoolean(KEY_MATERIAL, false);
     }
-
 
     public static boolean isMaterial() {
         try {
@@ -117,7 +113,7 @@ public final class Accent {
         Context ctx = AirTok.context();
         if (ctx != null) {
             try {
-                ctx.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+                ctx.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                    .edit().putBoolean(KEY_MATERIAL, on).apply();
             } catch (Throwable ignored) {}
         }
@@ -127,15 +123,12 @@ public final class Accent {
         refreshLikeViews();
     }
 
-
     public static int accent() {
         return Plugins.colour(colour());
     }
 
     public static void set(int colour) {
         cached = colour == 0 ? BUILT_WITH : colour;
-
-
 
         forget();
         SharedPreferences prefs = prefs();
@@ -146,7 +139,7 @@ public final class Accent {
         Context ctx = AirTok.context();
         if (ctx != null) {
             try {
-                ctx.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+                ctx.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                    .edit().putInt(KEY, cached).putBoolean(KEY_MATERIAL, false).apply();
             } catch (Throwable ignored) {}
         }
@@ -168,12 +161,7 @@ public final class Accent {
         }
     }
 
-
-
-
     public static int swap(int colour) {
-
-
 
         long known = memo;
         if ((int) (known >>> 32) == colour) return (int) known;
@@ -188,7 +176,6 @@ public final class Accent {
         return out;
     }
 
-
     private static int translate(int colour) {
         int chosen = colour();
         int moved = Palette.map(colour, TIKTOK, chosen);
@@ -197,14 +184,10 @@ public final class Accent {
         int origin = originOf(colour);
         if (origin != 0) return Palette.map(origin, TIKTOK, chosen);
 
-
         if (chosen != TIKTOK && Palette.secondary(colour)) return Palette.toAccent(colour, chosen);
-
-
 
         return Themes.recolour(colour, true);
     }
-
 
     private static int originOf(int colour) {
         int[] baked = Baked.BAKED;
@@ -221,8 +204,6 @@ public final class Accent {
     private static volatile long memo;
     private static volatile java.util.concurrent.atomic.AtomicLongArray translations=new java.util.concurrent.atomic.AtomicLongArray(256);
 
-
-
     static volatile int epoch;
 
     static void forget() {
@@ -234,10 +215,6 @@ public final class Accent {
         recolouredVectors.clear();
         plainVectors.clear();
     }
-
-
-
-
 
     public static Drawable getDrawable(TypedArray array, int index) {
         return moved(array.getDrawable(index));
@@ -261,7 +238,6 @@ public final class Accent {
         view.setBackgroundResource(id);
     }
 
-
     private static Drawable moved(Drawable drawable) {
         if(drawable==null)return null;
         Owned known=owned.get(drawable);
@@ -284,7 +260,6 @@ public final class Accent {
         return now == was ? drawable : new ColorDrawable(now);
     }
 
-
     private static boolean plainlyRed(int[] pixels) {
         int coloured = 0, red = 0;
         for (int pixel : pixels) {
@@ -298,16 +273,13 @@ public final class Accent {
         return coloured > 0 && red * 100 >= coloured * 88;
     }
 
-
     private static final int DISK_MIN = 4096;
 
         private static final java.util.Map<Bitmap, Bitmap> recolouredBitmaps =
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Bitmap, Bitmap>());
 
-
     private static final java.util.Map<Bitmap, Integer> untouchedBitmaps =
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Bitmap, Integer>());
-
 
     private static Drawable movedBitmap(android.graphics.drawable.BitmapDrawable drawable) {
         int target = colour();
@@ -325,8 +297,6 @@ public final class Accent {
             if (known != null) return new android.graphics.drawable.BitmapDrawable(resources, known);
             int[] pixels = new int[width * height];
             source.getPixels(pixels, 0, width, 0, 0, width, height);
-
-
 
             String diskKey = width * height >= DISK_MIN
                     ? "bmp2|" + Integer.toHexString(target) + "|"
@@ -362,7 +332,6 @@ public final class Accent {
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             out.setPixels(pixels, 0, width, 0, 0, width, height);
 
-
             out.setDensity(source.getDensity());
             recolouredBitmaps.put(source, out);
             if (diskKey != null) {
@@ -378,7 +347,6 @@ public final class Accent {
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Object, Bitmap>());
     private static final java.util.Set<Object> plainVectors = java.util.Collections.synchronizedSet(
             java.util.Collections.newSetFromMap(new java.util.WeakHashMap<Object, Boolean>()));
-
 
     private static Drawable movedVector(Drawable drawable) {
         int target = colour();
@@ -446,7 +414,6 @@ public final class Accent {
         }
     }
 
-
     private static Drawable movedShape(GradientDrawable shape) {
         if (android.os.Build.VERSION.SDK_INT < 24) return shape;
         try {
@@ -472,7 +439,6 @@ public final class Accent {
         }
     }
 
-
     private static Drawable movedLayers(android.graphics.drawable.LayerDrawable layers) {
         try {
             int count = layers.getNumberOfLayers();
@@ -497,8 +463,6 @@ public final class Accent {
         }
     }
 
-
-
     private static final class Owned {
         final Drawable original;
         final int accent;
@@ -508,10 +472,8 @@ public final class Accent {
         }
     }
 
-
     private static final java.util.Map<Drawable, Owned> owned =
             java.util.Collections.synchronizedMap(new java.util.WeakHashMap<Drawable, Owned>());
-
 
     public static void repaintTree(View root) {
         if (root == null) return;
@@ -520,11 +482,6 @@ public final class Accent {
             paintViews(root, 0, new int[] {0});
         } catch (Throwable ignored) { }
     }
-
-
-
-
-
 
     private static final int LOOKED = 0x4D617272;
 
@@ -546,7 +503,6 @@ public final class Accent {
         }
         return all;
     }
-
 
     static void look(View view) {
         if (colour() == TIKTOK && owned.isEmpty() && ownedColours.isEmpty()) return;
@@ -593,13 +549,11 @@ public final class Accent {
         }
     }
 
-
     private static final class OwnedText {
         final CharSequence original,shown;
         OwnedText(CharSequence original,CharSequence shown){this.original=original;this.shown=shown;}
     }
     private static final int SPAN_KEY = 0x54545350;
-
 
     private static void paintSpans(TextView text) {
         if (text instanceof android.widget.EditText) return;
@@ -659,7 +613,6 @@ public final class Accent {
         return mapped;
     }
 
-
     private static Drawable repainted(Drawable current, boolean icon) {
         if (current == null) return null;
         int accent = colour();
@@ -690,7 +643,6 @@ public final class Accent {
         return moved(array.getColorStateList(index));
     }
 
-
     private static ColorStateList moved(ColorStateList list) {
         if(list==null)return null;
         OwnedColours known=ownedColours.get(list);
@@ -702,8 +654,6 @@ public final class Accent {
     private static ColorStateList moveColours(ColorStateList list) {
         if (list == null) return null;
         try {
-
-
 
             int[] colours = (int[]) call(list, "getColors");
             int[][] states = (int[][]) call(list, "getStates");
@@ -792,9 +742,6 @@ public final class Accent {
         shape.setColors(out);
     }
 
-
-
-
     public static Drawable getDrawable(Context context, int id) {
         return movedById(context.getResources(), id, context.getDrawable(id));
     }
@@ -806,7 +753,6 @@ public final class Accent {
     public static Drawable getDrawable(Resources resources, int id, Resources.Theme theme) {
         return movedById(resources, id, resources.getDrawable(id, theme));
     }
-
 
     private static Drawable movedById(Resources resources, int id, Drawable drawable) {
         if (drawable == null) return null;
@@ -823,7 +769,6 @@ public final class Accent {
     public static void setImageResource(ImageView view, int id) {
         {
             Drawable out = null;
-
 
             if (colour() != TIKTOK && !PlainArt.has(view.getResources(), id, colour())) {
                 try {
@@ -884,7 +829,6 @@ public final class Accent {
         view.setImageTintList(mapped);
     }
 
-
     public static java.io.InputStream openRawResource(Resources resources, int id) {
         return recolourResource(resources, id, resources.openRawResource(id));
     }
@@ -914,7 +858,6 @@ public final class Accent {
             + "\\s*(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\\s*,"
             + "\\s*(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\\s*,"
             + "\\s*(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\\s*\\]");
-
 
     private static InputStream recolourLottie(InputStream source, boolean like) {
         return recolourLottie(source, like, false);
@@ -992,7 +935,6 @@ public final class Accent {
         return new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
     }
 
-
     private static String recolourGradientFills(String json, int target) {
         if (!json.contains("\"gf\"") && !json.contains("\"gs\"")) return json;
         try {
@@ -1031,7 +973,6 @@ public final class Accent {
             }
         }
     }
-
 
     private static void recolourStopProperty(org.json.JSONObject property, int stops,
                                              int target, int[] changed)
@@ -1105,7 +1046,6 @@ public final class Accent {
         return source;
     }
 
-
     public static void setAnimation(Object animation, String name) {
         if (animation == null) return;
         String lower = name == null ? "" : name.toLowerCase(Locale.ROOT);
@@ -1115,15 +1055,11 @@ public final class Accent {
             rememberLikeName(name);
             try {
 
-
                 final Context context = ((View) animation).getContext();
                 String json = likeAnimationReady(context, name);
                 if (json == null) {
 
-
-
                     scheduleLikeBuild(context, (View) animation, name);
-
 
                     json = shippedLikeJson(context, lower, TIKTOK);
                     if (json == null) {
@@ -1133,7 +1069,7 @@ public final class Accent {
                 }
                 java.lang.reflect.Method fromJson = animation.getClass().getMethod(
                         "setAnimationFromJson", String.class, String.class);
-                String cacheKey = "airtok:" + lower + ":"
+                String cacheKey = "margyt:" + lower + ":"
                         + Integer.toHexString(LikeColors.colour()) + ":"
                         + Integer.toHexString(json.hashCode());
                 fromJson.invoke(animation, json, cacheKey);
@@ -1144,16 +1080,6 @@ public final class Accent {
         }
         setAnimationNormally(animation, name);
     }
-
-
-
-
-
-
-
-
-
-
 
     private static final String LIKE_NAMES_KEY = "like_animation_names";
     private static final java.util.concurrent.ConcurrentHashMap<String, String> likeJson =
@@ -1167,7 +1093,7 @@ public final class Accent {
                     new java.util.concurrent.LinkedBlockingQueue<Runnable>(),
                     new java.util.concurrent.ThreadFactory() {
                 @Override public Thread newThread(Runnable job) {
-                    Thread thread = new Thread(job, "airtok-like-prewarm");
+                    Thread thread = new Thread(job, "margyt-like-prewarm");
                     thread.setPriority(Thread.MIN_PRIORITY);
                     thread.setDaemon(true);
                     return thread;
@@ -1186,7 +1112,6 @@ public final class Accent {
         return RecolourCache.likeKey(lower, LikeColors.colour());
     }
 
-
     private static String likeAnimationReady(Context context, String name) {
         String lower = name == null ? "" : name.toLowerCase(Locale.ROOT);
         String key = likeKey(lower);
@@ -1197,7 +1122,6 @@ public final class Accent {
         if (ready != null) likeJson.put(key, ready);
         return ready;
     }
-
 
     private static void scheduleLikeBuild(final Context context, final View view,
                                           final String name) {
@@ -1244,14 +1168,12 @@ public final class Accent {
         } catch (Throwable ignored) { }
     }
 
-
     private static String likeAnimationJson(Context context, String name) {
         String lower = name == null ? "" : name.toLowerCase(Locale.ROOT);
         final long generation = likeGeneration;
         String key = likeKey(lower);
         String ready = likeJson.get(key);
         if (ready != null) return ready;
-
 
         ready = shippedLikeJson(context, lower, LikeColors.colour());
         if (ready != null) {
@@ -1275,11 +1197,10 @@ public final class Accent {
         return built;
     }
 
-
     private static String shippedLikeJson(Context context, String lower, int colour) {
         InputStream in = null;
         try {
-            String path = "airtok/rc/"
+            String path = "margyt/rc/"
                     + String.format(Locale.US, "%06X", colour & 0xFFFFFF) + "/"
                     + RecolourCache.hash(lower.getBytes(StandardCharsets.UTF_8)).substring(0, 16)
                     + ".json";
@@ -1372,7 +1293,6 @@ public final class Accent {
         } catch (Throwable ignored) { }
     }
 
-
     private static void discoverLikeNames(Context context) {
         try {
             String[] files = context.getAssets().list("");
@@ -1382,7 +1302,6 @@ public final class Accent {
                     likeNames.add(file);
         } catch (Throwable ignored) { }
     }
-
 
     static void dropLikeCache() {
         likeGeneration++;
@@ -1394,7 +1313,6 @@ public final class Accent {
         likeWorker.getQueue().clear();
         buildingLike.clear();
     }
-
 
     public static void prewarmLikeAnimations(final Runnable then) {
         final Context context = AirTok.context();
@@ -1437,7 +1355,6 @@ public final class Accent {
         return name.endsWith(".json") && isLikeAsset(name);
     }
 
-
     private static String embedFeedLikeImages(org.json.JSONObject composition, Context context) {
         String json = composition.toString();
         try {
@@ -1448,7 +1365,6 @@ public final class Accent {
                 org.json.JSONObject image = images.optJSONObject(i);
                 if (image == null) continue;
                 String file = image.optString("p", "");
-
 
                 if (!file.toLowerCase(Locale.ROOT).endsWith(".png")
                         || file.startsWith("data:")) continue;
@@ -1479,7 +1395,6 @@ public final class Accent {
                     image.put("e", 1);
                     changed = true;
                 } catch (Throwable ignored) {
-
 
                 } finally {
                     if (tinted != null) try { tinted.close(); } catch (Throwable ignoredClose) { }
@@ -1521,7 +1436,6 @@ public final class Accent {
                     return size() > 48;
                 }
             };
-
 
     private static InputStream recolourLikePng(InputStream source) {
         try {
@@ -1582,7 +1496,6 @@ public final class Accent {
             return source;
         }
     }
-
 
     public static void setAlpha(View view, float alpha) {
         long probe = Probe.start();
@@ -1647,7 +1560,6 @@ public final class Accent {
         LikeColors.syncCount(view, LikeColors.liked(colour));
     }
 
-
     public static void refreshLikeViews() {
         Heart.refresh();
         synchronized(textSources){for(java.util.Map.Entry<TextView,Integer> entry:new java.util.WeakHashMap<TextView,Integer>(textSources).entrySet()){
@@ -1706,8 +1618,6 @@ public final class Accent {
         }
     }
 
-
-
     private static void accentReply(TextView view){
         if(view==null)return;
         CharSequence text=view.getText();
@@ -1722,7 +1632,6 @@ public final class Accent {
         synchronized(textSources){textSources.put(view,original);}
         view.setTextColor((original&0xff000000)|(accent()&0xffffff));
     }
-
 
     static Integer themed(android.content.Context context, int number) {
         if (context == null || number == 0) return null;
@@ -1745,7 +1654,6 @@ public final class Accent {
             return null;
         }
     }
-
 
     static String sourceOf(TextView view){
         Integer source;
@@ -1853,7 +1761,6 @@ public final class Accent {
     public static int getColor(TypedArray array, int index, int fallback) {
         return sourced(array.getColor(index, fallback));
     }
-
 
     private static int sourced(int colour) {
         int rgb=colour & 0xFFFFFF;

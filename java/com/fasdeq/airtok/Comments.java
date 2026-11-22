@@ -22,14 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public final class Comments {
 
     private Comments() {}
     public static void mark(View cell) {
         if(cell!=null)cell.setTag(0x5454434D,Boolean.TRUE);
     }
-
 
     public static View findViewById(View cell,int id) {
         mark(cell);
@@ -38,7 +36,6 @@ public final class Comments {
         return result;
     }
 
-
     public static final String KEY_COPY = "comment_copy";
     public static final String KEY_DOUBLE_TAP_LIKE = "comment_double_tap_like";
 
@@ -46,7 +43,7 @@ public final class Comments {
         Context context = AirTok.context();
         if (context == null) return true;
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY_DOUBLE_TAP_LIKE, true);
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY_DOUBLE_TAP_LIKE, true);
         } catch (Throwable ignored) {
             return true;
         }
@@ -56,22 +53,19 @@ public final class Comments {
         Context context = AirTok.context();
         if (context == null) return;
         try {
-            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_DOUBLE_TAP_LIKE, enabled).apply();
+            context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY_DOUBLE_TAP_LIKE, enabled).apply();
             Flags.forget();
         } catch (Throwable ignored) {}
     }
-
 
     private static final String STAMPED = "-image-origin.";
     private static final String PLAIN = "-image-medium.";
 
     private static final Set<String> told = new HashSet<String>();
 
-
     public static boolean isCopyEnabled() {
         return true;
     }
-
 
     public static void stickerTapped(View view, CommentStickerStruct sticker,
                                      boolean flag, String from,
@@ -84,7 +78,6 @@ public final class Comments {
         }
         onwards(view, sticker, flag, from, extras, where);
     }
-
 
     private static void onwards(Object... args) {
         try {
@@ -101,7 +94,6 @@ public final class Comments {
             Diary.note("comment sticker tap: " + error);
         }
     }
-
 
     public static void stickerSheet(Object helper, String where, StickerItem sticker,
                                     View view, boolean saved, String from, Map extras,
@@ -133,7 +125,6 @@ public final class Comments {
         }
     }
 
-
     public static CommentStickerStruct getStickerStruct(Object comment) {
         CommentStickerStruct sticker = null;
         try {
@@ -149,25 +140,16 @@ public final class Comments {
         return sticker;
     }
 
-
     private static volatile CommentStickerStruct lastBound;
-
 
     public static void setOnLongClickListener(View view,
                                               final View.OnLongClickListener theirs) {
         if (view == null) return;
         view.setTag(0x5454434D,Boolean.TRUE);
 
-
-
-
-
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View pressed) {
-
-
-
 
                 String comment = isCopyEnabled() ? CommentText.from(theirs) : null;
                 if (isCopyEnabled() && comment == null) comment = visibleComment(pressed);
@@ -216,7 +198,6 @@ public final class Comments {
         return false;
     }
 
-
     public static List nativeItems(Object fragment,List items) {
         if(!isCopyEnabled() || items==null)return items;
         try {
@@ -229,7 +210,7 @@ public final class Comments {
             for(int i=0;i<items.size();i++) {
                 Object item=items.get(i);
                 String key=NativeRead.string(NativeRead.field(item,"LIZIZ"));
-                if("airtok_select_comment".equals(key))return items;
+                if("margyt_select_comment".equals(key))return items;
                 String label=NativeRead.string(NativeRead.field(item,"LIZLLL")).toLowerCase(java.util.Locale.ROOT);
                 if(key.toLowerCase(java.util.Locale.ROOT).contains("copy") || label.contains("копир") || label.equals("copy")) {
                     after=i+1;Object art=NativeRead.field(item,"LIZJ");if(art instanceof Integer)icon=(Integer)art;
@@ -237,7 +218,7 @@ public final class Comments {
             }
             Class<?> type=Class.forName("X.0oi8");
             Object action=type.getConstructor().newInstance();
-            type.getField("LIZIZ").set(action,"airtok_select_comment");
+            type.getField("LIZIZ").set(action,"margyt_select_comment");
             type.getField("LIZLLL").set(action,Text.COMMENT_SELECT_COPY);
             type.getField("LIZJ").set(action,icon);
             type.getField("LJ").set(action,(Function0<Object>)()->{
@@ -259,7 +240,6 @@ public final class Comments {
             nativeMenu.remove();
         }
     }
-
 
     private static String visibleComment(View root) {
         if (root==null || root.getVisibility()!=View.VISIBLE) return null;
@@ -294,7 +274,6 @@ public final class Comments {
         }
     }
 
-
     private static void selectComment(Context context, String text) {
         try {
             Skin skin=Skin.remembered(context);
@@ -314,7 +293,6 @@ public final class Comments {
             Diary.note("comment selection: " + error);
         }
     }
-
 
     private static CommentStickerStruct hunt(Object thing, Set<Object> seen, int depth) {
         if (thing == null || depth > 3) return null;
@@ -360,10 +338,6 @@ public final class Comments {
             }
             if (!swapped) return origin;
 
-
-
-
-
             UrlModel clean = new UrlModel();
             clean.setUrlList(plain);
             clean.setUri(origin.getUri());
@@ -374,7 +348,6 @@ public final class Comments {
             return origin;
         }
     }
-
 
     private static void say(String uri) {
         synchronized (told) {

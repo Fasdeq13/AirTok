@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
-
 public final class LiteMenu {
 
     private LiteMenu() {}
@@ -16,7 +15,6 @@ public final class LiteMenu {
     public static String title() {
         return "MargyT Lite";
     }
-
 
     public static Object tapped() {
         try {
@@ -54,7 +52,6 @@ public final class LiteMenu {
             Diary.note("menu row tapped: " + broken);
         }
     }
-
 
     private static Object nothing() {
         try {

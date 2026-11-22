@@ -3,7 +3,6 @@ package com.fasdeq.airtok;
 import java.util.HashMap;
 import java.util.Map;
 
-
 final class Icons {
 
     private Icons() {}

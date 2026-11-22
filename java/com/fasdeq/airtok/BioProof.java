@@ -7,11 +7,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 final class BioProof {
 
     private BioProof() {}
-
 
     interface Done {
         void done(boolean proved, String said);
@@ -20,12 +18,10 @@ final class BioProof {
     private static final AtomicBoolean busy = new AtomicBoolean();
     private static final String PREFIX = "bio_proof_";
 
-
     private static final int LOOKS = 9;
     private static final long BETWEEN = 6000L;
 
     private static long recoveredAt;
-
 
     static boolean available() {
         try {
@@ -36,13 +32,12 @@ final class BioProof {
     }
 
     private static SharedPreferences prefs() {
-        return AirTok.context().getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return AirTok.context().getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 
     static boolean pending(String uid) {
         return uid != null && prefs().contains(PREFIX + uid + "_original");
     }
-
 
     static String temporary(String original, String code) {
         String out = original.length() == 0 ? code : original + "\n" + code;
@@ -84,7 +79,6 @@ final class BioProof {
                         String original = NativeBio.bio(uid);
                         String extra = NativeBio.extras(uid);
                         String next = temporary(original, code);
-
 
                         if (!prefs().edit().putString(key + "_original", original)
                                 .putString(key + "_temporary", next)
@@ -135,8 +129,6 @@ final class BioProof {
         });
     }
 
-
-
     private static String code() throws InterruptedException {
         String have = Proof.waiting();
         if (have.length() > 0) return have;
@@ -174,9 +166,6 @@ final class BioProof {
         }
     }
 
-
-
-
     private static void later(final String uid, final int attempt) {
         if (attempt >= 4 || !pending(uid)) return;
         new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -188,7 +177,6 @@ final class BioProof {
             }
         }, 30000L);
     }
-
 
     static void recover() {
         final String uid = Account.liveId();

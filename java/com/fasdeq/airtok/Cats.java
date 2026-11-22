@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 public final class Cats {
 
     private Cats() {}
@@ -35,7 +34,6 @@ public final class Cats {
 
     private static final String REPOSITORY = "https://margy.narez.xyz/cats/";
     private static final String LIST = REPOSITORY + "cats.json";
-
 
     private static final class Cat {
         final String photo;
@@ -52,9 +50,6 @@ public final class Cats {
     private static volatile List<Cat> known = new ArrayList<Cat>();
     private static int taps;
     private static long lastTap;
-
-
-
 
     public static void tapped(final View heading) {
         long now = android.os.SystemClock.uptimeMillis();
@@ -82,16 +77,12 @@ public final class Cats {
         show(heading.getContext());
     }
 
-
     private static void meow(final Context context) {
         try {
 
-
-
-
-            final File sound = new File(context.getFilesDir(), "airtok/meow.ogg");
+            final File sound = new File(context.getFilesDir(), "margyt/meow.ogg");
             if (!sound.isFile()) {
-                java.io.InputStream in = context.getAssets().open("airtok/meow.ogg");
+                java.io.InputStream in = context.getAssets().open("margyt/meow.ogg");
                 java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
                 byte[] buffer = new byte[8192];
                 int read;
@@ -117,11 +108,9 @@ public final class Cats {
         }
     }
 
-
-
     private static void fetch(final Context context) {
         if (!known.isEmpty()) return;
-        final File cache = new File(context.getFilesDir(), "airtok/cats.json");
+        final File cache = new File(context.getFilesDir(), "margyt/cats.json");
         byte[] have = Net.read(cache);
         if (have != null && apply(have)) return;
 
@@ -158,8 +147,6 @@ public final class Cats {
         }
     }
 
-
-
     private static void show(final Context context) {
         final List<Cat> all = known;
         if (all.isEmpty()) {
@@ -185,13 +172,12 @@ public final class Cats {
         });
     }
 
-
     static byte[] fat(Context context) {
         return picture(context, "tilcayo.jpg");
     }
 
     private static byte[] picture(Context context, String path) {
-        File cache = new File(context.getFilesDir(), "airtok/cats/" + name(path));
+        File cache = new File(context.getFilesDir(), "margyt/cats/" + name(path));
         byte[] have = Net.read(cache);
         if (have != null) return have;
         byte[] raw = Net.bytes(REPOSITORY + path);

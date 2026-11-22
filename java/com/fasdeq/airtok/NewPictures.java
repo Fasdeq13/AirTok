@@ -7,7 +7,6 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-
 final class NewPictures {
 
     private NewPictures() {}
@@ -16,7 +15,6 @@ final class NewPictures {
         t = Math.max(0f, Math.min(1f, t));
         return 1f - (1f - t) * (1f - t) * (1f - t);
     }
-
 
     private static float spring(float t) {
         t = Math.max(0f, Math.min(1f, t));
@@ -30,9 +28,6 @@ final class NewPictures {
         picture.setAlpha(alpha);
         picture.draw(canvas);
     }
-
-
-
 
     static final class Ghosting extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
@@ -62,7 +57,6 @@ final class NewPictures {
             words(canvas, Local.of("в сети"), left + 46 * d, top + 31 * d, 12, faint(skin.muted(), 1f - g), false, Paint.Align.LEFT);
             words(canvas, Local.of("был(а) давно"), left + 46 * d, top + 31 * d, 12, faint(skin.muted(), g), false, Paint.Align.LEFT);
 
-
             float right = getWidth() - 22 * d, y = top + 56 * d;
             String said = Local.of("ты тут?");
             text.setTextSize(14 * d);
@@ -73,7 +67,6 @@ final class NewPictures {
             words(canvas, said, right - w / 2f, y + 21 * d, 14, 0xFFFFFFFF, false, Paint.Align.CENTER);
             words(canvas, Local.of("Прочитано"), right, y + 48 * d, 11, faint(skin.muted(), 1f - g), false, Paint.Align.RIGHT);
             words(canvas, Local.of("Отправлено"), right, y + 48 * d, 11, faint(skin.muted(), g), false, Paint.Align.RIGHT);
-
 
             float bx = left, by = y + 28 * d;
             paint.setColor(faint(surface(0.12f), 1f - g * 0.85f));
@@ -92,9 +85,6 @@ final class NewPictures {
             again();
         }
     }
-
-
-
 
     static final class Folders extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
@@ -154,9 +144,6 @@ final class NewPictures {
             again();
         }
     }
-
-
-
 
     static final class Typing extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
@@ -232,9 +219,6 @@ final class NewPictures {
         }
     }
 
-
-
-
     static final class Sponsor extends SettingsPictures.Art {
 
         Sponsor(Context context, Skin skin) {
@@ -274,9 +258,6 @@ final class NewPictures {
             again();
         }
     }
-
-
-
 
     static final class Editor extends SettingsPictures.Art {
         private final Paint dashes = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -330,9 +311,6 @@ final class NewPictures {
             again();
         }
     }
-
-
-
 
     static final class Reposts extends SettingsPictures.Art {
 

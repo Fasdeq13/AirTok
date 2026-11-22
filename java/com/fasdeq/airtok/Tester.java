@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-
 public final class Tester {
 
-
     static final String SUPPORTER = "supporter";
-
 
     private static final int INK = 0x14FFFFFF;
 
@@ -30,11 +27,9 @@ public final class Tester {
 
     private Tester() {}
 
-
     public static boolean on() {
         return Version.TEST;
     }
-
 
     public static boolean allowed() {
         if (!on()) return true;
@@ -48,7 +43,6 @@ public final class Tester {
         return false;
     }
 
-
     public static boolean asked() {
         try {
             return Mine.anything() || Mine.everAsked();
@@ -56,12 +50,6 @@ public final class Tester {
             return false;
         }
     }
-
-
-
-
-
-
 
     static void mark(final Activity activity) {
         if (!on()) return;
@@ -99,7 +87,6 @@ public final class Tester {
         }, AGAIN);
     }
 
-
     private static String who() {
         try {
             String id = Account.id();
@@ -108,9 +95,6 @@ public final class Tester {
         }
         return Text.TEST_NOBODY;
     }
-
-
-
 
     public static void refuse(Activity activity) {
         try {

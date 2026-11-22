@@ -18,7 +18,6 @@ import android.provider.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public final class StreakAlarm extends BroadcastReceiver {
 
     static final String FIRE = "com.fasdeq.airtok.STREAK_FIRE";
@@ -28,14 +27,13 @@ public final class StreakAlarm extends BroadcastReceiver {
     private static final long CADENCE = 15 * 60 * 1000L;
 
     private static final long WAIT = 1500L;
-    private static final String CHANNEL = "airtok_streak";
+    private static final String CHANNEL = "margyt_streak";
 
     private static volatile long exactAt;
     private static volatile String lastMode;
     private static volatile long lastDenied;
 
     static final String KEY_ARMED = "streak_armed_at";
-
 
     static boolean exactAllowed(Context c) {
         try {
@@ -47,16 +45,13 @@ public final class StreakAlarm extends BroadcastReceiver {
         }
     }
 
-
     static String lastMode() {
         return lastMode;
     }
 
-
     static long lastExactAt() {
         return exactAt;
     }
-
 
     static boolean notificationsAllowed(Context c) {
         try {
@@ -68,13 +63,11 @@ public final class StreakAlarm extends BroadcastReceiver {
         }
     }
 
-
     static void channel(Context c) {
         try {
             if (Build.VERSION.SDK_INT < 26) return;
             NotificationManager manager = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
             if (manager == null || manager.getNotificationChannel(CHANNEL) != null) return;
-
 
             manager.createNotificationChannel(new NotificationChannel(
                     CHANNEL, Local.of("Серии"), NotificationManager.IMPORTANCE_HIGH));
@@ -95,7 +88,7 @@ public final class StreakAlarm extends BroadcastReceiver {
             try {
                 try {
                     PowerManager power = (PowerManager) app.getSystemService(Context.POWER_SERVICE);
-                    lock = power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "airtok:streak");
+                    lock = power.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "margyt:streak");
                     lock.acquire(60 * 1000L);
                 } catch (Throwable ignored) {
                 }
@@ -111,16 +104,12 @@ public final class StreakAlarm extends BroadcastReceiver {
                 try { if (lock != null && lock.isHeld()) lock.release(); } catch (Throwable ignored) { }
                 result.finish();
             }
-        }, "airtok-streak-alarm");
+        }, "margyt-streak-alarm");
         thread.setDaemon(true);
         thread.start();
     }
 
-
     private static boolean attempt(Context app) {
-
-
-
 
         boolean ready = Streaks.ready(WAIT);
         boolean retry = Streaks.runNow(app);
@@ -128,9 +117,6 @@ public final class StreakAlarm extends BroadcastReceiver {
         if (retry) watchNetwork(app); else unwatchNetwork(app);
         return retry;
     }
-
-
-
 
     static boolean online(Context c) {
         try {
@@ -156,7 +142,6 @@ public final class StreakAlarm extends BroadcastReceiver {
         return PendingIntent.getBroadcast(c, REQUEST + 2, i, f);
     }
 
-
     static void watchNetwork(Context c) {
         try {
             if (Build.VERSION.SDK_INT < 26 || online(c)) return;
@@ -180,19 +165,15 @@ public final class StreakAlarm extends BroadcastReceiver {
         }
     }
 
-
-
     private static PendingIntent intent(Context c, int flags) {
         Intent i = new Intent(c, StreakAlarm.class).setAction(FIRE);
         int f = flags | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0);
         return PendingIntent.getBroadcast(c, REQUEST, i, f);
     }
 
-
     static boolean pending(Context c) {
         return intent(c, PendingIntent.FLAG_NO_CREATE) != null;
     }
-
 
     static void schedule(Context c, boolean retry) {
         Streaks.rescheduleForeground();
@@ -207,16 +188,11 @@ public final class StreakAlarm extends BroadcastReceiver {
             }
             long at = StreakSchedule.next(System.currentTimeMillis(), StreakSchedule.minute(), retry, CADENCE);
 
-
             try {
-                c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit()
+                c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit()
                         .putLong(KEY_ARMED, System.currentTimeMillis()).apply();
             } catch (Throwable ignored) {
             }
-
-
-
-
 
             if (exactAllowed(c)) {
                 try {
@@ -240,9 +216,6 @@ public final class StreakAlarm extends BroadcastReceiver {
         }
     }
 
-
-
-
     static void permissions(Context c) {
         try {
             if (c == null) return;
@@ -256,7 +229,7 @@ public final class StreakAlarm extends BroadcastReceiver {
             }
             if (Build.VERSION.SDK_INT >= 23) {
                 PowerManager power = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-                android.content.SharedPreferences prefs = c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+                android.content.SharedPreferences prefs = c.getSharedPreferences("margyt", Context.MODE_PRIVATE);
                 if (power != null && !power.isIgnoringBatteryOptimizations(c.getPackageName())
                         && !prefs.getBoolean("streak_battery_asked", false)) {
                     prefs.edit().putBoolean("streak_battery_asked", true).apply();
@@ -274,18 +247,13 @@ public final class StreakAlarm extends BroadcastReceiver {
         c.startActivity(intent);
     }
 
-
-
-
     private static void nudge(Context app) {
         try {
-            android.content.SharedPreferences prefs = app.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            android.content.SharedPreferences prefs = app.getSharedPreferences("margyt", Context.MODE_PRIVATE);
             long now = System.currentTimeMillis();
             if (StreakSchedule.sameDay(now, prefs.getLong("streak_nudge_at", 0))) return;
             Intent open = app.getPackageManager().getLaunchIntentForPackage(app.getPackageName());
             if (open == null) return;
-
-
 
             if (!notificationsAllowed(app)) {
                 Diary.note("streak nudge: notifications are not allowed for this app");
@@ -311,7 +279,6 @@ public final class StreakAlarm extends BroadcastReceiver {
             Diary.note("streak nudge: " + error);
         }
     }
-
 
     static String status(Context c) {
         try {

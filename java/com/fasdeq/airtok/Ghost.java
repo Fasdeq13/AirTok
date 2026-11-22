@@ -2,7 +2,6 @@ package com.fasdeq.airtok;
 
 import android.app.Activity;
 
-
 public final class Ghost {
 
     static final String KEY = "ghost";

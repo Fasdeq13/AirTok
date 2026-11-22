@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class DisclosureBody extends android.widget.FrameLayout {
     private float progress;
     private boolean enter=true;

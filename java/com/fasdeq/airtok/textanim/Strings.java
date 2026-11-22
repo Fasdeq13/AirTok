@@ -50,19 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
-
-
-
 
 public final class Strings {
     public static final int AUTO = 0;
@@ -370,7 +363,6 @@ public final class Strings {
         EN.put("Цвет букв", "Letter color");
         EN.put("Серый", "Gray");
         EN.put("Тлеющий", "Smoldering");
-
 
         EN.put("Резкий старт", "Sharp start");
         EN.put("Плавный разгон", "Smooth ease");

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
-
 final class Motion {
     private Motion() {}
-
 
     static void press(android.view.View view) {
         view.setFocusable(true);
@@ -20,7 +18,6 @@ final class Motion {
                 android.content.res.ColorStateList.valueOf((Accent.colour() & 0xFFFFFF) | 0x22000000),
                 base, new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE)));
     }
-
 
     static void touch(android.view.View view) {
         view.setOnTouchListener((target,event) -> {
@@ -53,7 +50,6 @@ final class Motion {
                 .setDuration(90L).withEndAction(() -> {replace.run();enter(view,direction);}).start();
     }
 
-
     static void enter(android.view.View view, float direction) {
         view.animate().withEndAction(null).cancel();
         if (!enabled(view.getContext())) { view.setAlpha(1f); view.setTranslationX(0f); return; }
@@ -62,7 +58,6 @@ final class Motion {
         view.animate().alpha(1f).translationX(0f).setDuration(180L)
                 .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
     }
-
 
     static Runnable rise(android.view.View view) {
         view.animate().withEndAction(null).cancel();

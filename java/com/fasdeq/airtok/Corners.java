@@ -4,13 +4,11 @@ import android.graphics.Outline;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-
 public final class Corners {
 
     private Corners() {}
 
     public static final String KEY = "round_cards";
-
 
     private static final float RADIUS = 8f;
 
@@ -30,12 +28,11 @@ public final class Corners {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
     }
-
 
     private static int cover;
 
@@ -64,15 +61,12 @@ public final class Corners {
         return cover > 0 && cell.findViewById(cover) != null;
     }
 
-
     public static void cell(View cell) {
         try {
 
             if (cell == null || cell.getOutlineProvider() == ROUND) return;
             cell.setOutlineProvider(ROUND);
             cell.setClipToOutline(true);
-
-
 
             cell.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                 @Override

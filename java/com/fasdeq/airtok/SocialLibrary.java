@@ -18,7 +18,6 @@ final class SocialLibrary {
    missing=true;Diary.note("friends library is not in this TikTok: "+e);
   }catch(Throwable e){
 
-
    Diary.note("friends library: "+e.getClass().getSimpleName()+(e.getMessage()==null?"":": "+e.getMessage()));
   }finally{busy.set(false);}});
  }
@@ -49,7 +48,7 @@ final class SocialLibrary {
    Object callback=Proxy.newProxyInstance(continuation.getClassLoader(),new Class<?>[]{continuation},(proxy,m,args)->{
     if(m.getName().equals("getContext"))return context;
     if(m.getName().equals("resumeWith")){answer[0]=args[0];latch.countDown();return null;}
-    if(m.getName().equals("toString"))return "airtok-friends";if(m.getName().equals("hashCode"))return System.identityHashCode(proxy);if(m.getName().equals("equals"))return proxy==args[0];return null;});
+    if(m.getName().equals("toString"))return "margyt-friends";if(m.getName().equals("hashCode"))return System.identityHashCode(proxy);if(m.getName().equals("equals"))return proxy==args[0];return null;});
    Object immediate=request.invoke(service,source,30,sec,page,callback);
    if(immediate!=null&&immediate.getClass().getName().equals("com.ss.android.ugc.aweme.relation.model.FriendsListResponse"))answer[0]=immediate;
    else if(!latch.await(20,TimeUnit.SECONDS))throw new java.io.IOException("friends timeout");

@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-
 final class TilcayoRun {
 
     private TilcayoRun() {}
@@ -62,11 +61,10 @@ final class TilcayoRun {
 
     private static SharedPreferences prefs(Context context) {
         Context base = context != null ? context : AirTok.context();
-        return base == null ? null : base.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return base == null ? null : base.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 
     private static final List<java.lang.ref.WeakReference<Runway>> SHOWN = new ArrayList<>();
-
 
     static void resumed(Activity activity) {
         if (activity == null || activity.getClass().getName().startsWith("com.fasdeq.airtok.")) return;
@@ -102,7 +100,6 @@ final class TilcayoRun {
         }
     }
 
-
     static String skin(Context context) {
         SharedPreferences prefs = prefs(context);
         String chosen = prefs == null ? SKINS[0] : prefs.getString(SKIN_KEY, SKINS[0]);
@@ -118,9 +115,8 @@ final class TilcayoRun {
 
     private static volatile String spriteSkin;
 
-
     static Bitmap picture(Context context, String skin) {
-        String file = "classic".equals(skin) ? "airtok/tilcayo_run.png" : "airtok/tilcayo_run_" + skin + ".png";
+        String file = "classic".equals(skin) ? "margyt/tilcayo_run.png" : "margyt/tilcayo_run_" + skin + ".png";
         try (java.io.InputStream in = context.getAssets().open(file)) {
             return BitmapFactory.decodeStream(in);
         } catch (Throwable error) {
@@ -128,7 +124,6 @@ final class TilcayoRun {
             return null;
         }
     }
-
 
     static Bitmap sprite(Context context) {
         String skin = skin(context);
@@ -140,8 +135,6 @@ final class TilcayoRun {
         spriteSkin = skin;
         return known;
     }
-
-
 
     private static final class Cat {
         final float h, speed;
@@ -179,7 +172,6 @@ final class TilcayoRun {
         }
     }
 
-
     private static final class Treat {
         float x, y, vy, turn;
         final Cat to;
@@ -193,7 +185,6 @@ final class TilcayoRun {
         abstract boolean update(float dt);
         abstract boolean has(Cat cat);
     }
-
 
     static final class Runway extends View {
         private final boolean overTikTok;
@@ -218,7 +209,6 @@ final class TilcayoRun {
         private final Rect dirty = new Rect(), lastDirty = new Rect(), box = new Rect();
         private final RectF place = new RectF(), round = new RectF();
         private final int[] sparks;
-
 
         private Cat grabbed;
         private boolean dragging, stroking;
@@ -287,7 +277,6 @@ final class TilcayoRun {
             if (visibility == VISIBLE) { last = 0L; invalidate(); }
         }
 
-
         private float baseY() {
             float inset = 0;
             if (overTikTok) {
@@ -308,9 +297,6 @@ final class TilcayoRun {
             return k * k * (3f - 2f * k);
         }
 
-
-
-
         private float centreY(Cat cat) {
             return cat.free() ? cat.fy : groundY(cat.x) - lift(cat) - cat.h / 2f;
         }
@@ -326,7 +312,6 @@ final class TilcayoRun {
             }
             return found;
         }
-
 
         @Override public boolean dispatchTouchEvent(MotionEvent event) {
             int action = event.getActionMasked();
@@ -445,7 +430,6 @@ final class TilcayoRun {
             cat.sayLeft = seconds;
         }
 
-
         private void feed(Cat cat) {
             float from = Math.max(dp1 * 10, groundY(cat.x) - cat.h - dp1 * 170);
             treats.add(new Treat(cat.x + cat.dir * cat.h * aspect * 0.3f, from, cat));
@@ -468,8 +452,6 @@ final class TilcayoRun {
                 heartAt(cat.x + (random.nextFloat() - 0.5f) * cat.h * 0.6f, centreY(cat) - cat.h * 0.6f, random.nextFloat() < 0.3f);
             }
         }
-
-
 
         private void fly(Cat cat, float dt) {
             float g = dp1 * 1500, w = cat.h * aspect / 2f;
@@ -541,8 +523,6 @@ final class TilcayoRun {
             }
         }
 
-
-
         private void jump(Cat cat, boolean bigOne) {
             cat.air = 0f;
             cat.airDur = 0.6f + random.nextFloat() * 0.3f;
@@ -574,8 +554,6 @@ final class TilcayoRun {
             if (cat.x < margin) { cat.x = margin; cat.dir = 1; }
             else if (cat.x > getWidth() - margin) { cat.x = getWidth() - margin; cat.dir = -1; }
         }
-
-
 
         private boolean walk(Cat cat, float dt) {
             float d = cat.tx - cat.x;
@@ -616,7 +594,6 @@ final class TilcayoRun {
                 parts.add(new Part(x, y, dir * dp1 * (20 + random.nextFloat() * 50), -dp1 * (10 + random.nextFloat() * 30), 0.6f, 0xFFE6E0D4, false, dp1 * 3f));
             }
         }
-
 
         private final class Duo extends Scene {
             final Cat left, right;
@@ -691,7 +668,6 @@ final class TilcayoRun {
             }
         }
 
-
         private final class Salute extends Scene {
             final List<Cat> trio;
             int phase;
@@ -755,7 +731,6 @@ final class TilcayoRun {
             }
         }
 
-
         private final class Leap extends Scene {
             final Cat cat;
             final float peak;
@@ -810,8 +785,6 @@ final class TilcayoRun {
             else scene = free.isEmpty() ? null : new Leap(free.get(0));
             nextScene = scene == null ? 1.5f : 10f + random.nextFloat() * 15f;
         }
-
-
 
         private float lift(Cat cat) {
             float laugh = cat.laugh > 0 ? Math.abs((float) Math.sin(cat.laugh * 18f)) * cat.h * 0.06f : 0f;
@@ -881,7 +854,6 @@ final class TilcayoRun {
             for (Treat treat : treats) drawTreat(canvas, treat);
             for (Part p : parts) drawPart(canvas, p);
             for (Cat cat : order) if (cat.sayLeft > 0 && cat.say != null) drawWords(canvas, cat);
-
 
             if (isShown() && getWindowVisibility() == VISIBLE) {
                 box.set(dirty);

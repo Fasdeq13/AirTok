@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.Locale;
 
-
 public final class Updater {
 
     private Updater() {}
@@ -21,7 +20,6 @@ public final class Updater {
     private static final String SOURCE = "";
 
     public static final String KEY_REMIND = "update_remind";
-
 
     private static final String KEY_GOT = "update_got";
 
@@ -33,21 +31,16 @@ public final class Updater {
 
     private static volatile String title;
 
-
     private static volatile boolean refused;
     private static volatile boolean started;
-
-
 
     public static synchronized void start(final Context context) {
         return;
     }
 
-
     public static void check(final Context context, final boolean byHand) {
         if (byHand) Screen.say("Обновления отключены");
     }
-
 
     public static boolean newer() {
         return false;
@@ -56,7 +49,6 @@ public final class Updater {
     public static String latest() {
         return latest;
     }
-
 
     static int compare(String a, String b) {
         if (a == null) return -1;
@@ -85,8 +77,6 @@ public final class Updater {
         return translated.length() > 0 ? translated : root.optString(field, "");
     }
 
-
-
     public static boolean remind(Context context) {
         try {
             return prefs(context).getBoolean(KEY_REMIND, true);
@@ -103,7 +93,7 @@ public final class Updater {
     }
 
     private static SharedPreferences prefs(Context context) {
-        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 
     public static void offer(final Context context) {
@@ -112,8 +102,6 @@ public final class Updater {
             public void run() {
                 android.app.Activity activity = Screen.now();
                 if (activity == null || activity.isFinishing()) return;
-
-
 
                 final boolean store = storeInstalled(activity);
                 String named = title == null || title.length() == 0 ? "" : " «" + title + "»";
@@ -143,13 +131,9 @@ public final class Updater {
         });
     }
 
-
-
-
     static final String[] STORE_PACKAGES = {"cat.narezany.store", "cat.narezany.patcher"};
-    private static final String STORE_PAGE = "https://margy.narez.xyz/app/airtok";
+    private static final String STORE_PAGE = "https://margy.narez.xyz/app/margyt";
     private static final String STORE_APK = "https://margy.narez.xyz/get";
-
 
     static String storePackage(Context context) {
         for (String name : STORE_PACKAGES) {
@@ -165,7 +149,6 @@ public final class Updater {
     static boolean storeInstalled(Context context) {
         return storePackage(context) != null;
     }
-
 
     static void openStore(Context context) {
         String store = storePackage(context);
@@ -186,7 +169,6 @@ public final class Updater {
         downloadStore(context);
     }
 
-
     static void downloadStore(Context context) {
         try {
             android.content.Intent get = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(STORE_APK));
@@ -197,11 +179,8 @@ public final class Updater {
         }
     }
 
-
-
-
     public static File file(Context context) {
-        return new File(context.getFilesDir(), "airtok/update.apk");
+        return new File(context.getFilesDir(), "margyt/update.apk");
     }
 
     private static final java.util.concurrent.atomic.AtomicBoolean fetching=new java.util.concurrent.atomic.AtomicBoolean();
@@ -230,7 +209,7 @@ public final class Updater {
                 }
                 downloaded=true;
                 try {
-                    context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+                    context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                             .edit().putString(KEY_GOT, latest()).apply();
                 } catch (Throwable ignored) {
                 }
@@ -240,7 +219,6 @@ public final class Updater {
         });
     }
 
-
     public static void install(final Context context) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -248,11 +226,6 @@ public final class Updater {
                 try {
                     if (Build.VERSION.SDK_INT >= 26
                             && !context.getPackageManager().canRequestPackageInstalls()) {
-
-
-
-
-
 
                         waitingOnPermission = true;
                         Screen.say(Text.UPDATE_ALLOW);
@@ -283,9 +256,7 @@ public final class Updater {
         });
     }
 
-
     private static volatile boolean waitingOnPermission;
-
 
     public static void resumed(Context context) {
         if (!waitingOnPermission) return;
@@ -306,16 +277,14 @@ public final class Updater {
         }
     }
 
-
     public static boolean waiting(Context context) {
         File apk = file(context);
         return apk.isFile() && apk.length() > 0 && ahead(context);
     }
 
-
     private static String got(Context context) {
         try {
-            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                     .getString(KEY_GOT, "");
         } catch (Throwable ignored) {
             return "";
@@ -327,14 +296,13 @@ public final class Updater {
         return which.length() > 0 && compare(which, Version.MOD) > 0;
     }
 
-
     static void tidy(Context context) {
         try {
             File apk = file(context);
             if (!apk.isFile()) return;
             if (ahead(context)) return;
             if (apk.delete()) Diary.note("update: the old download is gone");
-            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
                     .edit().remove(KEY_GOT).apply();
         } catch (Throwable error) {
             Diary.note("update: " + error);

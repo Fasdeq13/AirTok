@@ -23,7 +23,6 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Set;
 
-
 final class PhotoGrid {
 
     private PhotoGrid() {}
@@ -85,7 +84,6 @@ final class PhotoGrid {
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         tile.addView(image, new FrameLayout.LayoutParams(-1, -1));
 
-
         TextView number = new TextView(c);
         number.setText(String.valueOf(index + 1));
         number.setTextColor(Color.WHITE);
@@ -142,7 +140,6 @@ final class PhotoGrid {
         }
     }
 
-
     static Bitmap decode(byte[] data, int target) {
         if (data == null || data.length == 0) return null;
         try {
@@ -160,7 +157,6 @@ final class PhotoGrid {
             return null;
         }
     }
-
 
     private static final class Tick extends View {
         boolean on;
@@ -195,7 +191,6 @@ final class PhotoGrid {
             canvas.drawPath(mark, paint);
         }
     }
-
 
     private static final class Ring extends View {
         boolean on;

@@ -12,7 +12,6 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
-
 final class TabBadges {
 
     private TabBadges() {}
@@ -56,7 +55,6 @@ final class TabBadges {
         return true;
     };
 
-
     static void attach(Activity activity) {
         try {
             look(activity.getWindow().getDecorView(), 0);
@@ -76,15 +74,12 @@ final class TabBadges {
                 }
             } else if (attempt < TRIES) {
 
-
-
                 screen.postDelayed(() -> look(screen, attempt + 1), BETWEEN);
             }
         } catch (Throwable error) {
             Diary.detail("tab badges: " + error);
         }
     }
-
 
     private static int find(View view, View screen, int depth) {
         if (view == null || depth > 30 || view.getVisibility() != View.VISIBLE) return 0;
@@ -114,14 +109,12 @@ final class TabBadges {
         return null;
     }
 
-
     private static boolean low(View view, View screen) {
         int[] at = new int[2], origin = new int[2];
         view.getLocationOnScreen(at);
         screen.getLocationOnScreen(origin);
         return at[1] - origin[1] > screen.getHeight() * 0.8f;
     }
-
 
     private static TextView number(ViewGroup tab) {
         CharSequence name = tab.getContentDescription();
@@ -136,7 +129,6 @@ final class TabBadges {
         return null;
     }
 
-
     private static void settle(ViewGroup tab, Tab state) {
         TextView number = number(tab);
         View hidden = state.hidden.get();
@@ -145,10 +137,6 @@ final class TabBadges {
                 hidden.setAlpha(1f);
                 state.hidden = new WeakReference<View>(null);
             }
-
-
-
-
 
             if (state.forgotten) return;
             long now = android.os.SystemClock.uptimeMillis();
@@ -209,13 +197,13 @@ final class TabBadges {
     }
 
     private static int dismissed(Context context, String which) {
-        SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
         return prefs.getInt(KEY + which, 0);
     }
 
     private static void remember(Context context, String which, int number) {
         SharedPreferences.Editor edit =
-                context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit();
+                context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit();
         if (number > 0) edit.putInt(KEY + which, number);
         else edit.remove(KEY + which);
         edit.apply();

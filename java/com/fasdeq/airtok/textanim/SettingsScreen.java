@@ -50,16 +50,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
-
-
 
 public final class SettingsScreen {
     static final String SAMPLE = "привет, это я";
@@ -253,9 +249,6 @@ public final class SettingsScreen {
         }
     }
 
-
-
-
     View buildPreview() {
         LinearLayout card = new LinearLayout(host);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -311,7 +304,6 @@ public final class SettingsScreen {
         inputRow.setGravity(Gravity.CENTER_VERTICAL);
         inputRow.addView(preview, new LinearLayout.LayoutParams(0, dp(56), 1.0f));
 
-
         FrameLayout sendButton = new FrameLayout(host);
         sendBtn = sendButton;
         sendButton.setBackground(rounded(accent, 100));
@@ -361,7 +353,6 @@ public final class SettingsScreen {
             }
         });
     }
-
 
     void startTyping() {
         typing = true;
@@ -436,7 +427,6 @@ public final class SettingsScreen {
         });
     }
 
-
     void afterHold(final int id) {
         if (closed || id != runId) {
             return;
@@ -447,7 +437,6 @@ public final class SettingsScreen {
             eraseStep(id);
         }
     }
-
 
     void applySendChange() {
         main.reloadConfig();
@@ -482,7 +471,6 @@ public final class SettingsScreen {
             }
         });
     }
-
 
     void sendDemo(final View button) {
         if (closed || preview == null) {
@@ -535,9 +523,6 @@ public final class SettingsScreen {
     void schedule(long delay, Runnable action) {
         main.ttcuz().later(action, delay);
     }
-
-
-
 
     View buildHeader() {
         LinearLayout header = new LinearLayout(host);
@@ -593,7 +578,6 @@ public final class SettingsScreen {
         toggle(modes, "advanced", "Расширенные настройки", false);
         toggle(modes, "hints", "Подсказки под пунктами", false);
 
-
         LinearLayout body = section(0, IconView.SPARKLE, "Появление букв", "Эффект, скорость и очерёдность");
         effects(body);
         slider(body, "duration", "Время появления", "Сколько длится появление одной буквы",
@@ -608,7 +592,6 @@ public final class SettingsScreen {
         slider(body, "jitter", "Разброс скорости",
             "Каждая буква появляется чуть быстрее или медленнее остальных — выглядит живее",
             0, 60, 0, "%", 1);
-
 
         body = section(1, IconView.PLAY, "Движение и размер", "Въезд, рост, наклон, сжатие и дрожь");
         toggle(body, "slide", "Въезд буквы", "Буква выезжает на своё место", true);
@@ -634,7 +617,6 @@ public final class SettingsScreen {
         slider(body, "shake", "Дрожь", "Лёгкое покачивание из стороны в сторону, быстро затухает",
             0, 12, 0, " dp", 1);
 
-
         body = section(2, IconView.GLOW, "Размытие и свечение", "Расфокус при появлении и подсветка свежих букв");
         toggle(body, "blur", "Размытие при появлении", "Буква выезжает размытой и становится чёткой", true);
         View blurDp = slider(body, "blur_dp", "Сила размытия",
@@ -653,7 +635,6 @@ public final class SettingsScreen {
         View aura = toggle(body, "aura", "Аура вокруг букв", "Мягкий ореол во время свечения", true);
         View gradient = toggle(body, "gradient_text", "Градиентный текст", "TikTok-градиент на горящих буквах", false);
         link("glow", glowTime, glowColor, aura, gradient);
-
 
         body = section(3, IconView.CARET, "Курсор и выделение", "Вид, движение, мигание и ручки выделения");
         subhead(body, "ВИД");
@@ -689,7 +670,6 @@ public final class SettingsScreen {
         link("sel_effect", selStretch, selSide);
         link("liquid", jumpT, diveT, pulseT, stretchS);
         link("blink", blinkS);
-
 
         body = section(4, IconView.SEND, "Отправка сообщения", "Что вылетает из букв и кнопки «Отправить»");
         subhead(body, "ЧТО ВЫЛЕТАЕТ");
@@ -737,7 +717,6 @@ public final class SettingsScreen {
             "Сколько букве нужно, чтобы раствориться, пока из неё вылетают частицы. 0 — как «Время появления». Нужно «Плавное исчезновение буквы»",
             0, 1500, 0, " мс", 1);
 
-
         body = section(5, IconView.BACKSPACE, "Стирание букв", "Что происходит со стёртой буквой");
         toggle(body, "particles", "Частицы при стирании", "Стёртая буква рассыпается", true);
         View style = choice(body, "style", "Вид частиц", STYLE_NAMES, 0);
@@ -762,10 +741,8 @@ public final class SettingsScreen {
         updateSmokeRows();
         link("particles", smokeRows.toArray(new View[0]));
 
-
         link("ghosts", morphRow);
         updateSendRows();
-
 
         body = section(6, IconView.RAINBOW, "Свои цвета", "Два цвета для свечения, курсора и частиц");
         TextView colorHint = text("Чтобы применить, выбери «Свой цвет» в настройках свечения и курсора, а «Свои цвета» — в цветах частиц", 12, MUTED);
@@ -781,7 +758,6 @@ public final class SettingsScreen {
         slider(body, "cb_s", "Насыщенность", 0, 100, 85, "%", 1);
         slider(body, "cb_v", "Яркость", 20, 100, 100, "%", 1);
         swatchB = swatchRow(body, "cb");
-
 
         LinearLayout general = new LinearLayout(host);
         general.setOrientation(LinearLayout.VERTICAL);
@@ -800,7 +776,6 @@ public final class SettingsScreen {
         footer.setAlpha(0.7f);
         list.addView(footer, params(MATCH, WRAP, 0, 14, 0, 0));
     }
-
 
     View resetButton() {
         final TextView reset = text("Сбросить настройки", 15, accent);
@@ -839,9 +814,6 @@ public final class SettingsScreen {
         });
         return reset;
     }
-
-
-
 
     void presets() {
         TextView label = text("БЫСТРЫЕ ПРЕСЕТЫ", 11, MUTED);
@@ -922,9 +894,6 @@ public final class SettingsScreen {
         list.addView(scroll, new LinearLayout.LayoutParams(MATCH, WRAP));
     }
 
-
-
-
     int currentCustom(String prefix) {
         int hue = "ca".equals(prefix) ? 340 : 180;
         return Config.hsv(prefs().getInt(prefix + "_h", hue), prefs().getInt(prefix + "_s", 85),
@@ -973,7 +942,6 @@ public final class SettingsScreen {
         applyChange();
     }
 
-
     String settingsCode() {
         org.json.JSONObject all = new org.json.JSONObject();
         java.util.Map<String, ?> values = prefs().getAll();
@@ -992,7 +960,6 @@ public final class SettingsScreen {
         }
         return "TA1:" + all.toString();
     }
-
 
     boolean applyCode(String code) {
         if (code == null) {
@@ -1066,7 +1033,6 @@ public final class SettingsScreen {
         }
     }
 
-
     View actionButton(final String label, final boolean export) {
         final TextView button = text(label, 15, accent);
         button.setTypeface(MEDIUM);
@@ -1136,9 +1102,6 @@ public final class SettingsScreen {
         applyChange();
     }
 
-
-
-
     LinearLayout section(final int index, int icon, String title, String subtitle) {
         LinearLayout card = new LinearLayout(host);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -1191,7 +1154,6 @@ public final class SettingsScreen {
         return body;
     }
 
-
     void updateSendRows() {
         int motion = prefs().getInt("send_motion", 0);
         int preset = prefs().getInt("send_preset", 1);
@@ -1205,7 +1167,6 @@ public final class SettingsScreen {
         }
     }
 
-
     void subhead(LinearLayout body, String title) {
         TextView label = text(title, 11, MUTED);
         label.setPadding(dp(16), dp(14), dp(16), dp(2));
@@ -1215,7 +1176,6 @@ public final class SettingsScreen {
             label.setVisibility(advanced ? View.VISIBLE : View.GONE);
         }
     }
-
 
     void markAdv(String key, View row) {
         if (!ADV_KEYS.contains("," + key + ",")) {
@@ -1236,7 +1196,6 @@ public final class SettingsScreen {
             }
         }
     }
-
 
     void applyDetail() {
         advanced = prefs().getBoolean("advanced", false);
@@ -1260,7 +1219,6 @@ public final class SettingsScreen {
         body.addView(divider, line);
         body.addView(row, new LinearLayout.LayoutParams(MATCH, WRAP));
     }
-
 
     void link(String key, View... rows) {
         ArrayList<View> group = links.get(key);
@@ -1415,7 +1373,6 @@ public final class SettingsScreen {
         return choice(body, key, title, null, options, def);
     }
 
-
     View caption(String title, String desc) {
         LinearLayout names = new LinearLayout(host);
         names.setOrientation(LinearLayout.VERTICAL);
@@ -1482,8 +1439,6 @@ public final class SettingsScreen {
             views[i].setTypeface(on ? MEDIUM : Typeface.DEFAULT);
         }
     }
-
-
 
     void effects(LinearLayout body) {
         LinearLayout row = new LinearLayout(host);
@@ -1563,7 +1518,6 @@ public final class SettingsScreen {
         applyChange();
     }
 
-
     public static final class Flow extends ViewGroup {
         final int gap;
 
@@ -1628,9 +1582,6 @@ public final class SettingsScreen {
         restartDemo();
     }
 
-
-
-
     SharedPreferences prefs() {
         return main.ttcuz().prefs();
     }
@@ -1638,7 +1589,6 @@ public final class SettingsScreen {
     int dp(float value) {
         return main.ttcuz().dp(value);
     }
-
 
     void setTr(TextView view, String ru) {
         view.setTag(ru);
@@ -1656,7 +1606,6 @@ public final class SettingsScreen {
             }
         }
     }
-
 
     void updateSmokeRows() {
         boolean on = prefs().getInt("style", Config.STYLE_DUST) == Config.STYLE_SMOKE;
@@ -1694,7 +1643,6 @@ public final class SettingsScreen {
         return view;
     }
 
-
     View badge(int icon) {
         FrameLayout box = new FrameLayout(host);
         box.setBackground(rounded(tint(accent, 0x2E), 12));
@@ -1705,7 +1653,6 @@ public final class SettingsScreen {
     int tint(int color, int alpha) {
         return (alpha << 24) | (color & 0x00FFFFFF);
     }
-
 
     int onAccent() {
         double luma = (0.299 * Color.red(accent) + 0.587 * Color.green(accent) + 0.114 * Color.blue(accent)) / 255.0;
@@ -1739,7 +1686,6 @@ public final class SettingsScreen {
         int id = host.getResources().getIdentifier(name, "dimen", "android");
         return id > 0 ? host.getResources().getDimensionPixelSize(id) : 0;
     }
-
 
     void fitSystemBars() {
         int[] location = new int[2];

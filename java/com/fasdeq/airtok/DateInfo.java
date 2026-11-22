@@ -18,13 +18,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
 final class DateInfo {
     private DateInfo() {}
 
-
     static final int CELL_TAG = 0x7e0d0335;
-
 
     static final class Data {
         final long seconds;
@@ -55,7 +52,6 @@ final class DateInfo {
         }
     }
 
-
     static void open(View row, View cell) {
         try {
             Object tag = cell == null ? null : cell.getTag(CELL_TAG);
@@ -71,8 +67,6 @@ final class DateInfo {
         }
     }
 
-
-
     private static final String LANGUAGE = Locale.getDefault().getLanguage();
     private static final boolean RU = "ru".equals(LANGUAGE) || "be".equals(LANGUAGE);
     private static final boolean UK = "uk".equals(LANGUAGE);
@@ -80,8 +74,6 @@ final class DateInfo {
     private static String pick(String russian, String ukrainian, String english) {
         return RU ? russian : UK ? ukrainian : english;
     }
-
-
 
     static void show(final Context context, Data data) {
         final Locale locale = Locale.getDefault();
@@ -144,8 +136,6 @@ final class DateInfo {
             }
         };
     }
-
-
 
     private static View header(Context context, Skin skin, String date, String line, String ago) {
         int accent = Accent.colour();
@@ -213,8 +203,6 @@ final class DateInfo {
         return (red * 299 + green * 587 + blue * 114) / 1000 > 150 ? 0xFF111111 : 0xFFFFFFFF;
     }
 
-
-
     private static String best(Locale locale, String skeleton, String fallback) {
         try {
             String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, skeleton);
@@ -248,8 +236,6 @@ final class DateInfo {
         return value < 10 ? "0" + value : String.valueOf(value);
     }
 
-
-
     private static final String[][] RU_UNITS = {
             {"год", "года", "лет"}, {"месяц", "месяца", "месяцев"}, {"день", "дня", "дней"},
             {"час", "часа", "часов"}, {"минуту", "минуты", "минут"}, {"секунду", "секунды", "секунд"}};
@@ -271,7 +257,6 @@ final class DateInfo {
         }
         return count + " " + units[index][form];
     }
-
 
     static String ago(long published, long now) {
         if (now - published < 60) return pick("только что", "щойно", "just now");

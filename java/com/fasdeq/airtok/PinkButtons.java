@@ -17,9 +17,6 @@ final class PinkButtons {
    decor.setTag(TAG,Boolean.TRUE);
    final long[] last={0L};
 
-
-
-
    final boolean[] moved={true};
    decor.getViewTreeObserver().addOnGlobalLayoutListener(()->moved[0]=true);
    decor.getViewTreeObserver().addOnPreDrawListener(()->{

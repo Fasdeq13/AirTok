@@ -3,11 +3,9 @@ package com.fasdeq.airtok;
 import java.util.HashMap;
 import java.util.Map;
 
-
 final class Local {
 
     private Local() {}
-
 
     private static final Map<String, String[]> BOOK = new HashMap<String, String[]>();
 

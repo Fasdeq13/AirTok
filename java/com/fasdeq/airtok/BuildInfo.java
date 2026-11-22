@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class BuildInfo {
     private BuildInfo() {}
     static final int PATCHED_DEX = 44;

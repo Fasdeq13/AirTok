@@ -10,25 +10,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
 public final class Diary {
 
     private Diary() {}
 
     private static final String KEY = "diary";
 
-    private static final String FILE = "diary_airtok";
+    private static final String FILE = "diary_margyt";
     private static final int KEEP = 40;
     private static final int KEEP_DEV = 400;
 
     private static final List<String> LINES = new ArrayList<String>();
     private static boolean loaded;
 
-
     private static boolean dirty;
     private static long savedAt;
     private static final long REST = 3000;
-
 
     private static final SimpleDateFormat CLOCK =
             new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -56,7 +53,6 @@ public final class Diary {
 
     private static final java.util.HashMap<String, long[]> SAID = new java.util.HashMap<String, long[]>();
 
-
     private static boolean flooding(String line) {
         if (line == null) return true;
         String kind = line.length() > 80 ? line.substring(0, 80) : line;
@@ -78,7 +74,6 @@ public final class Diary {
         }
     }
 
-
     public static void detail(String line) {
         if (DevMode.isOn()) note("· " + line);
     }
@@ -99,8 +94,6 @@ public final class Diary {
         }
     }
 
-
-
     private static void load() {
         if (loaded) return;
         SharedPreferences prefs = prefs();
@@ -109,10 +102,9 @@ public final class Diary {
         String stored = prefs.getString(KEY, "");
         if (stored.length() == 0) {
 
-
             try {
                 SharedPreferences settings = AirTok.context()
-                        .getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+                        .getSharedPreferences("margyt", Context.MODE_PRIVATE);
                 if (settings.contains(KEY)) {
                     stored = settings.getString(KEY, "");
                     settings.edit().remove(KEY).apply();

@@ -27,7 +27,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
-
 final class TimeWheel extends View {
 
     private static final float STEP = 19f;
@@ -39,7 +38,6 @@ final class TimeWheel extends View {
         void step(float dt, float k, float c) { v += (-k * (x - to) - c * v) * dt; x += v * dt; }
         boolean still() { return Math.abs(x - to) < .001f && Math.abs(v) < .01f; }
     }
-
 
     private final class Drum {
         final String[] items;
@@ -123,10 +121,7 @@ final class TimeWheel extends View {
         describe();
     }
 
-
     int minuteOfDay() { return ((hour.index() + 1) % 12 + (pm ? 12 : 0)) * 60 + minute.index(); }
-
-
 
     private boolean animated() { return Motion.enabled(getContext()); }
 
@@ -169,8 +164,6 @@ final class TimeWheel extends View {
         setContentDescription(hour.items[hour.index()] + ":" + minute.items[minute.index()] + (pm ? " PM" : " AM"));
     }
 
-
-
     @Override protected void onMeasure(int widthSpec, int heightSpec) {
         int w = MeasureSpec.getMode(widthSpec) == MeasureSpec.UNSPECIFIED ? Math.round(320 * density) : MeasureSpec.getSize(widthSpec);
         setMeasuredDimension(w, Math.round((76 + 12 + 200) * density));
@@ -186,8 +179,6 @@ final class TimeWheel extends View {
         amBox.set(x, top, x + ap, top + half); pmBox.set(x, top + half + 4 * density, x + ap, top + bh);
         stage.set(0, bh + 12 * density, w, bh + 12 * density + 200 * density);
     }
-
-
 
     private static int lerp(int a, int b, float t) {
         t = Math.max(0, Math.min(1, t));
@@ -216,7 +207,6 @@ final class TimeWheel extends View {
         int onTonal = contrast(accent, tonal) >= 3f ? accent : skin.text;
         float u = density;
 
-
         RectF[] boxes = {hourBox, minuteBox, amBox, pmBox};
         for (int i = 0; i < 4; i++) {
             float t = mix[i].x;
@@ -230,7 +220,6 @@ final class TimeWheel extends View {
         label(canvas, pmBox, "PM", 15 * u, medium, lerp(skin.text, onTonal, mix[3].x));
         tmp.set(hourBox.right, hourBox.top, minuteBox.left, hourBox.bottom);
         label(canvas, tmp, ":", 44 * u, regular, skin.text);
-
 
         canvas.save();
         clip.reset(); clip.addRoundRect(stage, 28 * u, 28 * u, Path.Direction.CW);
@@ -275,8 +264,6 @@ final class TimeWheel extends View {
             canvas.restore();
         }
     }
-
-
 
     private int boxAt(float x, float y) {
         if (hourBox.contains(x, y)) return 0;
@@ -349,9 +336,6 @@ final class TimeWheel extends View {
         synchronized (TimeWheel.class) { if (click != null) { try { click.release(); } catch (Throwable ignored) { } click = null; } }
     }
 
-
-
-
     private void edit(final int which) {
         if (field != null) field.dismiss();
         final Drum d = which == 0 ? hour : minute;
@@ -392,7 +376,6 @@ final class TimeWheel extends View {
         getViewTreeObserver().addOnGlobalLayoutListener(follow);
     }
 
-
     private void commit(int which, String typed) {
         int v;
         try { v = Integer.parseInt(typed.trim()); } catch (Throwable ignored) { return; }
@@ -407,13 +390,10 @@ final class TimeWheel extends View {
         targets();
     }
 
-
     private void jumpTo(Drum d, int index) {
         int n = d.items.length, cur = Math.round(d.pos);
         d.goTo(cur + (((index - cur + n / 2) % n) + n) % n - n / 2);
     }
-
-
 
     private static AudioTrack click;
     private static long lastClick;
@@ -432,7 +412,6 @@ final class TimeWheel extends View {
             }
         } catch (Throwable ignored) { }
     }
-
 
     private static AudioTrack makeClick() {
         int rate = 22050, n = rate * 30 / 1000;

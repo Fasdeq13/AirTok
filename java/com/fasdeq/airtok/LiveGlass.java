@@ -17,9 +17,7 @@ import android.view.ViewTreeObserver;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
-
 final class LiveGlass {
-
 
     private static final String SHADER = "uniform shader img;\n"
             + "uniform float2 resolution;uniform float2 center;uniform float2 size;uniform float4 radius;\n"
@@ -43,8 +41,8 @@ final class LiveGlass {
         return android.os.Build.VERSION.SDK_INT >= 31;
     }
 
-    private final RenderNode source = new RenderNode("airtok-glass-under");
-    private final RenderNode fill = new RenderNode("airtok-glass");
+    private final RenderNode source = new RenderNode("margyt-glass-under");
+    private final RenderNode fill = new RenderNode("margyt-glass");
     private final Outline outline = new Outline();
     private final int[] at = new int[2];
     private Object lens;
@@ -52,53 +50,45 @@ final class LiveGlass {
     private float lastW, lastH, lastTop, lastBottom, lastThick;
     private int lastTint;
 
-
     boolean draw(Canvas canvas, View view, float left, float top, float w, float h,
                  float rTop, float rBottom, int tint, boolean bend) {
-        if (!canvas.isHardwareAccelerated() || w < 1 || h < 1) return false;
-        View root = view.getRootView();
-        if (root == null || root == view) return false;
-        watch(root, view);
-        float density = view.getResources().getDisplayMetrics().density;
-        float blur = Math.max(2f, Design.style().blur * 2.2f) * density;
-        int margin = Math.round(blur * 2f + 16f * density);
-        int sw = Math.round(w) + 2 * margin, sh = Math.round(h) + 2 * margin;
+        try {
+            if (!canvas.isHardwareAccelerated() || w < 1 || h < 1) return false;
+            View root = view.getRootView();
+            if (root == null || root == view) return false;
+            watch(root, view);
+            float density = view.getResources().getDisplayMetrics().density;
+            float blur = Math.max(2f, Design.style().blur * 2.2f) * density;
+            int margin = Math.round(blur * 2f + 16f * density);
+            int sw = Math.round(w) + 2 * margin, sh = Math.round(h) + 2 * margin;
 
-        view.getLocationInWindow(at);
-        float gx = at[0] + left, gy = at[1] + top;
-        long now = android.os.SystemClock.uptimeMillis();
-        Watcher watcher = ROOTS.get(root);
-        int generation = watcher == null ? 0 : watcher.generation;
-
-
-
-
-        boolean moved = !source.hasDisplayList() || sw != recordedW || sh != recordedH
-                || Math.abs(gx - recordedX) > .5f || Math.abs(gy - recordedY) > .5f;
-
-
-
-
-
-        boolean due = generation != recordedGeneration || now - recordedAt > 500L;
-        boolean stale = moved || (due && now - recordedAt >= spacing);
-        if (!stale && due && !settlePosted) {
-            settlePosted = true;
-            final View again = view;
-            view.postOnAnimationDelayed(() -> { settlePosted = false; again.invalidate(); }, spacing);
-        }
-        if (recordingDepth > 0) {
-
-
-            if (!source.hasDisplayList()) {
-                android.graphics.Paint plain = new android.graphics.Paint();
-                plain.setColor(tint);
-                canvas.drawRect(0, 0, w, h, plain);
-                return true;
+            view.getLocationInWindow(at);
+            float gx = at[0] + left, gy = at[1] + top;
+            long now = android.os.SystemClock.uptimeMillis();
+            Watcher watcher = ROOTS.get(root);
+            int generation = watcher == null ? 0 : watcher.generation;
+            boolean moved = !source.hasDisplayList() || sw != recordedW || sh != recordedH
+                    || Math.abs(gx - recordedX) > .5f || Math.abs(gy - recordedY) > .5f;
+            boolean due = generation != recordedGeneration || now - recordedAt > 500L;
+            boolean stale = moved || (due && now - recordedAt >= spacing);
+            if (!stale && due && !settlePosted) {
+                settlePosted = true;
+                final View again = view;
+                view.postOnAnimationDelayed(() -> { settlePosted = false; again.invalidate(); }, spacing);
             }
-        } else if (stale) record(root, view, sw, sh, margin, gx, gy, generation, now);
-        drawGlass(canvas, w, h, rTop, rBottom, tint, bend, margin, density, blur);
-        return true;
+            if (recordingDepth > 0) {
+                if (!source.hasDisplayList()) {
+                    android.graphics.Paint plain = new android.graphics.Paint();
+                    plain.setColor(tint);
+                    canvas.drawRect(0, 0, w, h, plain);
+                    return true;
+                }
+            } else if (stale) record(root, view, sw, sh, margin, gx, gy, generation, now);
+            drawGlass(canvas, w, h, rTop, rBottom, tint, bend, margin, density, blur);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     private static int drawn, videosDrawn;
@@ -108,7 +98,6 @@ final class LiveGlass {
     private int recordedW, recordedH, recordedGeneration;
     private float recordedX = Float.NaN, recordedY = Float.NaN;
     private long recordedAt;
-
 
     private long spacing = 48L;
     private boolean settlePosted;
@@ -135,10 +124,6 @@ final class LiveGlass {
         recordedW = sw; recordedH = sh; recordedX = gx; recordedY = gy; recordedGeneration = generation; recordedAt = now;
         source.setPosition(0, 0, sw, sh);
         RecordingCanvas under = source.beginRecording(sw, sh);
-
-
-
-
 
         recordingDepth++;
         try {
@@ -199,9 +184,6 @@ final class LiveGlass {
         canvas.drawRenderNode(fill);
     }
 
-
-
-
     private static final String BUBBLE = "uniform shader img;\n"
             + "uniform float2 center;uniform float2 size;uniform float radius;uniform float thickness;\n"
             + "uniform float refract_index;uniform float refract_intensity;uniform float dispersion;\n"
@@ -220,35 +202,37 @@ final class LiveGlass {
             + "half3 c=half3(r,g.g,b)+half3(0.035)*edge;"
             + "return half4(c*g.a+half3(0.035)*(1.0-g.a),max(g.a,0.035));}\n";
 
-    private final RenderNode bubble = new RenderNode("airtok-glass-bubble");
+    private final RenderNode bubble = new RenderNode("margyt-glass-bubble");
     private Object bubbleLens;
 
-
     boolean bubble(Canvas canvas, RenderNode content, android.graphics.RectF box, float magnify, float density, float strength) {
-        if (!canvas.isHardwareAccelerated() || box.width() < 2 || box.height() < 2) return false;
-        int w = Math.round(box.width()), h = Math.round(box.height());
-        float radius = h / 2f;
-        bubble.setPosition(0, 0, w, h);
-        outline.setRoundRect(0, 0, w, h, radius);
-        bubble.setOutline(outline);
-        bubble.setClipToOutline(true);
-        if (android.os.Build.VERSION.SDK_INT >= 33) {
-            BubbleLens lens = bubbleLens instanceof BubbleLens ? (BubbleLens) bubbleLens : null;
-            if (lens == null) { lens = new BubbleLens(); bubbleLens = lens; }
-            bubble.setRenderEffect(lens.effect(w, h, radius, Math.max(2f, Math.min(h / 5f, 8f * density)), strength));
+        try {
+            if (!canvas.isHardwareAccelerated() || box.width() < 2 || box.height() < 2) return false;
+            int w = Math.round(box.width()), h = Math.round(box.height());
+            float radius = h / 2f;
+            bubble.setPosition(0, 0, w, h);
+            outline.setRoundRect(0, 0, w, h, radius);
+            bubble.setOutline(outline);
+            bubble.setClipToOutline(true);
+            if (android.os.Build.VERSION.SDK_INT >= 33) {
+                BubbleLens lens = bubbleLens instanceof BubbleLens ? (BubbleLens) bubbleLens : null;
+                if (lens == null) { lens = new BubbleLens(); bubbleLens = lens; }
+                bubble.setRenderEffect(lens.effect(w, h, radius, Math.max(2f, Math.min(h / 5f, 8f * density)), strength));
+            }
+            RecordingCanvas inside = bubble.beginRecording(w, h);
+            inside.translate(w / 2f, h / 2f);
+            inside.scale(magnify, magnify);
+            inside.translate(-box.centerX(), -box.centerY());
+            inside.drawRenderNode(content);
+            bubble.endRecording();
+            int saved = canvas.save();
+            canvas.translate(box.left, box.top);
+            canvas.drawRenderNode(bubble);
+            canvas.restoreToCount(saved);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
         }
-        RecordingCanvas inside = bubble.beginRecording(w, h);
-
-        inside.translate(w / 2f, h / 2f);
-        inside.scale(magnify, magnify);
-        inside.translate(-box.centerX(), -box.centerY());
-        inside.drawRenderNode(content);
-        bubble.endRecording();
-        int saved = canvas.save();
-        canvas.translate(box.left, box.top);
-        canvas.drawRenderNode(bubble);
-        canvas.restoreToCount(saved);
-        return true;
     }
 
     private static final class BubbleLens {
@@ -266,7 +250,6 @@ final class LiveGlass {
             return RenderEffect.createRuntimeShaderEffect(shader, "img");
         }
     }
-
 
     private static final class Lens {
         private final RuntimeShader shader = new RuntimeShader(SHADER);
@@ -287,11 +270,7 @@ final class LiveGlass {
         }
     }
 
-
-
     private static final Matrix SCRATCH = new Matrix();
-
-
 
     private static float areaL, areaT, areaR, areaB;
 
@@ -327,13 +306,12 @@ final class LiveGlass {
             Drawable background = group.getBackground();
             if (background != null) background.draw(canvas);
 
-
-
             int index = group.indexOfChild(next);
             float z = next.getZ();
             for (int i = 0; i < group.getChildCount(); i++) {
                 if (i == index) continue;
                 View other = group.getChildAt(i);
+                if (other == null) continue;
                 float oz = other.getZ();
                 if (oz < z || (oz == z && i < index)) child(canvas, group, other, ox, oy);
             }
@@ -346,7 +324,6 @@ final class LiveGlass {
         }
         canvas.restoreToCount(saved);
     }
-
 
     private static View activityDecor(View view) {
         android.content.Context context = view.getContext();
@@ -362,44 +339,38 @@ final class LiveGlass {
         return null;
     }
 
-
     private static boolean reaches(View view, float x, float y) {
         return x < areaR && x + view.getWidth() > areaL && y < areaB && y + view.getHeight() > areaT;
     }
 
-
     private static void child(Canvas canvas, ViewGroup group, View child, float ox, float oy) {
-        if (child.getVisibility() != View.VISIBLE || child.getAlpha() <= 0.01f
+        if (child == null || child.getVisibility() != View.VISIBLE || child.getAlpha() <= 0.01f
                 || child.getWidth() <= 0 || child.getHeight() <= 0) return;
-        float cx = ox + child.getLeft() - group.getScrollX() + child.getTranslationX();
-        float cy = oy + child.getTop() - group.getScrollY() + child.getTranslationY();
-        if (!reaches(child, cx, cy)) return;
-        int saved = canvas.save();
-        canvas.translate(child.getLeft() - group.getScrollX(), child.getTop() - group.getScrollY());
-        Matrix matrix = child.getMatrix();
-        if (!matrix.isIdentity()) canvas.concat(matrix);
-        if (child instanceof android.view.SurfaceView) {
-
-
-
-            VideoCopy copy = VideoCopy.of((android.view.SurfaceView) child);
-            copy.draw(canvas);
-            if (recording != null && !recording.contains(copy)) recording.add(copy);
-            videosDrawn++;
+        try {
+            float cx = ox + child.getLeft() - group.getScrollX() + child.getTranslationX();
+            float cy = oy + child.getTop() - group.getScrollY() + child.getTranslationY();
+            if (!reaches(child, cx, cy)) return;
+            int saved = canvas.save();
+            canvas.translate(child.getLeft() - group.getScrollX(), child.getTop() - group.getScrollY());
+            Matrix matrix = child.getMatrix();
+            if (!matrix.isIdentity()) canvas.concat(matrix);
+            if (child instanceof android.view.SurfaceView) {
+                VideoCopy copy = VideoCopy.of((android.view.SurfaceView) child);
+                copy.draw(canvas);
+                if (recording != null && !recording.contains(copy)) recording.add(copy);
+                videosDrawn++;
+                canvas.restoreToCount(saved);
+                return;
+            }
+            if (child.getAlpha() < 0.99f) {
+                canvas.saveLayerAlpha(0, 0, child.getWidth(), child.getHeight(), Math.round(child.getAlpha() * 255f));
+            }
+            if (child instanceof ViewGroup && anyVideo((ViewGroup) child, cx, cy)) manual(canvas, (ViewGroup) child, cx, cy);
+            else child.draw(canvas);
+            drawn++;
             canvas.restoreToCount(saved);
-            return;
-        }
-        if (child.getAlpha() < 0.99f) {
-            canvas.saveLayerAlpha(0, 0, child.getWidth(), child.getHeight(), Math.round(child.getAlpha() * 255f));
-        }
-
-
-        if (child instanceof ViewGroup && anyVideo((ViewGroup) child, cx, cy)) manual(canvas, (ViewGroup) child, cx, cy);
-        else child.draw(canvas);
-        drawn++;
-        canvas.restoreToCount(saved);
+        } catch (Throwable ignored) {}
     }
-
 
     private static void manual(Canvas canvas, ViewGroup group, float ox, float oy) {
         Drawable background = group.getBackground();
@@ -409,12 +380,19 @@ final class LiveGlass {
         for (int i = 0; i < count; i++) order[i] = i;
         final ViewGroup g = group;
         java.util.Arrays.sort(order, (x, y) -> {
-            int byZ = Float.compare(g.getChildAt(x).getZ(), g.getChildAt(y).getZ());
+            View vx = g.getChildAt(x);
+            View vy = g.getChildAt(y);
+            if (vx == null && vy == null) return 0;
+            if (vx == null) return -1;
+            if (vy == null) return 1;
+            int byZ = Float.compare(vx.getZ(), vy.getZ());
             return byZ != 0 ? byZ : Integer.compare(x, y);
         });
-        for (Integer i : order) child(canvas, group, group.getChildAt(i), ox, oy);
+        for (Integer i : order) {
+            View c = group.getChildAt(i);
+            if (c != null) child(canvas, group, c, ox, oy);
+        }
     }
-
 
     private static boolean anyVideo(ViewGroup group, float ox, float oy) {
         if (holdsVideo(group, ox, oy, 0)) return true;
@@ -427,7 +405,6 @@ final class LiveGlass {
         View playing = GlassVideo.render(group.getRootView());
         return playing != null && inside(playing, group);
     }
-
 
     private static boolean holdsVideo(ViewGroup group, float ox, float oy, int depth) {
         if (depth > 30) return false;
@@ -460,7 +437,6 @@ final class LiveGlass {
         return false;
     }
 
-
     static final class Media {
         final ArrayList<android.view.SurfaceView> videos = new ArrayList<>();
         final ArrayList<View> pictures = new ArrayList<>();
@@ -482,7 +458,7 @@ final class LiveGlass {
         }
 
         private void walk(View view, int[] budget) {
-            if (budget[0]-- <= 0 || view.getVisibility() != View.VISIBLE || view.getWidth() <= 0 || view.getHeight() <= 0) return;
+            if (view == null || budget[0]-- <= 0 || view.getVisibility() != View.VISIBLE || view.getWidth() <= 0 || view.getHeight() <= 0) return;
             if (view instanceof android.view.SurfaceView) {
                 if (!videos.contains(view)) { videos.add((android.view.SurfaceView) view); pictures.add(view); }
                 return;
@@ -502,7 +478,6 @@ final class LiveGlass {
         }
     }
 
-
     static boolean worthIt(View view, float left, float top, float w, float h) {
         View root = view.getRootView();
         if (root == null) return false;
@@ -510,27 +485,22 @@ final class LiveGlass {
         if (host != null && host != root) return true;
         Media media = mediaOf(root);
         int[] spot = new int[2];
-        view.getLocationInWindow(spot);
-        float gl = spot[0] + left - 8, gt = spot[1] + top - 8, gr = gl + w + 16, gb = gt + h + 16;
-        for (View picture : media.pictures) {
-            if (picture == null || picture == view || !picture.isShown() || inside(picture, view)) continue;
-            picture.getLocationInWindow(spot);
-            if (spot[0] < gr && spot[0] + picture.getWidth() > gl && spot[1] < gb && spot[1] + picture.getHeight() > gt) return true;
-        }
+        try {
+            view.getLocationInWindow(spot);
+            float gl = spot[0] + left - 8, gt = spot[1] + top - 8, gr = gl + w + 16, gb = gt + h + 16;
+            for (View picture : media.pictures) {
+                if (picture == null || picture == view || !picture.isShown() || inside(picture, view)) continue;
+                picture.getLocationInWindow(spot);
+                if (spot[0] < gr && spot[0] + picture.getWidth() > gl && spot[1] < gb && spot[1] + picture.getHeight() > gt) return true;
+            }
+        } catch (Throwable ignored) {}
         return false;
     }
 
-
-    private static final class VideoCopy implements android.view.PixelCopy.OnPixelCopyFinishedListener {
+    private static final class VideoCopy {
         private static final WeakHashMap<android.view.SurfaceView, VideoCopy> ALL = new WeakHashMap<>();
-        private static final android.os.Handler MAIN = new android.os.Handler(android.os.Looper.getMainLooper());
-        private static final int WIDTH = 270;
         final java.lang.ref.WeakReference<android.view.SurfaceView> view;
-        final RenderNode node = new RenderNode("airtok-glass-video");
-        final android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.FILTER_BITMAP_FLAG);
-        android.graphics.Bitmap bitmap;
-        long wanted;
-        boolean busy, scheduled;
+        final RenderNode node = new RenderNode("margyt-glass-video");
 
         VideoCopy(android.view.SurfaceView view) {
             this.view = new java.lang.ref.WeakReference<>(view);
@@ -542,78 +512,14 @@ final class LiveGlass {
             return copy;
         }
 
-        void want() {
-            wanted = android.os.SystemClock.uptimeMillis();
-            if (!scheduled) { scheduled = true; MAIN.post(this::take); }
-        }
-
-
-        private static VideoCopy lastGood;
+        void want() {}
 
         void draw(Canvas canvas) {
-            android.view.SurfaceView source = view.get();
-            if (source == null) return;
-            wanted = android.os.SystemClock.uptimeMillis();
-            node.setPosition(0, 0, source.getWidth(), source.getHeight());
-            if (!scheduled) { scheduled = true; MAIN.post(this::take); }
             if (node.hasDisplayList()) canvas.drawRenderNode(node);
-            else if (lastGood != null && lastGood != this && lastGood.node.hasDisplayList()) {
-                float sx = source.getWidth() / (float) Math.max(1, lastGood.node.getWidth());
-                float sy = source.getHeight() / (float) Math.max(1, lastGood.node.getHeight());
-                int saved = canvas.save();
-                canvas.scale(sx, sy);
-                canvas.drawRenderNode(lastGood.node);
-                canvas.restoreToCount(saved);
-            }
-        }
-
-        private void take() {
-            scheduled = false;
-            android.view.SurfaceView source = view.get();
-            if (source == null || !source.isAttachedToWindow() || busy) return;
-            if (android.os.SystemClock.uptimeMillis() - wanted > 1500L) return;
-            android.view.Surface surface = source.getHolder().getSurface();
-            if (surface == null || !surface.isValid() || source.getWidth() <= 0) { later(); return; }
-            int h = Math.max(1, Math.round(WIDTH * source.getHeight() / (float) source.getWidth()));
-            if (bitmap == null || bitmap.getHeight() != h) bitmap = android.graphics.Bitmap.createBitmap(WIDTH, h, android.graphics.Bitmap.Config.ARGB_8888);
-            busy = true;
-            try {
-                android.view.PixelCopy.request(source, bitmap, this, MAIN);
-            } catch (Throwable error) {
-                busy = false;
-                later();
-            }
-        }
-
-        private long copyLog;
-
-        @Override
-        public void onPixelCopyFinished(int result) {
-            busy = false;
-            long t = android.os.SystemClock.uptimeMillis();
-            if (t - copyLog > 3000L) { copyLog = t; android.util.Log.w("MargyTGlass", "video copy: " + result); }
-            android.view.SurfaceView source = view.get();
-            if (result == android.view.PixelCopy.SUCCESS && source != null) {
-                RecordingCanvas canvas = node.beginRecording(source.getWidth(), source.getHeight());
-                canvas.drawBitmap(bitmap, null, new android.graphics.Rect(0, 0, source.getWidth(), source.getHeight()), paint);
-                node.endRecording();
-                lastGood = this;
-
-                Watcher watcher = ROOTS.get(source.getRootView());
-                if (watcher != null) watcher.redraw();
-            }
-            later();
-        }
-
-        private void later() {
-            if (!scheduled) { scheduled = true; MAIN.postDelayed(this::take, 50L); }
         }
     }
 
-
-
     private static final WeakHashMap<View, Watcher> ROOTS = new WeakHashMap<>();
-
 
     private static void watch(View root, View glass) {
         Watcher watcher = ROOTS.get(root);
@@ -626,7 +532,6 @@ final class LiveGlass {
         }
         watcher.glass.put(glass, Boolean.TRUE);
     }
-
 
     private static final class Watcher implements ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnScrollChangedListener {
         final WeakHashMap<View, Boolean> glass = new WeakHashMap<>();
@@ -641,7 +546,7 @@ final class LiveGlass {
 
         @Override public void onGlobalLayout() { changed(); }
 
-        @Override public void onScrollChanged() { changed(); }
+        @Override public void onScrollChanged() { generation++; }
 
         void changed() {
             if (!Design.frosted()) return;
@@ -650,9 +555,11 @@ final class LiveGlass {
         }
 
         void redraw() {
-            for (View view : new ArrayList<>(glass.keySet())) {
-                if (view != null && view.isShown()) view.invalidate();
-            }
+            try {
+                for (View view : new ArrayList<>(glass.keySet())) {
+                    if (view != null && view.isShown()) view.invalidate();
+                }
+            } catch (Throwable ignored) {}
         }
     }
 }

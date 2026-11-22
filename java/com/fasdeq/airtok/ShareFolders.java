@@ -14,7 +14,6 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-
 final class ShareFolders {
 
     private ShareFolders() {}
@@ -36,7 +35,6 @@ final class ShareFolders {
         actionRowId = context.getResources().getIdentifier("a5x", "id", pack);
         appLabelId = context.getResources().getIdentifier("w5k", "id", pack);
     }
-
 
     static void named(final TextView view) {
         if (Version.LITE) return;
@@ -62,10 +60,7 @@ final class ShareFolders {
         });
     }
 
-
-
     private static final int TAG_ACTIONS = 0x7e0c0433, TAG_PAINTED = 0x7e0c0434;
-
 
     private static void actions(final TextView label) {
         label.post(new Runnable() {
@@ -223,7 +218,6 @@ final class ShareFolders {
         return chip;
     }
 
-
     private static void dress(LinearLayout row, int ink) {
         int accent = Accent.colour() | 0xFF000000;
         for (int i = 0; i < row.getChildCount(); i++) {
@@ -255,7 +249,6 @@ final class ShareFolders {
         if (id != null) fill(list, id, -1, 0, 0);
     }
 
-
     private static void sweep(ViewGroup list) {
         for (int i = 0; i < list.getChildCount(); i++) shape(list.getChildAt(i));
     }
@@ -265,7 +258,6 @@ final class ShareFolders {
         CharSequence said = person.getContentDescription();
         return said != null && ChatFolders.holds(chosen, said.toString());
     }
-
 
     private static int[] gaps(View person) {
         try {
@@ -289,7 +281,6 @@ final class ShareFolders {
             if (kept == null) {
                 person.setTag(TAG_KEPT, new int[] {margins.width, margins.leftMargin, margins.rightMargin, person.getVisibility()});
             }
-
 
             int[] gaps = gaps(person);
             if (margins.width != 0 || margins.leftMargin != -gaps[0] || margins.rightMargin != -gaps[1]) {
@@ -327,7 +318,6 @@ final class ShareFolders {
             return -1;
         }
     }
-
 
     private static void fill(final ViewGroup list, final String id, final int before, final int quiet, final int steps) {
         list.postDelayed(new Runnable() {

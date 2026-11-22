@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class CommentText {
     private static final String MODEL = "com.ss.android.ugc.aweme.comment.model.Comment";
     private static final String CELL = "com.ss.android.ugc.aweme.commentv2.commentlist.powercell.BaseCommentCell";

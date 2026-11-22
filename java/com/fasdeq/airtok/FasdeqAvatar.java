@@ -20,7 +20,7 @@ public final class FasdeqAvatar {
         return bitmap;
     }
 
-    public static Bitmap getCircle(int size) {
+    public static Bitmap getRound(int size) {
         Bitmap src = get();
         if (src == null) return null;
         try {
@@ -28,7 +28,8 @@ public final class FasdeqAvatar {
             android.graphics.Canvas canvas = new android.graphics.Canvas(out);
             android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG | android.graphics.Paint.FILTER_BITMAP_FLAG);
             android.graphics.Path path = new android.graphics.Path();
-            path.addCircle(size / 2f, size / 2f, size / 2f, android.graphics.Path.Direction.CW);
+            float r = size * 0.26f;
+            path.addRoundRect(new android.graphics.RectF(0, 0, size, size), r, r, android.graphics.Path.Direction.CW);
             canvas.clipPath(path);
             android.graphics.Rect srcRect = new android.graphics.Rect(0, 0, src.getWidth(), src.getHeight());
             android.graphics.Rect dstRect = new android.graphics.Rect(0, 0, size, size);
@@ -37,5 +38,9 @@ public final class FasdeqAvatar {
         } catch (Throwable t) {
             return src;
         }
+    }
+
+    public static Bitmap getCircle(int size) {
+        return getRound(size);
     }
 }

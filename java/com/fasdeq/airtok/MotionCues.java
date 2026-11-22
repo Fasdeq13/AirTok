@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 
-
 public final class MotionCues {
 
     private MotionCues() {}
@@ -32,7 +31,7 @@ public final class MotionCues {
         if (known != null) return known;
         Context context = AirTok.context();
         if (context == null) return false;
-        boolean value = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+        boolean value = context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
         on = value;
         return value;
     }
@@ -40,16 +39,14 @@ public final class MotionCues {
     static void setEnabled(Activity activity, boolean value) {
         on = value;
         Context context = AirTok.context();
-        if (context != null) context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (context != null) context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
         if (value) resumed(activity); else remove(activity);
     }
-
 
     static boolean available(Context context) {
         SensorManager sensors = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         return sensors != null && sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null;
     }
-
 
     static void resumed(Activity activity) {
         if (!enabled() || activity == null) return;
@@ -87,7 +84,6 @@ public final class MotionCues {
             decor.setTag(TAG, null);
         }
     }
-
 
     static final class Dots extends View implements SensorEventListener {
         private final SensorManager sensors;

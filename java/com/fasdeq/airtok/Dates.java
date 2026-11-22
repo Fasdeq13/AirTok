@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import java.lang.reflect.Method;
 
-
 public final class Dates {
     static void reloadSettings(){on=null;DateOverlay.update();}
 
@@ -47,7 +46,6 @@ public final class Dates {
         new android.os.Handler(android.os.Looper.getMainLooper()).post(()->DateOverlay.update());
     }
 
-
     public static String getDesc(Object post) {
         if (post==null) return null;
         String original=null;
@@ -77,18 +75,15 @@ public final class Dates {
 
     private static final java.util.Set<String> COUNTRIES=new java.util.HashSet<>(java.util.Arrays.asList(java.util.Locale.getISOCountries()));
 
-
     static String region(Object post){
         String code=NativeRead.string(NativeRead.get(post,"getRegion")).toUpperCase(java.util.Locale.ROOT);
         return COUNTRIES.contains(code)?code:"";
     }
 
-
     static String flag(String code){
         if(code==null||code.length()!=2)return "";
         return new String(Character.toChars(0x1F1E6+code.charAt(0)-'A'))+new String(Character.toChars(0x1F1E6+code.charAt(1)-'A'));
     }
-
 
     private static String flagged(Object post,String date){
         if(date==null)return null;
@@ -112,6 +107,6 @@ public final class Dates {
 
     private static SharedPreferences prefs() {
         Context context=AirTok.context();
-        return context==null ? null : context.getSharedPreferences(AirTok.PREFS,Context.MODE_PRIVATE);
+        return context==null ? null : context.getSharedPreferences("margyt",Context.MODE_PRIVATE);
     }
 }

@@ -25,11 +25,7 @@ public final class Heart {
         tint(view);
     }
 
-
-
     private static final int FLOWN=0x54544C49;
-
-
 
     private static android.view.View likeButton(android.view.View heart){
         android.view.View known=FeedRail.likeOnScreen();
@@ -59,7 +55,6 @@ public final class Heart {
         }
         return null;
     }
-
 
     public static void shown(android.widget.ImageView heart){
         if(heart==null)return;
@@ -142,7 +137,6 @@ public final class Heart {
         flight.addListener(new android.animation.AnimatorListenerAdapter(){
             @Override public void onAnimationEnd(android.animation.Animator a){
                 removeCopy();animator=null;
-
 
                 if(disposed||!like.isAttachedToWindow()||!like.isShown())return;
                 like.animate().cancel();

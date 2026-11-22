@@ -47,7 +47,7 @@ final class FavouriteStickers {
         read();if(repository==null)return;
         long now=android.os.SystemClock.uptimeMillis();if(now-lastLoad<30000)return;lastLoad=now;
         final int token=generation;final Object repo=repository;
-        try{Method refresh=repo.getClass().getMethod("refreshFavouriteStickers",boolean.class,boolean.class,String.class);refresh.setAccessible(true);refresh.invoke(repo,false,false,"airtok_settings");}
+        try{Method refresh=repo.getClass().getMethod("refreshFavouriteStickers",boolean.class,boolean.class,String.class);refresh.setAccessible(true);refresh.invoke(repo,false,false,"margyt_settings");}
         catch(Throwable ignored){return;}
         Handler handler=new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable(){int tries;

@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
-
 public final class MotionBlur {
 
     private MotionBlur() {}
@@ -27,7 +26,7 @@ public final class MotionBlur {
         if (on == null) {
             Context c = AirTok.context();
             if (c == null) return false;
-            on = c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+            on = c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
         }
         return on && android.os.Build.VERSION.SDK_INT >= 31;
     }
@@ -35,14 +34,13 @@ public final class MotionBlur {
     static void set(boolean value) {
         on = value;
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
     }
-
 
     static int strength() {
         if (strength < 0) {
             Context c = AirTok.context();
-            strength = c == null ? 50 : c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getInt(STRENGTH, 50);
+            strength = c == null ? 50 : c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getInt(STRENGTH, 50);
         }
         return strength;
     }
@@ -50,9 +48,8 @@ public final class MotionBlur {
     static void setStrength(int value) {
         strength = Math.max(0, Math.min(100, value));
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putInt(STRENGTH, strength).apply();
+        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putInt(STRENGTH, strength).apply();
     }
-
 
     public static boolean textureVideo() {
         try {
@@ -61,8 +58,6 @@ public final class MotionBlur {
             return false;
         }
     }
-
-
 
     static void attach(Activity activity) {
         if (!on()) return;
@@ -94,7 +89,6 @@ public final class MotionBlur {
             return down ? view.getScrollY() : view.getScrollX();
         }
     }
-
 
     private static final class Mover {
         int x, y;

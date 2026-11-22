@@ -13,11 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public final class Flags {
 
     private Flags() {}
-
 
     public static final int ADS = 0;
     public static final int VOICE = 1;
@@ -29,14 +27,11 @@ public final class Flags {
     public static final String KEY_BANNER = "flag_profile_banner";
     public static final String KEY_SPEED_LOCK = "flag_speed_lock";
 
-
     public static final String KEY_COMMENT_REPOST = "flag_comment_repost";
     public static final String KEY_SELF_REPOST = "flag_self_repost";
     public static final String KEY_COMMENT_PHOTOS = "flag_comment_photos";
     public static final String KEY_HASHTAGS = "flag_hashtags_unlimited";
     public static final String KEY_TRANSLATE_COMMENTS = "flag_translate_comments";
-
-
 
     public static final String KEY_NEW_PROFILE = "flag_new_profile";
 
@@ -44,9 +39,7 @@ public final class Flags {
             KEY_VOICE, KEY_BANNER, KEY_NEW_PROFILE, KEY_TRANSLATE_COMMENTS, KEY_COMMENT_REPOST,
             KEY_COMMENT_PHOTOS, KEY_HASHTAGS));
 
-
-    static final String OVERRIDES = AirTok.PREFS + "_flags";
-
+    static final String OVERRIDES = "margyt" + "_flags";
 
     private static final String SPEED_LOCK = "long_press_speed_up_lock";
 
@@ -68,7 +61,6 @@ public final class Flags {
 
     static {
 
-
         put(ADS, Boolean.FALSE,
                 "enable_normal_splash_ad", "enable_normal_splash_ad_ab", "splash_ad_enable",
                 "enable_live_splash", "search_ad_refactor_enable", "search_enable_mix_adgap",
@@ -77,8 +69,6 @@ public final class Flags {
         put(VOICE, Integer.valueOf(1), "audio_comment_publish");
         put(BANNER,Integer.valueOf(1),"profile_bg_in_allow_list","profile_bg_enable_consumption_group");
     }
-
-
 
     public static boolean isOn(int group) {
         if (group == ADS) return Feed.isEnabled();
@@ -103,9 +93,7 @@ public final class Flags {
         forget();
     }
 
-
     private static boolean chosen(String key) {
-
 
         return KEY_NEW_PROFILE.equals(key) || KEY_SPEED_LOCK.equals(key);
     }
@@ -123,9 +111,8 @@ public final class Flags {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
     }
-
 
     private static Object of(String key) {
         Object forced = forced(key);
@@ -134,9 +121,6 @@ public final class Flags {
         if (override == null) return null;
         return isOn(override.group) ? override.value : null;
     }
-
-
-
 
     private static volatile Map<String, Object> table;
 
@@ -162,20 +146,12 @@ public final class Flags {
             Map<String, Object> made = new HashMap<String, Object>();
             Integer one = Integer.valueOf(1), none = Integer.valueOf(0);
 
-
-
-
-
-
             made.put(SPEED_LOCK, on(prefs, KEY_SPEED_LOCK) ? one : none);
             if (on(prefs, KEY_VOICE)) made.put("audio_comment_publish", one);
             if (on(prefs, KEY_BANNER)) {
                 made.put("profile_bg_in_allow_list", one);
                 made.put("profile_bg_enable_consumption_group", one);
             }
-
-
-
 
             if (on(prefs, KEY_COMMENT_REPOST)) {
                 made.put("tt_comment_repost", one);
@@ -184,27 +160,15 @@ public final class Flags {
             }
             if (on(prefs, KEY_SELF_REPOST)) made.put("enable_self_repost", one);
 
-
             if (on(prefs, KEY_COMMENT_PHOTOS)) made.put("comment_multi_photo_group", Integer.valueOf(2));
-
 
             if (on(prefs, KEY_HASHTAGS)) made.put("studio_publish_limit_hashtag_switch", none);
 
             made.put("camera_teleprompter_mode", one);
 
-
             made.put("studio_selfie_fill_light_config", "{\"support_selfie_light_adjust\":true,\"selfie_fill_light_persist_memory\":true,"
                     + "\"selfie_fill_light_tab_memory\":true,\"selfie_fill_light_shutter_ring_shadow_order_fix\":true,\"lazy_load_flash_front_scene\":true,"
                     + "\"auto_adjust_full_brightness\":true}");
-
-
-
-
-
-
-
-
-
 
             if (on(prefs, KEY_TRANSLATE_COMMENTS)) {
                 made.put("comment_auto_translation_enabled", one);
@@ -213,11 +177,6 @@ public final class Flags {
                 made.put("comment_auto_translation_display_button_under_dnt", one);
                 made.put("tt_comment_auto_translation_v2", none);
             }
-
-
-
-
-
 
             made.put("circle_search_block", none);
             if (Comments.isDoubleTapLikeEnabled()) {
@@ -230,13 +189,7 @@ public final class Flags {
             made.put("long_press_redesign", none);
             made.put("short_drama_default_long_press_panel", none);
 
-
-
-
-
-
             made.put("profile_left_align", on(prefs, KEY_NEW_PROFILE) ? one : none);
-
 
             if (DevMode.isOn()) {
                 Map<String, Object> mine = overrides();
@@ -250,10 +203,6 @@ public final class Flags {
             building = null;
         }
     }
-
-
-
-
 
     public static boolean newProfile() {
         try {
@@ -279,20 +228,12 @@ public final class Flags {
             Object value = known.get(key);
             if (value == null || asking == Thread.currentThread()) return null;
 
-
             if (ANSWERED.add(key)) Diary.detail("flag " + key + " = " + value);
             return value;
         } catch (Throwable error) {
             return null;
         }
     }
-
-
-
-
-
-
-
 
     public static Object playerFlag(String key, java.lang.reflect.Type type) {
         try {
@@ -343,7 +284,6 @@ public final class Flags {
 
     private static final Map<String, Object> BUILT = new java.util.concurrent.ConcurrentHashMap<String, Object>();
 
-
     public static Object forcedObject(Class<?> type, String key) {
         if (type == null || key == null) return null;
         Object value = forced(key);
@@ -359,9 +299,6 @@ public final class Flags {
         }
         return null;
     }
-
-
-
 
     static final class Known {
         final String key;
@@ -381,15 +318,11 @@ public final class Flags {
         }
     }
 
-
-
-
     private static final String REGISTRY = "X.06y1";
     private static final String READER = "X.09tK";
     private static final int EVERYWHERE = 0x7c00;
 
     private static List<Known> catalogue;
-
 
     static synchronized List<Known> catalogue() {
         if (catalogue != null) return catalogue;
@@ -418,7 +351,6 @@ public final class Flags {
         catalogue = out;
         return out;
     }
-
 
     static Object own(Known flag) {
         Thread before = asking;
@@ -478,7 +410,6 @@ public final class Flags {
         return context.getSharedPreferences(OVERRIDES, android.content.Context.MODE_PRIVATE);
     }
 
-
     static Map<String, Object> overrides() {
         Map<String, Object> out = new HashMap<String, Object>();
         try {
@@ -498,7 +429,6 @@ public final class Flags {
     }
 
     private static final String DOUBLE = "double:";
-
 
     static void override(Known flag, Object value) {
         SharedPreferences prefs = overridePrefs();
@@ -521,7 +451,6 @@ public final class Flags {
         forget();
     }
 
-
     static Object parse(Known flag, String typed) {
         String text = typed == null ? "" : typed.trim();
         try {
@@ -541,7 +470,6 @@ public final class Flags {
             return null;
         }
     }
-
 
     public static boolean flag(String key, boolean fallback) {
         Object value = of(key);

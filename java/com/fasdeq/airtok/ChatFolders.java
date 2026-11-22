@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 final class ChatFolders {
 
     private ChatFolders() {}
@@ -41,8 +40,6 @@ final class ChatFolders {
     private static final int TAG_MINE = 0x7e0c0420, TAG_HIDDEN = 0x7e0c0421, TAG_NAME = 0x7e0c0422,
             TAG_HEADER = 0x7e0c0423, TAG_CHIP = 0x7e0c0424, TAG_SWAPPED = 0x7e0c0425,
             TAG_WATCHED = 0x7e0c0426;
-
-
 
     static boolean enabled() {
 
@@ -56,8 +53,6 @@ final class ChatFolders {
         if (!on) active = null;
         poke();
     }
-
-
 
     private static final class Folder {
         final String id;
@@ -134,14 +129,11 @@ final class ChatFolders {
         return null;
     }
 
-
-
     private static final Map<String, String> uidByName = new LinkedHashMap<String, String>() {
         @Override protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
             return size() > 2000;
         }
     };
-
 
     static void seen(String name, String uid) {
         if (name == null || uid == null || !uid.matches("[0-9]{1,24}")) return;
@@ -151,7 +143,6 @@ final class ChatFolders {
             uidByName.put(clean, uid);
         }
     }
-
 
     private static String clean(String name) {
         StringBuilder out = new StringBuilder(name.length());
@@ -170,7 +161,6 @@ final class ChatFolders {
         return nameId;
     }
 
-
     private static TextView nameOf(View row) {
         Object known = row.getTag(TAG_NAME);
         if (known instanceof TextView) return (TextView) known;
@@ -184,13 +174,11 @@ final class ChatFolders {
         return null;
     }
 
-
     private static String keyOf(View row) {
         TextView name = nameOf(row);
         if (name == null || name.getText() == null) return null;
         return keyOfName(name.getText().toString());
     }
-
 
     static String keyOfName(String written) {
         if (written == null) return null;
@@ -200,7 +188,6 @@ final class ChatFolders {
         synchronized (uidByName) {
             uid = uidByName.get(text);
             if (uid == null) {
-
 
                 int best = 0;
                 for (Map.Entry<String, String> known : uidByName.entrySet()) {
@@ -216,7 +203,6 @@ final class ChatFolders {
         return uid != null ? uid : "n:" + text;
     }
 
-
     private static boolean marksOnly(String text, int from) {
         for (int i = from; i < text.length(); i++) {
             char c = text.charAt(i);
@@ -224,9 +210,6 @@ final class ChatFolders {
         }
         return true;
     }
-
-
-
 
     static List<String[]> list() {
         List<String[]> out = new ArrayList<String[]>();
@@ -238,12 +221,10 @@ final class ChatFolders {
         return out;
     }
 
-
     static synchronized int size(String id) {
         Folder folder = folder(id);
         return folder == null ? 0 : folder.chats.size();
     }
-
 
     static synchronized boolean holds(String id, String written) {
         Folder folder = folder(id);
@@ -264,8 +245,6 @@ final class ChatFolders {
         TextView name = nameOf(row);
         return name == null || name.getText() == null ? "" : clean(name.getText().toString());
     }
-
-
 
     static void attach(final Activity activity) {
         if (Version.LITE) return;
@@ -290,7 +269,6 @@ final class ChatFolders {
         }
     }
 
-
     private static void poke() {
         lastPass = 0;
         Activity activity = Watch.here();
@@ -302,8 +280,6 @@ final class ChatFolders {
             }
         });
     }
-
-
 
     private static long lastPass, menuFrom, menuUntil;
     private static WeakReference<ViewGroup> inbox = new WeakReference<ViewGroup>(null);
@@ -349,12 +325,10 @@ final class ChatFolders {
         overlays(activity, decor);
     }
 
-
     private static void overlays(Activity activity, View decor) {
         long now = SystemClock.uptimeMillis();
         if (now >= menuFrom && now <= menuUntil) menu(activity, decor);
     }
-
 
     private static void waitFor(final Activity activity) {
         final View decor = activity.getWindow().getDecorView();
@@ -388,7 +362,6 @@ final class ChatFolders {
         return null;
     }
 
-
     private static void look(Activity activity, View decor) {
         int id = nameId(activity);
         View any = id == 0 ? null : decor.findViewById(id);
@@ -420,7 +393,6 @@ final class ChatFolders {
         }
         chips(activity, (HorizontalScrollView) strip);
     }
-
 
     private static View stripOf(ViewGroup list) {
         for (int i = 0; i < list.getChildCount(); i++) {
@@ -459,8 +431,6 @@ final class ChatFolders {
         return null;
     }
 
-
-
     private static boolean header(View row) {
         if (row.getTag(TAG_HEADER) != null) return true;
         if (nameOf(row) != null) return false;
@@ -468,7 +438,6 @@ final class ChatFolders {
         if (is) row.setTag(TAG_HEADER, Boolean.TRUE);
         return is;
     }
-
 
     private static boolean holdsHeader(View view, int depth) {
         if (depth > 6) return false;
@@ -483,7 +452,6 @@ final class ChatFolders {
     private static void sweep(ViewGroup list) {
         for (int i = 0; i < list.getChildCount(); i++) shape(list.getChildAt(i));
     }
-
 
     private static void shape(View row) {
         Folder folder = folder(active);
@@ -508,7 +476,6 @@ final class ChatFolders {
                 margins.bottomMargin = 0;
                 row.setLayoutParams(margins);
             }
-
 
             boolean laid = row.getHeight() == 0 || System.currentTimeMillis() >= settleUntil;
             if (laid && row.getVisibility() != View.INVISIBLE) row.setVisibility(View.INVISIBLE);
@@ -543,8 +510,6 @@ final class ChatFolders {
             sweep(list);
         } else if (list != null) {
 
-
-
             View strip = stripOf(list);
             Activity activity = Watch.here();
             if (strip instanceof HorizontalScrollView && activity != null) chips(activity, (HorizontalScrollView) strip);
@@ -572,7 +537,6 @@ final class ChatFolders {
         }
     }
 
-
     private static int rows(ViewGroup list) {
         try {
             Object adapter = list.getClass().getMethod("getAdapter").invoke(list);
@@ -583,7 +547,6 @@ final class ChatFolders {
             return -1;
         }
     }
-
 
     private static void fill(final ViewGroup list, final String id, final int before, final int quiet, final int steps) {
 
@@ -608,9 +571,6 @@ final class ChatFolders {
             }
         }, steps == 0 ? 120L : 350L);
     }
-
-
-
 
     private static final class Narrowed {
         static Object differ;
@@ -638,7 +598,6 @@ final class ChatFolders {
             throw new NoSuchFieldException(name);
         }
 
-
         private static boolean bind(ViewGroup list) throws Exception {
             Object adapter = list.getClass().getMethod("getAdapter").invoke(list);
             if (adapter == null) return false;
@@ -652,7 +611,6 @@ final class ChatFolders {
             java.lang.reflect.Method giving = type.getDeclaredMethod("LIZIZ", List.class, Runnable.class);
             giving.setAccessible(true);
             java.lang.reflect.Field held = field(type, "LJ");
-
 
             Object config = field(type, "LIZIZ").get(found);
             java.lang.reflect.Field executing = field(config.getClass(), "LIZ");
@@ -680,7 +638,6 @@ final class ChatFolders {
             return true;
         }
 
-
         private static final class Gate implements java.util.concurrent.Executor {
             private final java.util.concurrent.Executor real;
 
@@ -697,7 +654,6 @@ final class ChatFolders {
                 real.execute(work);
             }
         }
-
 
         private static void intercept(Runnable work, String id) throws Exception {
             Object current = backing.get(differ);
@@ -716,7 +672,6 @@ final class ChatFolders {
             }
         }
 
-
         private static void committed() {
             try {
                 Object now = backing.get(differ);
@@ -734,7 +689,6 @@ final class ChatFolders {
             }
         }
 
-
         private static String chatName(Object wrapper) throws Exception {
             if (model == null) model = field(wrapper.getClass(), "LIZ");
             Object item = model.get(wrapper);
@@ -744,7 +698,6 @@ final class ChatFolders {
             if (sessions.containsKey(kind)) {
                 session = sessions.get(kind);
             } else {
-
 
                 session = null;
                 for (Class<?> c = kind; c != null && session == null; c = c.getSuperclass()) {
@@ -769,7 +722,6 @@ final class ChatFolders {
             Object name = field(info.getClass(), "LLJJJ").get(info);
             return name instanceof String ? (String) name : null;
         }
-
 
         private static List<Object> part(String id, List<?> from) throws Exception {
             List<Object> out = new ArrayList<Object>();
@@ -799,7 +751,6 @@ final class ChatFolders {
             }
         }
 
-
         static boolean narrow(ViewGroup list, String id) {
             try {
                 if (!bind(list)) return false;
@@ -820,7 +771,6 @@ final class ChatFolders {
             }
         }
 
-
         static void restore() {
             List<?> back = whole;
             boolean was = ours != null;
@@ -833,8 +783,6 @@ final class ChatFolders {
             }
         }
     }
-
-
 
     private static final class Look {
         Drawable.ConstantState background;
@@ -871,7 +819,6 @@ final class ChatFolders {
         }
     }
 
-
     private static void dress(View chip, Look look) {
         if (look == null) return;
         if (look.background != null) chip.setBackground(look.background.newDrawable().mutate());
@@ -889,11 +836,9 @@ final class ChatFolders {
         }
         if (theirs.isEmpty()) return;
 
-
         boolean swapped = false;
         for (LinearLayout chip : theirs) if (chip.getTag(TAG_SWAPPED) != null) swapped = true;
         if (!swapped && active == null) learn(theirs);
-
 
         for (LinearLayout chip : theirs) {
             if (chip.getTag(TAG_WATCHED) != null) continue;
@@ -905,7 +850,6 @@ final class ChatFolders {
                 }
             });
         }
-
 
         List<Folder> wanted = enabled() ? new ArrayList<Folder>(folders) : new ArrayList<Folder>();
         boolean same = mine.size() == wanted.size();
@@ -921,7 +865,6 @@ final class ChatFolders {
             LinearLayout proto = prototype(theirs);
             if (proto != null) {
 
-
                 int at = Math.min(holder.getChildCount(), holder.indexOfChild(theirs.get(0)) + 1);
                 for (Folder folder : wanted) {
                     LinearLayout chip = chip(activity, proto, folder);
@@ -930,7 +873,6 @@ final class ChatFolders {
                 }
             }
         }
-
 
         for (LinearLayout chip : theirs) {
             Object saved = chip.getTag(TAG_SWAPPED);
@@ -966,7 +908,6 @@ final class ChatFolders {
         return text == null ? 0 : InboxMd3.nativeInk(text);
     }
 
-
     private static void learn(List<LinearLayout> theirs) {
         if (theirs.size() < 2) return;
         LinearLayout odd = null;
@@ -987,7 +928,6 @@ final class ChatFolders {
         }
         if (oddCount == 1 && odd != null) selectedLook = lookOf(odd);
     }
-
 
     private static LinearLayout prototype(List<LinearLayout> theirs) {
         LinearLayout best = null;
@@ -1060,7 +1000,6 @@ final class ChatFolders {
         if (context != null) android.widget.Toast.makeText(context, words, android.widget.Toast.LENGTH_SHORT).show();
     }
 
-
     private static void scrollToStart() {
         final ViewGroup list = inbox();
         if (list == null) return;
@@ -1079,8 +1018,6 @@ final class ChatFolders {
         if (list != null) sweep(list);
         poke();
     }
-
-
 
     private static void watchTouches(final Activity activity) {
         Window window = activity.getWindow();
@@ -1140,9 +1077,6 @@ final class ChatFolders {
         }
     }
 
-
-
-
     private static LinearLayout menuColumn(View view, int depth) {
         if (view == null || depth > 45 || isRecycler(view)) return null;
         if (view instanceof LinearLayout && view.getTag(TAG_MINE) == null) {
@@ -1194,7 +1128,6 @@ final class ChatFolders {
         column.requestLayout();
     }
 
-
     private static LinearLayout copy(LinearLayout proto, String words, String glyph, View.OnClickListener click) {
         Context context = proto.getContext();
         LinearLayout row = new LinearLayout(context);
@@ -1245,9 +1178,6 @@ final class ChatFolders {
         return row;
     }
 
-
-
-
     private static void create(final Activity activity, final String[] chat) {
         final Panel panel = Panel.with(activity, Skin.remembered(activity), Local.of("Новая папка"));
         final android.widget.EditText name = panel.field(Local.of("Название папки"));
@@ -1276,7 +1206,6 @@ final class ChatFolders {
         panel.quiet(Local.of("Отмена"), null).show();
     }
 
-
     private static void pick(final Activity activity, final String key, final String label) {
         load();
         final Panel panel = Panel.with(activity, Skin.remembered(activity), Local.of("Добавить в папку"));
@@ -1303,7 +1232,6 @@ final class ChatFolders {
         });
         panel.quiet(Local.of("Закрыть"), null).show();
     }
-
 
     private static void manage(final Activity activity, final Folder folder) {
         final Panel panel = Panel.with(activity, Skin.remembered(activity), folder.name);

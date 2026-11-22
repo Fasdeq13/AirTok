@@ -5,7 +5,6 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.widget.TextView;
 
-
 final class M3Type {
     private M3Type() {}
 
@@ -18,7 +17,6 @@ final class M3Type {
     static void bodyMedium(TextView view) { set(view, 14, 0.2f, 20, false); }
     static void bodySmall(TextView view) { set(view, 12, 0.4f, 16, false); }
     static void labelLarge(TextView view) { set(view, 14, 0.1f, 20, true); }
-
 
     static void line(TextView view, float sp, float trackingSp) {
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);

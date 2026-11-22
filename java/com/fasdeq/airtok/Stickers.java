@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 public final class Stickers {
     static void reloadSettings(){cached=null;}
 
@@ -27,7 +26,7 @@ public static final String KEY = "save_stickers";
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return true;
-            boolean on = context.getSharedPreferences(AirTok.PREFS,
+            boolean on = context.getSharedPreferences("margyt",
                     android.content.Context.MODE_PRIVATE).getBoolean(KEY, true);
             cached = on;
             return on;
@@ -41,19 +40,13 @@ public static final String KEY = "save_stickers";
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
     }
 
     private static volatile String latest;
-
-
-
-
-
-
 
     public static void RQ1(Object ability, Object view, Object a, Object b,
                            StickerTemplate sticker) {
@@ -77,7 +70,6 @@ public static final String KEY = "save_stickers";
         seen(sticker);
         onwards(ability, "vQ1", corner, sticker);
     }
-
 
     private static void onwards(Object ability, String name, Object... args) {
         if (ability == null) return;
@@ -107,27 +99,11 @@ public static final String KEY = "save_stickers";
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static final int PLACED = 0x4D617274;
     private static final long LOOK_FOR = 2500L;
     private static final android.os.Handler MAIN =
             new android.os.Handler(android.os.Looper.getMainLooper());
     private static Runnable looking;
-
 
     static void sheet(Object sticker) {
         if (!isEnabled()) return;
@@ -172,7 +148,6 @@ public static final String KEY = "save_stickers";
         });
     }
 
-
     private static List<android.view.View> windows() {
         try {
             Class<?> global = Class.forName("android.view.WindowManagerGlobal");
@@ -188,7 +163,6 @@ public static final String KEY = "save_stickers";
         return new java.util.ArrayList<android.view.View>();
     }
 
-
     private static boolean place() {
         List<android.view.View> open = windows();
         for (int i = open.size() - 1; i >= 0; i--) {
@@ -202,7 +176,6 @@ public static final String KEY = "save_stickers";
         }
         return false;
     }
-
 
     private static android.widget.LinearLayout row(android.view.View view, int depth, int[] budget) {
         if (view == null || depth > 40 || --budget[0] < 0
@@ -253,8 +226,6 @@ public static final String KEY = "save_stickers";
         float density = context.getResources().getDisplayMetrics().density;
         int tall = first.getHeight();
         int gap = Math.max(second.getLeft() - first.getRight(), Math.round(8 * density));
-
-
 
         for (android.view.View one : new android.view.View[] {first, second}) {
             android.widget.LinearLayout.LayoutParams how =
@@ -307,10 +278,7 @@ public static final String KEY = "save_stickers";
         row.setTag(PLACED, Boolean.TRUE);
     }
 
-
-
     private static final int DEEP = 4;
-
 
     private static String find(Object thing, Set<Object> seen, int depth) {
         if (thing == null || depth > DEEP) return null;
@@ -341,7 +309,6 @@ public static final String KEY = "save_stickers";
                     field.setAccessible(true);
                     String found = find(field.get(thing), seen, depth + 1);
 
-
                     if (found != null && (best == null || found.length() > best.length())) {
                         best = found;
                     }
@@ -352,8 +319,6 @@ public static final String KEY = "save_stickers";
         }
         return best;
     }
-
-
 
     private static void save() {
         final String url = latest;
@@ -371,7 +336,6 @@ public static final String KEY = "save_stickers";
             }
         });
     }
-
 
     public static boolean have() {
         return latest != null;

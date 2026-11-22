@@ -7,7 +7,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import java.lang.ref.WeakReference;
 
-
 final class BottomChrome {
     private BottomChrome() {}
     private static WeakReference<View> rail = new WeakReference<View>(null);

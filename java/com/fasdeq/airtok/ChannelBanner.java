@@ -11,9 +11,8 @@ import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.view.View;
 
-
 final class ChannelBanner extends View {
-    static final String URL = "https://t.me/airtokiktok";
+    static final String URL = "https://t.me/margytiktok";
 
     private static final float W = 1107f, H = 356f;
     private static final float[][] SPARKS = {
@@ -81,13 +80,11 @@ final class ChannelBanner extends View {
         canvas.drawRoundRect(box, 46 * s, 46 * s, ink);
         ink.setShader(null);
 
-
         for (int i = 0; i < SPARKS.length; i++) {
             float wave = (i % 2 == 0) ? phase : 1f - phase;
             paint(ink,argb(0x30 + Math.round(0x40 * wave), 0xFFFFFF));
             canvas.drawCircle(SPARKS[i][0] * s, SPARKS[i][1] * s, SPARKS[i][2] * s, ink);
         }
-
 
         paint(ink,argb(0x42, 0xFFFFFF));
         canvas.drawCircle(135 * s, 178 * s, 80 * s, ink);
@@ -100,14 +97,12 @@ final class ChannelBanner extends View {
         canvas.drawPath(fold, ink);
         canvas.restore();
 
-
         ink.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
         ink.setTextAlign(Paint.Align.LEFT);
         paint(ink,0xFFFFFFFF);
         ink.setTextSize(64 * s);
         canvas.drawText(Text.CHANNEL_TITLE, 265 * s, 102 * s, ink);
         canvas.drawText("MargyT", 265 * s, 168 * s, ink);
-
 
         ink.setTextSize(45 * s);
         float breath = 0.55f + 0.45f * phase;
@@ -122,7 +117,6 @@ final class ChannelBanner extends View {
         canvas.drawText(Text.CHANNEL_NEWS_B, 265 * s, 287 * s, ink);
         ink.clearShadowLayer();
 
-
         pill.set(615 * s, 118 * s, 1055 * s, 236 * s);
         paint(ink,isPressed() ? 0xE6FFFCF7 : 0xFFFFFCF7);
         canvas.drawRoundRect(pill, 59 * s, 59 * s, ink);
@@ -136,7 +130,6 @@ final class ChannelBanner extends View {
         canvas.drawText(Text.CHANNEL_SUBSCRIBE, pill.centerX(), pill.centerY() - (m.ascent + m.descent) / 2f, ink);
         ink.setTextAlign(Paint.Align.LEFT);
     }
-
 
     private static void paint(Paint brush, int colour) {
         brush.setARGB((colour >>> 24) & 0xFF, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);

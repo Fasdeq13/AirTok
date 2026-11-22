@@ -52,14 +52,12 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
-
 
 public final class Main extends TtcuzPlugin {
 
@@ -131,7 +129,6 @@ public final class Main extends TtcuzPlugin {
         instance = null;
     }
 
-
     public Config configFor(View view) {
         if (!ecoOn || view == null) {
             return config;
@@ -193,7 +190,6 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
-
     @Override
     public boolean onOpenSettings(Activity activity) {
         if (activity == null) {
@@ -248,7 +244,6 @@ public final class Main extends TtcuzPlugin {
     long accentTime;
     int accentValue;
 
-
     public int accentColor() {
         long now = SystemClock.uptimeMillis();
         if (accentTime == 0L || now - accentTime > 1000L) {
@@ -257,7 +252,6 @@ public final class Main extends TtcuzPlugin {
         }
         return accentValue;
     }
-
 
     @Override
     public void onScreen(Activity activity, ViewGroup content) {
@@ -277,7 +271,6 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
-
     @Override
     public void onView(View view) {
         if (view instanceof EditText) {
@@ -285,7 +278,6 @@ public final class Main extends TtcuzPlugin {
         }
         watchSend(view);
     }
-
 
     void watchFocus(Activity activity) {
         if (focusWatchers.containsKey(activity)) {
@@ -319,7 +311,6 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
-
     void watchSendNear(View edit) {
         android.view.ViewParent up = edit.getParent();
         for (int i = 0; i < 3 && up instanceof ViewGroup && ((ViewGroup) up).getParent() instanceof ViewGroup; i++) {
@@ -347,8 +338,6 @@ public final class Main extends TtcuzPlugin {
             attachOne(list.get(i));
         }
     }
-
-
 
     void watchSendAll(ViewGroup root) {
         if (root == null) return;
@@ -418,7 +407,6 @@ public final class Main extends TtcuzPlugin {
         };
         sendUntil = SystemClock.uptimeMillis() + SEND_WINDOW_MS;
     }
-
 
     public float[] takeSendPoint() {
         float[] point = sendPoint;

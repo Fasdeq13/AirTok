@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-
 final class Design {
     static final String KEY = "ui_design";
     private static volatile String chosen;
@@ -22,7 +21,6 @@ final class Design {
     private static final int OWNED = 0x4d674c31;
     private static final java.util.WeakHashMap<Drawable, GlassOptics> OPTICS = new java.util.WeakHashMap<>();
     private Design() {}
-
 
     static UiStyle style() {
         UiStyle known=style;
@@ -43,11 +41,10 @@ final class Design {
         if(known!=null)return known;
         Context context=AirTok.context();
         if(context==null)return "glass";
-        String saved=context.getSharedPreferences(AirTok.PREFS,0).getString(KEY,"glass");
+        String saved=context.getSharedPreferences("margyt",0).getString(KEY,"glass");
         chosen=valid(saved)?saved:"glass";
         return chosen;
     }
-
 
     static String mode() {
         int base=style().base;
@@ -68,7 +65,7 @@ final class Design {
 
     static void choose(Context context,String key) {
         if(!valid(key))throw new IllegalArgumentException("Unknown interface style");
-        context.getSharedPreferences(AirTok.PREFS,0).edit().putString(KEY,key).apply();
+        context.getSharedPreferences("margyt",0).edit().putString(KEY,key).apply();
         chosen=key;style=null;
         OPTICS.clear();GlassBackdrop.changed();
     }
@@ -118,7 +115,6 @@ final class Design {
         optics.draw(canvas, view, rect, top, bottom, colour, press);
         return true;
     }
-
 
     static void own(View root) {
         if (root.getTag(OWNED) != null) { decorate(root); return; }
@@ -179,7 +175,6 @@ final class Design {
         }
     }
 
-
     static final class ColourSample extends GradientDrawable {
         ColourSample() { super(); }
         ColourSample(Orientation orientation, int[] colours) { super(orientation, colours); }
@@ -192,7 +187,6 @@ final class Design {
         own(window.getDecorView());
         if (frosted()) window.setDimAmount(.24f);
     }
-
 
     static final class Surface extends Drawable implements Drawable.Callback {
         private final java.lang.ref.WeakReference<View> view;

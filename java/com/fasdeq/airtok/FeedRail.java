@@ -43,13 +43,9 @@ public final class FeedRail {
         }catch(Throwable error){Diary.note("feed rail binding: "+error);}
     }
 
-
     private static final int KNOWN=0x7e0c0399;
     public static void setVisibility(View view,int visibility){
         if(view==null)return;
-
-
-
 
         if(view.getTag(KNOWN)==null&&view.getTag(Repost.TAG)==null){view.setVisibility(visibility);return;}
         long probe=Probe.start();
@@ -73,7 +69,6 @@ public final class FeedRail {
     private static long idled;
     static void icons(){
         long now=android.os.SystemClock.uptimeMillis();
-
 
         if(!Md3.isOn(Md3.KEY_ICONS)){if(now-idled<500L)return;idled=now;}
         if(now-listed>500L){

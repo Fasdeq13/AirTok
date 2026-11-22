@@ -14,11 +14,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-
 public final class Badges {
 
     private Badges() {}
-
 
     public static final String SERVER = "https://margy.narez.xyz/api";
 
@@ -26,7 +24,6 @@ public final class Badges {
     private static final String FILES = SERVER + "/icon/";
 
     private static final long EVERY = 2 * 60 * 1000L;
-
 
     public static final class Badge {
         public final String id;
@@ -59,12 +56,11 @@ public static final String KEY = "badges_on";
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
     }
-
 
     private static volatile Map<String, Badge[]> known = new HashMap<String, Badge[]>();
     public static final String GITHUB_URL = "https://raw.githubusercontent.com/Fasdeq13/fasdtok-rep/main/name";
@@ -147,7 +143,6 @@ public static final String KEY = "badges_on";
         registerSupporter(username, desc, "@" + username, "client");
     }
 
-
     static final class Verdict {
         final boolean good;
         final String reason;
@@ -156,26 +151,19 @@ public static final String KEY = "badges_on";
 
     private static volatile Map<String, Verdict> verdicts = new HashMap<String, Verdict>();
 
-
     static Verdict verdict(String uid) {
         return uid == null ? null : verdicts.get(uid);
     }
 
-
-
-
-
     static char looksFirst() {
         return (char) (FIRST + MOST);
     }
-
 
     public static boolean isPrivate(char c) {
         return (c >= '\uE000' && c <= '\uF8FF') || (c >= '\u200B' && c <= '\u200F') || c == '\u2009' || (c >= '\u2060' && c <= '\u206F');
     }
 
     private static volatile boolean started;
-
 
     public static Bitmap note() {
         Bitmap known = ownNote;
@@ -191,14 +179,12 @@ public static final String KEY = "badges_on";
 
     private static volatile Bitmap ownNote;
 
-
     public static Badge byId(String id) {
         for (Badge badge : numbered) {
             if (badge != null && badge.id.equals(id)) return badge;
         }
         return null;
     }
-
 
     static Badge[] all() {
         return numbered.clone();
@@ -225,7 +211,6 @@ public static final String KEY = "badges_on";
         return known.get(clean.replace("_", ""));
     }
 
-
     public static String marksFor(String uid) {
         if (!isEnabled()) return "";
         Badge[] held = of(uid);
@@ -243,7 +228,6 @@ public static final String KEY = "badges_on";
         return out.toString();
     }
 
-
     public static boolean isMark(char c) {
         return c >= FIRST && c < FIRST + MOST;
     }
@@ -254,16 +238,11 @@ public static final String KEY = "badges_on";
         return at >= 0 && at < list.length ? list[at] : null;
     }
 
-
-
-
     public static synchronized void start(Context context) {
         started = true;
     }
 
-
     private static volatile String tag;
-
 
     static void refresh() {
         Context context = AirTok.context();
@@ -273,13 +252,11 @@ public static final String KEY = "badges_on";
     private static void refresh(final Context context) {
     }
 
-
     private static volatile Runnable waiting;
 
     public static void tell(Runnable then) {
         waiting = then;
     }
-
 
     public static void stopTelling(Runnable then) {
         if (waiting == then) waiting = null;
@@ -291,18 +268,15 @@ public static final String KEY = "badges_on";
         new android.os.Handler(android.os.Looper.getMainLooper()).post(then);
     }
 
-
     private static volatile long freeUntil;
     private static volatile long serverNow;
     private static volatile long readAt;
-
 
     public static boolean freeStillOpen() {
         if (serverNow <= 0) return false;
         long since = (android.os.SystemClock.elapsedRealtime() - readAt) / 1000;
         return serverNow + since < freeUntil;
     }
-
 
     private static void prefetch(Context context) {
         try {
@@ -314,7 +288,6 @@ public static final String KEY = "badges_on";
         } catch (Throwable ignored) {
         }
     }
-
 
     private static boolean apply(byte[] json, boolean live) {
         try {
@@ -395,7 +368,6 @@ public static final String KEY = "badges_on";
         }
     }
 
-
     private static String localised(JSONObject one, String field) {
         String language = Locale.getDefault().getLanguage();
         String translated = one.optString(field + "_" + language, "");
@@ -413,35 +385,30 @@ public static final String KEY = "badges_on";
     }
 
     private static File file(Context context) {
-        return new File(context.getFilesDir(), "airtok/badges.json");
+        return new File(context.getFilesDir(), "margyt/badges.json");
     }
-
-
 
     private static final Map<String, Bitmap> pictures = new HashMap<String, Bitmap>();
 
-
     private static final Map<String, Long> asked = new HashMap<String, Long>();
 
-
     private static final long AGAIN = 60000;
-
 
     public static Bitmap modIcon() {
         try {
             Bitmap lp = Launcher.preview("airtok");
-            if (lp != null) return com.fasdeq.airtok.Badge.crop(lp);
+            if (lp != null) return com.fasdeq.airtok.Badge.round(com.fasdeq.airtok.Badge.crop(lp));
         } catch (Throwable ignored) {}
         try {
             Bitmap lp = Launcher.preview(Launcher.chosen());
-            if (lp != null) return com.fasdeq.airtok.Badge.crop(lp);
+            if (lp != null) return com.fasdeq.airtok.Badge.round(com.fasdeq.airtok.Badge.crop(lp));
         } catch (Throwable ignored) {}
         try {
             Bitmap lp = Launcher.preview("");
-            if (lp != null) return com.fasdeq.airtok.Badge.crop(lp);
+            if (lp != null) return com.fasdeq.airtok.Badge.round(com.fasdeq.airtok.Badge.crop(lp));
         } catch (Throwable ignored) {}
         Bitmap n = note();
-        if (n != null) return com.fasdeq.airtok.Badge.crop(n);
+        if (n != null) return com.fasdeq.airtok.Badge.round(com.fasdeq.airtok.Badge.crop(n));
         return null;
     }
 
@@ -452,7 +419,7 @@ public static final String KEY = "badges_on";
             return note();
         }
         if ("fasdeq".equals(path) || "fasdeq13".equals(path)) {
-            Bitmap b = FasdeqAvatar.get();
+            Bitmap b = FasdeqAvatar.getRound(128);
             if (b != null) return b;
             return modIcon();
         }
@@ -466,12 +433,11 @@ public static final String KEY = "badges_on";
             asked.put(path, Long.valueOf(now));
         }
 
-        final File cache = new File(context.getFilesDir(), "airtok/badges/" + name(path));
+        final File cache = new File(context.getFilesDir(), "margyt/badges/" + name(path));
         byte[] have = Net.read(cache);
         if (have != null) {
             Bitmap drawn = remember(path, have);
             if (drawn != null) return drawn;
-
 
             cache.delete();
         }
@@ -492,13 +458,7 @@ public static final String KEY = "badges_on";
         try {
             Bitmap bitmap = BitmapFactory.decodeByteArray(raw, 0, raw.length);
             if (bitmap == null) return null;
-
-
-
-
-
-
-            bitmap = com.fasdeq.airtok.Badge.crop(bitmap);
+            bitmap = com.fasdeq.airtok.Badge.round(com.fasdeq.airtok.Badge.crop(bitmap));
             synchronized (pictures) {
                 pictures.put(path, bitmap);
             }
@@ -507,7 +467,6 @@ public static final String KEY = "badges_on";
             return null;
         }
     }
-
 
     private static String name(String path) {
         StringBuilder out = new StringBuilder();

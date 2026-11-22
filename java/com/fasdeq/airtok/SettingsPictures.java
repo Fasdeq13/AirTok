@@ -18,12 +18,10 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.PathInterpolator;
 
-
 final class SettingsPictures {
     private SettingsPictures() {}
 
     private static final PathInterpolator EMPHASIZED = new PathInterpolator(0.2f, 0f, 0f, 1f);
-
 
     abstract static class Art extends View {
         final Skin skin;
@@ -47,7 +45,6 @@ final class SettingsPictures {
             setMeasuredDimension(MeasureSpec.getSize(widthSpec), Math.round(tall * d));
         }
 
-
         void again() {
             if (!isAttachedToWindow()) return;
             if (isShown() && getGlobalVisibleRect(seen)) postInvalidateOnAnimation();
@@ -67,7 +64,6 @@ final class SettingsPictures {
             super.onDetachedFromWindow();
             removeCallbacks(lookAgain);
         }
-
 
         float clock() {
             return (SystemClock.uptimeMillis() % 1000000L) / 1000f;
@@ -104,7 +100,6 @@ final class SettingsPictures {
         }
     }
 
-
     static final class Eased {
         float value;
         private ValueAnimator animator;
@@ -128,9 +123,6 @@ final class SettingsPictures {
             animator.start();
         }
     }
-
-
-
 
     static final class Fps extends Art {
         private int rate;
@@ -176,9 +168,6 @@ final class SettingsPictures {
             words(canvas, name, left - 14 * d, y - 20 * d, 12, skin.muted(), true, Paint.Align.LEFT);
         }
     }
-
-
-
 
     static final class Speed extends Art {
         private boolean lock;
@@ -241,9 +230,6 @@ final class SettingsPictures {
             again();
         }
     }
-
-
-
 
     static final class Feed extends Art {
 
@@ -320,9 +306,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Grid extends Art {
         private static float last = 0f;
         private final Eased round = new Eased(last);
@@ -362,9 +345,6 @@ final class SettingsPictures {
             }
         }
     }
-
-
-
 
     static final class Layout extends Art {
         private static float last = 1f;
@@ -432,9 +412,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Black extends Art {
         private static float last = 0f;
         private final Eased black = new Eased(last);
@@ -484,9 +461,6 @@ final class SettingsPictures {
             words(canvas, t > 0.5f ? "#000000" : "#161823", box.right - 14 * d, box.bottom - 10 * d, 10, 0x88FFFFFF, false, Paint.Align.RIGHT);
         }
     }
-
-
-
 
     static final class Badged extends Art {
         private static float last = 1f;
@@ -558,9 +532,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Copying extends Art {
         private boolean on;
         private final Bitmap avatar;
@@ -618,9 +589,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Notices extends Art {
         private final Eased[] shown = new Eased[3];
         private final boolean[] want = new boolean[3];
@@ -677,9 +645,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Emergency extends Art {
         Emergency(Context context, Skin skin) { super(context, skin, 176); }
 
@@ -702,7 +667,6 @@ final class SettingsPictures {
             again();
         }
     }
-
 
     static final class Fall extends Art {
         Fall(Context context, Skin skin) { super(context, skin, 170); }
@@ -729,7 +693,6 @@ final class SettingsPictures {
         }
     }
 
-
     static final class Scream extends Art {
         private final Bitmap face;
 
@@ -750,9 +713,6 @@ final class SettingsPictures {
             again();
         }
     }
-
-
-
 
     static final class Ages extends Art {
         private static float last = 168f;
@@ -776,7 +736,6 @@ final class SettingsPictures {
             super.onAttachedToWindow();
             set(want >= 168f ? 0 : Math.round(want));
         }
-
 
         private float at(float hours, float left, float right) {
             float along = (float) (Math.log1p(hours) / Math.log1p(168));
@@ -816,9 +775,6 @@ final class SettingsPictures {
             words(canvas, Local.of("неделя"), right, y + 26 * d, 11, skin.muted(), false, Paint.Align.RIGHT);
         }
     }
-
-
-
 
     static final class Watermark extends Art {
         private static float last = 0f;
@@ -865,9 +821,6 @@ final class SettingsPictures {
         }
     }
 
-
-
-
     static final class Bright extends Art {
         private boolean kept;
 
@@ -910,9 +863,6 @@ final class SettingsPictures {
             again();
         }
     }
-
-
-
 
     static final class Sound extends Art {
         private boolean on;
@@ -963,6 +913,5 @@ final class SettingsPictures {
                     skin.muted(), false, Paint.Align.CENTER);
         }
     }
-
 
 }

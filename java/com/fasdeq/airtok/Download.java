@@ -12,7 +12,6 @@ import com.ss.android.ugc.aweme.feed.model.VideoControl;
 import java.util.List;
 import com.ss.android.ugc.aweme.profile.model.User;
 
-
 public final class Download {
 
     private Download() {}
@@ -72,14 +71,11 @@ public final class Download {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return null;
-            return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
+            return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }
     }
-
-
-
 
     public static UrlModel getDownloadAddr(Video video) {
         if (video == null) return null;
@@ -89,21 +85,13 @@ public final class Download {
             UrlModel clean = video.getDownloadNoWatermarkAddr();
             if (usable(clean)) return (UrlModel)DownloadQuality.video(video,clean);
 
-
-
-
-
-
-
             UrlModel playing = video.getPlayAddr();
             if (usable(playing)) return (UrlModel)DownloadQuality.video(video,playing);
         } catch (Throwable ignored) {
 
-
         }
         return stamped;
     }
-
 
     private static boolean usable(UrlModel url) {
         if (url == null) return false;
@@ -114,9 +102,6 @@ public final class Download {
             return false;
         }
     }
-
-
-
 
     public static int getCode(ACLCommonShare acl) {
         if (acl == null) return 0;
@@ -132,9 +117,6 @@ public final class Download {
         if (acl == null) return 1;
         return isAlways() ? 1 : acl.getTranscode();
     }
-
-
-
 
     public static UrlModel ownerWatermarkImage(PhotoModeImageUrlModel image) {
         return clean(image, image == null ? null : image.ownerWatermarkImage);
@@ -154,22 +136,17 @@ public final class Download {
         return stamped;
     }
 
-
-
-
     public static boolean isPreventDownload(Aweme aweme) {
         if (aweme == null) return false;
         if (isAlways()) return false;
         return aweme.isPreventDownload();
     }
 
-
     public static boolean isPreventDownload(User user) {
         if (user == null) return false;
         if (isAlways()) return false;
         return user.isPreventDownload();
     }
-
 
     public static Boolean allowDownload(VideoControl control) {
         if (control == null) return null;

@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 final class ModDialog {
     static final class Builder {
         private final Context context;

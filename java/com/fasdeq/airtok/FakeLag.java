@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-
 final class FakeLag {
     private FakeLag() {}
 
@@ -24,11 +23,11 @@ final class FakeLag {
     private static Session active;
 
     static boolean isOn(Context c) {
-        return c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
+        return c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
     }
 
     static void set(Context c, boolean on) {
-        c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+        c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
         stop();
         Activity here = Watch.here();
         if (on && here != null) resumed(here);
@@ -185,7 +184,7 @@ final class FakeLag {
 
         void close() {
 
-            activity.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, false).commit();
+            activity.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, false).commit();
             FakeLag.stop();
             try { activity.finishAndRemoveTask(); } catch (Throwable ignored) {}
             try { activity.finishAffinity(); } catch (Throwable ignored) {}

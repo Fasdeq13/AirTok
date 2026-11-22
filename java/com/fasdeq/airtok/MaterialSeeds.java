@@ -3,11 +3,9 @@ package com.fasdeq.airtok;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 final class MaterialSeeds {
 
     private MaterialSeeds() {}
-
 
     static final int[] SEEDS = {0, 0xFF8DD1B0, 0xFF6750A4, 0xFF4285F4, 0xFF00897B, 0xFF43A047, 0xFFFBC02D,
             0xFFFB8C00, 0xFFE53935, 0xFFD81B60, 0xFF8E24AA, 0xFF6D4C41, 0xFF546E7A};
@@ -16,14 +14,13 @@ final class MaterialSeeds {
 
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
-        return context == null ? null : context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+        return context == null ? null : context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
     }
 
     static int seed() {
         SharedPreferences prefs = prefs();
         return prefs == null ? 0 : prefs.getInt(KEY, 0);
     }
-
 
     static void choose(int seed) {
         SharedPreferences prefs = prefs();
@@ -34,11 +31,9 @@ final class MaterialSeeds {
         Themes.repaintVisible();
     }
 
-
     static int neutral(int seed, double tone) {
         return tone(seed, 4, 0, tone);
     }
-
 
     static int[] swatch(int seed, boolean dark) {
         if (seed == 0) {
@@ -58,7 +53,6 @@ final class MaterialSeeds {
                 tone(seed, 26, 60, dark ? 70 : 60)};
     }
 
-
     static int tone(int seed, double chroma, double turnDegrees, double tone) {
         double[] lab = lab(seed);
         double hue = Math.atan2(lab[2], lab[1]) + Math.toRadians(turnDegrees);
@@ -70,8 +64,6 @@ final class MaterialSeeds {
         return out[0];
     }
 
-
-
     private static double[] lab(int colour) {
         double r = linear(((colour >> 16) & 0xFF) / 255.0);
         double g = linear(((colour >> 8) & 0xFF) / 255.0);
@@ -82,7 +74,6 @@ final class MaterialSeeds {
         double fx = f(x), fy = f(y), fz = f(z);
         return new double[]{116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)};
     }
-
 
     private static boolean rgb(double l, double a, double b, int[] out) {
         double fy = (l + 16) / 116, fx = fy + a / 500, fz = fy - b / 200;

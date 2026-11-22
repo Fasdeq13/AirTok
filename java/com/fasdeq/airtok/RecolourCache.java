@@ -14,16 +14,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-
 final class RecolourCache {
     private RecolourCache() {}
-
 
     static final String ALGORITHM_VERSION = "2";
     private static final String VERSION = ALGORITHM_VERSION;
     private static final long LIMIT = 96L * 1024 * 1024;
     private static final int LIKE_COLOURS = 6;
-
 
     static final byte[] NONE = new byte[0];
 
@@ -36,7 +33,7 @@ final class RecolourCache {
     private static final ExecutorService writer =
             Executors.newSingleThreadExecutor(new ThreadFactory() {
                 @Override public Thread newThread(Runnable job) {
-                    Thread thread = new Thread(job, "airtok-recolour-write");
+                    Thread thread = new Thread(job, "margyt-recolour-write");
                     thread.setPriority(Thread.MIN_PRIORITY);
                     thread.setDaemon(true);
                     return thread;
@@ -49,10 +46,8 @@ final class RecolourCache {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            File dir = new File(context.getFilesDir(), "airtok/recolour-cache");
+            File dir = new File(context.getFilesDir(), "margyt/recolour-cache");
             if (!dir.isDirectory() && !dir.mkdirs()) return null;
-
-
 
             stamp = VERSION + "|" + Version.TIKTOK;
             File mark = new File(dir, "stamp");
@@ -77,7 +72,6 @@ final class RecolourCache {
                 + ":" + ALGORITHM_VERSION;
     }
 
-
     private static File entry(File dir, String key, boolean create) {
         if (key.startsWith("png|")) {
             String[] parts = key.split("\\|", 4);
@@ -98,7 +92,6 @@ final class RecolourCache {
         if (create) shelf.mkdirs();
         return new File(shelf, name(key));
     }
-
 
     static byte[] get(String key) {
         if (clearing) return null;
@@ -128,7 +121,6 @@ final class RecolourCache {
         }
     }
 
-
     static void put(final String key, final byte[] data) {
         if (clearing) return;
         final long generation = epoch;
@@ -139,7 +131,6 @@ final class RecolourCache {
             });
         } catch (Throwable ignored) { }
     }
-
 
     static void putLater(final String key, final Bitmap picture) {
         if (clearing) return;
@@ -176,7 +167,6 @@ final class RecolourCache {
             if (++writes % 20 == 0) trim(dir);
         } catch (Throwable ignored) { }
     }
-
 
     static void clear() {
         try {
@@ -258,8 +248,6 @@ final class RecolourCache {
             finally { out.close(); }
         } catch (Throwable ignored) { }
     }
-
-
 
     private static byte[] digest(byte[] data) {
         try {

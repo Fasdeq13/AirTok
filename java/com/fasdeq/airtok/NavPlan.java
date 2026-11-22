@@ -1,10 +1,8 @@
 package com.fasdeq.airtok;
 
-
 final class NavPlan {
 
     private NavPlan() {}
-
 
     static float[] edges(float room, float[] open, float[] extra, float least) {
         int count = open.length;
@@ -24,14 +22,12 @@ final class NavPlan {
         return edges;
     }
 
-
     interface Pen {
         void move(float x, float y);
         void line(float x, float y);
         void curve(float x1, float y1, float x2, float y2, float x, float y);
         void close();
     }
-
 
     static void trace(String data, Pen pen) {
         int at = 0, length = data.length();

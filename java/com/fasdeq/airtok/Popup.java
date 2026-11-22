@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public final class Popup {
 
     private Popup() {}
@@ -27,7 +26,6 @@ public final class Popup {
     public static void show(Context context, String title, String message) {
         show(context, title, message, null);
     }
-
 
     public static void show(Context context, String title, String message,
                             String button, final android.graphics.drawable.Drawable picture) {
@@ -121,7 +119,6 @@ public final class Popup {
         }
     }
 
-
     public static void showList(Context context, String title, String button,
                                 android.graphics.drawable.Drawable[] pictures,
                                 String[] titles, String[] texts) {
@@ -211,7 +208,6 @@ public final class Popup {
         }
     }
 
-
     private static View gallery(final Context context, Skin skin,
                                 String[][] pictures, String[] captions) {
         if (pictures == null || pictures.length == 0) return null;
@@ -281,7 +277,6 @@ public final class Popup {
         return holder;
     }
 
-
     private static android.graphics.Bitmap decode(String[] pieces) {
         if (pieces == null || pieces.length == 0) return null;
         android.graphics.Bitmap known = decoded.get(pieces);
@@ -304,7 +299,6 @@ public final class Popup {
     private static final java.util.Map<String[], android.graphics.Bitmap> decoded =
             new java.util.HashMap<String[], android.graphics.Bitmap>();
 
-
     private static android.graphics.Bitmap round(Context context,
                                                  android.graphics.Bitmap source,
                                                  float radius) {
@@ -326,7 +320,6 @@ public final class Popup {
             return source;
         }
     }
-
 
     public static void told(Context context, String title, String message,
                             String button, final Runnable then) {
@@ -376,7 +369,6 @@ public final class Popup {
             if (then != null) then.run();
         }
     }
-
 
     public static void write(Context context, String title, String current,
                              String button, final Written onDone) {
@@ -471,7 +463,6 @@ public final class Popup {
         void wrote(String text);
     }
 
-
     public interface Reply {
 
         void said(boolean ok, String trouble, String code, boolean askName);
@@ -480,7 +471,6 @@ public final class Popup {
     public interface Checking {
         void check(String name, Reply reply);
     }
-
 
     public interface Fresh {
         void want(Reply reply);
@@ -558,7 +548,6 @@ public final class Popup {
             line.setCornerRadius(dp(context, 10));
             line.setStroke(dp(context, 1), skin.muted());
             named.setBackground(line);
-
 
             named.setVisibility(View.GONE);
             card.addView(named, wide(context, 10));
@@ -687,7 +676,6 @@ public final class Popup {
         }
     }
 
-
     public static void ask(Context context, String title, String message,
                            String yes, final Runnable onYes,
                            String no, final Runnable onNo,
@@ -696,7 +684,6 @@ public final class Popup {
     }
 
     private static Dialog lastAsked;
-
 
     static void afterLast(final Runnable then) {
         Dialog dialog = lastAsked;
@@ -864,7 +851,6 @@ public final class Popup {
         }
     }
 
-
     public interface Ticked {
         void ticked(boolean on);
     }
@@ -908,7 +894,6 @@ public final class Popup {
             body.setGravity(Gravity.CENTER);
             supporting(body, skin);
 
-
             body.setMaxHeight((int) (context.getResources()
                     .getDisplayMetrics().heightPixels * 0.5f));
             body.setMovementMethod(new android.text.method.ScrollingMovementMethod());
@@ -945,18 +930,13 @@ public final class Popup {
         return card;
     }
 
-
-
-
     private static boolean m3() {
         return !Design.frosted();
     }
 
-
     private static void inside(Context context, LinearLayout card, boolean sheet) {
         if (m3()) card.setPadding(dp(context, 24), dp(context, sheet ? 8 : 24), dp(context, 24), dp(context, 20));
     }
-
 
     private static void headline(TextView head) {
         if (!m3()) return;
@@ -964,14 +944,12 @@ public final class Popup {
         head.setGravity(Gravity.START);
     }
 
-
     private static void supporting(TextView body, Skin skin) {
         if (!m3()) return;
         M3Type.bodyMedium(body);
         body.setTextColor(skin.muted());
         body.setGravity(Gravity.START);
     }
-
 
     private static void action(Context context, TextView button) {
         if (!m3()) return;
@@ -981,7 +959,6 @@ public final class Popup {
         button.setMinHeight(dp(context, 40));
         button.setMinimumHeight(dp(context, 40));
     }
-
 
     private static int onAccent() {
         int colour = Accent.colour();

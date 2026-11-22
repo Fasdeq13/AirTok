@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
 final class LagTally {
-
 
     static final int PLACES = 40;
     static final String REST = "elsewhere";
@@ -34,7 +32,6 @@ final class LagTally {
         this.stages = stages;
     }
 
-
     synchronized void stall(String where, String example, long took) {
         String key = places.containsKey(where) || places.size() < PLACES ? where : REST;
         Place place = places.get(key);
@@ -49,7 +46,6 @@ final class LagTally {
             place.example = example;
         }
     }
-
 
     synchronized void frame(String screen, boolean slow, boolean stuck, long[] spent) {
         Screen known = screens.get(screen);
@@ -66,7 +62,6 @@ final class LagTally {
             if (spent[i] > 0) known.spent[i] += spent[i];
         }
     }
-
 
     synchronized String report() {
         StringBuilder out = new StringBuilder();

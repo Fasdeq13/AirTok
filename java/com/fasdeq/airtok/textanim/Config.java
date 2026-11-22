@@ -50,7 +50,6 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -102,7 +101,6 @@ public final class Config {
         true, 60, 50,
         0xFFFE2C55, 0xFF25F4EE
     );
-
 
     public static final int TILT_LEFT = 0;
     public static final int TILT_RIGHT = 1;
@@ -160,7 +158,6 @@ public final class Config {
     public final int smokeSwirl;
     public final int smokeHold;
     public final int smokeTone;
-
 
     public final boolean blur;
     public final int blurDp;
@@ -263,7 +260,6 @@ public final class Config {
     public static Config fromPrefs(SharedPreferences prefs) {
         return fromPrefs(prefs, 0);
     }
-
 
     public static Config fromPrefs(SharedPreferences prefs, int lite) {
         if (prefs == null) {
@@ -384,7 +380,6 @@ public final class Config {
     }
 
     static final float[] HSV = new float[3];
-
 
     public static int hsv(int h, int s, int v) {
         return Color.HSVToColor(new float[]{clamp(h, 0, 359), clamp(s, 0, 100) / 100.0f, clamp(v, 20, 100) / 100.0f});

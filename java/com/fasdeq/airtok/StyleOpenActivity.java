@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-
 public final class StyleOpenActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {

@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class RestartSymbol extends android.view.View {
     private final android.graphics.Paint ink = new android.graphics.Paint(3);
     private final android.graphics.Path path = new android.graphics.Path();

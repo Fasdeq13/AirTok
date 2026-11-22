@@ -1,6 +1,5 @@
 package com.fasdeq.airtok;
 
-
 final class Emblem {
 
     private Emblem() {}
