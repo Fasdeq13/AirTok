@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import json
@@ -5,6 +6,7 @@ import os
 import subprocess
 from collections import OrderedDict
 from typing import List
+
 
 def grant(root: str, badge_id: str, uids: List[str], push: bool = True) -> str:
     path = os.path.join(root, "badges.json")

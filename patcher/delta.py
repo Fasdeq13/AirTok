@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import argparse
@@ -20,8 +21,10 @@ STORED, DEFLATED = 0, 8
 DEFLATE = {"with": "jzlib-1.1.3", "level": 6}
 _XZ = {"format": lzma.FORMAT_XZ, "preset": 6}
 
+
 class DeltaError(Exception):
     pass
+
 
 class _Entry:
     __slots__ = ("name", "method", "crc", "csize", "usize", "data")
@@ -29,6 +32,7 @@ class _Entry:
     def __init__(self, name, method, crc, csize, usize, data):
         self.name, self.method, self.crc = name, method, crc
         self.csize, self.usize, self.data = csize, usize, data
+
 
 def _entries(path: str) -> Dict[str, _Entry]:
     out: Dict[str, _Entry] = {}
@@ -44,6 +48,7 @@ def _entries(path: str) -> Dict[str, _Entry]:
                 info.file_size, info.header_offset + 30 + name_len + extra_len)
     return out
 
+
 def _sha256(path: str) -> str:
     digest = hashlib.sha256()
     with open(path, "rb") as handle:
@@ -51,8 +56,10 @@ def _sha256(path: str) -> str:
             digest.update(block)
     return digest.hexdigest()
 
+
 def _plain(raw: bytes, method: int) -> bytes:
     return raw if method == STORED else zlib.decompress(raw, -15)
+
 
 def _difference(pair: Tuple[bytes, bytes]) -> Tuple[bytes, bytes, bytes]:
     from bsdiff4 import core
@@ -62,6 +69,7 @@ def _difference(pair: Tuple[bytes, bytes]) -> Tuple[bytes, bytes, bytes]:
     packed = b"".join(struct.pack("<qqq", *row) for row in control)
     return (lzma.compress(packed, **_XZ), lzma.compress(difference, **_XZ),
             lzma.compress(extra, **_XZ))
+
 
 def make(base_path: str, target_path: str, out_path: str, deflate_many=None,
          say=print) -> dict:
@@ -179,6 +187,7 @@ def make(base_path: str, target_path: str, out_path: str, deflate_many=None,
         % (about["patch"]["size"] / 1e6, size / 1e6, len(ops), time.time() - started))
     return about
 
+
 def _bspatch(old: bytes, size: int, control: bytes, difference: bytes, extra: bytes) -> bytes:
     new = bytearray(size)
     at = from_old = from_diff = from_extra = 0
@@ -199,6 +208,7 @@ def _bspatch(old: bytes, size: int, control: bytes, difference: bytes, extra: by
     if at != size:
         raise DeltaError("a patched file came out %d bytes long, not %d" % (at, size))
     return bytes(new)
+
 
 def apply(base_path: str, patch_path: str, out_path: str, deflate_many, say=print) -> None:
     with zipfile.ZipFile(patch_path) as patch, open(base_path, "rb") as old, \
@@ -242,10 +252,11 @@ def apply(base_path: str, patch_path: str, out_path: str, deflate_many, say=prin
         raise DeltaError("the apk that came out is not the release")
     say("    the release apk, byte for byte")
 
+
 def main(argv: Optional[List[str]] = None) -> int:
     from .toolchain import Toolchain
 
-    parser = argparse.ArgumentParser(prog="margyt.delta", description=__doc__.split("\n")[0])
+    parser = argparse.ArgumentParser(prog="airtok.delta", description=__doc__.split("\n")[0])
     parser.add_argument("--tools", default=os.path.join(os.path.dirname(os.path.dirname(
         os.path.abspath(__file__))), "tools"), help="where the build keeps its jars")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -269,6 +280,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         print("delta: %s" % problem, file=sys.stderr)
         return 1
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

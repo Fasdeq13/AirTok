@@ -2,6 +2,7 @@ package com.ss.android.ugc.aweme.base.model;
 
 import java.util.List;
 
+
 public class UrlModel {
 
     public List getUrlList() {

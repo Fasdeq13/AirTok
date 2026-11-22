@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from typing import Dict, List, Tuple
@@ -8,6 +9,7 @@ from .axml import Axml
 from .palette import captures, map_colour
 
 COLOUR_TYPES = (0x1C, 0x1D, 0x1E, 0x1F)
+
 
 def bake(apk: Apk, arsc: Arsc, old: int, new: int, pairs: Dict[int, int] = None) -> List[str]:
     writing = old != new
@@ -55,6 +57,7 @@ def bake(apk: Apk, arsc: Arsc, old: int, new: int, pairs: Dict[int, int] = None)
                       "settings cannot reach them; --accent is what moves them")
     return report
 
+
 def _walk_table(arsc: Arsc, old: int, new: int, writing: bool, pairs: Dict[int, int]):
     found = 0
     shades = set()
@@ -70,11 +73,13 @@ def _walk_table(arsc: Arsc, old: int, new: int, writing: bool, pairs: Dict[int, 
                     found += 1
     return found, shades
 
+
 def _entries(arsc: Arsc, package, type_id: int):
     for entry_id in range(_entry_count(arsc, package, type_id)):
         res_id = (package.id << 24) | (type_id << 16) | entry_id
         for value in arsc.values(res_id):
             yield value
+
 
 def _entry_count(arsc: Arsc, package, type_id: int) -> int:
     import struct

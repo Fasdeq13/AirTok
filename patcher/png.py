@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -9,8 +10,10 @@ SIGNATURE = b"\x89PNG\r\n\x1a\n"
 GREY, RGB, PALETTE, GREY_ALPHA, RGBA = 0, 2, 3, 4, 6
 CHANNELS = {GREY: 1, RGB: 3, PALETTE: 1, GREY_ALPHA: 2, RGBA: 4}
 
+
 class PngError(Exception):
     pass
+
 
 class Image:
 
@@ -50,6 +53,7 @@ class Image:
                     out[at + 3] = a // n
         return Image(size, size, out)
 
+
 def decode(data: bytes) -> Image:
     if not data.startswith(SIGNATURE):
         raise PngError("not a PNG")
@@ -83,6 +87,7 @@ def decode(data: bytes) -> Image:
     raw = zlib.decompress(bytes(idat))
     lines = _unfilter(raw, width, height, channels)
     return Image(width, height, _to_rgba(lines, width, height, color, palette, transparency))
+
 
 def _unfilter(raw: bytes, width: int, height: int, channels: int) -> bytearray:
     stride = width * channels
@@ -124,6 +129,7 @@ def _unfilter(raw: bytes, width: int, height: int, channels: int) -> bytearray:
         previous = line
     return out
 
+
 def _to_rgba(lines: bytearray, width: int, height: int, color: int, palette: bytes,
              transparency: bytes) -> bytearray:
     if color == RGBA:
@@ -149,6 +155,7 @@ def _to_rgba(lines: bytearray, width: int, height: int, color: int, palette: byt
             out[i * 4 + 3] = transparency[index] if index < len(transparency) else 255
     return out
 
+
 def encode(image: Image) -> bytes:
     stride = image.width * 4
     raw = bytearray()
@@ -162,6 +169,7 @@ def encode(image: Image) -> bytes:
     out += _chunk(b"IEND", b"")
     return bytes(out)
 
+
 def _chunk(kind: bytes, body: bytes) -> bytes:
     return (
         struct.pack(">I", len(body))
@@ -169,6 +177,7 @@ def _chunk(kind: bytes, body: bytes) -> bytes:
         + body
         + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
     )
+
 
 def size_of(data: bytes) -> Tuple[int, int]:
     if not data.startswith(SIGNATURE):

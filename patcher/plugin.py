@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import argparse
@@ -18,10 +19,11 @@ TIKTOK_STUBS = os.path.join(ROOT, "inject", "stubs")
 
 REQUIRED = ("id", "name", "version", "author", "entry")
 
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
-        prog="margyt.plugin",
-        description="Pack a folder into an .mtp margyt plugin.",
+        prog="airtok.plugin",
+        description="Pack a folder into an .mtp airtok plugin.",
     )
     parser.add_argument("folder", help="the plugin's folder: manifest.json, java/, icon.png")
     parser.add_argument("-o", "--out", help="where the .mtp goes")
@@ -93,17 +95,20 @@ def main(argv=None) -> int:
     finally:
         shutil.rmtree(room, ignore_errors=True)
 
+
 def _java_files(root: str):
     out = []
     for dirpath, _dirs, names in os.walk(root):
         out += [os.path.join(dirpath, n) for n in names if n.endswith(".java")]
     return sorted(out)
 
+
 def _javac(android_jar: str, extra_classpath, out_dir: str, files) -> None:
     classpath = android_jar if not extra_classpath else \
         android_jar + os.pathsep + extra_classpath
     _run(["javac", "-nowarn", "-Xlint:-options", "-proc:none", "-encoding", "UTF-8",
           "-cp", classpath, "--release", "17", "-d", out_dir] + list(files))
+
 
 def _run(command: list) -> None:
     environment = dict(os.environ)
@@ -112,6 +117,7 @@ def _run(command: list) -> None:
     if result.returncode != 0:
         sys.stderr.write(result.stdout + result.stderr)
         raise SystemExit("%s failed" % os.path.basename(command[0]))
+
 
 if __name__ == "__main__":
     sys.exit(main())

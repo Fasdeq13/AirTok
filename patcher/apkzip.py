@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import os
@@ -16,8 +17,10 @@ ALIGNMENT = 4
 
 SIGNATURE_FILES = (".SF", ".RSA", ".DSA", ".EC")
 
+
 class ZipError(Exception):
     pass
+
 
 class Entry:
     def __init__(self, name: str, method: int, crc: int, csize: int, usize: int, dos_time: int,
@@ -32,6 +35,7 @@ class Entry:
         self.source_offset = source_offset
         self.data = data
 
+
 class Apk:
 
     def __init__(self, path: str):
@@ -40,6 +44,7 @@ class Apk:
         self.entries: List[Entry] = []
         self.index: Dict[str, Entry] = {}
         self._read_central_directory()
+
 
     deflater = None
 
@@ -102,6 +107,7 @@ class Apk:
 
     def has(self, name: str) -> bool:
         return name in self.index
+
 
     def replace(self, name: str, data: bytes, method: Optional[int] = None) -> None:
         entry = self.index.get(name)
@@ -226,6 +232,7 @@ class Apk:
 
     def close(self) -> None:
         self.file.close()
+
 
 def _compress(data: bytes, method: int) -> bytes:
     if method == STORED:

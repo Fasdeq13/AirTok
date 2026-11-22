@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -40,11 +41,14 @@ ATTR_IDS = [
 
 DIP = 1
 
+
 def dimension_dp(value: int) -> int:
     return (value << 8) | DIP
 
+
 def float_bits(value: float) -> int:
     return struct.unpack("<I", struct.pack("<f", value))[0]
+
 
 def build(size: int, paths: Sequence[Tuple[int, str]]) -> bytes:
     strings = list(ATTR_NAMES)

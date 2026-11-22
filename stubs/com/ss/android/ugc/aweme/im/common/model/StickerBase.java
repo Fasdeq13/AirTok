@@ -1,5 +1,6 @@
 package com.ss.android.ugc.aweme.im.common.model;
 
+
 public class StickerBase {
 
     public Long id;

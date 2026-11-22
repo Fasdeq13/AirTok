@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import hashlib
@@ -19,9 +20,11 @@ KEEP_DAYS = 30
 HEAP = "2g"
 ROOM_PER_JOB = 2.5
 
+
 def folder() -> str:
     return os.environ.get("MARGYT_CACHE") or os.path.join(
-        os.path.expanduser("~"), ".cache", "margyt-dex")
+        os.path.expanduser("~"), ".cache", "airtok-dex")
+
 
 def _sha(*parts: bytes) -> str:
     digest = hashlib.sha256()
@@ -29,6 +32,7 @@ def _sha(*parts: bytes) -> str:
         digest.update(len(part).to_bytes(8, "big"))
         digest.update(part)
     return digest.hexdigest()
+
 
 def _stamp(path: str) -> bytes:
     try:
@@ -38,17 +42,20 @@ def _stamp(path: str) -> bytes:
     except OSError:
         return b"?"
 
+
 def _touch(path: str) -> None:
     try:
         os.utime(path, None)
     except OSError:
         pass
 
+
 def workers(jobs: int) -> int:
     asked = os.environ.get("MARGYT_WORKERS", "6")
     if asked:
         return max(1, min(int(asked), jobs or 1))
     return 6
+
 
 def prune(root: Optional[str] = None) -> None:
     root = root or folder()
@@ -71,6 +78,7 @@ def prune(root: Optional[str] = None) -> None:
                 os.remove(path)
         except OSError:
             pass
+
 
 def _pieces(dex: bytes, dex_sha: str, smali: Smali, root: str, scratch: str) -> str:
     home = os.path.join(root, "pieces", "%s-a%d" % (dex_sha[:40], smali.api))
@@ -98,6 +106,7 @@ def _pieces(dex: bytes, dex_sha: str, smali: Smali, root: str, scratch: str) -> 
             raise
     return tree
 
+
 def _copy(tree: str, into: str) -> None:
     shutil.rmtree(into, ignore_errors=True)
     os.makedirs(os.path.dirname(into), exist_ok=True)
@@ -106,6 +115,7 @@ def _copy(tree: str, into: str) -> None:
     if done.returncode != 0:
         shutil.rmtree(into, ignore_errors=True)
         shutil.copytree(tree, into)
+
 
 def _rewrite(root: str, literals: Dict[str, str],
              dex: Optional[bytes] = None) -> Tuple[Dict[str, int], List[str]]:
@@ -123,6 +133,7 @@ def _rewrite(root: str, literals: Dict[str, str],
     finally:
         del dexpatch.open
     return counts, sorted(written)
+
 
 def _outcome(dex_sha: str, smali: Smali, tree: str, room: str,
              written: List[str]) -> str:
@@ -142,11 +153,13 @@ def _outcome(dex_sha: str, smali: Smali, tree: str, room: str,
         parts.append(hashlib.sha256(now).digest())
     return _sha(*parts)
 
+
 def _save(path: str, data: bytes) -> None:
     part = "%s.%d.part" % (path, os.getpid())
     with open(part, "wb") as handle:
         handle.write(data)
     os.replace(part, path)
+
 
 def one(job: dict) -> Tuple[str, Optional[str], Dict[str, int], str]:
     name = job["name"]
@@ -213,6 +226,7 @@ def one(job: dict) -> Tuple[str, Optional[str], Dict[str, int], str]:
         return name, out, counts, said
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
+
 
 def patch_all(dexes: Dict[str, bytes], jar: str, api: int, workspace: str,
               literals: Optional[Dict[str, str]],

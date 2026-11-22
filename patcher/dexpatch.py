@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import os
@@ -7,10 +8,10 @@ import subprocess
 from typing import Dict, List, Optional, Tuple
 
 TELEPHONY = "Landroid/telephony/TelephonyManager;"
-REGION = "Lcat/narezany/margyt/Region;"
-ACCENT = "Lcat/narezany/margyt/Accent;"
-DOWNLOAD = "Lcat/narezany/margyt/Download;"
-FEED = "Lcat/narezany/margyt/Feed;"
+REGION = "Lcom/fasdeq/airtok/Region;"
+ACCENT = "Lcom/fasdeq/airtok/Accent;"
+DOWNLOAD = "Lcom/fasdeq/airtok/Download;"
+FEED = "Lcom/fasdeq/airtok/Feed;"
 
 VIDEO = "Lcom/ss/android/ugc/aweme/feed/model/Video;"
 ACL = "Lcom/ss/android/ugc/aweme/feed/model/ACLCommonShare;"
@@ -21,9 +22,9 @@ VIDEO_CONTROL = "Lcom/ss/android/ugc/aweme/feed/model/VideoControl;"
 FEED_ITEM_LIST = "Lcom/ss/android/ugc/aweme/feed/model/FeedItemList;"
 PHOTO_IMAGE = "Lcom/ss/android/ugc/aweme/feed/model/PhotoModeImageUrlModel;"
 ACCOUNT_SERVICE = "Lcom/ss/android/ugc/aweme/IAccountUserService;"
-ACCOUNT = "Lcat/narezany/margyt/Account;"
-COMMENTS = "Lcat/narezany/margyt/Comments;"
-RAIL = "Lcat/narezany/margyt/FeedRail;"
+ACCOUNT = "Lcom/fasdeq/airtok/Account;"
+COMMENTS = "Lcom/fasdeq/airtok/Comments;"
+RAIL = "Lcom/fasdeq/airtok/FeedRail;"
 RAIL_CLASSES = (
     "Lcom/ss/android/ugc/aweme/feed/assem/digg/VideoDiggAssem;",
     "Lcom/ss/android/ugc/aweme/feed/assem/videocomment/VideoCommentAssem;",
@@ -41,13 +42,13 @@ FRIENDS_RESPONSE="Lcom/ss/android/ugc/aweme/relation/model/FriendsListResponse;"
 COMMENT_IMAGE = "Lcom/ss/android/ugc/aweme/comment/model/CommentImageStruct;"
 COMMENT = "Lcom/ss/android/ugc/aweme/comment/model/Comment;"
 COMMENT_STICKER = "Lcom/ss/android/ugc/aweme/comment/model/CommentStickerStruct;"
-WATERMARK = "Lcat/narezany/margyt/Watermark;"
-FLAGS = "Lcat/narezany/margyt/Flags;"
-SOUND = "Lcat/narezany/margyt/Sound;"
-BADGE = "Lcat/narezany/margyt/Badge;"
-AVATARS = "Lcat/narezany/margyt/Avatars;"
-STICKERS = "Lcat/narezany/margyt/Stickers;"
-STREAKS = "Lcat/narezany/margyt/Streaks;"
+WATERMARK = "Lcom/fasdeq/airtok/Watermark;"
+FLAGS = "Lcom/fasdeq/airtok/Flags;"
+SOUND = "Lcom/fasdeq/airtok/Sound;"
+BADGE = "Lcom/fasdeq/airtok/Badge;"
+AVATARS = "Lcom/fasdeq/airtok/Avatars;"
+STICKERS = "Lcom/fasdeq/airtok/Stickers;"
+STREAKS = "Lcom/fasdeq/airtok/Streaks;"
 STREAK_DATA = "Lcom/ss/android/ugc/aweme/im/streak/api/StreakData;"
 STREAK_SERVICE = "Lcom/ss/android/ugc/aweme/im/streak/api/IStreakService;"
 STICKER_ITEM = "Lcom/ss/android/ugc/aweme/im/common/model/StickerItem;"
@@ -58,9 +59,9 @@ STICKER_TEMPLATE = "Lcom/ss/android/ugc/aweme/im/message/template/card/StickerTe
 TEXT_VIEW = "Landroid/widget/TextView;"
 TUX_TEXT = "Lcom/bytedance/tux/input/TuxTextView;"
 CHAR_SEQUENCE = "Ljava/lang/CharSequence;"
-SEEKBAR = "Lcat/narezany/margyt/Seekbar;"
-FONTS = "Lcat/narezany/margyt/Fonts;"
-RATE = "Lcat/narezany/margyt/Rate;"
+SEEKBAR = "Lcom/fasdeq/airtok/Seekbar;"
+FONTS = "Lcom/fasdeq/airtok/Fonts;"
+RATE = "Lcom/fasdeq/airtok/Rate;"
 TYPEFACE = "Landroid/graphics/Typeface;"
 PAINT_CLASS = "Landroid/graphics/Paint;"
 MUSIC = "Lcom/ss/android/ugc/aweme/music/model/Music;"
@@ -113,6 +114,7 @@ DISCOVERED_VIRTUALS: List[Tuple[str, str, str, str]] = [
 
 FOUND: Dict[str, Tuple[str, str]] = {}
 
+
 VIEW = "Landroid/view/View;"
 LONG_CLICK = "Landroid/view/View$OnLongClickListener;"
 
@@ -139,16 +141,16 @@ SPEED_TOUCH_METHOD = (
     "Landroid/view/View;Landroid/view/MotionEvent;)Z"
 )
 SPEED_TOUCH_TARGET = (
-    "Lcat/narezany/margyt/SpeedGesture;->onTouch(Ljava/lang/Object;"
+    "Lcom/fasdeq/airtok/SpeedGesture;->onTouch(Ljava/lang/Object;"
     "Landroid/view/View;Landroid/view/MotionEvent;)Z"
 )
 SPEED_TOUCH_HOOK = """\
-    invoke-static {p0, p1, p2}, Lcat/narezany/margyt/SpeedGesture;->onTouch(Ljava/lang/Object;Landroid/view/View;Landroid/view/MotionEvent;)Z
+    invoke-static {p0, p1, p2}, Lcom/fasdeq/airtok/SpeedGesture;->onTouch(Ljava/lang/Object;Landroid/view/View;Landroid/view/MotionEvent;)Z
     move-result v0
-    if-eqz v0, :margyt_speed_touch_continue
+    if-eqz v0, :airtok_speed_touch_continue
     const/4 v0, 0x1
     return v0
-:margyt_speed_touch_continue
+:airtok_speed_touch_continue
     out = []
     literal = "-0x%x" % ((1 << 32) - TIKTOK_PINK) if TIKTOK_PINK > 0x7FFFFFFF \
         else "0x%x" % TIKTOK_PINK
@@ -180,6 +182,7 @@ SPEED_TOUCH_HOOK = """\
     ))
     return out
 
+
 for _font_owner in (TEXT_VIEW,TUX_TEXT,"Landroid/widget/EditText;","Landroid/widget/Button;"):
     for _font_name,_font_sig in (
         ("setText","(I)V"),("setHint","(I)V"),("setHint","(Ljava/lang/CharSequence;)V"),
@@ -187,9 +190,10 @@ for _font_owner in (TEXT_VIEW,TUX_TEXT,"Landroid/widget/EditText;","Landroid/wid
     ):
         MODEL_SOURCES.append((_font_owner,_font_name,_font_sig,"("+TEXT_VIEW+_font_sig[1:],FONTS))
 
+
 MODEL_SOURCES += [
-    ("Landroid/app/NotificationManager;","notify","(ILandroid/app/Notification;)V","(Landroid/app/NotificationManager;ILandroid/app/Notification;)V","Lcat/narezany/margyt/ModNotifications;"),
-    ("Landroid/app/NotificationManager;","notify","(Ljava/lang/String;ILandroid/app/Notification;)V","(Landroid/app/NotificationManager;Ljava/lang/String;ILandroid/app/Notification;)V","Lcat/narezany/margyt/ModNotifications;"),
+    ("Landroid/app/NotificationManager;","notify","(ILandroid/app/Notification;)V","(Landroid/app/NotificationManager;ILandroid/app/Notification;)V","Lcom/fasdeq/airtok/ModNotifications;"),
+    ("Landroid/app/NotificationManager;","notify","(Ljava/lang/String;ILandroid/app/Notification;)V","(Landroid/app/NotificationManager;Ljava/lang/String;ILandroid/app/Notification;)V","Lcom/fasdeq/airtok/ModNotifications;"),
 ]
 
 def model_rules() -> List[Tuple[str, "re.Pattern[str]", str]]:
@@ -269,6 +273,7 @@ def model_rules() -> List[Tuple[str, "re.Pattern[str]", str]]:
         ))
     return out
 
+
 def rewrite_models(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     prepared = model_rules()
@@ -302,10 +307,11 @@ def rewrite_models(root: str) -> Dict[str, int]:
                     handle.write(text)
     return counts
 
+
 ANCHORED_SOURCES.append(("LX/0oir;","LX/0oir;","LIZ",
     "(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Landroid/content/ClipData;",
     "(Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Landroid/content/ClipData;",
-    "Lcat/narezany/margyt/CommentClipboard;"))
+    "Lcom/fasdeq/airtok/CommentClipboard;"))
 
 def anchored_rules() -> List[Tuple[str, str, "re.Pattern[str]", str]]:
     out = []
@@ -327,6 +333,7 @@ def anchored_rules() -> List[Tuple[str, str, "re.Pattern[str]", str]]:
         ))
     return out
 
+
 def rewrite_anchored(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     prepared = anchored_rules()
@@ -343,7 +350,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def glass_texture_frame(match):
                     body=match.group(0)
                     if "GlassVideo;->frameUpdated" in body:return body
-                    hook="    invoke-static/range {p1 .. p1}, Lcat/narezany/margyt/GlassVideo;->frameUpdated(Landroid/graphics/SurfaceTexture;)V\n"
+                    hook="    invoke-static/range {p1 .. p1}, Lcom/fasdeq/airtok/GlassVideo;->frameUpdated(Landroid/graphics/SurfaceTexture;)V\n"
                     body,hits=re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)",lambda m:m.group(0)+hook,body,count=1)
                     if hits:counts["native texture frame events"]=counts.get("native texture frame events",0)+hits
                     return body
@@ -352,12 +359,12 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def texture_video(match):
                     body=match.group(0)
                     if "MotionBlur;->textureVideo" in body:return body
-                    hook=("    invoke-static {}, Lcat/narezany/margyt/MotionBlur;->textureVideo()Z\n"
+                    hook=("    invoke-static {}, Lcom/fasdeq/airtok/MotionBlur;->textureVideo()Z\n"
                           "    move-result v0\n"
-                          "    if-eqz v0, :margyt_surface_view\n"
+                          "    if-eqz v0, :airtok_surface_view\n"
                           "    const/4 v0, 0x0\n"
                           "    return v0\n"
-                          "    :margyt_surface_view\n")
+                          "    :airtok_surface_view\n")
                     body,hits=re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)",lambda m:m.group(0)+hook,body,count=1)
                     if hits:counts["player video view kind"]=counts.get("player video view kind",0)+hits
                     return body
@@ -367,11 +374,11 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def player_flag(match):
                     body=match.group(0)
                     if "Flags;->playerFlag" in body:return body
-                    hook=("    invoke-static {p0, p1}, Lcat/narezany/margyt/Flags;->playerFlag(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;\n"
+                    hook=("    invoke-static {p0, p1}, Lcom/fasdeq/airtok/Flags;->playerFlag(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;\n"
                           "    move-result-object v0\n"
-                          "    if-eqz v0, :margyt_player_flag\n"
+                          "    if-eqz v0, :airtok_player_flag\n"
                           "    return-object v0\n"
-                          "    :margyt_player_flag\n")
+                          "    :airtok_player_flag\n")
                     body,hits=re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)",lambda m:m.group(0)+hook,body,count=1)
                     if hits:counts["player settings reader"]=counts.get("player settings reader",0)+hits
                     return body
@@ -404,7 +411,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
             if "Lcom/ss/android/ugc/aweme/offlinemode/ui/sheet/OfflineModeSheetPageAssem;" in declaration:
                 def offline_legacy(match):
                     body=match.group(0)
-                    hook="    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/OfflineChoices;->legacy(Ljava/lang/Object;)V\n"
+                    hook="    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/OfflineChoices;->legacy(Ljava/lang/Object;)V\n"
                     if hook.strip() not in body:
                         body=re.sub(r"(?m)^    return-void",hook+"    return-void",body)
                         counts["native offline legacy menu"]=counts.get("native offline legacy menu",0)+1
@@ -425,9 +432,9 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     register="p0" if static else "p1"
                     method="nativeTask" if task else "nativeObservable"
                     result="LX/0Vgo;" if task else "LX/19ZK;"
-                    hook=(f"    invoke-static/range {{{register} .. {register}}}, Lcat/narezany/margyt/OfflineComments;->{method}(Ljava/lang/String;)Ljava/lang/Object;\n"
-                          "    move-result-object v0\n    if-eqz v0, :margyt_comments_online\n"
-                          f"    check-cast v0, {result}\n    return-object v0\n    :margyt_comments_online\n")
+                    hook=(f"    invoke-static/range {{{register} .. {register}}}, Lcom/fasdeq/airtok/OfflineComments;->{method}(Ljava/lang/String;)Ljava/lang/Object;\n"
+                          "    move-result-object v0\n    if-eqz v0, :airtok_comments_online\n"
+                          f"    check-cast v0, {result}\n    return-object v0\n    :airtok_comments_online\n")
                     body,hits=re.subn(r"(?m)^(    (?:move|const|invoke|sget|iget|new|return|if|check)[\w/-]*(?: |$))",lambda m:hook+m.group(0),body,count=1)
                     if hits:counts["native offline comments response"]=counts.get("native offline comments response",0)+1
                     return body
@@ -437,7 +444,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def offline_saved(match):
                     body=match.group(0)
                     if "OfflineComments;->cached" not in body:
-                        body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/OfflineComments;->cached(Ljava/lang/Object;Ljava/lang/String;)V",body,count=1)
+                        body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/OfflineComments;->cached(Ljava/lang/Object;Ljava/lang/String;)V",body,count=1)
                         counts["native offline comments cache"]=counts.get("native offline comments cache",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public static LIZ\(Lcom/ss/android/ugc/aweme/feed/model/Aweme;Ljava/lang/String;\)V.*?^\.end method",offline_saved,text)
@@ -445,21 +452,21 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def offline_content(match):
                     body=match.group(0)
                     if "OfflineComments;->content" not in body:
-                        body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/OfflineComments;->content(Ljava/lang/Object;)V",body,count=1)
+                        body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/OfflineComments;->content(Ljava/lang/Object;)V",body,count=1)
                         counts["native offline comments current video"]=counts.get("native offline comments current video",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public final onParentViewCreated\(\)V.*?^\.end method",offline_content,text)
                 def offline_closed(match):
                     body=match.group(0)
                     if "OfflineComments;->closed" not in body:
-                        body=re.sub(r"(?m)^    return-void","    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/OfflineComments;->closed(Ljava/lang/Object;)V\n    return-void",body)
+                        body=re.sub(r"(?m)^    return-void","    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/OfflineComments;->closed(Ljava/lang/Object;)V\n    return-void",body)
                     return body
                 text=re.sub(r"(?ms)^\.method public final onDestroy\(\)V.*?^\.end method",offline_closed,text)
             if "Lcom/ss/android/ugc/aweme/offlinemode/ui/bottom/OfflineModeDetailBottomComponent;" in declaration:
                 def offline_bottom(match):
                     body=match.group(0)
                     if "OfflineComments;->bottom" not in body and "    return-object v4" in body:
-                        body=body.replace("    return-object v4","    invoke-static {v4}, Lcat/narezany/margyt/OfflineComments;->bottom(Landroid/view/View;)Landroid/view/View;\n    move-result-object v4\n    return-object v4")
+                        body=body.replace("    return-object v4","    invoke-static {v4}, Lcom/fasdeq/airtok/OfflineComments;->bottom(Landroid/view/View;)Landroid/view/View;\n    move-result-object v4\n    return-object v4")
                         counts["native offline comments viewer"]=counts.get("native offline comments viewer",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public final MR2\(Landroid/view/ViewGroup;\)Landroid/view/View;.*?^\.end method",offline_bottom,text)
@@ -468,7 +475,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     body=match.group(0)
                     needle="invoke-interface {v1, v0}, Ljava/util/List;->contains(Ljava/lang/Object;)Z"
                     if needle in body:
-                        body=body.replace(needle,"invoke-static {v1, v0}, Lcat/narezany/margyt/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z")
+                        body=body.replace(needle,"invoke-static {v1, v0}, Lcom/fasdeq/airtok/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z")
                         counts["native offline custom persistence"]=counts.get("native offline custom persistence",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public final d43\(\)Z.*?^\.end method",offline_valid,text)
@@ -477,14 +484,14 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     body=match.group(0)
                     needle="invoke-interface {v1, v0}, Ljava/util/List;->contains(Ljava/lang/Object;)Z"
                     if needle in body:
-                        body=body.replace(needle,"invoke-static {v1, v0}, Lcat/narezany/margyt/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z",1)
+                        body=body.replace(needle,"invoke-static {v1, v0}, Lcom/fasdeq/airtok/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z",1)
                         counts["native offline count accepted"]=counts.get("native offline count accepted",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public static LIZ\(\)I.*?^\.end method",offline_native_count,text)
             if "Lkotlin/jvm/internal/AwS704S0100000_26;" in declaration:
                 def offline_list(match):
                     body=match.group(0)
-                    hook="\n    invoke-static {v1}, Lcat/narezany/margyt/OfflineChoices;->counts(Ljava/util/List;)Ljava/util/List;\n    move-result-object v1"
+                    hook="\n    invoke-static {v1}, Lcom/fasdeq/airtok/OfflineChoices;->counts(Ljava/util/List;)Ljava/util/List;\n    move-result-object v1"
                     needle=re.search(r"invoke-static \{\}, LX/0wj1;->LJFF\(\)Ljava/util/List;(?:(?:\s*\.line \d+)*)\s*move-result-object v1",body)
                     if "OfflineChoices;->counts" not in body and needle:
                         body=body[:needle.end()]+hook+body[needle.end():]
@@ -495,7 +502,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def offline_row(match):
                     body=match.group(0)
                     if "OfflineChoices;->row" not in body:
-                        body=body.replace("    return-object v10","    invoke-static {v3, v10}, Lcat/narezany/margyt/OfflineChoices;->row(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\n    move-result-object v10\n    check-cast v10, LX/0ldB;\n    return-object v10")
+                        body=body.replace("    return-object v10","    invoke-static {v3, v10}, Lcom/fasdeq/airtok/OfflineChoices;->row(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;\n    move-result-object v10\n    check-cast v10, LX/0ldB;\n    return-object v10")
                         counts["native offline row"]=counts.get("native offline row",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public final LIZLLL\(\)LX/0ldB;.*?^\.end method",offline_row,text)
@@ -512,7 +519,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def capture_share(match):
                     body=match.group(0)
                     if "VideoActions;->captureShare" in body:return body
-                    body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/VideoActions;->captureShare(Ljava/lang/Object;)V",body,count=1)
+                    body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/VideoActions;->captureShare(Ljava/lang/Object;)V",body,count=1)
                     counts["native share capture"]=counts.get("native share capture",0)+1
                     return body
                 text=re.sub(r"(?ms)^\.method public final onClick\(Landroid/view/View;\)V.*?^\.end method",capture_share,text)
@@ -520,23 +527,23 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def heart_cycle(match):
                     body=match.group(0)
                     if "Heart;->shown" in body:return body
-                    hook="    invoke-static/range {p1 .. p1}, Lcat/narezany/margyt/Heart;->shown(Landroid/widget/ImageView;)V\n"
+                    hook="    invoke-static/range {p1 .. p1}, Lcom/fasdeq/airtok/Heart;->shown(Landroid/widget/ImageView;)V\n"
                     body,hits=re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)",lambda m:m.group(0)+hook,body,count=1)
                     if hits:counts["native heart reuse"]=counts.get("native heart reuse",0)+hits
                     return body
                 text=re.sub(r"(?ms)^\.method public final LIZ\(Landroid/widget/ImageView;FF\)V.*?^\.end method",heart_cycle,text)
             if REPOST_CLASS in declaration:
-                add_exit(r"(?ms)^\.method public final (?:onViewCreated\(Landroid/view/View;\)|s4\(Ljava/lang/Object;\))V.*?^\.end method","    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/Repost;->bind(Ljava/lang/Object;)V\n","native repost")
+                add_exit(r"(?ms)^\.method public final (?:onViewCreated\(Landroid/view/View;\)|s4\(Ljava/lang/Object;\))V.*?^\.end method","    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/Repost;->bind(Ljava/lang/Object;)V\n","native repost")
             if AVATAR_CLASS in declaration:
-                add_exit(r"(?ms)^\.method public final (?:onViewCreated\(Landroid/view/View;\)|s4\(Ljava/lang/Object;\))V.*?^\.end method","    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/Repost;->anchor(Ljava/lang/Object;)V\n","native repost avatar")
+                add_exit(r"(?ms)^\.method public final (?:onViewCreated\(Landroid/view/View;\)|s4\(Ljava/lang/Object;\))V.*?^\.end method","    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/Repost;->anchor(Ljava/lang/Object;)V\n","native repost avatar")
             if PROFILE_CONTAINER in declaration:
-                add_exit(r"(?ms)^\.method public onViewCreated\(Landroid/view/View;\)V.*?^\.end method","    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/ProfileLayout;->bind(Ljava/lang/Object;Landroid/view/View;)V\n","native profile layout")
+                add_exit(r"(?ms)^\.method public onViewCreated\(Landroid/view/View;\)V.*?^\.end method","    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/ProfileLayout;->bind(Ljava/lang/Object;Landroid/view/View;)V\n","native profile layout")
             if PROFILE_HEADER in declaration:
                 def profile_parts(match):
                     body = match.group(0)
                     if "ProfileParts;->attaching" in body:
                         return body
-                    hook = "    invoke-static/range {p0 .. p2}, Lcat/narezany/margyt/ProfileParts;->attaching(Ljava/lang/Object;Landroid/view/View;Landroid/view/ViewGroup;)V\n"
+                    hook = "    invoke-static/range {p0 .. p2}, Lcom/fasdeq/airtok/ProfileParts;->attaching(Ljava/lang/Object;Landroid/view/View;Landroid/view/ViewGroup;)V\n"
                     body, hits = re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)", lambda m: m.group(0) + hook, body, count=1)
                     if hits:
                         counts["native profile component roles"] = hits
@@ -546,8 +553,8 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def message_bind(match):
                     body=match.group(0)
                     if "MessageTimes;->bind" in body:return body
-                    body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/MessageTimes;->before(Ljava/lang/Object;)V",body,count=1)
-                    body=re.sub(r"(?m)^    return-void","    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/MessageTimes;->bind(Ljava/lang/Object;Ljava/lang/Object;)V\n    return-void",body)
+                    body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+"\n    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/MessageTimes;->before(Ljava/lang/Object;)V",body,count=1)
+                    body=re.sub(r"(?m)^    return-void","    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/MessageTimes;->bind(Ljava/lang/Object;Ljava/lang/Object;)V\n    return-void",body)
                     counts["native message timestamps"]=counts.get("native message timestamps",0)+1
                     return body
                 message_pattern=(r"(?ms)^\.method public Bq\(LX/0Qfl;\)V.*?^\.end method" if MESSAGE_CLASSES[0] in declaration else r"(?ms)^\.method public final s4\(Ljava/lang/Object;\)V.*?^\.end method")
@@ -556,7 +563,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def push_guide(match):
                     body=match.group(0)
                     if "ModNotifications;->noPrompts" in body:return body
-                    hook="\n    invoke-static {}, Lcat/narezany/margyt/ModNotifications;->noPrompts()Z\n    move-result v0\n    if-eqz v0, :margyt_notification_guide\n    const/4 v0, 0x0\n    return v0\n    :margyt_notification_guide"
+                    hook="\n    invoke-static {}, Lcom/fasdeq/airtok/ModNotifications;->noPrompts()Z\n    move-result v0\n    if-eqz v0, :airtok_notification_guide\n    const/4 v0, 0x0\n    return v0\n    :airtok_notification_guide"
                     body=re.sub(r"(?m)^    \.registers \d+",lambda m:m.group(0)+hook,body,count=1)
                     counts["native notification guide"]=counts.get("native notification guide",0)+1
                     return body
@@ -567,11 +574,11 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     if "GlassVideo;->" in body:return body
                     signature=body.split("\n",1)[0]
                     if "onPlayProgressChange(" in signature:
-                        hook="    invoke-static/range {p0 .. p3}, Lcat/narezany/margyt/GlassVideo;->progress(Ljava/lang/Object;Ljava/lang/String;J)V\n"
+                        hook="    invoke-static/range {p0 .. p3}, Lcom/fasdeq/airtok/GlassVideo;->progress(Ljava/lang/Object;Ljava/lang/String;J)V\n"
                     elif "onPausePlay(" in signature or "onPlayPause(" in signature or "onPlayStop(" in signature:
-                        hook="    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/GlassVideo;->paused(Ljava/lang/Object;Ljava/lang/String;)V\n"
+                        hook="    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/GlassVideo;->paused(Ljava/lang/Object;Ljava/lang/String;)V\n"
                     else:
-                        hook="    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/GlassVideo;->resumed(Ljava/lang/Object;Ljava/lang/String;)V\n"
+                        hook="    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/GlassVideo;->resumed(Ljava/lang/Object;Ljava/lang/String;)V\n"
                     body,hits=re.subn(r"(?m)^([ \t]*\.(?:registers|locals) \d+\n)",lambda m:m.group(0)+hook,body,count=1)
                     if hits:counts["native backdrop playback events"]=counts.get("native backdrop playback events",0)+hits
                     return body
@@ -579,7 +586,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def resumed_player(match):
                     body=match.group(0)
                     if "PlayerTools;->resumed" in body:return body
-                    changed,hits=re.subn(r"(?m)^([ \t]*)return-void",lambda m:"    invoke-static/range {p0 .. p1}, Lcat/narezany/margyt/PlayerTools;->resumed(Ljava/lang/Object;Ljava/lang/String;)V\n"+m.group(0),body)
+                    changed,hits=re.subn(r"(?m)^([ \t]*)return-void",lambda m:"    invoke-static/range {p0 .. p1}, Lcom/fasdeq/airtok/PlayerTools;->resumed(Ljava/lang/Object;Ljava/lang/String;)V\n"+m.group(0),body)
                     if hits:counts["native player resume"]=counts.get("native player resume",0)+1
                     return changed
                 text=re.sub(r"(?ms)^\.method public final onResumePlay\(Ljava/lang/String;\)V.*?^\.end method",resumed_player,text)
@@ -606,7 +613,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def repost_texture(match):
                     body=match.group(0)
                     if "Repost;->textureChanged" in body:return body
-                    body,hits=re.subn(r"(?m)^([ \t]*return-void)","    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/Repost;->textureChanged(Landroid/view/View;)V\n"+r"\1",body)
+                    body,hits=re.subn(r"(?m)^([ \t]*return-void)","    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/Repost;->textureChanged(Landroid/view/View;)V\n"+r"\1",body)
                     if hits:counts["native repost texture state"]=counts.get("native repost texture state",0)+hits
                     return body
                 text=re.sub(r"(?ms)^\.method public final (?:LJ|LJFF)\(\)V.*?^\.end method",repost_texture,text)
@@ -614,7 +621,7 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                 def selected_dislike(match):
                     body=match.group(0)
                     if "Accent;->dislike" in body:return body
-                    body,hits=re.subn(r"(?m)^([ \t]*return-void)","    invoke-static/range {p0 .. p0}, Lcat/narezany/margyt/Accent;->dislike(Ljava/lang/Object;)V\n"+r"\1",body)
+                    body,hits=re.subn(r"(?m)^([ \t]*return-void)","    invoke-static/range {p0 .. p0}, Lcom/fasdeq/airtok/Accent;->dislike(Ljava/lang/Object;)V\n"+r"\1",body)
                     if hits:counts["selected dislike accent"]=counts.get("selected dislike accent",0)+hits
                     return body
                 text=re.sub(r"(?ms)^\.method public final LJIIIZ\(Ljava/lang/Boolean;\)V.*?^\.end method",selected_dislike,text)
@@ -695,14 +702,14 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     method=match.group(0)
                     if "CommentActionMenuVM;->h43" not in method or "Comments;->openNativeActions" in method:return method
                     hook=("\n    invoke-static/range {p0 .. p0}, "+COMMENTS+"->openNativeActions(Ljava/lang/Object;)Z\n"
-                          "    move-result v0\n    if-eqz v0, :margyt_native_comment_menu\n    return-void\n    :margyt_native_comment_menu\n")
+                          "    move-result v0\n    if-eqz v0, :airtok_native_comment_menu\n    return-void\n    :airtok_native_comment_menu\n")
                     result,hits=re.subn(r"(?m)^(    \.registers [0-9]+)",lambda m:m.group(0)+hook,method,count=1)
                     if hits:counts["native comment text actions"]=counts.get("native comment text actions",0)+hits
                     return result
                 text=re.sub(r"(?ms)^\.method public k8\(\)V.*?^\.end method",native_comment_actions,text)
                 pattern = (r"(?m)^([ \t]*iget-object ([vp]\d+), [vp]\d+, "
                     r"Landroidx/recyclerview/widget/RecyclerView\$ViewHolder;->itemView:Landroid/view/View;)"
-                    r"(?!\n[ \t]*invoke-static/range \{\2 \.\. \2\}, Lcat/narezany/margyt/Comments;->mark)")
+                    r"(?!\n[ \t]*invoke-static/range \{\2 \.\. \2\}, Lcom/fasdeq/airtok/Comments;->mark)")
                 text,hits=re.subn(pattern,lambda m:m.group(1)+"\n    invoke-static/range {"+m.group(2)+" .. "+m.group(2)+"}, "
                     +COMMENTS+"->mark(Landroid/view/View;)V",text)
                 if hits:counts["native comment cell protection"]=counts.get("native comment cell protection",0)+hits
@@ -734,6 +741,8 @@ def rewrite_anchored(root: str) -> Dict[str, int]:
                     handle.write(text)
     return counts
 
+
+
 FLAG_READERS = ("LX/09tK;", "Lvq4/m;")
 FLAG_READER = FLAG_READERS[0]
 FLAG_ANSWERS = {
@@ -746,6 +755,7 @@ FLAG_ANSWERS = {
 }
 FLAG_LABEL = "native flag reader"
 
+
 def _parameters(descriptor: str) -> List[str]:
     out = []
     at = 0
@@ -756,6 +766,7 @@ def _parameters(descriptor: str) -> List[str]:
         at = descriptor.index(";", at) + 1 if descriptor[at] == "L" else at + 1
         out.append(descriptor[start:at])
     return out
+
 
 def defines(dex: bytes, descriptor: str) -> bool:
     wanted = descriptor.encode()
@@ -772,6 +783,7 @@ def defines(dex: bytes, descriptor: str) -> bool:
         if length == len(wanted) and dex[at:at + length] == wanted:
             return True
     return False
+
 
 def rewrite_flag_reader(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -807,9 +819,9 @@ def rewrite_flag_reader(root: str, dex: Optional[bytes] = None) -> Dict[str, int
                              "    move-object/from16 v1, p%d" % key,
                              "    invoke-static {v0, v1}, %s->forcedObject(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;" % FLAGS,
                              "    move-result-object v0",
-                             "    if-eqz v0, :margyt_flag",
+                             "    if-eqz v0, :airtok_flag",
                              "    return-object v0",
-                             "    :margyt_flag"]
+                             "    :airtok_flag"]
                     counts[FLAG_LABEL] = counts.get(FLAG_LABEL, 0) + 1
                     rows = body.split("\n")
                     inside = False
@@ -840,11 +852,11 @@ def rewrite_flag_reader(root: str, dex: Optional[bytes] = None) -> Dict[str, int
                 lines = ["    invoke-static/range {p%d .. p%d}, %s->%s(Ljava/lang/String;)%s"
                          % (key, key, FLAGS, method, boxed),
                          "    move-result-object v0",
-                         "    if-eqz v0, :margyt_flag"]
+                         "    if-eqz v0, :airtok_flag"]
                 if unbox:
                     lines += ["    invoke-virtual {v0}, %s->%s" % (boxed, unbox),
                               "    move-result%s v0" % wide]
-                lines += ["    return%s v0" % wide, "    :margyt_flag"]
+                lines += ["    return%s v0" % wide, "    :airtok_flag"]
                 counts[FLAG_LABEL] = counts.get(FLAG_LABEL, 0) + 1
                 rows = body.split("\n")
                 inside = False
@@ -869,6 +881,7 @@ def rewrite_flag_reader(root: str, dex: Optional[bytes] = None) -> Dict[str, int
                     handle.write(changed)
     return counts
 
+
 def rewrite_hdr_switch(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     if dex is not None and not defines(dex, PLAYER_CONFIG):
@@ -892,14 +905,15 @@ def rewrite_hdr_switch(root: str, dex: Optional[bytes] = None) -> Dict[str, int]
         word = row.strip()
         if word and not word.startswith((".prologue", ".param", ".end param", ".annotation", ".end annotation")):
             break
-    rows[at:at] = ["    invoke-static {}, %s\n\n    move-result v0\n\n    if-eqz v0, :margyt_hdr\n\n"
-                   "    const/4 v0, 0x1\n\n    return v0\n\n    :margyt_hdr\n" % HDR_QUESTION]
+    rows[at:at] = ["    invoke-static {}, %s\n\n    move-result v0\n\n    if-eqz v0, :airtok_hdr\n\n"
+                   "    const/4 v0, 0x1\n\n    return v0\n\n    :airtok_hdr\n" % HDR_QUESTION]
     text = text[:match.start(2)] + "\n".join(rows) + text[match.end(2):]
     with open(path, "w", encoding="utf-8") as handle:
         handle.write(text)
     return counts
 
-SAFELY = "Lcat/narezany/margyt/Safely;"
+
+SAFELY = "Lcom/fasdeq/airtok/Safely;"
 for anchor in ("LX/0TFu;", "LX/0TVv;"):
     ANCHORED_SOURCES.append((anchor, "Landroid/content/Context;", "getString",
         "(I)Ljava/lang/String;", "(Landroid/content/Context;I)Ljava/lang/String;", SAFELY))
@@ -907,7 +921,8 @@ for anchor in ("LX/0TFu;", "LX/0TVv;"):
 
 STARTER = "Landroidx/activity/ComponentActivity;"
 START_LABEL = "native start"
-START_ROUTE = "Lcat/narezany/margyt/Launcher;->route(Landroid/content/Intent;)V"
+START_ROUTE = "Lcom/fasdeq/airtok/Launcher;->route(Landroid/content/Intent;)V"
+
 
 def rewrite_starts(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -946,7 +961,8 @@ def rewrite_starts(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
             handle.write(changed)
     return counts
 
-LITE_MENU = "Lcat/narezany/margyt/LiteMenu;"
+
+LITE_MENU = "Lcom/fasdeq/airtok/LiteMenu;"
 LITE_MENU_LABEL = "native menu row"
 LITE_MENU_SHEET = '"MoreActionDialog"'
 LITE_MENU_ROW = re.compile(
@@ -963,8 +979,10 @@ LITE_MENU_LIST = re.compile(
     r"    new-instance (?P<list>v\d+), Ljava/util/ArrayList;\n(?:[ \t]*\n|[ \t]*\.line \d+\n)*"
     r"    invoke-direct \{(?P=list)\}, Ljava/util/ArrayList;-><init>\(\)V\n")
 
+
 def opens_the_menu(dex: bytes) -> bool:
     return LITE_MENU_SHEET.strip('"').encode() in dex
+
 
 def rewrite_lite_menu(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1019,7 +1037,8 @@ def rewrite_lite_menu(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
             counts[LITE_MENU_LABEL] = counts.get(LITE_MENU_LABEL, 0) + 1
     return counts
 
-LITE_NET = "Lcat/narezany/margyt/LiteNet;"
+
+LITE_NET = "Lcom/fasdeq/airtok/LiteNet;"
 LITE_NET_LABEL = "native request drop"
 URL_DISPATCHER = "Lcom/bytedance/frameworks/baselib/network/http/ok3/impl/urldispatcher/URLDispatcher;"
 LITE_NET_ASK = "%s->drops()Z" % LITE_NET
@@ -1029,6 +1048,7 @@ LITE_NET_DROP = re.compile(
     r"(?:[ \t]*\n|[ \t]*\.line \d+\n)*"
     r"    sget-object (?P=held), (?P<kind>L[^;]+;)->DISPATCH_DROP:(?P=kind)\n(?:[ \t]*\n|[ \t]*\.line \d+\n)*"
     r"    return-object (?P=held)\n)")
+
 
 def rewrite_lite_drops(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1053,10 +1073,10 @@ def rewrite_lite_drops(root: str, dex: Optional[bytes] = None) -> Dict[str, int]
                 held, kind = match.group("held"), match.group("kind")
                 return ("    invoke-static {}, %s\n\n" % LITE_NET_ASK
                         + "    move-result %s\n\n" % held
-                        + "    if-nez %s, :margyt_drop_%d\n\n" % (held, at)
+                        + "    if-nez %s, :airtok_drop_%d\n\n" % (held, at)
                         + "    sget-object %s, %s->DISPATCH_NONE:%s\n\n" % (held, kind, kind)
                         + "    return-object %s\n\n" % held
-                        + "    :margyt_drop_%d\n" % at
+                        + "    :airtok_drop_%d\n" % at
                         + match.group("wipe"))
 
             changed = LITE_NET_DROP.sub(asked, text)
@@ -1065,7 +1085,8 @@ def rewrite_lite_drops(root: str, dex: Optional[bytes] = None) -> Dict[str, int]
                     handle.write(changed)
     return counts
 
-SETTINGS_CELL = "Lcat/narezany/margyt/SettingsCell;"
+
+SETTINGS_CELL = "Lcom/fasdeq/airtok/SettingsCell;"
 SETTINGS_LABEL = "native settings row"
 SETTINGS_ROWS = "LX/0MUp;"
 SETTINGS_GROUP = "LX/1Htf;"
@@ -1073,9 +1094,11 @@ SETTINGS_ROW_METHOD = ".method public static final LIZ(LX/0MUl;ZZLX/0Lx7;I)V"
 SETTINGS_FIRST_ROW = ("    invoke-static/range {v9 .. v14}, LX/1HtZ;->LIZIZ(ZZLcom/ss/android/ugc/aweme/setting/ui/"
                       "rvmpcompose/group/top/cell/ManagePostsVM;LX/0Lx7;II)V\n")
 
+
 def _class_file(root: str, descriptor: str) -> Optional[str]:
     path = os.path.join(root, *descriptor[1:-1].split("/")) + ".smali"
     return path if os.path.exists(path) else None
+
 
 def rewrite_settings_row(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1084,7 +1107,7 @@ def rewrite_settings_row(root: str, dex: Optional[bytes] = None) -> Dict[str, in
         if path:
             with open(path, encoding="utf-8") as handle:
                 text = handle.read()
-            if ".method public static final margyt(LX/0MUl;ZZLX/0Lx7;I)V" in text:
+            if ".method public static final airtok(LX/0MUl;ZZLX/0Lx7;I)V" in text:
                 counts[SETTINGS_LABEL] = counts.get(SETTINGS_LABEL, 0) + 1
             else:
                 start = text.find(SETTINGS_ROW_METHOD)
@@ -1092,7 +1115,7 @@ def rewrite_settings_row(root: str, dex: Optional[bytes] = None) -> Dict[str, in
                 if end >= 0:
                     body = text[start:end + len(".end method")]
                     copy = body.replace(SETTINGS_ROW_METHOD,
-                                        ".method public static final margyt(LX/0MUl;ZZLX/0Lx7;I)V", 1)
+                                        ".method public static final airtok(LX/0MUl;ZZLX/0Lx7;I)V", 1)
                     copy, titled = re.subn(
                         r"    const v0, 0x[0-9a-f]+\n(?:[ \t]*\n|[ \t]*\.line \d+\n)*"
                         r"    invoke-static \{v0, v6\}, LX/0L52;->LIZIZ\(ILX/0Lx7;\)Ljava/lang/String;",
@@ -1130,8 +1153,10 @@ def rewrite_settings_row(root: str, dex: Optional[bytes] = None) -> Dict[str, in
                 counts[SETTINGS_LABEL] = counts.get(SETTINGS_LABEL, 0) + 1
     return counts
 
+
 PLAYER_SETTINGS = "LX/0nY8;"
 PLAYER_VIEW_CONFIG = "LX/0qS5;"
+
 
 def carries_an_anchor(dex: bytes) -> bool:
     return (any(anchor.encode() in dex for anchor, *_rest in ANCHORED_SOURCES)
@@ -1164,6 +1189,7 @@ def carries_an_anchor(dex: bytes) -> bool:
             or SPEED_TOUCH_CLASS.encode() in dex or SPEED_EDGE_CLASS.encode() in dex
             or PLAYER_SETTINGS.encode() in dex
             or defines(dex, PLAYER_VIEW_CONFIG))
+
 
 def rewrite_speed_touch(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1203,7 +1229,8 @@ def rewrite_speed_touch(root: str) -> Dict[str, int]:
             counts[label] = 1
     return counts
 
-LOADING = "Lcat/narezany/margyt/Loading;"
+
+LOADING = "Lcom/fasdeq/airtok/Loading;"
 LOADING_DRAW = re.compile(
     r"\.method public (?:final )?onDraw\(Landroid/graphics/Canvas;\)V\n"
     r"[ \t]*\.registers (\d+)\n(?:[ \t]*\n)*(?:[ \t]*\.prologue\n)?")
@@ -1212,11 +1239,11 @@ LOADING_HOOK = """\
 
     move-result v0
 
-    if-eqz v0, :margyt_loading_native
+    if-eqz v0, :airtok_loading_native
 
     return-void
 
-    :margyt_loading_native
+    :airtok_loading_native
 
     The views that draw them have no names left, so they are known by what
     they are: a plain View, with a `setProgressBarInfo` of its own and a
@@ -1243,6 +1270,7 @@ LOADING_HOOK = """\
             handle.write(changed)
     return {RECALL_LABEL: hits} if hits else {}
 
+
 def rewrite_frames(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
     if dex is not None and not defines(dex, IMAGE_LOADER):
         return {}
@@ -1263,6 +1291,7 @@ def rewrite_frames(root: str, dex: Optional[bytes] = None) -> Dict[str, int]:
         handle.write(changed)
     return {FRAME_LABEL: 1}
 
+
 def touches_a_model(dex: bytes) -> bool:
     for owner, name, _original, _replacement, _target in MODEL_SOURCES + MODEL_STATICS:
         theirs = name[0] if isinstance(name, tuple) else name
@@ -1280,6 +1309,7 @@ def touches_a_model(dex: bytes) -> bool:
             return True
     return False
 
+
 def reads_a_colour(dex: bytes) -> bool:
     for owner, name, _original, _replacement in COLOUR_SOURCES:
         if owner.encode() in dex and name.encode() in dex:
@@ -1289,6 +1319,7 @@ def reads_a_colour(dex: bytes) -> bool:
             return True
     return False
 
+
 def holds_the_pink(dex: bytes) -> bool:
     needle = struct.pack("<I", TIKTOK_PINK)
     at = dex.find(needle)
@@ -1297,6 +1328,7 @@ def holds_the_pink(dex: bytes) -> bool:
             return True
         at = dex.find(needle, at + 1)
     return False
+
 
 def _required(pattern) -> str:
     try:
@@ -1319,6 +1351,7 @@ def _required(pattern) -> str:
         run = ""
     return best
 
+
 def _literal_of(pattern) -> str:
     source = pattern.pattern
     for head in (r"(\{[^}]*\}), ", r"^(\s*)const ([vp]\d+), "):
@@ -1329,6 +1362,7 @@ def _literal_of(pattern) -> str:
                 tail = tail[:-1]
             return re.sub(r"\\(.)", r"\1", tail)
     return ""
+
 
 def rewrite_accent(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1355,6 +1389,7 @@ def rewrite_accent(root: str) -> Dict[str, int]:
                 with open(path, "w", encoding="utf-8") as handle:
                     handle.write(text)
     return counts
+
 
 def force_false(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1384,6 +1419,7 @@ def force_false(root: str) -> Dict[str, int]:
         counts["%s->%s" % (class_name.rsplit("/", 1)[-1], signature)] = 1
     return counts
 
+
 def force_true(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     for class_name, signature in FORCED_TRUE:
@@ -1408,6 +1444,7 @@ def force_true(root: str) -> Dict[str, int]:
         counts["%s->%s" % (class_name.rsplit("/", 1)[-1], signature)] = 1
     return counts
 
+
 def force_void(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     for class_name, signature in FORCED_VOID:
@@ -1431,6 +1468,7 @@ def force_void(root: str) -> Dict[str, int]:
             handle.write(text)
         counts["%s->%s" % (class_name.rsplit("/", 1)[-1], signature)] = 1
     return counts
+
 
 def rewrite_speedup(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1503,6 +1541,7 @@ def rewrite_speedup(root: str) -> Dict[str, int]:
     counts["EdgeSpeedupAssem->Y52(FF)Z"] = 1
     return counts
 
+
 def interesting(dex: bytes, literals: Optional[Dict[str, str]] = None) -> bool:
     for old in (literals or {}):
         if old.encode() in dex:
@@ -1536,6 +1575,7 @@ def interesting(dex: bytes, literals: Optional[Dict[str, str]] = None) -> bool:
         return False
     return any(name.encode() in dex for name, _o, _r in TARGETS)
 
+
 def rewrite_literals(root: str, literals: Dict[str, str]) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     if not literals:
@@ -1559,6 +1599,7 @@ def rewrite_literals(root: str, literals: Dict[str, str]) -> Dict[str, int]:
                     handle.write(text)
     return counts
 
+
 def rewrite_smali(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
     prepared = rules()
@@ -1580,6 +1621,7 @@ def rewrite_smali(root: str) -> Dict[str, int]:
                 with open(path, "w", encoding="utf-8") as handle:
                     handle.write(text)
     return counts
+
 
 class Smali:
 
@@ -1609,8 +1651,12 @@ class Smali:
             ["a", "-a", str(self.api), "-j", str(self.jobs), "-o", dex_path, smali_dir],
         )
 
+
 def dex_format(dex: bytes) -> str:
     return dex[4:7].decode("ascii", "replace")
+
+
+
 
 def rewrite_targets() -> List[str]:
     out = ["%s->accent()I" % ACCENT]
@@ -1632,11 +1678,11 @@ def rewrite_targets() -> List[str]:
         out.append("%s->%s()%s" % (target, name, kind))
     for _anchor, _owner, name, _original, replacement, target in ANCHORED_SOURCES:
         out.append("%s->%s%s" % (target, name, replacement))
-    out.append("Lcat/narezany/margyt/VideoActions;->captureShare(Ljava/lang/Object;)V")
-    out.append("Lcat/narezany/margyt/Heart;->shown(Landroid/widget/ImageView;)V")
-    out.extend(["Lcat/narezany/margyt/OfflineComments;->closed(Ljava/lang/Object;)V", "Lcat/narezany/margyt/OfflineComments;->nativeTask(Ljava/lang/String;)Ljava/lang/Object;", "Lcat/narezany/margyt/OfflineComments;->nativeObservable(Ljava/lang/String;)Ljava/lang/Object;"])
-    out.extend(["Lcat/narezany/margyt/OfflineComments;->closed(Ljava/lang/Object;)V", "Lcat/narezany/margyt/OfflineComments;->nativeTask(Ljava/lang/String;)Ljava/lang/Object;", "Lcat/narezany/margyt/OfflineComments;->nativeObservable(Ljava/lang/String;)Ljava/lang/Object;"])
-    out.extend(["Lcat/narezany/margyt/OfflineChoices;->counts(Ljava/util/List;)Ljava/util/List;", "Lcat/narezany/margyt/OfflineChoices;->row(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", "Lcat/narezany/margyt/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z", "Lcat/narezany/margyt/OfflineChoices;->legacy(Ljava/lang/Object;)V", "Lcat/narezany/margyt/OfflineComments;->cached(Ljava/lang/Object;Ljava/lang/String;)V", "Lcat/narezany/margyt/OfflineComments;->content(Ljava/lang/Object;)V", "Lcat/narezany/margyt/OfflineComments;->bottom(Landroid/view/View;)Landroid/view/View;"])
+    out.append("Lcom/fasdeq/airtok/VideoActions;->captureShare(Ljava/lang/Object;)V")
+    out.append("Lcom/fasdeq/airtok/Heart;->shown(Landroid/widget/ImageView;)V")
+    out.extend(["Lcom/fasdeq/airtok/OfflineComments;->closed(Ljava/lang/Object;)V", "Lcom/fasdeq/airtok/OfflineComments;->nativeTask(Ljava/lang/String;)Ljava/lang/Object;", "Lcom/fasdeq/airtok/OfflineComments;->nativeObservable(Ljava/lang/String;)Ljava/lang/Object;"])
+    out.extend(["Lcom/fasdeq/airtok/OfflineComments;->closed(Ljava/lang/Object;)V", "Lcom/fasdeq/airtok/OfflineComments;->nativeTask(Ljava/lang/String;)Ljava/lang/Object;", "Lcom/fasdeq/airtok/OfflineComments;->nativeObservable(Ljava/lang/String;)Ljava/lang/Object;"])
+    out.extend(["Lcom/fasdeq/airtok/OfflineChoices;->counts(Ljava/util/List;)Ljava/util/List;", "Lcom/fasdeq/airtok/OfflineChoices;->row(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", "Lcom/fasdeq/airtok/OfflineChoices;->validCount(Ljava/util/List;Ljava/lang/Object;)Z", "Lcom/fasdeq/airtok/OfflineChoices;->legacy(Ljava/lang/Object;)V", "Lcom/fasdeq/airtok/OfflineComments;->cached(Ljava/lang/Object;Ljava/lang/String;)V", "Lcom/fasdeq/airtok/OfflineComments;->content(Ljava/lang/Object;)V", "Lcom/fasdeq/airtok/OfflineComments;->bottom(Landroid/view/View;)Landroid/view/View;"])
     out.append(SPEED_TOUCH_TARGET)
     out.extend(["%s->title()Ljava/lang/String;" % LITE_MENU, "%s->tapped()Ljava/lang/Object;" % LITE_MENU])
     out.append(LITE_NET_ASK)
@@ -1644,13 +1690,13 @@ def rewrite_targets() -> List[str]:
     out.append(COMMENTS+"->openNativeActions(Ljava/lang/Object;)Z")
     out.append(COMMENTS+"->nativeItems(Ljava/lang/Object;Ljava/util/List;)Ljava/util/List;")
     out.append(FEED+"->withoutAds(Ljava/util/List;)Ljava/util/List;")
-    out.append("Lcat/narezany/margyt/Repost;->textureChanged(Landroid/view/View;)V")
-    out.append("Lcat/narezany/margyt/Accent;->dislike(Ljava/lang/Object;)V")
+    out.append("Lcom/fasdeq/airtok/Repost;->textureChanged(Landroid/view/View;)V")
+    out.append("Lcom/fasdeq/airtok/Accent;->dislike(Ljava/lang/Object;)V")
     out.append(COMMENTS+"->bindCell(Ljava/lang/Object;)V")
     out.append(RAIL+"->bindNative(Ljava/lang/Object;)V")
-    out.append("Lcat/narezany/margyt/PlayerTools;->resumed(Ljava/lang/Object;Ljava/lang/String;)V")
-    out.extend(["Lcat/narezany/margyt/Repost;->bind(Ljava/lang/Object;)V","Lcat/narezany/margyt/Repost;->anchor(Ljava/lang/Object;)V","Lcat/narezany/margyt/ProfileLayout;->bind(Ljava/lang/Object;Landroid/view/View;)V","Lcat/narezany/margyt/MessageTimes;->before(Ljava/lang/Object;)V","Lcat/narezany/margyt/MessageTimes;->bind(Ljava/lang/Object;Ljava/lang/Object;)V","Lcat/narezany/margyt/ModNotifications;->noPrompts()Z"])
-    out.append("Lcat/narezany/margyt/ProfileParts;->attaching(Ljava/lang/Object;Landroid/view/View;Landroid/view/ViewGroup;)V")
+    out.append("Lcom/fasdeq/airtok/PlayerTools;->resumed(Ljava/lang/Object;Ljava/lang/String;)V")
+    out.extend(["Lcom/fasdeq/airtok/Repost;->bind(Ljava/lang/Object;)V","Lcom/fasdeq/airtok/Repost;->anchor(Ljava/lang/Object;)V","Lcom/fasdeq/airtok/ProfileLayout;->bind(Ljava/lang/Object;Landroid/view/View;)V","Lcom/fasdeq/airtok/MessageTimes;->before(Ljava/lang/Object;)V","Lcom/fasdeq/airtok/MessageTimes;->bind(Ljava/lang/Object;Ljava/lang/Object;)V","Lcom/fasdeq/airtok/ModNotifications;->noPrompts()Z"])
+    out.append("Lcom/fasdeq/airtok/ProfileParts;->attaching(Ljava/lang/Object;Landroid/view/View;Landroid/view/ViewGroup;)V")
     out.extend("%s->%s(Ljava/lang/String;)%s" % (FLAGS, method, boxed)
                for method, boxed, _unbox, _wide in FLAG_ANSWERS.values())
     out.append(HDR_QUESTION)
@@ -1673,6 +1719,7 @@ def rewrite_targets() -> List[str]:
                        % (target, ours, "(Ljava/lang/Object;" + descriptor[1:]))
     return out
 
+
 def _uleb(data: bytes, at: int) -> Tuple[int, int]:
     value = shift = 0
     while True:
@@ -1682,6 +1729,7 @@ def _uleb(data: bytes, at: int) -> Tuple[int, int]:
         shift += 7
         if not byte & 0x80:
             return value, at
+
 
 def defined_methods(dex: bytes) -> set:
     string_ids_off = struct.unpack_from("<I", dex, 60)[0]
@@ -1737,6 +1785,7 @@ def defined_methods(dex: bytes) -> set:
                 out.add(signature(index))
     return out
 
+
 def find_statics(dexes: Dict[str, bytes]) -> Dict[str, Tuple[str, str]]:
     wanted = {descriptor: label for label, descriptor, _ours, _target
               in DISCOVERED_STATICS + DISCOVERED_VIRTUALS}
@@ -1753,6 +1802,7 @@ def find_statics(dexes: Dict[str, bytes]) -> Dict[str, Tuple[str, str]]:
         if len(found) == 1:
             out[label] = next(iter(found))
     return out
+
 
 def _static_methods(dex: bytes):
     strings = struct.unpack_from("<I", dex, 60)[0]
@@ -1781,9 +1831,11 @@ def _static_methods(dex: bytes):
         owner, proto, name = struct.unpack_from("<HHI", dex, methods + 8 * i)
         yield kind(owner), text(name), shape(proto)
 
+
 def missing_targets(dex: bytes) -> List[str]:
     defined = defined_methods(dex)
     return [target for target in rewrite_targets() if target not in defined]
+
 
 def rewrite_everything(root: str, literals: Optional[Dict[str, str]] = None,
                        dex: Optional[bytes] = None) -> Dict[str, int]:
@@ -1812,8 +1864,10 @@ def rewrite_everything(root: str, literals: Optional[Dict[str, str]] = None,
         counts.update(rewrite_clipboard(root))
     return counts
 
+
 CLIP_CALL = re.compile(r"invoke-virtual(/range)? (\{[^}]*\}), Landroid/content/ClipboardManager;->setPrimaryClip\(Landroid/content/ClipData;\)V")
-CLIP_HOOK = r"invoke-static\1 \2, Lcat/narezany/margyt/ShareLinks;->setPrimaryClip(Landroid/content/ClipboardManager;Landroid/content/ClipData;)V"
+CLIP_HOOK = r"invoke-static\1 \2, Lcom/fasdeq/airtok/ShareLinks;->setPrimaryClip(Landroid/content/ClipboardManager;Landroid/content/ClipData;)V"
+
 
 def rewrite_clipboard(root: str) -> Dict[str, int]:
     counts: Dict[str, int] = {}
@@ -1832,6 +1886,7 @@ def rewrite_clipboard(root: str) -> Dict[str, int]:
                 with open(path, "w", encoding="utf-8") as handle:
                     handle.write(text)
     return counts
+
 
 def next_dex_name(names: List[str]) -> str:
     used = set()

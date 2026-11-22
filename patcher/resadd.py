@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -12,8 +13,9 @@ RES_TABLE_TYPE_SPEC = 0x0202
 TYPE_STRING = 0x03
 UTF8_FLAG = 1 << 8
 
+
 def add_files(data: bytes, package_id: int, type_name: str,
-              names_and_paths: List[tuple], package_name: str = "margyt") -> bytes:
+              names_and_paths: List[tuple], package_name: str = "airtok") -> bytes:
     table_kind, table_header, table_size = struct.unpack_from("<HHI", data, 0)
     if table_kind != RES_TABLE:
         raise ValueError("not a resource table")
@@ -32,6 +34,7 @@ def add_files(data: bytes, package_id: int, type_name: str,
     struct.pack_into("<I", out, 8, package_count + 1)
     struct.pack_into("<I", out, 4, len(out))
     return bytes(out)
+
 
 def add_adaptive_icons(data: bytes, package_id: int,
                        names_and_paths: List[tuple]) -> bytes:
@@ -53,6 +56,7 @@ def add_adaptive_icons(data: bytes, package_id: int,
     struct.pack_into("<I", out, 4, len(out))
     return bytes(out)
 
+
 def _package_adaptive(package_id: int, keys: List[str], legacy: List[int],
                       adaptive: List[int]) -> bytes:
     type_pool = _pool(["mipmap"])
@@ -64,11 +68,12 @@ def _package_adaptive(package_id: int, keys: List[str], legacy: List[int],
     struct.pack_into("<HHI", head, 0, RES_TABLE_PACKAGE, header_size,
                      header_size + len(body))
     struct.pack_into("<I", head, 8, package_id)
-    name = "margyt".encode("utf-16-le")
+    name = "airtok".encode("utf-16-le")
     head[12:12 + len(name)] = name
     struct.pack_into("<4I", head, 268,
                      header_size, 1, header_size + len(type_pool), len(keys))
     return bytes(head) + body
+
 
 def _append_strings(data: bytes, pool_at: int, strings: List[str]):
     kind, header_size, size = struct.unpack_from("<HHI", data, pool_at)
@@ -112,6 +117,7 @@ def _append_strings(data: bytes, pool_at: int, strings: List[str]):
     struct.pack_into("<I", out, pool_at + 4, size + moved + len(encoded))
     return out, count
 
+
 def _encode(text: str, utf8: bool) -> bytes:
     if utf8:
         raw = text.encode("utf-8")
@@ -123,8 +129,9 @@ def _encode(text: str, utf8: bool) -> bytes:
         raise ValueError("too long")
     return struct.pack("<H", len(text)) + raw + b"\x00\x00"
 
+
 def _package(package_id: int, type_name: str, keys: List[str],
-             string_indexes: List[int], package_name: str = "margyt") -> bytes:
+             string_indexes: List[int], package_name: str = "airtok") -> bytes:
     type_pool = _pool([type_name])
     key_pool = _pool(keys)
 
@@ -144,6 +151,7 @@ def _package(package_id: int, type_name: str, keys: List[str],
                      header_size, 1, header_size + len(type_pool), count)
     return bytes(head) + body
 
+
 def _pool(strings: List[str]) -> bytes:
     offsets = bytearray()
     body = bytearray()
@@ -161,6 +169,7 @@ def _pool(strings: List[str]) -> bytes:
     struct.pack_into("<5I", head, 8, len(strings), 0, UTF8_FLAG, strings_start, 0)
     return bytes(head) + bytes(offsets) + bytes(body)
 
+
 def _spec(count: int) -> bytes:
     header_size = 16
     size = header_size + 4 * count
@@ -171,6 +180,7 @@ def _spec(count: int) -> bytes:
     for i in range(count):
         struct.pack_into("<I", out, header_size + 4 * i, 0)
     return bytes(out)
+
 
 def _type(count: int, string_indexes: List[int], sdk: int = 0) -> bytes:
     config = bytearray(64)

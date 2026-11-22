@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import argparse
@@ -10,9 +11,10 @@ from .toolchain import Toolchain
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
-        prog="margyt",
+        prog="airtok",
         description="Build MargyT from an official TikTok apk.",
     )
     parser.add_argument("apk", nargs="?",
@@ -24,7 +26,7 @@ def main(argv=None) -> int:
                         help="the TikTok account ids to give it to")
     parser.add_argument("--no-push", action="store_true",
                         help="with --badge: edit badges.json but do not push it")
-    parser.add_argument("-o", "--out", default=os.path.join(ROOT, "build", "margyt.apk"),
+    parser.add_argument("-o", "--out", default=os.path.join(ROOT, "build", "airtok.apk"),
                         help="where the finished apk goes")
     parser.add_argument("--work", default=os.path.join(ROOT, "work"),
                         help="scratch space for the dex files being rewritten")
@@ -79,6 +81,7 @@ def main(argv=None) -> int:
         print("\n\033[1;31mBuild failed:\033[0m %s" % error, file=sys.stderr)
         return 1
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

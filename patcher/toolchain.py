@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import os
@@ -21,7 +22,9 @@ SIGNER_JAR = (
     "uber-apk-signer-1.3.0.jar"
 )
 
+
 JZLIB_JAR = "https://repo1.maven.org/maven2/com/jcraft/jzlib/1.1.3/jzlib-1.1.3.jar"
+
 
 class Toolchain:
     def __init__(self, directory: str, quiet: bool = False):
@@ -81,7 +84,7 @@ class Toolchain:
         if not os.path.exists(stamp) or os.path.getmtime(stamp) < os.path.getmtime(source):
             os.makedirs(helper, exist_ok=True)
             _run(["javac", "-nowarn", "-cp", self.jzlib, "-d", helper, source])
-        with tempfile.TemporaryDirectory(prefix="margyt-deflate-") as room:
+        with tempfile.TemporaryDirectory(prefix="airtok-deflate-") as room:
             for at, blob in enumerate(blobs):
                 with open(os.path.join(room, "%d.in" % at), "wb") as handle:
                     handle.write(blob)
@@ -91,6 +94,7 @@ class Toolchain:
                 with open(os.path.join(room, "%d.out" % at), "rb") as handle:
                     out.append(handle.read())
             return out
+
 
     def framework_constant(self, field: str) -> int:
         result = subprocess.run(
@@ -181,7 +185,7 @@ class Toolchain:
             raise RuntimeError("keytool did not report the keystore type")
         store_type = match.group(1).upper()
 
-        with tempfile.TemporaryDirectory(prefix="margyt-sign-") as temp:
+        with tempfile.TemporaryDirectory(prefix="airtok-sign-") as temp:
             signer_key = key
             if store_type != "JKS":
                 signer_key = os.path.join(temp, "signing.jks")
@@ -198,17 +202,20 @@ class Toolchain:
             ]
             _run(command)
 
+
 def _java_under(root: str) -> list:
     out = []
     for dirpath, _dirs, files in os.walk(root):
         out += [os.path.join(dirpath, f) for f in files if f.endswith(".java")]
     return sorted(out)
 
+
 def _classes_under(root: str) -> list:
     out = []
     for dirpath, _dirs, files in os.walk(root):
         out += [os.path.join(dirpath, f) for f in files if f.endswith(".class")]
     return sorted(out)
+
 
 def _java() -> str:
     javac = shutil.which("javac")
@@ -218,6 +225,7 @@ def _java() -> str:
         if os.path.isfile(beside):
             return beside
     return shutil.which("java") or "java"
+
 
 def _keytool() -> str:
     javac = shutil.which("javac")
@@ -230,6 +238,7 @@ def _keytool() -> str:
     if not found:
         raise RuntimeError("keytool is required to sign with the supplied keystore")
     return found
+
 
 def _run(command: list) -> None:
     environment = dict(os.environ)

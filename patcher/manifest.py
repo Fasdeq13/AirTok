@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from typing import List, Optional
@@ -14,8 +15,10 @@ from .axml import (
 MAIN_ACTION = "android.intent.action.MAIN"
 LAUNCHER_CATEGORY = "android.intent.category.LAUNCHER"
 
+
 class ManifestError(Exception):
     pass
+
 
 def application(axml: Axml) -> Node:
     elements = axml.elements("application")
@@ -23,11 +26,14 @@ def application(axml: Axml) -> Node:
         raise ManifestError("the manifest has no <application>")
     return elements[0]
 
+
 def package_name(axml: Axml) -> Optional[str]:
     return axml.attr_string(axml.elements("manifest")[0], "package")
 
+
 def application_class(axml: Axml) -> Optional[str]:
     return axml.attr_string(application(axml), "name")
+
 
 def min_sdk(axml: Axml, fallback: int = 21) -> int:
     for node in axml.elements("uses-sdk"):
@@ -35,6 +41,7 @@ def min_sdk(axml: Axml, fallback: int = 21) -> int:
         if attr is not None and attr.kind != TYPE_STRING:
             return attr.data
     return fallback
+
 
 def icon_ids(axml: Axml) -> List[int]:
     app = application(axml)
@@ -44,6 +51,7 @@ def icon_ids(axml: Axml) -> List[int]:
         if attr is not None and attr.kind == TYPE_REFERENCE and attr.data not in out:
             out.append(attr.data)
     return out
+
 
 def launcher_elements(axml: Axml) -> List[Node]:
     stack: List[Node] = []
@@ -64,6 +72,7 @@ def launcher_elements(axml: Axml) -> List[Node]:
                 stack.pop()
     return [node for node, kinds in found.values() if len(kinds) == 2]
 
+
 def shared_authorities(axml: Axml, package: str) -> List[str]:
     out = []
     for node in axml.elements("provider"):
@@ -74,6 +83,7 @@ def shared_authorities(axml: Axml, package: str) -> List[str]:
             if authority and package not in authority and authority not in out:
                 out.append(authority)
     return out
+
 
 def rename_authorities(axml: Axml, renames: dict) -> List[str]:
     touched = []
@@ -88,6 +98,7 @@ def rename_authorities(axml: Axml, renames: dict) -> List[str]:
             touched.append(new_value)
     return touched
 
+
 def set_label(axml: Axml, label: str) -> List[str]:
     touched = []
     app = application(axml)
@@ -99,15 +110,18 @@ def set_label(axml: Axml, label: str) -> List[str]:
             touched.append(axml.pool.get(node.name) + " " + str(axml.attr_string(node, "name")))
     return touched
 
+
 def has_activity(axml: Axml, class_name: str) -> bool:
     return any(
         axml.attr_string(node, "name") == class_name
         for node in axml.elements("activity") + axml.elements("activity-alias")
     )
 
+
 def has_permission(axml: Axml, name: str) -> bool:
     return any(axml.attr_string(node, "name") == name
                for node in axml.elements("uses-permission"))
+
 
 def add_permission(axml: Axml, name: str) -> bool:
     if has_permission(axml, name):
@@ -117,12 +131,14 @@ def add_permission(axml: Axml, name: str) -> bool:
     axml.insert_into(axml.elements("manifest")[0], [node, axml.close_element(node)])
     return True
 
+
 def version_name(axml: Axml) -> str:
     for node in axml.elements("manifest"):
         found = axml.attr_string(node, "versionName")
         if found:
             return found
     return "?"
+
 
 def version_code(axml: Axml) -> int:
     for node in axml.elements("manifest"):
@@ -131,11 +147,13 @@ def version_code(axml: Axml) -> int:
             return found.data
     return 1
 
+
 def set_version_code(axml: Axml, value: int) -> None:
     if value < 1 or value > 0x7FFFFFFF:
         raise ManifestError("versionCode must be between 1 and 2,147,483,647")
     node = axml.elements("manifest")[0]
     axml.set_attr(node, "versionCode", 0x10, value)
+
 
 def add_provider(axml: Axml, class_name: str, authority: str) -> None:
     provider = axml.make_element("provider")
@@ -145,18 +163,22 @@ def add_provider(axml: Axml, class_name: str, authority: str) -> None:
     axml.set_attr_bool(provider, "grantUriPermissions", True)
     axml.insert_into(application(axml), [provider, axml.close_element(provider)])
 
+
 def add_meta_data(axml: Axml, name: str, value: str) -> None:
     data = axml.make_element("meta-data")
     axml.set_attr_string(data, "name", name)
     axml.set_attr_string(data, "value", value)
     axml.insert_into(application(axml), [data, axml.close_element(data)])
 
+
 def add_profileable(axml: Axml) -> None:
     node = axml.make_element("profileable")
     axml.set_attr_bool(node, "shell", True)
     axml.insert_into(application(axml), [node, axml.close_element(node)])
 
+
 LAUNCH_SINGLE_TASK = 2
+
 
 def launcher_entry(axml: Axml):
     from .axml import RES_XML_START_ELEMENT, RES_XML_END_ELEMENT
@@ -182,6 +204,7 @@ def launcher_entry(axml: Axml):
                     return name, target
                 inside = None
     raise ManifestError("this apk has no launcher entry to stand in for")
+
 
 def add_icon_alias(axml: Axml, name: str, target: str, icon: int,
                    label: str, enabled: bool) -> None:
@@ -209,6 +232,7 @@ def add_icon_alias(axml: Axml, name: str, target: str, icon: int,
         axml.close_element(intent_filter),
         axml.close_element(alias),
     ])
+
 
 def add_activity(axml: Axml, class_name: str, label: str, theme: int,
                  affinity: str = None, launcher: bool = False) -> None:
@@ -247,8 +271,10 @@ def add_activity(axml: Axml, class_name: str, label: str, theme: int,
     ]
     axml.insert_into(application(axml), subtree)
 
+
 VIEW_ACTION = "android.intent.action.VIEW"
 DEFAULT_CATEGORY = "android.intent.category.DEFAULT"
+
 
 def add_file_opener(axml: Axml, class_name: str, label: str, theme: int,
                     extension: str, mimes: List[str]) -> None:
@@ -282,6 +308,7 @@ def add_file_opener(axml: Axml, class_name: str, label: str, theme: int,
     subtree.append(axml.close_element(activity))
     axml.insert_into(application(axml), subtree)
 
+
 def add_queries(axml: Axml, packages: List[str]) -> None:
     queries = axml.make_element("queries")
     subtree = [queries]
@@ -291,6 +318,7 @@ def add_queries(axml: Axml, packages: List[str]) -> None:
         subtree += [node, axml.close_element(node)]
     subtree.append(axml.close_element(queries))
     axml.insert_into(axml.elements("manifest")[0], subtree)
+
 
 def add_widget(axml: Axml, class_name: str, info: int) -> None:
     receiver = axml.make_element("receiver")
@@ -306,6 +334,7 @@ def add_widget(axml: Axml, class_name: str, info: int) -> None:
         receiver, intent_filter, action, axml.close_element(action),
         axml.close_element(intent_filter), meta, axml.close_element(meta),
         axml.close_element(receiver)])
+
 
 def add_receiver(axml: Axml, class_name: str, actions: List[str]) -> None:
     receiver = axml.make_element("receiver")

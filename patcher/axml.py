@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -58,8 +59,12 @@ ATTR_IDS = {
 
 NO_ENTRY = 0xFFFFFFFF
 
+
 class AxmlError(Exception):
     pass
+
+
+
 
 class StringPool:
 
@@ -88,6 +93,7 @@ class StringPool:
             return None
         return self.strings[index]
 
+
     @classmethod
     def parse(cls, data: bytes, start: int) -> "StringPool":
         kind, header_size, size = struct.unpack_from("<HHI", data, start)
@@ -110,6 +116,7 @@ class StringPool:
             styles = data[start + styles_start : start + size]
 
         return cls(strings, flags, styles, style_offsets)
+
 
     def build(self) -> bytes:
         offsets = []
@@ -146,6 +153,7 @@ class StringPool:
         out += self.styles
         return bytes(out)
 
+
 def _read_len(data: bytes, pos: int, utf8: bool):
     if utf8:
         first = data[pos]
@@ -158,6 +166,7 @@ def _read_len(data: bytes, pos: int, utf8: bool):
         return ((first & 0x7FFF) << 16) | second, pos + 4
     return first, pos + 2
 
+
 def _read_string(data: bytes, pos: int, utf8: bool) -> str:
     if utf8:
         _chars, pos = _read_len(data, pos, True)
@@ -165,6 +174,7 @@ def _read_string(data: bytes, pos: int, utf8: bool) -> str:
         return data[pos : pos + nbytes].decode("utf-8", "replace")
     nchars, pos = _read_len(data, pos, False)
     return data[pos : pos + nchars * 2].decode("utf-16-le", "replace")
+
 
 def _write_len(value: int, utf8: bool) -> bytes:
     if utf8:
@@ -175,6 +185,7 @@ def _write_len(value: int, utf8: bool) -> bytes:
         return struct.pack("<HH", 0x8000 | ((value >> 16) & 0x7FFF), value & 0xFFFF)
     return struct.pack("<H", value)
 
+
 def _write_string(value: str, utf8: bool) -> bytes:
     if utf8:
         raw = value.encode("utf-8")
@@ -182,6 +193,9 @@ def _write_string(value: str, utf8: bool) -> bytes:
         return _write_len(chars, True) + _write_len(len(raw), True) + raw + b"\x00"
     raw = value.encode("utf-16-le")
     return _write_len(len(raw) // 2, False) + raw + b"\x00\x00"
+
+
+
 
 class Attribute:
     def __init__(self, ns: int, name: int, raw: int, size: int, res0: int, kind: int, data: int):
@@ -197,6 +211,7 @@ class Attribute:
         return struct.pack(
             "<IIIHBBI", self.ns, self.name, self.raw, self.size, self.res0, self.kind, self.data
         )
+
 
 class Node:
 
@@ -244,6 +259,7 @@ class Node:
             body
         )
 
+
 class Axml:
 
     def __init__(self, pool: StringPool, resource_map: List[int], nodes: List[Node]):
@@ -251,6 +267,7 @@ class Axml:
         self.resource_map = resource_map
         self.nodes = nodes
         self.pending: List[Node] = []
+
 
     @classmethod
     def parse(cls, data: bytes) -> "Axml":
@@ -297,6 +314,7 @@ class Axml:
             body += node.pack()
         return struct.pack("<HHI", RES_XML, 8, 8 + len(body)) + bytes(body)
 
+
     def string(self, index: int) -> Optional[str]:
         return self.pool.get(index)
 
@@ -320,6 +338,7 @@ class Axml:
         if a.kind == TYPE_STRING:
             return self.pool.get(a.data)
         return self.pool.get(a.raw)
+
 
     def attribute_name_index(self, name: str) -> int:
         if name not in ATTR_IDS:
@@ -426,6 +445,7 @@ class Axml:
                     return
                 depth -= 1
         raise AxmlError("element has no end tag")
+
 
 def _parse_node(data: bytes, pos: int, ctype: int, chdr: int, csize: int) -> Node:
     line, comment = struct.unpack_from("<II", data, pos + 8)

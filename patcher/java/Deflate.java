@@ -5,7 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 
+
 public final class Deflate {
+
 
     static final int LEVEL = 6;
 
@@ -23,6 +25,7 @@ public final class Deflate {
             }
         });
     }
+
 
     static byte[] raw(byte[] data) throws Exception {
         Deflater deflater = new Deflater(LEVEL, true);

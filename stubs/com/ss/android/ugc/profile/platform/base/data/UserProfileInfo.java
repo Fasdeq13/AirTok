@@ -1,5 +1,6 @@
 package com.ss.android.ugc.profile.platform.base.data;
 
+
 public class UserProfileInfo {
 
     public String getNickname() {

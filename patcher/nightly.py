@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -11,6 +12,7 @@ COLOUR_TYPES = (0x1C, 0x1D, 0x1E, 0x1F)
 FLAG_SPARSE = 0x01
 FLAG_OFFSET16 = 0x02
 ENTRY_FLAG_COMPLEX = 0x0001
+
 
 def theme_colours(arsc: Arsc, accent_reference: int) -> Tuple[List[int], List[int]]:
     holds = {}
@@ -40,6 +42,7 @@ def theme_colours(arsc: Arsc, accent_reference: int) -> Tuple[List[int], List[in
     safe = sorted(value for value in out if value not in elsewhere)
     return sorted(out), safe
 
+
 def _night_pairs(arsc: Arsc, accent_reference: int) -> Set[int]:
     from .accent import _entry_count
 
@@ -66,14 +69,17 @@ def _night_pairs(arsc: Arsc, accent_reference: int) -> Set[int]:
                         out.add(value)
     return out
 
+
 _UI_MODE = 29
 _NIGHT_MASK = 0x30
 _NIGHT_YES = 0x20
+
 
 def _is_night(config: bytes) -> bool:
     if len(config) <= _UI_MODE:
         return False
     return (config[_UI_MODE] & _NIGHT_MASK) == _NIGHT_YES
+
 
 def _ordinary_colours(arsc: Arsc) -> Set[int]:
     from .accent import _entry_count
@@ -90,6 +96,7 @@ def _ordinary_colours(arsc: Arsc) -> Set[int]:
                     if value.kind in COLOUR_TYPES:
                         seen.add(value.data)
     return seen
+
 
 def _bag_colours(arsc: Arsc, chunk: int):
     data = arsc.data

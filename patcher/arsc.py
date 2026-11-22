@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import struct
@@ -20,8 +21,10 @@ ENTRY_FLAG_COMPACT = 0x0008
 NO_ENTRY32 = 0xFFFFFFFF
 NO_ENTRY16 = 0xFFFF
 
+
 class ArscError(Exception):
     pass
+
 
 class Value:
 
@@ -51,6 +54,7 @@ class Value:
             self.kind,
             self.data,
         )
+
 
 class StringPool:
 
@@ -94,6 +98,7 @@ class StringPool:
         nchars, pos = _read_len(self._data, pos, False)
         return pos, nchars * 2
 
+
 def _read_len(data: bytes, pos: int, utf8: bool) -> Tuple[int, int]:
     if utf8:
         first = data[pos]
@@ -106,6 +111,7 @@ def _read_len(data: bytes, pos: int, utf8: bool) -> Tuple[int, int]:
         return ((first & 0x7FFF) << 16) | second, pos + 4
     return first, pos + 2
 
+
 def _read_string(data: bytes, pos: int, utf8: bool) -> str:
     if utf8:
         _chars, pos = _read_len(data, pos, True)
@@ -114,6 +120,7 @@ def _read_string(data: bytes, pos: int, utf8: bool) -> str:
     nchars, pos = _read_len(data, pos, False)
     return data[pos : pos + nchars * 2].decode("utf-16-le", "replace")
 
+
 class Package:
     def __init__(self, pid: int, name: str):
         self.id = pid
@@ -121,12 +128,14 @@ class Package:
         self.type_names: Optional[StringPool] = None
         self.types: Dict[int, List[int]] = {}
 
+
 class Arsc:
     def __init__(self, data: bytes):
         self.data = bytearray(data)
         self.dirty = False
         self.packages: List[Package] = []
         self._parse()
+
 
     def _parse(self) -> None:
         data = self.data
@@ -168,6 +177,7 @@ class Arsc:
                 package.types.setdefault(type_id, []).append(pos)
             pos += csize
         return package
+
 
     def package(self, pid: int) -> Optional[Package]:
         for p in self.packages:
@@ -242,6 +252,7 @@ class Arsc:
         if value.kind != TYPE_STRING:
             return None
         return self.strings.get(value.data)
+
 
     def replace_string(self, index: int, new: str) -> None:
         pos, length = self.strings.encoded_span(index)

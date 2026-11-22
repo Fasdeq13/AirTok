@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import base64
@@ -16,30 +17,36 @@ COLOURS = [TIKTOK] + PALETTE
 
 MAX_JSON = 1024 * 1024
 MAX_PNG = 2 * 1024 * 1024
-ROOT = "assets/margyt/rc/"
+ROOT = "assets/airtok/rc/"
 
 _PINK = re.compile(r"(?i)#(?:[0-9a-f]{2})?fe2c55")
 _NUMBER = r"(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)"
 _COLOUR = re.compile(r'"(k|s|e)"\s*:\s*\[\s*' + _NUMBER + r"\s*," + r"\s*" + _NUMBER
                      + r"\s*," + r"\s*" + _NUMBER + r"\s*," + r"\s*" + _NUMBER + r"\s*\]")
 
+
 def is_like(name: str) -> bool:
     if "dislike" in name:
         return False
     return any(word in name for word in ("like", "heart", "digg", "double_tap", "doubletap"))
 
+
 def shipped_path(name: str, colour: int) -> str:
     key = hashlib.sha1(name.lower().encode("utf-8")).hexdigest()[:16]
     return "%s%06X/%s.json" % (ROOT, colour & 0xFFFFFF, key)
 
+
 def _round(value: float) -> int:
     return int(math.floor(value + 0.5))
+
 
 def _clamp_channel(value: float) -> int:
     return max(0, min(255, _round(value)))
 
+
 def _number(channel: int) -> str:
     return "%.8f" % (channel / 255.0)
+
 
 def recolour_png(data: bytes, target: int) -> bytes:
     image = png.decode(data)
@@ -59,6 +66,7 @@ def recolour_png(data: bytes, target: int) -> bytes:
         pixels[at + 2] = now & 255
         pixels[at + 3] = (now >> 24) & 255
     return png.encode(image)
+
 
 def recolour_json(text: str, colour: int, double_tap: bool) -> str:
     def pink(match: "re.Match[str]") -> str:
@@ -86,6 +94,7 @@ def recolour_json(text: str, colour: int, double_tap: bool) -> str:
     text = _COLOUR.sub(flat, text)
     return _gradients(text, colour)
 
+
 def _gradients(text: str, target: int) -> str:
     if '"gf"' not in text and '"gs"' not in text:
         return text
@@ -96,6 +105,7 @@ def _gradients(text: str, target: int) -> str:
     changed = [0]
     _walk(root, target, changed)
     return text if not changed[0] else json.dumps(root, separators=(",", ":"))
+
 
 def _walk(node, target: int, changed: List[int]) -> None:
     if isinstance(node, list):
@@ -111,6 +121,7 @@ def _walk(node, target: int, changed: List[int]) -> None:
             if isinstance(child, (dict, list)):
                 _walk(child, target, changed)
 
+
 def _stop_property(prop: dict, stops: int, target: int, changed: List[int]) -> None:
     values = prop.get("k")
     if not isinstance(values, list) or not values:
@@ -122,6 +133,7 @@ def _stop_property(prop: dict, stops: int, target: int, changed: List[int]) -> N
                 _stop_list(frame.get("e"), stops, target, changed)
     else:
         _stop_list(values, stops, target, changed)
+
 
 def _stop_list(items, stops: int, target: int, changed: List[int]) -> None:
     if not isinstance(items, list):
@@ -148,11 +160,13 @@ def _stop_list(items, stops: int, target: int, changed: List[int]) -> None:
         items[i + 3] = (now & 255) / scale
         changed[0] += 1
 
+
 def _opt(items, at: int) -> float:
     try:
         return float(items[at])
     except (TypeError, ValueError, IndexError):
         return 0.0
+
 
 def embed_images(text: str, colour: int, read: Callable[[str], Optional[bytes]]) -> str:
     try:
@@ -180,6 +194,7 @@ def embed_images(text: str, colour: int, read: Callable[[str], Optional[bytes]])
         changed = True
     return json.dumps(composition, separators=(",", ":")) if changed else text
 
+
 def make(name: str, source: bytes, colour: int,
          read: Callable[[str], Optional[bytes]]) -> Optional[bytes]:
     if len(source) > MAX_JSON:
@@ -193,10 +208,11 @@ def make(name: str, source: bytes, colour: int,
     text = embed_images(text, colour, read)
     return text.encode("utf-8")
 
+
 def candidates(names: List[str]) -> List[Tuple[str, str]]:
     out = []
     for path in names:
-        if not path.startswith("assets/") or path.startswith("assets/margyt/"):
+        if not path.startswith("assets/") or path.startswith("assets/airtok/"):
             continue
         name = path[len("assets/"):]
         lower = name.lower()

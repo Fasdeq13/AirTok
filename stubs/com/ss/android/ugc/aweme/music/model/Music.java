@@ -1,5 +1,6 @@
 package com.ss.android.ugc.aweme.music.model;
 
+
 public class Music {
 
     public boolean available() {

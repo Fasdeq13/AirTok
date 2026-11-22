@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import colorsys
@@ -8,6 +9,7 @@ HUE = 20.0
 MIN_SATURATION = 0.35
 MIN_VALUE = 0.35
 
+
 def _split(colour: int) -> Tuple[int, float, float, float]:
     alpha = (colour >> 24) & 0xFF
     red = ((colour >> 16) & 0xFF) / 255.0
@@ -16,6 +18,7 @@ def _split(colour: int) -> Tuple[int, float, float, float]:
     hue, saturation, value = colorsys.rgb_to_hsv(red, green, blue)
     return alpha, hue, saturation, value
 
+
 def _join(alpha: int, hue: float, saturation: float, value: float) -> int:
     red, green, blue = colorsys.hsv_to_rgb(hue % 1.0, _clamp(saturation), _clamp(value))
     return ((alpha & 0xFF) << 24
@@ -23,8 +26,10 @@ def _join(alpha: int, hue: float, saturation: float, value: float) -> int:
             | int(round(green * 255)) << 8
             | int(round(blue * 255)))
 
+
 def _clamp(value: float) -> float:
     return 0.0 if value < 0.0 else (1.0 if value > 1.0 else value)
+
 
 def captures(colour: int, reference: int) -> bool:
     if colour & 0xFFFFFF == reference & 0xFFFFFF:
@@ -39,6 +44,7 @@ def captures(colour: int, reference: int) -> bool:
     apart = abs(hue - ref_hue)
     apart = min(apart, 1.0 - apart) * 360.0
     return apart <= HUE
+
 
 def map_colour(colour: int, reference: int, accent: int) -> int:
     if reference == accent or not captures(colour, reference):

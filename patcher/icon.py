@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from typing import List, Optional
@@ -8,6 +9,7 @@ from .arsc import Arsc, Value
 from .axml import Axml, TYPE_REFERENCE
 
 COLOUR_TYPES = (0x1C, 0x1D, 0x1E, 0x1F)
+
 
 class Icon:
 
@@ -20,10 +22,12 @@ class Icon:
         self.raster = raster
         self._written = set()
 
+
     def bitmap(self, size: int) -> bytes:
         if size not in self._scaled:
             self._scaled[size] = png.encode(self.master.resized(size))
         return self._scaled[size]
+
 
     def replace(self, res_id: int) -> None:
         for value in self.arsc.values(res_id):
@@ -113,6 +117,7 @@ class Icon:
                 self.log.append("    <%s> 0x%08x: not a file" % (layer, res_id))
                 continue
             self._replace_file(path, value, layer)
+
 
 def replace_everywhere(apk: Apk, arsc: Arsc, manifest: Axml, master_png: bytes, raster=None) -> List[str]:
     from . import manifest as manifest_module

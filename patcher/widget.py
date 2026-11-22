@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 from typing import List
@@ -10,8 +11,8 @@ XML_PACKAGE = 0x32
 LAYOUT_ID = (LAYOUT_PACKAGE << 24) | (1 << 16)
 XML_ID = (XML_PACKAGE << 24) | (1 << 16)
 
-LAYOUT_PATH = "res/margyt/widget_layout.xml"
-XML_PATH = "res/margyt/widget_info.xml"
+LAYOUT_PATH = "res/airtok/widget_layout.xml"
+XML_PATH = "res/airtok/widget_info.xml"
 
 VIEW_ID = 0x01020000
 
@@ -20,8 +21,10 @@ TYPE_INT_DEC = 0x10
 TYPE_INT_HEX = 0x11
 DP = 1
 
+
 def _dp(value: int) -> int:
     return (value << 8) | DP
+
 
 def _document(element: str, attributes: List[tuple]) -> bytes:
     document = Axml(StringPool([], StringPool.UTF8, b"", []), [], [])
@@ -38,6 +41,7 @@ def _document(element: str, attributes: List[tuple]) -> bytes:
     document.pending = []
     return document.build()
 
+
 def layout_xml() -> bytes:
     return _document("ImageView", [
         ("id", axml_module.TYPE_REFERENCE, VIEW_ID),
@@ -45,6 +49,7 @@ def layout_xml() -> bytes:
         ("layout_height", TYPE_INT_DEC, 0xFFFFFFFF),
         ("scaleType", TYPE_INT_DEC, 6),
     ])
+
 
 def info_xml() -> bytes:
     return _document("appwidget-provider", [
