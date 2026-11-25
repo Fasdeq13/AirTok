@@ -52,6 +52,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -59,26 +60,30 @@ import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
 
-public final class Main extends TtcuzPlugin {
 
+
+
+
+public final class Main extends TtcuzPlugin {
+    
     public static volatile boolean enabled = true;
     static Main instance;
     final WeakHashMap<EditText, InputTracker> inputs = new WeakHashMap<EditText, InputTracker>();
     Config config = Config.DEFAULT;
-
+    
     Config saverConfig = Config.DEFAULT;
     Config calmConfig = Config.DEFAULT;
     boolean ecoOn = true;
     int ecoLevel;
     long ecoChecked;
     SettingsScreen settingsScreen;
-
+    
     boolean sendSparks = true;
     static final long SEND_WINDOW_MS = 700L;
     final WeakHashMap<View, Boolean> sendViews = new WeakHashMap<View, Boolean>();
     float[] sendPoint;
     long sendUntil;
-
+    
     int sendPreset = 1;
     int sendPalette = 0;
     int sendAmount = 4;
@@ -86,7 +91,7 @@ public final class Main extends TtcuzPlugin {
     int sendShape = 0;
     int sendSwirl = 100;
     int sendDir = 0;
-
+    
     int sendMotion = 0;
     int sendDuration = 600;
     int sendArc = 0;
@@ -129,6 +134,7 @@ public final class Main extends TtcuzPlugin {
         instance = null;
     }
 
+    
     public Config configFor(View view) {
         if (!ecoOn || view == null) {
             return config;
@@ -179,7 +185,7 @@ public final class Main extends TtcuzPlugin {
         try {
             Strings.setMode(ttcuz().prefs().getInt("lang", 0));
         } catch (Throwable ignored) {
-
+            
         }
         ArrayList<InputTracker> list = new ArrayList<InputTracker>(inputs.values());
         for (int i = 0; i < list.size(); i++) {
@@ -190,6 +196,7 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
+    
     @Override
     public boolean onOpenSettings(Activity activity) {
         if (activity == null) {
@@ -244,6 +251,7 @@ public final class Main extends TtcuzPlugin {
     long accentTime;
     int accentValue;
 
+    
     public int accentColor() {
         long now = SystemClock.uptimeMillis();
         if (accentTime == 0L || now - accentTime > 1000L) {
@@ -253,6 +261,7 @@ public final class Main extends TtcuzPlugin {
         return accentValue;
     }
 
+    
     @Override
     public void onScreen(Activity activity, ViewGroup content) {
         if (activity != null) {
@@ -271,6 +280,7 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
+    
     @Override
     public void onView(View view) {
         if (view instanceof EditText) {
@@ -279,6 +289,7 @@ public final class Main extends TtcuzPlugin {
         watchSend(view);
     }
 
+    
     void watchFocus(Activity activity) {
         if (focusWatchers.containsKey(activity)) {
             return;
@@ -311,6 +322,7 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
+    
     void watchSendNear(View edit) {
         android.view.ViewParent up = edit.getParent();
         for (int i = 0; i < 3 && up instanceof ViewGroup && ((ViewGroup) up).getParent() instanceof ViewGroup; i++) {
@@ -339,6 +351,8 @@ public final class Main extends TtcuzPlugin {
         }
     }
 
+    
+    
     void watchSendAll(ViewGroup root) {
         if (root == null) return;
         List<View> list = ttcuz().views(root, View.class);
@@ -350,7 +364,7 @@ public final class Main extends TtcuzPlugin {
     void watchSend(View view) {
         if (view == null || sendViews.containsKey(view) || !isSendButton(view)) return;
         sendViews.put(view, Boolean.TRUE);
-
+        
         final View.OnTouchListener previous = existingTouchListener(view);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -369,7 +383,7 @@ public final class Main extends TtcuzPlugin {
             String text = description.toString().toLowerCase();
             if (text.contains("send") || text.contains("отправ")) return true;
         }
-
+        
         try {
             if (view.getId() != View.NO_ID && view.getResources() != null) {
                 String name = view.getResources().getResourceEntryName(view.getId());
@@ -379,7 +393,7 @@ public final class Main extends TtcuzPlugin {
                 }
             }
         } catch (Throwable ignored) {
-
+            
         }
         return false;
     }
@@ -408,6 +422,7 @@ public final class Main extends TtcuzPlugin {
         sendUntil = SystemClock.uptimeMillis() + SEND_WINDOW_MS;
     }
 
+    
     public float[] takeSendPoint() {
         float[] point = sendPoint;
         sendPoint = null;

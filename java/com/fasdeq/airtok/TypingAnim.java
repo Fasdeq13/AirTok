@@ -22,6 +22,15 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
+
+
+
+
+
+
+
+
+
 public final class TypingAnim {
 
     static final String ON = "typing_anim", BLUR = "typing_anim_blur", SLIDE = "typing_anim_slide",
@@ -36,7 +45,7 @@ public final class TypingAnim {
 
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
-        return context == null ? null : context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return context == null ? null : context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 
     static boolean on(String key) {
@@ -91,15 +100,18 @@ public final class TypingAnim {
         return new String[] {Local.of("мягкая"), Local.of("пружина"), Local.of("резкая"), Local.of("выскок")}[curve()];
     }
 
+    
     static long duration() {
         long base = DURATIONS[speed()];
         return curve() == 3 ? base * 3 / 2 : base;
     }
 
+    
     static long leaving() {
         return DURATIONS[speed()];
     }
 
+    
     static float glide() {
         return TAU[speed()];
     }
@@ -121,6 +133,9 @@ public final class TypingAnim {
         }
     }
 
+    
+
+    
     static final class Look {
         boolean blur, slide, scale, rotate;
 
@@ -144,6 +159,10 @@ public final class TypingAnim {
         return known;
     }
 
+    
+
+
+
     static void arrive(Canvas canvas, Paint paint, String letter, float x, float y, float size, float t, float tilt, Look look, int alpha) {
         float e = ease(t);
         float calm = Math.max(0f, Math.min(1f, t * 3.2f));
@@ -164,6 +183,7 @@ public final class TypingAnim {
         paint.setAlpha(alpha);
     }
 
+    
     static void depart(Canvas canvas, Paint paint, String letter, float x, float y, float size, float t, Look look, int alpha) {
         float e = 1f - (1f - t) * (1f - t);
         float width = paint.measureText(letter);
@@ -178,6 +198,8 @@ public final class TypingAnim {
         paint.setMaskFilter(null);
         paint.setAlpha(alpha);
     }
+
+    
 
     static void attach(final Activity activity) {
         if (Version.LITE) return;
@@ -239,6 +261,9 @@ public final class TypingAnim {
         }
     }
 
+    
+
+    
     private static final class Pop {
         final ForegroundColorSpan clear = new ForegroundColorSpan(0);
         final long began;
@@ -325,6 +350,7 @@ public final class TypingAnim {
             }
         }
 
+        
         void finish(Pop pop) {
             pops.remove(pop);
             Editable text = view.getText();
@@ -403,6 +429,9 @@ public final class TypingAnim {
             if (again) view.postInvalidateOnAnimation();
         }
 
+        
+
+
         private boolean cursor(Canvas canvas, long now, Layout layout) {
             int from = view.getSelectionStart(), to = view.getSelectionEnd();
             if (to < 0 || from != to) return false;
@@ -429,7 +458,7 @@ public final class TypingAnim {
                 moved = now;
             }
             boolean going = Math.abs(goalX - x) > 0.3f || Math.abs(goalY - y) > 0.3f;
-
+            
             float idle = (now - moved) / 1000f;
             boolean shown = going || idle < 0.5f || ((int) ((idle - 0.5f) / 0.5f)) % 2 == 0;
             if (shown) {

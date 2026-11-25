@@ -5,11 +5,31 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class FlagGuard {
 
     private FlagGuard() {}
 
-    private static final String FILE = "flagguard_margyt";
+    
+    
+    private static final String FILE = "flagguard_airtok";
     private static final String STARTS = "starts";
     private static final int TOO_MANY = 3;
     private static final long LASTED = 8000L;
@@ -18,8 +38,10 @@ final class FlagGuard {
     private static volatile int countedFrom;
     private static volatile boolean counted;
 
+    
     private static volatile int answer;
 
+    
     static boolean allows() {
         int known = answer;
         if (known != 0) return known == 2;
@@ -36,7 +58,7 @@ final class FlagGuard {
             if (context.getPackageName().equals(processName())) {
                 counting = prefs;
                 countedFrom = starts;
-
+                
                 final Thread.UncaughtExceptionHandler before = Thread.getDefaultUncaughtExceptionHandler();
                 Thread.setDefaultUncaughtExceptionHandler((thread, error) -> {
                     count();
@@ -50,6 +72,7 @@ final class FlagGuard {
         }
     }
 
+    
     static void shown() {
         final SharedPreferences prefs = counting;
         if (prefs == null || counted) return;
@@ -62,7 +85,7 @@ final class FlagGuard {
         SharedPreferences prefs = counting;
         if (prefs == null || counted) return;
         counted = true;
-
+        
         try { prefs.edit().putInt(STARTS, countedFrom + 1).commit(); } catch (Throwable ignored) { }
     }
 
@@ -70,6 +93,7 @@ final class FlagGuard {
         return answer == 1;
     }
 
+    
     static void again() {
         answer = 2;
         Context context = AirTok.context();

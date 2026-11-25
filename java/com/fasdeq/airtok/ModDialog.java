@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 final class ModDialog {
     static final class Builder {
         private final Context context;
@@ -43,7 +44,7 @@ final class ModDialog {
             if (message != null) panel.text(message.toString());
             if (content != null) panel.view(content);
             if (choices != null) {
-
+                
                 panel.section(null);
                 for (int i = 0; i < choices.length; i++) {
                     final int index = i;

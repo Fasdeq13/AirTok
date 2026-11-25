@@ -37,7 +37,7 @@ final class FrameCapture {
    else{bitmap.recycle();busy=false;Screen.say(Text.FRAME_NOT_AVAILABLE);}
   },new android.os.Handler(android.os.Looper.getMainLooper()));
  }
-
+ 
  private static void copyWindow(View source,View player,Bitmap bitmap,String aid){
   try{
    if(android.os.Build.VERSION.SDK_INT<26)throw new IllegalStateException("Window PixelCopy unavailable");

@@ -6,6 +6,23 @@ import com.ss.android.ugc.aweme.IAccountUserService;
 import com.ss.android.ugc.aweme.profile.model.User;
 import com.ss.android.ugc.profile.platform.base.data.UserProfileInfo;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Account {
 
     private Account() {}
@@ -19,12 +36,7 @@ public final class Account {
     private static volatile String id;
     private static volatile String activeId;
     static String activeId(){return activeId;}
-    public static String liveId(){
-        if (activeId != null) return activeId;
-        String saved = id();
-        if (numeric(saved)) return saved;
-        return null;
-    }
+    public static String liveId(){return activeId;}
     private static volatile String secId;
     private static volatile String profileName;
     private static volatile String profileHandle;
@@ -35,10 +47,12 @@ public final class Account {
     private static String currentUserUid;
     private static long currentUserCapturedAt;
 
+    
+
     public static String getCurUserId(IAccountUserService service) {
         if (service == null) return null;
         String answer = service.getCurUserId();
-
+        
         try {
             if (answer != null && answer.equals(activeId)) return answer;
             activeId=numeric(answer) ? answer : null;
@@ -48,10 +62,12 @@ public final class Account {
         return answer;
     }
 
+    
     private static final long LOOK_AGAIN = 1000L;
     private static volatile String lookedUid;
     private static volatile long lookedAt;
 
+    
     static boolean numeric(String uid) {
         if (uid == null || uid.length() == 0 || uid.length() > 24) return false;
         for (int i = 0; i < uid.length(); i++) {
@@ -61,6 +77,7 @@ public final class Account {
         return true;
     }
 
+    
     public static User getCurUser(IAccountUserService service) {
         if (service == null) return null;
         User user = service.getCurUser();
@@ -68,7 +85,9 @@ public final class Account {
             if (user == null) {activeId=null;lookedUid=null;AccountAppearance.select(null);return null;}
             String uid = user.getUid();
             long now = android.os.SystemClock.uptimeMillis();
-
+            
+            
+            
             if (uid != null && uid.equals(lookedUid) && now - lookedAt < LOOK_AGAIN) return user;
             lookedUid = uid;
             lookedAt = now;
@@ -98,7 +117,7 @@ public final class Account {
     }
 
     private static void observationFailed(Throwable error) {
-
+        
         try { Diary.note("account observation failed: " + error.getClass().getSimpleName()); }
         catch (Throwable ignored) { }
     }
@@ -124,12 +143,14 @@ public final class Account {
         if (numeric) publishPending();
     }
 
+    
     public static void rememberProfile(User user) {
         if (user == null) return;
         try { rememberProfile(user, user.getUid(), user.getNickname()); }
         catch (Throwable ignored) { }
     }
 
+    
     public static void rememberProfile(UserProfileInfo user) {
         if (user == null) return;
         if(user.getUid()!=null && user.getUid().equals(activeId) && currentUserUid!=null
@@ -197,6 +218,7 @@ public final class Account {
         } catch (Throwable ignored) { }
     }
 
+    
     public static synchronized void rememberAvatar(String uid, String address) {
         if (uid == null || address == null || !uid.equals(id())) return;
         try {
@@ -224,17 +246,12 @@ public final class Account {
     }
 
     private static String withoutPrivateUse(String value) {
-        if (value == null) return null;
         StringBuilder clean = new StringBuilder(value.length());
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
-            if (!Badges.isPrivate(c)) clean.append(c);
+            if (c!='\u2063' && c!='\u2064' && !(c >= '\uE000' && c <= '\uF8FF')) clean.append(c);
         }
-        String res = clean.toString();
-        while (res.endsWith(" ") || res.endsWith("\u00A0") || res.endsWith("\u2009")) {
-            res = res.substring(0, res.length() - 1);
-        }
-        return res;
+        return clean.toString();
     }
 
     public static String profileName() { return profileValue(KEY_PROFILE_NAME, profileName); }
@@ -250,6 +267,9 @@ public final class Account {
         return saved;
     }
 
+    
+
+    
     public static String id() {
         String known = id;
         if (known != null) return known;
@@ -258,6 +278,7 @@ public final class Account {
         return known;
     }
 
+    
     public static String secId() {
         String known = secId;
         if (known != null) return known;
@@ -278,6 +299,6 @@ public final class Account {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
     }
 }

@@ -4,12 +4,25 @@ import android.content.SharedPreferences;
 
 import java.lang.reflect.Method;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Seekbar {
 
     private Seekbar() {}
 
     public static final String KEY = "seekbar_always";
 
+    
     private static final int ALWAYS = 0;
 
     private static volatile Boolean cached;
@@ -18,7 +31,7 @@ public final class Seekbar {
 
     static void reloadSettings(){cached=null;setEnabled(isEnabled());}
     public static boolean isEnabled() {
-
+        
         return true;
     }
 
@@ -41,8 +54,10 @@ public final class Seekbar {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
     }
+
+    
 
     public static void setSeekBarShowType(Object view, int type) {
         if (view == null) return;
@@ -60,7 +75,8 @@ public final class Seekbar {
             }
             setter.invoke(view, Integer.valueOf(type));
         } catch (Throwable error) {
-
+            
+            
             Diary.note("seekbar: " + error);
         }
     }

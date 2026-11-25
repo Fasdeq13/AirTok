@@ -8,6 +8,22 @@ import com.ss.android.ugc.aweme.feed.model.FeedItemList;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Feed {
 
     private Feed() {}
@@ -21,7 +37,7 @@ public final class Feed {
     private static volatile Boolean cached;
 
     public static boolean isEnabled() {
-
+        
         return true;
     }
 
@@ -31,8 +47,10 @@ public final class Feed {
         if (prefs != null) prefs.edit().putBoolean(KEY, enabled).apply();
     }
 
-    public static boolean hides(String key) {
+    
 
+    public static boolean hides(String key) {
+        
         if (KEY_SUGGESTIONS.equals(key)) return false;
         SharedPreferences prefs = prefs();
         return prefs != null && prefs.getBoolean(key, false);
@@ -43,13 +61,45 @@ public final class Feed {
         if (prefs != null) prefs.edit().putBoolean(key, on).apply();
     }
 
+    
     private static final int LIVE = 101;
 
     private static boolean isLive(Aweme post) {
+        if (post == null) return false;
         try {
-            if (post.getAwemeType() == LIVE) return true;
+            int type = post.getAwemeType();
+            if (type == LIVE || type == 61 || type == 66 || type == 1001) return true;
             if (post.getLiveId() != 0) return true;
-            return post.getRoomFeedCellStruct() != null;
+            if (post.getRoomFeedCellStruct() != null) return true;
+            if (NativeRead.get(post, "getRoom") != null) return true;
+            if (NativeRead.get(post, "getStreamUrlModel") != null) return true;
+            if (NativeRead.get(post, "getLiveType") != null) return true;
+            if (Boolean.TRUE.equals(NativeRead.get(post, "isLive"))) return true;
+            Object author = NativeRead.get(post, "getAuthor");
+            if (author != null && (NativeRead.number(NativeRead.get(author, "roomId")) > 0 || Boolean.TRUE.equals(NativeRead.get(author, "isLive")))) return true;
+            String className = post.getClass().getName().toLowerCase(java.util.Locale.ROOT);
+            if (className.contains("live") || className.contains("room")) return true;
+            return false;
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
+
+    private static boolean isLiveItem(Object item) {
+        if (item == null) return false;
+        try {
+            String className = item.getClass().getName().toLowerCase(java.util.Locale.ROOT);
+            if (className.contains("live") || className.contains("room")) return true;
+            if (NativeRead.get(item, "getRoomFeedCellStruct") != null) return true;
+            if (NativeRead.get(item, "getRoom") != null) return true;
+            if (NativeRead.get(item, "getLiveInfo") != null) return true;
+            if (NativeRead.get(item, "getStreamUrlModel") != null) return true;
+            if (Boolean.TRUE.equals(NativeRead.get(item, "isLive"))) return true;
+            Object type = NativeRead.get(item, "getLiveType");
+            if (type != null) return true;
+            Object cellType = NativeRead.get(item, "getCellType");
+            if (cellType instanceof Number && ((Number) cellType).intValue() == LIVE) return true;
+            return false;
         } catch (Throwable ignored) {
             return false;
         }
@@ -63,6 +113,13 @@ public final class Feed {
         }
     }
 
+    
+
+
+
+
+
+
     private static boolean mine(Aweme post) {
         try {
             String me = Account.id();
@@ -73,6 +130,7 @@ public final class Feed {
         }
     }
 
+    
     private static boolean outOfDates(Aweme post) {
         try {
             if (mine(post) || isLive(post) || advert(post)) return false;
@@ -82,8 +140,16 @@ public final class Feed {
         }
     }
 
+    
     private static boolean unwanted(Object item, boolean ads, boolean live, boolean photos) {
-        if (!(item instanceof Aweme)) return false;
+        if (item == null) return false;
+        if (!(item instanceof Aweme)) {
+            if (ads && (NativeRead.get(item, "getPreciseAd") != null || NativeRead.get(item, "getAiAdCard") != null)) return true;
+            if (live && isLiveItem(item)) return true;
+            Object inner = NativeRead.get(item, "getAweme");
+            if (inner instanceof Aweme) return unwanted(inner, ads, live, photos);
+            return false;
+        }
         Aweme post = (Aweme) item;
         if (mine(post)) return false;
         try {
@@ -97,88 +163,23 @@ public final class Feed {
         return false;
     }
 
-    private static final String[] PROMO_KEYWORDS = {
-        "мусордроп", "musordrop", "топскин", "topskin", "гейзервпн", "geyservpn", "gayservpn",
-        "кабура", "cabura", "нвути", "nvuti", "драгонмани", "dragonmoney",
-        "1win", "1xwin", "1xbet", "1хбет", "melbet", "мелбет", "mostbet", "мостбет", "leonbets",
-        "standoffdrop", "стандоффдроп", "ggstandoff", "ггстандофф", "bullsdrop", "булсдроп",
-        "forcedrop", "форсдроп", "csfail", "ксфейл", "csgorun", "ксгоран", "csgo-run",
-        "csdrop", "easydrop", "изидроп", "case-battle", "кейсбатл",
-        "промокод на скины", "промокод на депозит", "халявные скины",
-        "халява стендофф", "вайпервпн", "vipervpn", "hitvpn", "хитвпн",
-        "вавада", "vavada", "up-x", "апх", "джойказино", "joycasino", "покердом", "pokerdom",
-        "pin-up", "пинап", "бетсити", "фонбет", "лигаставок", "винлайн", "winline", "олимпбет", "olimpbet",
-        "parimatch", "париматч", "фриспины", "бонус за регистрацию", "промокод в шапке",
-        "скинбокс", "skinbox", "скинстейбл", "skinstable", "кейсы стендофф", "рулетка кс"
-    };
+    
 
-    private static final String[] CLEAN_PROMO_KEYWORDS;
-    static {
-        CLEAN_PROMO_KEYWORDS = new String[PROMO_KEYWORDS.length];
-        for (int i = 0; i < PROMO_KEYWORDS.length; i++) {
-            CLEAN_PROMO_KEYWORDS[i] = PROMO_KEYWORDS[i].replace(" ", "").replace("-", "").replace("_", "");
-        }
-    }
-
-    static boolean isPromoSpam(Aweme post) {
-        try {
-            String desc = NativeRead.string(NativeRead.get(post, "getDesc"));
-            if (desc.length() > 0) {
-                String lower = desc.toLowerCase(java.util.Locale.ROOT).replace(" ", "").replace("-", "").replace("_", "");
-                for (String cleanKw : CLEAN_PROMO_KEYWORDS) {
-                    if (lower.contains(cleanKw)) return true;
-                }
-            }
-            Object author = NativeRead.get(post, "getAuthor");
-            if (author != null) {
-                String nick = NativeRead.string(NativeRead.get(author, "getNickname"));
-                String uid = NativeRead.string(NativeRead.get(author, "getUniqueId"));
-                String text = (nick + " " + uid).toLowerCase(java.util.Locale.ROOT);
-                for (String kw : PROMO_KEYWORDS) {
-                    if (text.contains(kw)) return true;
-                }
-            }
-        } catch (Throwable ignored) {}
-        return false;
-    }
 
     static boolean advert(Object post){
         if(!(post instanceof Aweme))return false;
-        Aweme aweme = (Aweme) post;
-        try {
-            if (aweme.isAd()) return true;
-            if (Boolean.TRUE.equals(NativeRead.field(post, "_isAd"))) return true;
-            if (Boolean.TRUE.equals(NativeRead.get(post, "isSoftAd"))) return true;
-            Object rawAd = NativeRead.get(post, "getAwemeRawAd");
-            if (rawAd != null && Boolean.TRUE.equals(NativeRead.get(rawAd, "isAd"))) return true;
-            if (isPromoSpam(aweme)) return true;
-        } catch (Throwable ignored) {
-            return aweme.isAd();
-        }
-        return false;
+        return ((Aweme)post).isAd() || Boolean.TRUE.equals(NativeRead.field(post,"_isAd"));
     }
-
+    
     public static List withoutAds(List items){
-        if(items==null || !isEnabled())return items;
-        try {
-            ArrayList kept=null;
-            for(int i=0;i<items.size();i++){
-                Object item=items.get(i);
-                Object post=item instanceof Aweme?item:NativeRead.get(item,"getAweme");
-                boolean card=!(item instanceof Aweme) && (NativeRead.get(item,"getPreciseAd")!=null || NativeRead.get(item,"getAiAdCard")!=null);
-                if(advert(post) || card){if(kept==null){kept=new ArrayList(items.size());kept.addAll(items.subList(0,i));}}
-                else if(kept!=null)kept.add(item);
-            }
-            if(kept!=null && kept.isEmpty() && !items.isEmpty()) return items;
-            return kept==null?items:kept;
-        } catch (Throwable ignored) {
-            return items;
-        }
+        return without(items);
     }
     public static List searchItems(com.ss.android.ugc.aweme.search.pages.result.topsearch.core.model.SearchMixFeedList page){
+        Ghost.recordActivity();
         if(page==null)return null;
         List given=page.mItems,kept=withoutAds(given);
-
+        
+        
         int had=given==null?-1:given.size(),left=kept==null?-1:kept.size();
         if(had<=0||left!=had)Diary.note("search: a page of "+(had<0?"nothing at all":had+" from TikTok")+(left!=had?", "+left+" after the mod":""));
         return kept;
@@ -189,12 +190,13 @@ public final class Feed {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return null;
-            return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
+            return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }
     }
 
+    
     static boolean socialRepost(Object post){return NativeRead.get(post,"getUpvoteReason")!=null || NativeRead.get(post,"getUpvoteInfo")!=null || NativeRead.get(post,"getUpvotePreload")!=null;}
     static boolean suggestion(Object post){
         if(NativeRead.number(NativeRead.get(post,"getRecommendCardType"))<=0)return false;
@@ -202,8 +204,19 @@ public final class Feed {
         return true;
     }
 
+    
     private static int dropped;
     private static long reportedAt;
+
+    
+
+    
+
+
+
+
+
+
 
     public static List getItems(FeedItemList page) {
         if (page == null) return null;
@@ -213,6 +226,7 @@ public final class Feed {
         return out;
     }
 
+    
     private static List without(List items) {
         if (items == null) return items;
         boolean ads=isEnabled();SharedPreferences options=prefs();
@@ -221,7 +235,7 @@ public final class Feed {
         boolean stories=options!=null && options.getBoolean(KEY_STORIES,false);
         boolean suggestions=options!=null && options.getBoolean(KEY_SUGGESTIONS,false);
         boolean authors=!FeedBlacklist.items().isEmpty() || !FeedBlacklist.cards().isEmpty();
-
+        
         boolean others=!Tags.all().isEmpty();
         boolean dated=FeedDates.active();
         if (!ads && !live && !photos && !stories && !suggestions && !authors && !others && !dated) {
@@ -242,10 +256,6 @@ public final class Feed {
                 index++;
             }
             if(kept==null)return Plugins.feed(items);
-            if(kept.isEmpty() && !items.isEmpty()){
-                Diary.note("feed: safety fallback, kept was empty, returning original items");
-                return Plugins.feed(items);
-            }
             synchronized(Feed.class) {
                 dropped+=out;long now=System.currentTimeMillis();
                 if(now-reportedAt>=1000L){reportedAt=now;Diary.note("feed: " + out + " left out, " + dropped + " so far");}

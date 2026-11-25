@@ -1,5 +1,11 @@
 package com.fasdeq.airtok;
 
+
+
+
+
+
+
 final class GlassShader {
     private GlassShader() {}
     static final String LENS = """
@@ -7,23 +13,23 @@ final class GlassShader {
             uniform shader content;
             uniform float  margin;
             uniform float2 viewSize;
-            uniform float4 shape1;    // 真实主形状（触摸凸起的尺度用它）
+            uniform float4 shape1;
             uniform float4 radii1;
-            uniform float4 shape1L;   // 主形状：平边方向延伸到视图外，那条边就没有斜面（视图矩形外硬切）
-            uniform float  rimSoft;   // 边缘柔化：折射带内沿法线方向的抹匀宽度（px，0 = 关）
+            uniform float4 shape1L;
+            uniform float  rimSoft;
             uniform float4 shape2;
             uniform float  radius2;
             uniform float  blendK;
             uniform float  bevel;
             uniform float  refractPx;
-            uniform float  falloff;      // 折射剖面：> 0 为逆幂（引力透镜）衰减指数，0 = 平方斜面
-            uniform float  refractDir;   // -1 向内采样（默认，与 iOS 一致：内侧压缩镜像）/ +1 向外（可选的凸透镜模式）
-            uniform float2 sampleLo;     // 采样安全区（录制内容坐标）：区外没有内容，读到的是透明黑
+            uniform float  falloff;
+            uniform float  refractDir;
+            uniform float2 sampleLo;
             uniform float2 sampleHi;
             uniform float  dispersion;
             uniform float2 lightDir;
             uniform float  specStrength;
-            uniform float  rimBandMax;   // 贴边高光带宽度上限（px，小控件按短边收）
+            uniform float  rimBandMax;
             uniform float4 tintColor;
             uniform float  adaptiveTint;
             uniform float4 glassTint;
@@ -181,6 +187,6 @@ final class GlassShader {
                 col = clamp(col, float3(0.0), float3(1.0));
                 return half4(half3(col * cov), half(cov));
             }
-
+        
 """;
 }

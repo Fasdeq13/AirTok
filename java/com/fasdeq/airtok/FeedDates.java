@@ -3,10 +3,19 @@ package com.fasdeq.airtok;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
+
+
+
+
+
+
+
 final class FeedDates {
 
     private FeedDates() {}
 
+    
     static final int[] HOURS = {0, 6, 12, 24, 48, 72, 120, 168};
 
     private static final String KEY = "date_filter_hours";
@@ -34,6 +43,7 @@ final class FeedDates {
 
     static boolean active() { return hours() > 0; }
 
+    
     static boolean leavesOut(long created) {
         int limit = hours();
         if (limit <= 0 || created <= 0) return false;
@@ -41,6 +51,7 @@ final class FeedDates {
         return System.currentTimeMillis() / 1000L - created > limit * 3600L;
     }
 
+    
     static String describe(int value) {
         if (value <= 0) return Text.DATE_FILTER_OFF;
         if (value < 24) return Text.dateFilterRecent(value, 0);
@@ -49,6 +60,6 @@ final class FeedDates {
 
     private static SharedPreferences prefs() {
         Context c = AirTok.context();
-        return c == null ? null : c.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return c == null ? null : c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 }

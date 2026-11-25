@@ -8,11 +8,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+
+
+
+
 public final class Gradient {
 
+    
     public static final int FEWEST = 2;
     public static final int MOST = 5;
 
+    
     private static final int[] SUGGESTED = {0xFFFF6FA5, 0xFF7B61FF};
 
     private Gradient() {}
@@ -21,12 +30,14 @@ public final class Gradient {
         void said(boolean ok, String trouble);
     }
 
+    
     public static int[] mine() {
         String uid = Account.id();
         int[] have = uid == null ? null : Looks.of(uid);
         return have == null ? null : have.clone();
     }
 
+    
     public static List<Integer> starting() {
         List<Integer> out = new ArrayList<Integer>();
         int[] have = mine();
@@ -72,6 +83,7 @@ public final class Gradient {
         });
     }
 
+    
     public static void drop(final Said then) {
         final String uid = Account.id();
         final String token = Mine.token();
@@ -103,6 +115,7 @@ public final class Gradient {
         return String.format("%06X", colour & 0xFFFFFF);
     }
 
+    
     public static int from(int hue, int saturation, int value) {
         return Color.HSVToColor(new float[]{hue % 360, saturation / 100f, value / 100f});
     }

@@ -11,6 +11,9 @@ public final class Watch implements Application.ActivityLifecycleCallbacks {
     private static volatile java.lang.ref.WeakReference<Activity> here =
             new java.lang.ref.WeakReference<Activity>(null);
 
+    private static volatile int startedCount = 0;
+    private static volatile long appWentBackgroundAt;
+
     public static Activity here() {
         return here.get();
     }
@@ -23,35 +26,35 @@ public final class Watch implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    private static int startedCount = 0;
+    @Override
+    public void onActivityStarted(Activity activity) {
+        if (startedCount == 0) {
+            long timeoutMs = AppLock.getTimeoutMillis(activity);
+            if (appWentBackgroundAt > 0 && (System.currentTimeMillis() - appWentBackgroundAt >= timeoutMs)) {
+                AppLock.lock();
+            }
+            appWentBackgroundAt = 0;
+        }
+        startedCount++;
+        SplashCustom.started(activity);
+        if (!AppLock.isUnlocked() && !AppLock.isWithinTimeout(activity) && AppLock.isEnabled(activity)) {
+            AppLock.mute(activity);
+        }
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+        startedCount--;
+        if (startedCount <= 0) {
+            startedCount = 0;
+            appWentBackgroundAt = System.currentTimeMillis();
+            AppLock.onAppBackground(activity);
+        }
+    }
 
     @Override
     public void onActivityResumed(Activity activity) {
         here = new java.lang.ref.WeakReference<Activity>(activity);
-        if (activity != null) {
-            try {
-                android.content.SharedPreferences sp = activity.getSharedPreferences("airtok_first_glass", 0);
-                if (!sp.getBoolean("glass_dialog_shown", false)) {
-                    sp.edit().putBoolean("glass_dialog_shown", true).apply();
-                    activity.getWindow().getDecorView().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (activity.isFinishing()) return;
-                                new ModDialog.Builder(activity)
-                                        .setTitle("Liquid Glass")
-                                        .setMessage("Включен режим Liquid Glass, если он кажется вам не привычным вы можете его выключить в настройках")
-                                        .setPositiveButton("Понятно", null)
-                                        .show();
-                            } catch (Throwable ignored) {}
-                        }
-                    }, 1800);
-                }
-            } catch (Throwable ignored) {}
-        }
-        try {
-            AppLock.check(activity);
-        } catch (Throwable ignored) {}
         try {
             Rate.apply(activity);
         } catch (Throwable ignored) {
@@ -64,8 +67,6 @@ public final class Watch implements Application.ActivityLifecycleCallbacks {
             Tester.mark(activity);
         } catch (Throwable ignored) {
         }
-        Lag.frames(activity);
-
         if (!Version.LITE) {
             TabBadges.attach(activity);
             NavBar.attach(activity);
@@ -79,27 +80,25 @@ public final class Watch implements Application.ActivityLifecycleCallbacks {
             MotionBlur.attach(activity);
             SponsorBlock.attach(activity);
         }
-        Screamer.attach(activity);
-        FakeLag.resumed(activity);
+        AppLock.check(activity);
+        SplashCustom.resumed(activity);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        FakeLag.paused(activity);
         if (!Version.LITE) Ghost.paused(activity);
         if (here.get() == activity) {
             here = new java.lang.ref.WeakReference<Activity>(null);
         }
     }
 
-    @Override public void onActivityCreated(Activity activity, Bundle state) { LiteLogin.created(activity); }
-    @Override public void onActivityStarted(Activity activity) { startedCount++; }
-    @Override public void onActivityStopped(Activity activity) {
-        if (--startedCount <= 0) {
-            startedCount = 0;
-            AppLock.lock();
+    @Override public void onActivityCreated(Activity activity, Bundle state) {
+        LiteLogin.created(activity);
+        SplashCustom.created(activity);
+        if (!AppLock.isUnlocked() && AppLock.isEnabled(activity)) {
+            AppLock.mute(activity);
         }
     }
     @Override public void onActivitySaveInstanceState(Activity activity, Bundle out) {}
-    @Override public void onActivityDestroyed(Activity activity) { FakeLag.paused(activity); TextAnim.destroyed(activity); }
+    @Override public void onActivityDestroyed(Activity activity) { TextAnim.destroyed(activity); }
 }

@@ -5,20 +5,49 @@ import android.content.SharedPreferences;
 
 import org.json.JSONObject;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Proof {
 
     private Proof() {}
 
     private static final String KEY_PROVED = "proved_uid";
 
+    
+    
+    
     private static final String KEY_CODE = "proof_code";
     private static final String KEY_HOLDER = "proof_holder";
     private static final String KEY_FOR = "proof_for";
 
+    
     private static volatile String code = "";
+
+    
+
+
+
+
+
 
     private static volatile String holder = "";
 
+    
     private static volatile boolean needsName;
 
     public static boolean wantsName() {
@@ -29,6 +58,9 @@ public final class Proof {
         void then(boolean ok, String trouble);
     }
 
+    
+
+    
     public static boolean proved() {
         String uid = Account.id();
         if (uid == null || uid.length() == 0) return false;
@@ -38,12 +70,15 @@ public final class Proof {
                 && Mine.token().length() > 0;
     }
 
+    
     static void heard(boolean isProved) {
         if (isProved) return;
-
+        
+        
         forget();
     }
 
+    
     static void lost() {
         forget();
     }
@@ -58,6 +93,7 @@ public final class Proof {
         return code;
     }
 
+    
     private static synchronized void remember() {
         if (code.length() > 0) return;
         String uid = Account.id();
@@ -76,6 +112,9 @@ public final class Proof {
                 .putString(KEY_HOLDER, holder).apply();
     }
 
+    
+
+    
     public static void want(final Then then) {
         final String uid = Account.id();
         if (uid == null || uid.length() == 0) {
@@ -86,7 +125,8 @@ public final class Proof {
         Net.away("proof: code", new Runnable() {
             @Override
             public void run() {
-
+                
+                
                 Net.Said said = Net.talk(Badges.SERVER + "/prove",
                         json("uid", uid, "holder", holder));
                 if (!said.ok()) {
@@ -107,6 +147,13 @@ public final class Proof {
         });
     }
 
+    
+
+
+
+
+
+
     public static void check(final String name, final Then then) {
         final String uid = Account.id();
         if (uid == null || uid.length() == 0) {
@@ -124,7 +171,9 @@ public final class Proof {
                         : Net.talk(Badges.SERVER + "/prove/check",
                                 json("uid", uid, "holder", holder));
                 if (!said.ok()) {
-
+                    
+                    
+                    
                     mint(uid);
                     answer(then, false, trouble(said));
                     return;
@@ -153,6 +202,13 @@ public final class Proof {
             }
         });
     }
+
+    
+
+
+
+
+
 
     public static void fresh(final Then then) {
         final String uid = Account.id();
@@ -187,6 +243,7 @@ public final class Proof {
         });
     }
 
+    
     private static void mint(String uid) {
         try {
             Net.Said said = Net.talk(Badges.SERVER + "/prove",
@@ -203,6 +260,7 @@ public final class Proof {
         }
     }
 
+    
     static String clean(String name) {
         if (name == null) return "";
         String out = name.trim();
@@ -214,6 +272,7 @@ public final class Proof {
         return out.trim();
     }
 
+    
     private static String trouble(Net.Said said) {
         String what = "";
         try {
@@ -258,7 +317,7 @@ public final class Proof {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }

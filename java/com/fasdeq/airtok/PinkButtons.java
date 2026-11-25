@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+
+
+
+
 final class PinkButtons {
  private PinkButtons(){}
  private static final int TAG=0x50494E4B;
@@ -16,7 +21,10 @@ final class PinkButtons {
    if(decor.getTag(TAG)!=null)return;
    decor.setTag(TAG,Boolean.TRUE);
    final long[] last={0L};
-
+   
+   
+   
+   
    final boolean[] moved={true};
    decor.getViewTreeObserver().addOnGlobalLayoutListener(()->moved[0]=true);
    decor.getViewTreeObserver().addOnPreDrawListener(()->{

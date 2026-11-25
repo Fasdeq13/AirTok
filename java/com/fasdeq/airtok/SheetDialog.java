@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.WindowManager;
 
+
 final class SheetDialog extends Dialog {
     private final Context owner;
     private final boolean centered;
@@ -59,7 +60,7 @@ final class SheetDialog extends Dialog {
         android.widget.FrameLayout grip=new android.widget.FrameLayout(owner);grip.setTag(Integer.valueOf(tag));
         boolean m3=!Design.frosted();
         if(m3){
-
+            
             View handle=new View(owner);
             android.graphics.drawable.GradientDrawable pill=new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(dp(2));pill.setColor((Skin.remembered(owner).text&0xFFFFFF)|0x66000000);
@@ -116,7 +117,7 @@ final class SheetDialog extends Dialog {
     }
 
     private void finishLeave(boolean cancelled) {
-
+        
         closing = false;
         if (surface != null) surface.animate().withEndAction(null).cancel();
         surface = null;
@@ -130,7 +131,7 @@ final class SheetDialog extends Dialog {
         backdrop = android.animation.ValueAnimator.ofFloat(from,to);
         backdrop.setDuration(duration);
         backdrop.addUpdateListener(a -> {
-
+            
             try {
                 if (getWindow() != null && isShowing()) getWindow().setDimAmount((Float)a.getAnimatedValue());
             } catch (IllegalArgumentException gone) {

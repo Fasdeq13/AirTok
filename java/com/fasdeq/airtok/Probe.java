@@ -2,6 +2,17 @@ package com.fasdeq.airtok;
 
 import android.os.SystemClock;
 
+
+
+
+
+
+
+
+
+
+
+
 final class Probe {
 
     private Probe() {}
@@ -24,6 +35,7 @@ final class Probe {
     private static long told;
     private static final java.util.ArrayDeque<String> RECENT = new java.util.ArrayDeque<String>();
 
+    
     static String recent() {
         synchronized (RECENT) {
             return String.join("\n", RECENT);
@@ -34,6 +46,7 @@ final class Probe {
         return ON ? System.nanoTime() : 0L;
     }
 
+    
     static void stop(int what, long started) {
         if (!ON) return;
         long took = System.nanoTime() - started;
@@ -65,8 +78,8 @@ final class Probe {
             }
         }
         if (all >= 1000000L) {
-
-            android.util.Log.e("MargyT", "in " + since + "ms the mod took "
+            
+            android.util.Log.e("AirTok", "in " + since + "ms the mod took "
                     + all / 100000L / 10f + "ms: " + line);
         }
     }

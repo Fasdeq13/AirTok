@@ -10,6 +10,19 @@ import android.widget.TextView;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class SimpleFeed {
 
     private SimpleFeed() {}
@@ -29,17 +42,18 @@ final class SimpleFeed {
         if (known != null) return known;
         Context c = AirTok.context();
         if (c == null) return false;
-        known = c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
+        known = c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
         on = known;
         return known;
     }
 
     static void set(Context context, boolean value) {
         on = value;
-        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
         if (!value) restore();
     }
 
+    
     static void attach(Activity activity) {
         if (activity == null || !activity.getClass().getName().equals("com.ss.android.ugc.aweme.main.MainActivity")) return;
         final View root = activity.getWindow().getDecorView();
@@ -75,15 +89,15 @@ final class SimpleFeed {
         String name = Names.of(view);
         if (name.length() > 0) {
             switch (name) {
-                case "uvh": top(view); return;
+                case "uvh": top(view); return;              
                 case "title_shadow": hide(view, View.INVISIBLE); return;
-                case "i_a": hide(up(view, 2), View.GONE); return;
-                case "o6r": hide(up(view, 1), View.GONE); return;
-                case "pnv": hide(up(view, 1), View.INVISIBLE); return;
+                case "i_a": hide(up(view, 2), View.GONE); return;      
+                case "o6r": hide(up(view, 1), View.GONE); return;      
+                case "pnv": hide(up(view, 1), View.INVISIBLE); return; 
                 case "videomusiccoverblock": hide(view, View.INVISIBLE); return;
                 case "desc": caption(view); return;
-                case "lje": shrink(view, RAIL, 1f, 1f); break;
-                case "bqx": shrink(view, CAPTION, 0f, 1f); break;
+                case "lje": shrink(view, RAIL, 1f, 1f); break;         
+                case "bqx": shrink(view, CAPTION, 0f, 1f); break;      
                 default: break;
             }
         }
@@ -93,13 +107,14 @@ final class SimpleFeed {
         }
     }
 
+    
     private static void top(View row) {
         if (!(row instanceof ViewGroup)) { hide(row, View.INVISIBLE); return; }
         ViewGroup group = (ViewGroup) row;
         for (int i = 0; i < group.getChildCount(); i++) {
             View child = group.getChildAt(i);
             String name = Names.of(child);
-
+            
             if ("k_5".equals(name) || "k_2".equals(name) && Dim.isConfigured()) { show(child); continue; }
             hide(child, View.INVISIBLE);
         }
@@ -135,6 +150,7 @@ final class SimpleFeed {
         if (view.getScaleY() != scale) view.setScaleY(scale);
     }
 
+    
     private static void caption(View view) {
         if (!(view instanceof TextView)) return;
         TextView text = (TextView) view;
@@ -145,7 +161,7 @@ final class SimpleFeed {
         }
         float size = was[0] * 0.9f;
         if (Math.abs(text.getTextSize() - size) > 0.5f && Math.abs(text.getTextSize() - was[0]) > 0.5f) {
-
+            
             was[0] = text.getTextSize();
             size = was[0] * 0.9f;
         }
@@ -153,6 +169,7 @@ final class SimpleFeed {
         if (text.getMaxLines() > 2) text.setMaxLines(2);
     }
 
+    
     private static void restore() {
         java.util.List<Map.Entry<View, Integer>> views;
         synchronized (hidden) { views = new java.util.ArrayList<>(hidden.entrySet()); hidden.clear(); }

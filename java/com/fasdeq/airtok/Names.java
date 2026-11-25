@@ -7,6 +7,20 @@ import android.view.View;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Names {
 
     private Names() {}
@@ -15,10 +29,12 @@ final class Names {
     private static final ConcurrentHashMap<Class<?>, String> types =
             new ConcurrentHashMap<Class<?>, String>();
 
+    
     static String of(View view) {
         if (view == null) return "";
         int id = view.getId();
-
+        
+        
         int owner = id >>> 24;
         if (owner != 0x7f && owner != 0x01) return "";
         try {
@@ -28,6 +44,7 @@ final class Names {
         }
     }
 
+    
     static String of(Resources resources, int id) {
         int owner = id >>> 24;
         if (resources == null || (owner != 0x7f && owner != 0x01)) return "";
@@ -47,6 +64,7 @@ final class Names {
         return name;
     }
 
+    
     static String type(View view) {
         Class<?> type = view.getClass();
         String known = types.get(type);

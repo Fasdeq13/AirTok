@@ -6,7 +6,7 @@ public final class Heart {
     private static void tint(android.view.View view) {
         int colour=LikeColors.colour();
         synchronized(views){Integer known=views.get(view);if(known!=null&&known.intValue()==colour)return;views.put(view,colour);}
-
+        
         if(view instanceof android.widget.ImageView)((android.widget.ImageView)view).setColorFilter(colour,android.graphics.PorterDuff.Mode.SRC_IN);
     }
     static void refresh() {
@@ -25,8 +25,17 @@ public final class Heart {
         tint(view);
     }
 
+    
+
     private static final int FLOWN=0x54544C49;
 
+    
+
+
+
+
+
+    
     private static android.view.View likeButton(android.view.View heart){
         android.view.View known=FeedRail.likeOnScreen();
         if(known!=null)return known;
@@ -56,6 +65,7 @@ public final class Heart {
         return null;
     }
 
+    
     public static void shown(android.widget.ImageView heart){
         if(heart==null)return;
         try{
@@ -103,7 +113,7 @@ public final class Heart {
         if(heart.getWidth()<=0||heart.getHeight()<=0){dispose();return;}
         final float fromW=heart.getWidth()*heart.getScaleX(),fromH=heart.getHeight()*heart.getScaleY();
         if(fromW<=0||fromH<=0){dispose();return;}
-
+        
         picture=android.graphics.Bitmap.createBitmap(heart.getWidth(),heart.getHeight(),android.graphics.Bitmap.Config.ARGB_8888);
         heart.draw(new android.graphics.Canvas(picture));
         root=heart.getRootView();
@@ -111,11 +121,11 @@ public final class Heart {
         root.getLocationInWindow(rootAt);
         heart.getLocationInWindow(at);
         like.getLocationInWindow(to);
-
+        
         final float x0=at[0]-rootAt[0]+heart.getWidth()*heart.getScaleX()/2f,y0=at[1]-rootAt[1]+heart.getHeight()*heart.getScaleY()/2f;
         final float x1=to[0]-rootAt[0]+like.getWidth()/2f,y1=to[1]-rootAt[1]+like.getHeight()*.38f;
         final float toSize=Math.min(like.getWidth(),like.getHeight())*.62f;
-
+        
         final float cx=(x0+x1)/2f-Math.abs(x1-x0)*.25f,cy=Math.min(y0,y1)-root.getHeight()*.12f;
         copy=new android.graphics.drawable.BitmapDrawable(heart.getResources(),picture);
         copy.setAlpha(Math.round(255*Math.max(.3f,heart.getAlpha())));
@@ -137,7 +147,8 @@ public final class Heart {
         flight.addListener(new android.animation.AnimatorListenerAdapter(){
             @Override public void onAnimationEnd(android.animation.Animator a){
                 removeCopy();animator=null;
-
+                
+                
                 if(disposed||!like.isAttachedToWindow()||!like.isShown())return;
                 like.animate().cancel();
                 like.animate().scaleX(1.22f).scaleY(1.22f).setDuration(110).withEndAction(()->

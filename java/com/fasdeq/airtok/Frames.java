@@ -32,25 +32,38 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Frames {
 
     private Frames() {}
 
     private static final int TAG = 0x7e0c0371, PLATE = 0x7e0c0373, WATCHED = 0x7e0c0375, PENDING = 0x7e0c0377;
-
+    
     private static final String NOBODY = "1594805258216454";
     private static final int MOST_PICTURES = 2000;
 
     public static final class Frame {
         public final String id, image, title, text;
         public final float scale, dy;
-
+        
         final Map<String, String> shapes;
         Frame(String id, String image, float scale, float dy, String title, String text, Map<String, String> shapes) {
             this.id = id; this.image = image; this.scale = scale; this.dy = dy; this.title = title; this.text = text;
             this.shapes = shapes;
         }
 
+        
         String picture() {
             String own = shapes.get(AvatarShape.chosen());
             return own != null && own.length() > 0 ? own : image;
@@ -59,13 +72,18 @@ public final class Frames {
 
     private static volatile Map<String, Frame> frames = new HashMap<>();
     private static volatile Map<String, String> worn = new HashMap<>();
-
+    
     private static final Map<String, String> pictures = new ConcurrentHashMap<>();
-
+    
     private static final java.util.Set<View> hanging = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<View, Boolean>());
     private static java.lang.ref.WeakReference<LinearLayout> lastBlock;
     private static String lastUid;
     private static int lastInk;
+
+    
+
+
+
 
     private static volatile String ownChoice;
     private static volatile String ownUid;
@@ -73,6 +91,8 @@ public final class Frames {
 
     private static volatile List<String> mine = new ArrayList<>();
     private static volatile String mineWorn = "";
+
+    
 
     static void learn(JSONObject root) {
         JSONArray list = root.optJSONArray("frames");
@@ -109,6 +129,7 @@ public final class Frames {
         new android.os.Handler(android.os.Looper.getMainLooper()).post(Frames::refresh);
     }
 
+    
     private static void refresh() {
         for (View view : new ArrayList<>(hanging)) {
             Object tag = view.getTag(TAG);
@@ -126,6 +147,7 @@ public final class Frames {
         return translated.length() > 0 ? translated : one.optString(field, "");
     }
 
+    
     public static Frame of(String uid) {
         if (uid == null) return null;
         String id = ownChoice != null && uid.equals(ownUid) ? ownChoice : worn.get(uid);
@@ -134,6 +156,7 @@ public final class Frames {
 
     static Frame byId(String id) { return frames.get(id); }
 
+    
     static void readMine(JSONObject answer) {
         JSONArray list = answer.optJSONArray("frames");
         if (list == null) return;
@@ -148,6 +171,12 @@ public final class Frames {
 
     private static volatile String wanted;
     private static boolean saving;
+
+    
+
+
+
+
 
     static void wear(final String id, final Mine.Said then) {
         mineWorn = id;
@@ -195,7 +224,7 @@ public final class Frames {
             final boolean done = ok;
             final String why = trouble;
             main.post(() -> {
-
+                
                 if (done && !id.equals(wanted)) { send(then); return; }
                 saving = false;
                 if (then != null) then.said(done, why);
@@ -203,10 +232,13 @@ public final class Frames {
         });
     }
 
+    
+
+    
     static void saw(String uid, UrlModel url) {
         try {
             if (uid == null || url == null) return;
-
+            
             if (of(uid) == null && !uid.equals(Account.id())) return;
             List list = url.getUrlList();
             if (list == null) return;
@@ -218,6 +250,7 @@ public final class Frames {
         } catch (Throwable ignored) {}
     }
 
+    
     public static UrlModel contact(Object model) {
         Object url = NativeRead.get(model, "getAvatarThumb");
         UrlModel found = url instanceof UrlModel ? (UrlModel) url : null;
@@ -225,6 +258,7 @@ public final class Frames {
         return found;
     }
 
+    
     private static String key(String url) {
         if (url == null) return null;
         int end = url.indexOf('?');
@@ -239,6 +273,8 @@ public final class Frames {
         return key.equals(NOBODY) ? null : key;
     }
 
+    
+
     private static Field requestView, requestImage, requestUrls, urlsList, requestUri;
     private static boolean fieldsTried;
 
@@ -247,7 +283,7 @@ public final class Frames {
         fieldsTried = true;
         try {
             Class<?> type = request.getClass();
-
+            
             requestView = type.getField("LJJIJ");
             requestImage = type.getField("LJJIJIIJI");
             requestUrls = type.getField("LJJJI");
@@ -257,6 +293,7 @@ public final class Frames {
         }
     }
 
+    
     public static void display(Object request) {
         try {
             if (frames.isEmpty()) return;
@@ -267,7 +304,7 @@ public final class Frames {
             if (!(target instanceof View)) return;
             final View view = (View) target;
             Object tag = view.getTag(TAG);
-
+            
             if (tag instanceof Hung && ((Hung) tag).pinned) return;
             final String uid = pictures.isEmpty() ? null : find(request);
             final Frame frame = of(uid);
@@ -295,6 +332,7 @@ public final class Frames {
         return key == null ? null : pictures.get(key);
     }
 
+    
     private static final class Hung extends Drawable {
         final View view;
         String uid;
@@ -310,7 +348,7 @@ public final class Frames {
             if (frame == null) return;
             Bitmap art = picture(view.getContext(), frame.picture());
             if (art == null) {
-
+                
                 if (tries++ < 20) view.postDelayed(view::invalidate, 500);
                 return;
             }
@@ -319,7 +357,7 @@ public final class Frames {
                 canvas.drawBitmap(art, from, getBounds(), paint);
                 return;
             }
-
+            
             int saved = canvas.save();
             canvas.rotate(AvatarShape.angle(), getBounds().exactCenterX(), getBounds().exactCenterY());
             canvas.drawBitmap(art, from, getBounds(), paint);
@@ -360,6 +398,7 @@ public final class Frames {
         place(view);
     }
 
+    
     private static void place(View view) {
         Object tag = view.getTag(TAG);
         if (!(tag instanceof Hung)) return;
@@ -368,7 +407,7 @@ public final class Frames {
         if (width == 0 || height == 0 || hung.frame == null) return;
         float density = view.getResources().getDisplayMetrics().density;
         int side = Math.min(width, height);
-
+        
         if (side > 240 * density || side < 16 * density) { hung.setBounds(0, 0, 0, 0); return; }
         int size = Math.round(side * hung.frame.scale);
         int x = width / 2, y = height / 2 + Math.round(side * hung.frame.dy);
@@ -377,15 +416,18 @@ public final class Frames {
         view.invalidate();
     }
 
+    
     private static void unclip(View view, Rect wanted, boolean pinned) {
-
+        
+        
         float left = view.getX() + wanted.left, top = view.getY() + wanted.top;
         float right = view.getX() + wanted.right, bottom = view.getY() + wanted.bottom;
         View at = view;
         for (int depth = 0; depth < 8 && at.getParent() instanceof ViewGroup; depth++) {
             ViewGroup parent = (ViewGroup) at.getParent();
             if (isList(parent)) {
-
+                
+                
                 if (!parent.getClass().getName().contains("ViewPager")) parent.setClipChildren(false);
                 return;
             }
@@ -407,9 +449,12 @@ public final class Frames {
         return false;
     }
 
+    
+
     private static final Map<String, Bitmap> art = new HashMap<>();
     private static final Map<String, Long> asked = new HashMap<>();
 
+    
     static Bitmap picture(final Context context, final String path) {
         if (path == null || path.length() == 0) return null;
         long now = android.os.SystemClock.elapsedRealtime();
@@ -420,7 +465,7 @@ public final class Frames {
             if (when != null && now - when < 60000) return null;
             asked.put(path, now);
         }
-        final File cache = new File(context.getFilesDir(), "margyt/frames/" + path.replaceAll("[^A-Za-z0-9.]", "_"));
+        final File cache = new File(context.getFilesDir(), "airtok/frames/" + path.replaceAll("[^A-Za-z0-9.]", "_"));
         Net.away("frame picture", () -> {
             byte[] raw = Net.read(cache);
             if (raw == null || remember(path, raw) == null) {
@@ -437,6 +482,12 @@ public final class Frames {
         return bitmap;
     }
 
+    
+
+    
+
+
+
     static void profile(LinearLayout block, String uid, int ink) {
         try {
             lastBlock = new java.lang.ref.WeakReference<>(block);
@@ -450,6 +501,10 @@ public final class Frames {
             Diary.note("frames: profile: " + error);
         }
     }
+
+    
+
+
 
     private static View nearest(View from) {
         View at = from;
@@ -497,7 +552,7 @@ public final class Frames {
         final LinearLayout.LayoutParams where = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         int side = dp(block.getContext(), 16);
         where.setMargins(side, dp(block.getContext(), 8), side, dp(block.getContext(), 4));
-
+        
         block.setTag(PENDING, made);
         block.post(() -> {
             if (block.getTag(PENDING) == made) block.setTag(PENDING, null);
@@ -518,7 +573,7 @@ public final class Frames {
         final ImageView picture = new ImageView(c);
         Bitmap art = picture(c, frame.picture());
         if (art != null) picture.setImageBitmap(tight(art));
-
+        
         if (art == null) row.postDelayed(new Runnable() {
             int tries;
             @Override public void run() {
@@ -549,6 +604,7 @@ public final class Frames {
         return row;
     }
 
+    
     private static Bitmap tight(Bitmap art) {
         Rect solid = solid(art);
         return solid == null ? art : Bitmap.createBitmap(art, solid.left, solid.top, solid.width(), solid.height());
@@ -559,6 +615,7 @@ public final class Frames {
     private static volatile Bitmap face;
     private static boolean faceAsked;
 
+    
     private static Bitmap face(final View waiting) {
         Bitmap known = face;
         if (known != null) return known;
@@ -577,6 +634,7 @@ public final class Frames {
 
     private static final Map<String, float[]> covered = new HashMap<>();
 
+    
     private static float[] covers(Frame frame, Bitmap art) {
         float[] known = covered.get(frame.picture());
         if (known != null) return known;
@@ -588,6 +646,7 @@ public final class Frames {
         return out;
     }
 
+    
     private static Rect solid(Bitmap art) {
         int width = art.getWidth(), height = art.getHeight();
         int[] pixels = new int[width * height];
@@ -604,6 +663,7 @@ public final class Frames {
         return r < l ? null : new Rect(l, t, r + 1, b + 1);
     }
 
+    
     static final class Preview extends View {
         private final Paint plain = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         private final Paint round = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
@@ -630,7 +690,7 @@ public final class Frames {
             if (w <= 0 || h <= 0) return;
             Bitmap art = frame == null ? null : picture(getContext(), frame.picture());
             if (frame != null && art == null) postDelayed(this::invalidate, 400);
-
+            
             float x0 = -0.5f, y0 = -0.5f, x1 = 0.5f, y1 = 0.5f;
             if (art != null) {
                 float[] c = covers(frame, art);
@@ -642,7 +702,7 @@ public final class Frames {
             boolean turning = AvatarShape.turning();
             float angle = turning ? AvatarShape.angle() : 0;
             if (turning) {
-
+                
                 float reach = (float)Math.hypot(.5f,.5f);
                 if(art!=null){
                     float[] c=covers(frame,art);
@@ -653,7 +713,7 @@ public final class Frames {
                 x0=y0=-reach;x1=y1=reach;
             }
             float unit = Math.min(w / (x1 - x0), h / (y1 - y0)) * 0.94f;
-
+            
             if (art == null) unit *= 0.62f;
             float cx = w / 2 - (x0 + x1) / 2 * unit, cy = h / 2 - (y0 + y1) / 2 * unit;
             float radius = unit / 2;

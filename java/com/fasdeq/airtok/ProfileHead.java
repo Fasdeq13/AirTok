@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 final class ProfileHead {
     private ProfileHead() {}
 
@@ -97,11 +98,13 @@ final class ProfileHead {
             if (avatarId != 0 && child.findViewById(avatarId) != null) avatar = child;
             else if (nameId != 0 && statId != 0 && child.findViewById(nameId) != null && child.findViewById(statId) != null) info = child;
         }
-
+        
         if (avatar == null || info == null) return;
         float d = column.getResources().getDisplayMetrics().density;
         LinearLayout header = new LinearLayout(column.getContext());
         header.setTag(HEADER, Boolean.TRUE);
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        header.setGravity(Gravity.CENTER_VERTICAL);
         header.setClipChildren(false);
         header.setClipToPadding(false);
         LinearLayout.LayoutParams place = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -112,17 +115,13 @@ final class ProfileHead {
         column.removeView(avatar);
         column.removeView(info);
         int width = state.avatar.params.width > 0 ? state.avatar.params.width : Math.round(128 * d);
-        int height = state.avatar.params.height > 0 ? state.avatar.params.height : ViewGroup.LayoutParams.WRAP_CONTENT;
-        LinearLayout.LayoutParams portrait = new LinearLayout.LayoutParams(width, height);
+        LinearLayout.LayoutParams portrait = new LinearLayout.LayoutParams(width, state.avatar.params.height);
+        portrait.rightMargin = Math.round(4 * d);
+        header.addView(avatar, portrait);
         LinearLayout details = new LinearLayout(column.getContext());
         details.setOrientation(LinearLayout.VERTICAL);
-        header.setOrientation(LinearLayout.VERTICAL);
-        header.setGravity(Gravity.CENTER_HORIZONTAL);
-        portrait.gravity = Gravity.CENTER_HORIZONTAL;
-        portrait.bottomMargin = Math.round(8 * d);
-        header.addView(avatar, portrait);
-        details.setGravity(Gravity.CENTER_HORIZONTAL);
-        header.addView(details, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        details.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        header.addView(details, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         View name = info.findViewById(id(column, "t9e"));
         if (name == null) name = info.findViewById(nameId);
         LinearLayout nameLine = new LinearLayout(column.getContext());
@@ -173,7 +172,7 @@ final class ProfileHead {
             TextView text = (TextView) view;
             text.setMaxLines(1);
             text.setTextSize(TypedValue.COMPLEX_UNIT_SP, view.getId() == numberId ? 19 : 11);
-
+            
             ViewGroup.LayoutParams params = text.getLayoutParams();
             try {
                 java.lang.reflect.Constructor<?> copy = params.getClass().getConstructor(params.getClass());
@@ -181,7 +180,7 @@ final class ProfileHead {
                 fitted.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 text.setLayoutParams(fitted);
             } catch (ReflectiveOperationException ignored) {
-
+                
             }
         } else if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
@@ -211,7 +210,7 @@ final class ProfileHead {
         if (state.edit != null) state.edit.setAlpha(1f);
         if (state.header.getParent() == column) column.removeView(state.header);
         for (int i = state.pieces.size() - 1; i >= 0; i--) state.pieces.get(i).restore();
-
+        
         state.avatar.restore();
         state.info.restore();
         column.setTag(STATE, null);

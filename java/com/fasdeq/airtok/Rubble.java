@@ -25,6 +25,22 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Random;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Rubble {
 
     private Rubble() {}
@@ -33,6 +49,7 @@ final class Rubble {
     private static final int MOST = 90;
     private static final int TAG = 0x7e0c0338;
 
+    
     private static volatile boolean armed;
     private static volatile boolean running;
 
@@ -40,6 +57,7 @@ final class Rubble {
 
     static boolean running() { return running; }
 
+    
     static boolean on() { return armed || running; }
 
     static void arm(Activity settings) {
@@ -47,6 +65,7 @@ final class Rubble {
         try { settings.finish(); } catch (Throwable ignored) {}
     }
 
+    
     static void stop() {
         armed = false;
         running = false;
@@ -89,9 +108,9 @@ final class Rubble {
         View source;
         Bitmap picture;
         float x, y, w, h, vx, vy, angle, spin, mass, alpha;
-
+        
         boolean ghost = true;
-
+        
         boolean away;
     }
 
@@ -131,7 +150,7 @@ final class Rubble {
             try { if (sensors != null) sensors.unregisterListener(this); } catch (Throwable ignored) {}
             Choreographer.getInstance().removeFrameCallback(this);
             ticking = false;
-
+            
             Context context = getContext();
             if (context instanceof Activity && ((Activity) context).isFinishing() && ((Activity) context).isTaskRoot()) {
                 armed = false;
@@ -140,6 +159,7 @@ final class Rubble {
             }
         }
 
+        
         private void giveBack() {
             for (Piece p : pieces) {
                 try {
@@ -161,11 +181,14 @@ final class Rubble {
             if (parent != null) parent.removeView(this);
         }
 
+
         private void tick() {
             if (ticking) return;
             ticking = true;
             Choreographer.getInstance().postFrameCallback(this);
         }
+
+        
 
         void collect() {
             collected = android.os.SystemClock.uptimeMillis();
@@ -197,6 +220,7 @@ final class Rubble {
             }
         }
 
+        
         private boolean medium(View view, int depth) {
             if (view instanceof TextureView || view instanceof SurfaceView) return true;
             if (!(view instanceof ViewGroup) || depth > 12) return false;
@@ -226,7 +250,7 @@ final class Rubble {
             piece.h = view.getHeight();
             piece.x = at[0] - origin[0];
             piece.y = at[1] - origin[1];
-
+            
             piece.spin = (random.nextFloat() - .5f) * 30;
             piece.alpha = view.getAlpha();
             piece.mass = Math.max(1f, piece.w * piece.h / (unit * unit * 100));
@@ -242,14 +266,16 @@ final class Rubble {
                 int x = (i % 5) * (w - 1) / 4, y = (i / 5) * (h - 1) / 4;
                 if ((picture.getPixel(x, y) >>> 24) > 16) return false;
             }
-
+            
             for (int x = 0; x < w; x += Math.max(1, w / 40)) if ((picture.getPixel(x, h / 2) >>> 24) > 16) return false;
             return true;
         }
 
+        
+
         @Override public void onSensorChanged(SensorEvent event) {
             float ax = event.values[0], ay = event.values[1], az = event.values[2];
-
+            
             gx = gx * .8f + (-ax) * .2f;
             gy = gy * .8f + ay * .2f;
             float force = (float) Math.sqrt(ax * ax + ay * ay + az * az);
@@ -273,7 +299,7 @@ final class Rubble {
             last = time;
             try {
                 long now = android.os.SystemClock.uptimeMillis();
-
+                
                 if (now - collected > 1500 && pieces.size() < MOST) collect();
                 watch();
                 for (int i = 0; i < 4; i++) step(dt / 4);
@@ -287,11 +313,12 @@ final class Rubble {
 
         private final Rect seen = new Rect();
 
+        
         private void watch() {
             for (int i = pieces.size() - 1; i >= 0; i--) {
                 Piece p = pieces.get(i);
                 if (!p.source.isAttachedToWindow()) {
-
+                    
                     p.source.setAlpha(p.alpha);
                     p.source.setTag(TAG, null);
                     taken.remove(p.source);
@@ -301,6 +328,8 @@ final class Rubble {
                 p.away = !p.source.isShown() || !p.source.getGlobalVisibleRect(seen);
             }
         }
+
+        
 
         private Piece held;
         private boolean swallowing, forwarding;
@@ -313,7 +342,7 @@ final class Rubble {
                 held = hit(event.getX(), event.getY());
                 downX = event.getRawX(); downY = event.getRawY();
                 if (held != null) return true;
-
+                
                 swallowing = leftBehind((int) event.getRawX(), (int) event.getRawY());
                 return swallowing;
             }
@@ -346,6 +375,7 @@ final class Rubble {
             return false;
         }
 
+        
         private void tap(Piece piece) {
             int[] at = new int[2], origin = new int[2];
             piece.source.getLocationOnScreen(at);
@@ -362,7 +392,7 @@ final class Rubble {
 
         private void step(float dt) {
             float width = getWidth(), height = getHeight();
-            float pull = unit * 160;
+            float pull = unit * 160; 
             for (Piece p : pieces) {
                 if (p.away) continue;
                 p.vx += gx * pull * dt;
@@ -373,15 +403,16 @@ final class Rubble {
                 p.y += p.vy * dt;
                 p.angle += p.spin * dt;
                 p.spin *= 0.985f;
-
+                
                 if (p.x < 0) { p.x = 0; p.vx = -p.vx * .35f; p.vy *= .92f; p.spin += p.vy * .02f; }
                 if (p.x + p.w > width) { p.x = width - p.w; p.vx = -p.vx * .35f; p.vy *= .92f; p.spin -= p.vy * .02f; }
                 if (p.y < 0) { p.y = 0; p.vy = -p.vy * .35f; p.vx *= .92f; }
                 if (p.y + p.h > height) { p.y = height - p.h; p.vy = -p.vy * .35f; p.vx *= .92f; p.spin -= p.vx * .02f; }
             }
-
+            
             int n = pieces.size();
-
+            
+            
             for (int i = 0; i < n; i++) {
                 Piece a = pieces.get(i);
                 if (!a.ghost || a.away) continue;
@@ -432,7 +463,7 @@ final class Rubble {
             for (Piece p : pieces) {
                 if (p.away || p.picture == null || p.picture.isRecycled()) continue;
                 int save = canvas.save();
-
+                
                 float tilt = (float) Math.toDegrees(Math.sin(Math.toRadians(p.angle))) * .35f;
                 canvas.rotate(tilt, p.x + p.w / 2, p.y + p.h / 2);
                 canvas.drawBitmap(p.picture, p.x, p.y, paint);

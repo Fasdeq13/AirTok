@@ -18,7 +18,7 @@ final class NativeRead {
  static String uid(Object user){return string(get(user,"getUid"));}
  static String aid(Object post){return string(get(post,"getAid"));}
  static Object item(Object component){
-
+  
   Object payload=field(field(component,"LLJJJJLIIL"),"LL");if(payload!=null)return payload;
   try{Class<?> type=Class.forName("com.bytedance.assem.arch.reused.ReusedAssem");return Class.forName("X.0cP2").getMethod("LIZ",type).invoke(null,component);}catch(Throwable ignored){return null;}
  }

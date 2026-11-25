@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class SettingsScreen {
     static final String SAMPLE = "привет, это я";
@@ -84,7 +88,7 @@ public final class SettingsScreen {
         "Резкий старт", "Плавный разгон"
     };
     static final String[] TILT_DIR_NAMES = {"Влево", "Вправо", "По очереди", "Случайно"};
-
+    
     static final String[] MOTION_NAMES = {
         "Как у эффекта", "Мягкая", "Линейная", "Кубическая", "С перелётом", "Пружина", "Отскок",
         "Резкий старт", "Плавный разгон", "Вихрь"
@@ -122,7 +126,7 @@ public final class SettingsScreen {
     static final String[] SMOKE_TONE_NAMES = {"Цвет букв", "Серый", "Тлеющий", "Цвета искр"};
     static final String[] LANG_NAMES = {"Авто", "Русский", "English"};
     static final String HINT_DEMO = "Нажми на поле и печатай сам";
-    static final String HINT_TYPING = "Печатаешь сам · нажми сюда, чтобы вернуть демо";
+    static final String HINT_TYPING = "Печатаешь сам · нажмите сюда, чтобы вернуть демо";
 
     public final Activity host;
     final Main main;
@@ -136,10 +140,10 @@ public final class SettingsScreen {
     boolean closed;
     boolean typing;
     TextView hint;
-
+    
     View sendBtn;
     int cycle;
-
+    
     boolean advanced;
     boolean hints;
     final ArrayList<View> advRows = new ArrayList<View>();
@@ -149,16 +153,16 @@ public final class SettingsScreen {
         + "blur_end,blur_mode,glow_ms,aura,gradient_text,caret_width,caret_height,caret_glow,caret_morph,caret_stretch,"
         + "caret_jump,caret_dive,caret_pulse,blink_ms,sel_stretch,sel_side,send_guess,send_shape,send_motion,"
         + "send_duration,send_arc,send_swirl,send_dir,send_wave,send_morph,spark_size,part_speed,part_life,wind,blur_erase,";
-
+    
     View swatchA;
     View swatchB;
     static final int USER_SLOTS = 3;
     boolean resetArmed;
-
+    
     final boolean[] open = {true, false, false, false, false, false, false};
     final java.util.HashMap<String, ArrayList<View>> links = new java.util.HashMap<String, ArrayList<View>>();
     final ArrayList<View> smokeRows = new ArrayList<View>();
-
+    
     final ArrayList<View> flightRows = new ArrayList<View>();
     final ArrayList<View> vortexRows = new ArrayList<View>();
     final java.util.HashMap<String, Boolean> defaults = new java.util.HashMap<String, Boolean>();
@@ -237,7 +241,7 @@ public final class SettingsScreen {
                 removeLayer(target);
             }
         } catch (Throwable ignored) {
-
+            
         }
     }
 
@@ -245,10 +249,13 @@ public final class SettingsScreen {
         try {
             main.ttcuz().removeOverlay(target);
         } catch (Throwable ignored) {
-
+            
         }
     }
 
+    
+    
+    
     View buildPreview() {
         LinearLayout card = new LinearLayout(host);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -304,6 +311,7 @@ public final class SettingsScreen {
         inputRow.setGravity(Gravity.CENTER_VERTICAL);
         inputRow.addView(preview, new LinearLayout.LayoutParams(0, dp(56), 1.0f));
 
+        
         FrameLayout sendButton = new FrameLayout(host);
         sendBtn = sendButton;
         sendButton.setBackground(rounded(accent, 100));
@@ -354,6 +362,7 @@ public final class SettingsScreen {
         });
     }
 
+    
     void startTyping() {
         typing = true;
         runId++;
@@ -408,7 +417,7 @@ public final class SettingsScreen {
             return;
         }
         if (index == 0 && main.getConfig().stagger > 0) {
-
+            
             preview.getText().append(sample());
             schedule(HOLD_MS + sample().length() * 60L, new Runnable() {
                 @Override
@@ -427,6 +436,7 @@ public final class SettingsScreen {
         });
     }
 
+    
     void afterHold(final int id) {
         if (closed || id != runId) {
             return;
@@ -438,6 +448,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     void applySendChange() {
         main.reloadConfig();
         updateSendRows();
@@ -472,6 +483,7 @@ public final class SettingsScreen {
         });
     }
 
+    
     void sendDemo(final View button) {
         if (closed || preview == null) {
             return;
@@ -483,7 +495,7 @@ public final class SettingsScreen {
         final int id = runId;
         Editable text = preview.getText();
         if (text != null && text.length() == 0) {
-
+            
             main.attachOne(preview);
             text.append(sample());
             schedule(650L, new Runnable() {
@@ -505,7 +517,7 @@ public final class SettingsScreen {
         if (text == null || text.length() == 0) {
             return;
         }
-
+        
         main.armSend(button);
         text.clear();
         if (!typing) {
@@ -524,6 +536,9 @@ public final class SettingsScreen {
         main.ttcuz().later(action, delay);
     }
 
+    
+    
+    
     View buildHeader() {
         LinearLayout header = new LinearLayout(host);
         header.setOrientation(LinearLayout.HORIZONTAL);
@@ -578,6 +593,7 @@ public final class SettingsScreen {
         toggle(modes, "advanced", "Расширенные настройки", false);
         toggle(modes, "hints", "Подсказки под пунктами", false);
 
+        
         LinearLayout body = section(0, IconView.SPARKLE, "Появление букв", "Эффект, скорость и очерёдность");
         effects(body);
         slider(body, "duration", "Время появления", "Сколько длится появление одной буквы",
@@ -593,6 +609,7 @@ public final class SettingsScreen {
             "Каждая буква появляется чуть быстрее или медленнее остальных — выглядит живее",
             0, 60, 0, "%", 1);
 
+        
         body = section(1, IconView.PLAY, "Движение и размер", "Въезд, рост, наклон, сжатие и дрожь");
         toggle(body, "slide", "Въезд буквы", "Буква выезжает на своё место", true);
         View slideHeight = slider(body, "slide_dp", "Расстояние въезда",
@@ -617,6 +634,7 @@ public final class SettingsScreen {
         slider(body, "shake", "Дрожь", "Лёгкое покачивание из стороны в сторону, быстро затухает",
             0, 12, 0, " dp", 1);
 
+        
         body = section(2, IconView.GLOW, "Размытие и свечение", "Расфокус при появлении и подсветка свежих букв");
         toggle(body, "blur", "Размытие при появлении", "Буква выезжает размытой и становится чёткой", true);
         View blurDp = slider(body, "blur_dp", "Сила размытия",
@@ -636,6 +654,7 @@ public final class SettingsScreen {
         View gradient = toggle(body, "gradient_text", "Градиентный текст", "TikTok-градиент на горящих буквах", false);
         link("glow", glowTime, glowColor, aura, gradient);
 
+        
         body = section(3, IconView.CARET, "Курсор и выделение", "Вид, движение, мигание и ручки выделения");
         subhead(body, "ВИД");
         toggle(body, "caret", "Плавающий курсор", "Заменяет стандартный курсор", true);
@@ -671,6 +690,7 @@ public final class SettingsScreen {
         link("liquid", jumpT, diveT, pulseT, stretchS);
         link("blink", blinkS);
 
+        
         body = section(4, IconView.SEND, "Отправка сообщения", "Что вылетает из букв и кнопки «Отправить»");
         subhead(body, "ЧТО ВЫЛЕТАЕТ");
         toggle(body, "send_particles", "Эффект при отправке",
@@ -717,6 +737,7 @@ public final class SettingsScreen {
             "Сколько букве нужно, чтобы раствориться, пока из неё вылетают частицы. 0 — как «Время появления». Нужно «Плавное исчезновение буквы»",
             0, 1500, 0, " мс", 1);
 
+        
         body = section(5, IconView.BACKSPACE, "Стирание букв", "Что происходит со стёртой буквой");
         toggle(body, "particles", "Частицы при стирании", "Стёртая буква рассыпается", true);
         View style = choice(body, "style", "Вид частиц", STYLE_NAMES, 0);
@@ -731,7 +752,7 @@ public final class SettingsScreen {
         toggle(body, "blur_erase", "Размытие при стирании",
             "Стёртая буква расплывается, пока исчезает (нужно «Плавное исчезновение»)", true);
         toggle(body, "haptic", "Виброотклик при удалении", null, false);
-
+        
         smokeRows.add(slider(body, "smoke_density", "Плотность дыма", 20, 160, 80, ""));
         smokeRows.add(slider(body, "smoke_rise", "Подъём дыма", 30, 250, 100, "%"));
         smokeRows.add(slider(body, "smoke_spread", "Разрастание", 0, 200, 100, "%"));
@@ -741,11 +762,13 @@ public final class SettingsScreen {
         updateSmokeRows();
         link("particles", smokeRows.toArray(new View[0]));
 
+        
         link("ghosts", morphRow);
         updateSendRows();
 
+        
         body = section(6, IconView.RAINBOW, "Свои цвета", "Два цвета для свечения, курсора и частиц");
-        TextView colorHint = text("Чтобы применить, выбери «Свой цвет» в настройках свечения и курсора, а «Свои цвета» — в цветах частиц", 12, MUTED);
+        TextView colorHint = text("Чтобы применить, выберите «Свой цвет» в настройках свечения и курсора, а «Свои цвета» — в цветах частиц", 12, MUTED);
         colorHint.setPadding(dp(16), dp(10), dp(16), dp(6));
         body.addView(colorHint, new LinearLayout.LayoutParams(MATCH, WRAP));
         subhead(body, "ЦВЕТ 1 · СВЕЧЕНИЕ, КУРСОР, ЧАСТИЦЫ");
@@ -759,6 +782,7 @@ public final class SettingsScreen {
         slider(body, "cb_v", "Яркость", 20, 100, 100, "%", 1);
         swatchB = swatchRow(body, "cb");
 
+        
         LinearLayout general = new LinearLayout(host);
         general.setOrientation(LinearLayout.VERTICAL);
         general.setBackground(pill(CARD, STROKE, 20));
@@ -777,6 +801,7 @@ public final class SettingsScreen {
         list.addView(footer, params(MATCH, WRAP, 0, 14, 0, 0));
     }
 
+    
     View resetButton() {
         final TextView reset = text("Сбросить настройки", 15, accent);
         reset.setTypeface(MEDIUM);
@@ -815,6 +840,9 @@ public final class SettingsScreen {
         return reset;
     }
 
+    
+    
+    
     void presets() {
         TextView label = text("БЫСТРЫЕ ПРЕСЕТЫ", 11, MUTED);
         label.setTypeface(MEDIUM);
@@ -837,7 +865,7 @@ public final class SettingsScreen {
             tile.setBackground(pill(CARD, STROKE, 18));
 
             tile.addView(badge(i < PRESET_ICONS.length ? PRESET_ICONS[i] : IconView.SPARKLE), new LinearLayout.LayoutParams(dp(38), dp(38)));
-
+            
             tile.addView(new View(host), new LinearLayout.LayoutParams(0, 0, 1.0f));
             TextView name = text(i < PRESET_NAMES.length ? PRESET_NAMES[i] : "Мой пресет " + (i - PRESET_NAMES.length + 1), 14, TEXT);
             name.setTypeface(MEDIUM);
@@ -894,6 +922,9 @@ public final class SettingsScreen {
         list.addView(scroll, new LinearLayout.LayoutParams(MATCH, WRAP));
     }
 
+    
+    
+    
     int currentCustom(String prefix) {
         int hue = "ca".equals(prefix) ? 340 : 180;
         return Config.hsv(prefs().getInt(prefix + "_h", hue), prefs().getInt(prefix + "_s", 85),
@@ -942,6 +973,7 @@ public final class SettingsScreen {
         applyChange();
     }
 
+    
     String settingsCode() {
         org.json.JSONObject all = new org.json.JSONObject();
         java.util.Map<String, ?> values = prefs().getAll();
@@ -954,13 +986,14 @@ public final class SettingsScreen {
                 try {
                     all.put(entry.getKey(), value);
                 } catch (Exception ignored) {
-
+                    
                 }
             }
         }
         return "TA1:" + all.toString();
     }
 
+    
     boolean applyCode(String code) {
         if (code == null) {
             return false;
@@ -1033,6 +1066,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     View actionButton(final String label, final boolean export) {
         final TextView button = text(label, 15, accent);
         button.setTypeface(MEDIUM);
@@ -1102,6 +1136,9 @@ public final class SettingsScreen {
         applyChange();
     }
 
+    
+    
+    
     LinearLayout section(final int index, int icon, String title, String subtitle) {
         LinearLayout card = new LinearLayout(host);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -1154,6 +1191,7 @@ public final class SettingsScreen {
         return body;
     }
 
+    
     void updateSendRows() {
         int motion = prefs().getInt("send_motion", 0);
         int preset = prefs().getInt("send_preset", 1);
@@ -1167,6 +1205,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     void subhead(LinearLayout body, String title) {
         TextView label = text(title, 11, MUTED);
         label.setPadding(dp(16), dp(14), dp(16), dp(2));
@@ -1177,6 +1216,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     void markAdv(String key, View row) {
         if (!ADV_KEYS.contains("," + key + ",")) {
             return;
@@ -1197,6 +1237,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     void applyDetail() {
         advanced = prefs().getBoolean("advanced", false);
         hints = prefs().getBoolean("hints", false);
@@ -1220,6 +1261,7 @@ public final class SettingsScreen {
         body.addView(row, new LinearLayout.LayoutParams(MATCH, WRAP));
     }
 
+    
     void link(String key, View... rows) {
         ArrayList<View> group = links.get(key);
         if (group == null) {
@@ -1373,6 +1415,7 @@ public final class SettingsScreen {
         return choice(body, key, title, null, options, def);
     }
 
+    
     View caption(String title, String desc) {
         LinearLayout names = new LinearLayout(host);
         names.setOrientation(LinearLayout.VERTICAL);
@@ -1440,6 +1483,8 @@ public final class SettingsScreen {
         }
     }
 
+    
+    
     void effects(LinearLayout body) {
         LinearLayout row = new LinearLayout(host);
         row.setOrientation(LinearLayout.VERTICAL);
@@ -1467,49 +1512,49 @@ public final class SettingsScreen {
 
     void applyEffect(int index) {
         SharedPreferences.Editor e = prefs().edit();
-
+        
         e.putBoolean("slide", false).putInt("slide_dp", 8).putInt("slide_dir", 0);
         e.putBoolean("scale", false).putInt("scale_start", 80).putInt("pivot", 0);
         e.putInt("tilt", 0).putInt("tilt_dir", 0).putInt("squash", 0).putInt("shake", 0);
         e.putInt("stagger", 0).putInt("jitter", 0).putInt("fade_start", 25);
         e.putBoolean("blur", false).putInt("blur_dp", 6).putInt("blur_end", 80);
         switch (index) {
-            case 0:
+            case 0: 
                 e.putBoolean("slide", true).putInt("slide_dp", 8);
                 e.putBoolean("scale", true).putInt("scale_start", 80);
                 e.putInt("duration", 260).putInt("easing", 0).putInt("fade_start", 20);
                 e.putBoolean("blur", true).putInt("blur_dp", 4).putInt("blur_end", 70);
                 break;
-            case 1:
+            case 1: 
                 e.putBoolean("scale", true).putInt("scale_start", 92);
                 e.putInt("duration", 360).putInt("easing", 7).putInt("fade_start", 0);
                 e.putBoolean("blur", true).putInt("blur_dp", 12).putInt("blur_end", 90);
                 break;
-            case 2:
+            case 2: 
                 e.putBoolean("slide", true).putInt("slide_dp", 18).putInt("slide_dir", 0);
                 e.putInt("duration", 320).putInt("easing", 5).putInt("squash", 25).putInt("fade_start", 40);
                 e.putBoolean("blur", true).putInt("blur_dp", 3).putInt("blur_end", 40);
                 break;
-            case 3:
+            case 3: 
                 e.putBoolean("slide", true).putInt("slide_dp", 10).putInt("slide_dir", 1);
                 e.putBoolean("scale", true).putInt("scale_start", 35).putInt("pivot", 1);
                 e.putInt("duration", 320).putInt("easing", 4).putInt("squash", 20).putInt("fade_start", 20);
                 e.putInt("tilt", 8).putInt("tilt_dir", 2);
                 e.putBoolean("blur", true).putInt("blur_dp", 5).putInt("blur_end", 60);
                 break;
-            case 4:
+            case 4: 
                 e.putBoolean("scale", true).putInt("scale_start", 180);
                 e.putInt("duration", 300).putInt("easing", 6).putInt("fade_start", 0);
                 e.putBoolean("blur", true).putInt("blur_dp", 8).putInt("blur_end", 85);
                 break;
-            case 5:
+            case 5: 
                 e.putBoolean("slide", true).putInt("slide_dp", 12).putInt("slide_dir", 1);
                 e.putBoolean("scale", true).putInt("scale_start", 70);
                 e.putInt("duration", 340).putInt("easing", 3).putInt("fade_start", 10);
                 e.putInt("stagger", 45).putInt("jitter", 20);
                 e.putBoolean("blur", true).putInt("blur_dp", 4).putInt("blur_end", 70);
                 break;
-            default:
+            default: 
                 e.putInt("duration", 120).putInt("easing", 1).putInt("fade_start", 100);
                 break;
         }
@@ -1518,6 +1563,7 @@ public final class SettingsScreen {
         applyChange();
     }
 
+    
     public static final class Flow extends ViewGroup {
         final int gap;
 
@@ -1582,6 +1628,9 @@ public final class SettingsScreen {
         restartDemo();
     }
 
+    
+    
+    
     SharedPreferences prefs() {
         return main.ttcuz().prefs();
     }
@@ -1590,6 +1639,7 @@ public final class SettingsScreen {
         return main.ttcuz().dp(value);
     }
 
+    
     void setTr(TextView view, String ru) {
         view.setTag(ru);
         view.setText(Strings.t(ru));
@@ -1607,6 +1657,7 @@ public final class SettingsScreen {
         }
     }
 
+    
     void updateSmokeRows() {
         boolean on = prefs().getInt("style", Config.STYLE_DUST) == Config.STYLE_SMOKE;
         for (int i = 0; i < smokeRows.size(); i++) {
@@ -1643,6 +1694,7 @@ public final class SettingsScreen {
         return view;
     }
 
+    
     View badge(int icon) {
         FrameLayout box = new FrameLayout(host);
         box.setBackground(rounded(tint(accent, 0x2E), 12));
@@ -1654,6 +1706,7 @@ public final class SettingsScreen {
         return (alpha << 24) | (color & 0x00FFFFFF);
     }
 
+    
     int onAccent() {
         double luma = (0.299 * Color.red(accent) + 0.587 * Color.green(accent) + 0.114 * Color.blue(accent)) / 255.0;
         return luma > 0.6 ? 0xFF1B1A1F : 0xFFFFFFFF;
@@ -1687,6 +1740,7 @@ public final class SettingsScreen {
         return id > 0 ? host.getResources().getDimensionPixelSize(id) : 0;
     }
 
+    
     void fitSystemBars() {
         int[] location = new int[2];
         root.getLocationOnScreen(location);

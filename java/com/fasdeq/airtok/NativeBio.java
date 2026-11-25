@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+
 final class NativeBio {
     private static final java.util.Set<Object> callbacks=java.util.Collections.synchronizedSet(new java.util.HashSet<Object>());
     static Object service() throws Exception {
@@ -51,14 +52,14 @@ final class NativeBio {
             return true;
         } catch (Throwable error) {return false;}
     }
-
+    
     static boolean save(final String uid,final String expected,final String wanted,String extras) throws Exception {
         final List<?> metadata=decodeExtras(extras);
         final CountDownLatch done=new CountDownLatch(1);
         final boolean[] accepted={false};
         final java.util.concurrent.atomic.AtomicBoolean submitted=new java.util.concurrent.atomic.AtomicBoolean();
         final java.util.concurrent.atomic.AtomicBoolean expired=new java.util.concurrent.atomic.AtomicBoolean();
-
+        
         final Object[] callback=new Object[1];
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
@@ -71,7 +72,7 @@ final class NativeBio {
                     if (method.getDeclaringClass()==Object.class) {
                         if (method.getName().equals("hashCode")) return System.identityHashCode(proxy);
                         if (method.getName().equals("equals")) return proxy==args[0];
-                        return "margyt bio callback";
+                        return "airtok bio callback";
                     }
                     try {
                         if (args!=null && args.length==1 && args[0] instanceof Message) {
@@ -82,7 +83,7 @@ final class NativeBio {
                                     && uid.equals(Account.id())
                                     && uid.equals(result.getClass().getMethod("getUid").invoke(result))
                                     && wanted.equals(result.getClass().getMethod("getSignature").invoke(result))) {
-
+                                
                                 active.getClass().getMethod("LJJLI",String.class,List.class).invoke(active,wanted,metadata);
                                 accepted[0]=true;
                             }
@@ -100,7 +101,8 @@ final class NativeBio {
         boolean timely=done.await(30,TimeUnit.SECONDS);
         if (!timely) {
             expired.set(true);
-
+            
+            
             if (submitted.get()) new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (callback[0]!=null) callbacks.remove(callback[0]);
             }, 120000L);

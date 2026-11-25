@@ -5,6 +5,17 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+
+
+
+
+
+
+
+
+
+
+
 final class ProfilePage {
     private ProfilePage() {}
 
@@ -29,7 +40,7 @@ final class ProfilePage {
                     out.append(key).append(":\n");
                     outline(out, (JSONObject) part, 1, lines);
                 } else if (!(part instanceof JSONObject) && !(part instanceof JSONArray)) {
-
+                    
                     String said = String.valueOf(part);
                     if (said.length() <= 24) out.append(key).append(" = ").append(said).append('\n');
                 }

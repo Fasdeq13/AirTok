@@ -29,30 +29,52 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+
+
+
+
+
+
+
+
 final class SponsorBlock {
 
     private SponsorBlock() {}
 
     static final String KEY_SKIP = "sb_skip", KEY_MARKS = "sb_marks", KEY_ON = "sb_on", KEY_MOBILE = "sb_mobile";
 
+    
     static boolean enabled() {
-        return false;
+        return flag(KEY_ON, true);
     }
 
+    
     static boolean mobileOn() {
-        return false;
+        return flag(KEY_MOBILE, false);
     }
 
     private static boolean flag(String key, boolean otherwise) {
-        return false;
+        try {
+            return AccountAppearance.prefs(AirTok.context()).getBoolean(key, otherwise);
+        } catch (Throwable ignored) {
+            return otherwise;
+        }
     }
 
     static boolean skipOn() {
-        return false;
+        try {
+            return AccountAppearance.prefs(AirTok.context()).getBoolean(KEY_SKIP, true);
+        } catch (Throwable ignored) {
+            return true;
+        }
     }
 
     static boolean marksOn() {
-        return false;
+        try {
+            return AccountAppearance.prefs(AirTok.context()).getBoolean(KEY_MARKS, true);
+        } catch (Throwable ignored) {
+            return true;
+        }
     }
 
     static void set(String key, boolean on) {
@@ -62,13 +84,16 @@ final class SponsorBlock {
         }
     }
 
+    
+
+    
     private static final Map<String, long[][]> known = new LinkedHashMap<String, long[][]>(64, 0.75f, true) {
         @Override protected boolean removeEldestEntry(Map.Entry<String, long[][]> eldest) {
             return size() > 400;
         }
     };
     private static final Set<String> asking = new HashSet<String>();
-
+    
     private static final Set<Long> allowed = new HashSet<Long>();
     private static final Handler main = new Handler(Looper.getMainLooper());
     private static String playing = "";
@@ -83,6 +108,7 @@ final class SponsorBlock {
         if (parts.length > 0) wake();
     }
 
+    
     private static void wake() {
         main.post(() -> {
             if (!ticking && enabled()) {
@@ -92,11 +118,13 @@ final class SponsorBlock {
         });
     }
 
+    
     static void playing(String aid) {
         if (aid == null || aid.length() == 0 || !enabled()) return;
         playing = aid;
         ask(aid, false);
-
+        
+        
         main.postDelayed(() -> { if (aid.equals(playing)) listen(aid); }, 6000);
         if (!ticking) {
             ticking = true;
@@ -137,6 +165,8 @@ final class SponsorBlock {
         return out;
     }
 
+    
+
     private static long[] lastSkipped;
 
     private static final Runnable tick = new Runnable() {
@@ -146,7 +176,7 @@ final class SponsorBlock {
                 next = look();
             } catch (Throwable ignored) {
             }
-
+            
             if (next < 0) {
                 ticking = false;
                 return;
@@ -155,65 +185,46 @@ final class SponsorBlock {
         }
     };
 
+    
     private static long look() {
         if (!enabled() || !skipOn() || Watch.here() == null) return -1;
         Object manager = PlayerTools.manager();
         String aid = PlayerTools.aid();
         long[][] parts = partsOf(aid);
-
+        
         if (parts == null) return 600L;
         if (manager == null || parts.length == 0) return -1;
         long position = PlayerTools.position(manager), length = PlayerTools.duration(manager);
         if (position < 0 || length <= 0) return 300L;
         for (long[] part : parts) {
             if (allowed.contains(part[2])) continue;
-            if (position >= part[0] - 80 && position < part[1]) {
+            if (position >= part[0] && position < part[1] - 400) {
                 long to = Math.min(length - 1, part[1]);
                 PlayerTools.seekTo(manager, to, length);
                 lastSkipped = part;
                 undo(aid, part);
-                return 400L;
+                return 600L;
             }
         }
-        return 75L;
+        return 150L;
     }
 
+    
     private static void undo(final String aid, final long[] part) {
         Activity activity = Watch.here();
         if (activity == null) return;
         final ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
         View old = decor.findViewWithTag(TAG_UNDO);
         if (old != null) decor.removeView(old);
-        View oldBar = decor.findViewWithTag(TAG_RED_BAR);
-        if (oldBar != null) decor.removeView(oldBar);
-
-        float unit = activity.getResources().getDisplayMetrics().density;
-
-        final View redLine = new View(activity);
-        redLine.setTag(TAG_RED_BAR);
-        GradientDrawable redGlow = new GradientDrawable();
-        redGlow.setColor(0xFFFF2244);
-        redGlow.setCornerRadius(3 * unit);
-        redLine.setBackground(redGlow);
-        FrameLayout.LayoutParams lineParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, Math.round(4 * unit), Gravity.BOTTOM);
-        lineParams.bottomMargin = Math.round(50 * unit);
-        lineParams.leftMargin = Math.round(16 * unit);
-        lineParams.rightMargin = Math.round(16 * unit);
-        decor.addView(redLine, lineParams);
-        redLine.setAlpha(0f);
-        redLine.animate().alpha(1f).setDuration(160).start();
-        redLine.postDelayed(() -> redLine.animate().alpha(0f).setDuration(260).withEndAction(() -> decor.removeView(redLine)).start(), 3500);
-
         final TextView pill = new TextView(activity);
         pill.setTag(TAG_UNDO);
-        pill.setText("●  " + Local.of("Спонсорский сегмент пропущен") + "  ·  " + Local.of("Вернуть"));
+        float unit = activity.getResources().getDisplayMetrics().density;
+        pill.setText(Local.of("Реклама пропущена") + "  ·  " + Local.of("Вернуть"));
         pill.setTextColor(0xFFFFFFFF);
-        pill.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        pill.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         pill.setPadding(Math.round(18 * unit), Math.round(10 * unit), Math.round(18 * unit), Math.round(10 * unit));
         GradientDrawable ground = new GradientDrawable();
-        ground.setColor(0xEE1E1E1E);
-        ground.setStroke(Math.round(1.5f * unit), 0xFFFF2244);
+        ground.setColor(0xE6202020);
         ground.setCornerRadius(24 * unit);
         pill.setBackground(ground);
         Fonts.apply(pill);
@@ -224,7 +235,6 @@ final class SponsorBlock {
                 PlayerTools.seekTo(manager, part[0], PlayerTools.duration(manager));
             }
             decor.removeView(pill);
-            decor.removeView(redLine);
         });
         FrameLayout.LayoutParams place = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
@@ -235,8 +245,9 @@ final class SponsorBlock {
         pill.postDelayed(() -> pill.animate().alpha(0f).setDuration(240).withEndAction(() -> decor.removeView(pill)).start(), 4000);
     }
 
-    private static final String TAG_UNDO = "margyt-sponsor-undo";
-    private static final String TAG_RED_BAR = "margyt-sponsor-redbar";
+    private static final String TAG_UNDO = "airtok-sponsor-undo";
+
+    
 
     private static final int TAG_MARKED = 0x7e0c0450;
     private static long lookedForBars;
@@ -272,6 +283,7 @@ final class SponsorBlock {
         }
     }
 
+    
     private static final class Red extends Drawable {
         private final WeakReference<SeekBar> bar;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -310,6 +322,8 @@ final class SponsorBlock {
         }
     }
 
+    
+
     static final String KEY_SOUND = "sb_sound";
 
     static boolean soundOn() {
@@ -324,12 +338,13 @@ final class SponsorBlock {
     private static long printsUntil, printsAsked;
     private static final java.util.concurrent.ExecutorService listener = java.util.concurrent.Executors.newSingleThreadExecutor(quiet());
 
+    
     static java.util.concurrent.ThreadFactory quiet() {
         return work -> {
             Thread thread = new Thread(() -> {
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                 work.run();
-            }, "margyt-sponsor");
+            }, "airtok-sponsor");
             thread.setDaemon(true);
             return thread;
         };
@@ -338,9 +353,10 @@ final class SponsorBlock {
     private static boolean printsLoaded;
 
     private static java.io.File printsFile() {
-        return new java.io.File(AirTok.context().getFilesDir(), "margyt-sb-prints.json");
+        return new java.io.File(AirTok.context().getFilesDir(), "airtok-sb-prints.json");
     }
 
+    
     private static void prints() {
         long now = android.os.SystemClock.uptimeMillis();
         if (printsLoaded && now - printsAsked < 30 * 60 * 1000L) return;
@@ -380,11 +396,12 @@ final class SponsorBlock {
         });
     }
 
+    
     private static volatile boolean unmeteredKnown;
     private static volatile long unmeteredAt;
 
     private static boolean unmetered() {
-
+        
         long now = android.os.SystemClock.uptimeMillis();
         if (unmeteredAt != 0 && now - unmeteredAt < 10000L) return unmeteredKnown;
         unmeteredKnown = unmeteredNow();
@@ -401,6 +418,7 @@ final class SponsorBlock {
         }
     }
 
+    
     private static void listen(final String aid) {
         if (!soundOn()) return;
         prints();
@@ -410,9 +428,9 @@ final class SponsorBlock {
             if (!listened.add(aid)) return;
         }
         listener.execute(() -> {
-            java.io.File file = new java.io.File(AirTok.context().getCacheDir(), "margyt-sb-hear-" + aid + ".mp4");
+            java.io.File file = new java.io.File(AirTok.context().getCacheDir(), "airtok-sb-hear-" + aid + ".mp4");
             try {
-
+                
                 if (!aid.equals(PlayerTools.aid())) {
                     synchronized (SponsorBlock.class) { listened.remove(aid); }
                     return;
@@ -444,6 +462,7 @@ final class SponsorBlock {
         });
     }
 
+    
     static boolean fetchSmallest(Object post, java.io.File into) {
         if (into.length() > 0) return true;
         Object video = NativeRead.get(post, "getVideo");
@@ -454,6 +473,9 @@ final class SponsorBlock {
         return false;
     }
 
+    
+
+    
     static boolean photos(Object post) {
         if (post == null) return false;
         if (NativeRead.get(post, "getPhotoModeImageInfo") != null) return true;
@@ -461,6 +483,7 @@ final class SponsorBlock {
         return images instanceof java.util.List && !((java.util.List<?>) images).isEmpty();
     }
 
+    
     static void mark(final Context context, final Object post) {
         final String aid = NativeRead.aid(post);
         if (aid.length() == 0) {
@@ -486,7 +509,7 @@ final class SponsorBlock {
         }
         final Marker marker = new Marker(context, post, length, Math.max(0, now - 1000), Math.min(length, now + 9000));
         Panel panel = Panel.with(context, Skin.remembered(context), Local.of("Где реклама"));
-        panel.text(Local.of("Потяни красные края к началу и концу рекламы и нажми ▶, чтобы послушать кусок."));
+        panel.text(Local.of("Потяни красные края к началу и концу рекламы и нажмите ▶, чтобы послушать кусок."));
         panel.view(marker);
         long[][] parts = partsOf(aid);
         if (parts != null) {
@@ -509,10 +532,10 @@ final class SponsorBlock {
     private static void send(final String aid, final long start, final long stop, final long length, final boolean wrong, final java.io.File sound) {
         final String uid = Account.id();
         final String token = Mine.token();
-
+        
         java.io.File kept = null;
         if (sound != null && sound.length() > 0 && !wrong) {
-            java.io.File aside = new java.io.File(sound.getParentFile(), "margyt-sb-send-" + aid + ".mp4");
+            java.io.File aside = new java.io.File(sound.getParentFile(), "airtok-sb-send-" + aid + ".mp4");
             if (sound.renameTo(aside)) kept = aside;
         }
         final java.io.File heardFile = kept;
@@ -550,17 +573,23 @@ final class SponsorBlock {
                     } else if (Mine.asksForProof(said)) {
                         Screen.say(Local.of("Сначала подтверди аккаунт в разделе «Значки»"));
                     } else if (said.code == 429) {
-                        Screen.say(Local.of("Слишком много отметок, попробуй позже"));
+                        Screen.say(Local.of("Слишком много отметок, попробуйте позже"));
                     } else {
-                        Screen.say(Local.of("Не получилось отправить, попробуй позже"));
+                        Screen.say(Local.of("Не получилось отправить, попробуйте позже"));
                     }
                 } catch (Throwable error) {
                     Diary.note("sponsor mark: " + error);
-                    Screen.say(Local.of("Не получилось отправить, попробуй позже"));
+                    Screen.say(Local.of("Не получилось отправить, попробуйте позже"));
                 }
             }
         });
     }
+
+    
+
+    
+
+
 
     static final class Frames {
         final java.io.File file;
@@ -573,7 +602,7 @@ final class SponsorBlock {
 
         Frames(Context context, final Object post, final Runnable changed) {
             String aid = NativeRead.aid(post);
-            file = new java.io.File(context.getCacheDir(), "margyt-sb-" + aid + ".mp4");
+            file = new java.io.File(context.getCacheDir(), "airtok-sb-" + aid + ".mp4");
             width = Math.round(context.getResources().getDisplayMetrics().density * 180);
             worker.execute(() -> {
                 try {
@@ -590,6 +619,7 @@ final class SponsorBlock {
             });
         }
 
+        
         android.graphics.Bitmap at(final long ms, final boolean exact, final boolean strip, final Runnable changed) {
             final long key = (ms / (exact ? 100 : 500)) * 2 + (exact ? 1 : 0);
             final int lane = strip ? 1 : 0;
@@ -628,6 +658,9 @@ final class SponsorBlock {
         }
     }
 
+    
+
+    
     static final class Marker extends android.widget.LinearLayout {
         final Frames frames;
         final Range range;
@@ -648,6 +681,7 @@ final class SponsorBlock {
             range.invalidate();
         }
 
+        
         void edge(long at, boolean moving, boolean isStart) {
             preview.still(at, !moving, isStart);
         }
@@ -659,6 +693,7 @@ final class SponsorBlock {
         }
     }
 
+    
     static final class Preview extends FrameLayout implements android.view.TextureView.SurfaceTextureListener {
         private final Marker marker;
         private final android.view.TextureView screen;
@@ -836,6 +871,7 @@ final class SponsorBlock {
         @Override public void onSurfaceTextureUpdated(android.graphics.SurfaceTexture texture) {}
     }
 
+    
     static final class Range extends View {
         final long length;
         long start, stop;
@@ -919,7 +955,7 @@ final class SponsorBlock {
                 case MotionEvent.ACTION_DOWN:
                     held = Math.abs(x - x(start)) <= Math.abs(x - x(stop)) ? 0 : 1;
                     getParent().requestDisallowInterceptTouchEvent(true);
-
+                    
                 case MotionEvent.ACTION_MOVE:
                     long at = ms(x);
                     if (held == 0) start = Math.min(at, stop - 1000);

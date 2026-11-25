@@ -14,13 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
+
+
+
+
+
 final class VideoStats {
 
     private VideoStats() {}
 
-    static final String EXTRA = "margyt_video_stats";
+    static final String EXTRA = "airtok_video_stats";
     private static final int TAG = 0x7e0d0441;
 
+    
     static void open(Context context, Object post) {
         if (post == null || context == null) return;
         report(post);
@@ -30,11 +36,17 @@ final class VideoStats {
         context.startActivity(intent);
     }
 
+    
+
     private static final java.util.ArrayList<String> queue = new java.util.ArrayList<>();
     private static final java.util.LinkedHashMap<String, Long> sent = new java.util.LinkedHashMap<String, Long>() {
         @Override protected boolean removeEldestEntry(java.util.Map.Entry<String, Long> eldest) { return size() > 500; }
     };
     private static long flushedAt;
+
+    
+
+
 
     static void report(Object post) {
         try {
@@ -64,6 +76,7 @@ final class VideoStats {
         }
     }
 
+    
     interface Got { void got(long[][] points); }
 
     static void history(String aid, Got then) {
@@ -90,10 +103,13 @@ final class VideoStats {
         });
     }
 
+    
+
     static final String[] COUNTS = {"play", "digg", "comment", "share", "collect", "download", "forward", "repost", "lose", "lose_comment"};
     private static final String[] GETTERS = {"getPlayCount", "getDiggCount", "getCommentCount", "getShareCount", "getCollectCount",
             "getDownloadCount", "getForwardCount", "getRepostCount", "getLoseCount", "getLoseCommentCount"};
 
+    
     static Bundle read(Object post) {
         Bundle out = new Bundle();
         out.putString("aid", NativeRead.aid(post));
@@ -105,7 +121,7 @@ final class VideoStats {
         out.putLong("type", NativeRead.number(NativeRead.get(post, "getAwemeType")));
         Object ad = NativeRead.get(post, "isAd");
         out.putBoolean("ad", ad instanceof Boolean && (Boolean) ad);
-
+        
         Object aigc = NativeRead.get(post, "getAigcInfo");
         boolean ai = NativeRead.number(NativeRead.get(aigc, "getAIGCLabelType")) > 0;
         if (!ai && aigc != null) {
@@ -155,7 +171,7 @@ final class VideoStats {
                 if (name.length() > 0) tags.add(name);
             }
         }
-
+        
         java.util.regex.Matcher hash = java.util.regex.Pattern.compile("#([\\p{L}\\p{N}_]+)")
                 .matcher(NativeRead.string(NativeRead.get(post, "getDesc")));
         while (hash.find()) {

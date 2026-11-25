@@ -4,16 +4,25 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+
+
+
+
+
+
+
+
 public final class AirTok {
 
     private AirTok() {}
 
-    public static final String PREFS = "margyt";
+    public static final String PREFS = "airtok";
     public static final String KEY_ENABLED = "region_enabled";
     public static final String KEY_COUNTRY = "region_country";
 
     public static final String DEFAULT_ISO = "kz";
 
+    
     public static final String[][] COUNTRIES = {
             {"nl", "20408",  "KPN",        "Netherlands"},
             {"us", "310410", "AT&T",       "United States"},
@@ -121,7 +130,7 @@ public final class AirTok {
             {"gl", "29001", "Tusass", "Greenland"}, {"ad", "21303", "Andorra Telecom", "Andorra"},
             {"mc", "21201", "Monaco Telecom", "Monaco"}, {"li", "29501", "Swisscom", "Liechtenstein"},
             {"sm", "29201", "TIM", "San Marino"},
-
+            
             {"xx", "00101", "Двойка", "Страна невыученных уроков"},
             {"aq", "00103", "Penguin Mobile", "Antarctica"},
             {"xa", "00102", "Poseidon", "Atlantis"},
@@ -130,6 +139,7 @@ public final class AirTok {
 
     public static final int ISO = 0, MCCMNC = 1, CARRIER = 2, LABEL = 3;
 
+    
     public static String name(String[] row) {
         if ("xx".equals(row[ISO])) return Local.of("Страна невыученных уроков");
         if ("xa".equals(row[ISO])) return Local.of("Атлантида");
@@ -145,6 +155,8 @@ public final class AirTok {
 
     private static volatile Context sContext;
 
+    
+
     public static Context context() {
         Context known = sContext;
         if (known != null) return known;
@@ -154,47 +166,29 @@ public final class AirTok {
             if (app instanceof Application) {
                 sContext = (Context) app;
                 warmLikes();
-                ensureDarkMode(sContext);
             }
         } catch (Throwable ignored) {
-
+            
+            
         }
         return sContext;
     }
 
     private static volatile boolean likesWarmed;
 
+    
     private static void warmLikes() {
         if (likesWarmed) return;
         likesWarmed = true;
         try { Accent.prewarmLikeAnimations(null); } catch (Throwable ignored) { }
     }
 
+    
     public static void attach(Context context) {
         if (context != null) {
             sContext = context.getApplicationContext();
             warmLikes();
-            ensureDarkMode(sContext);
         }
-    }
-
-    private static volatile boolean darkModeChecked;
-
-    public static void ensureDarkMode(Context context) {
-        if (darkModeChecked || context == null) return;
-        darkModeChecked = true;
-        try {
-            SharedPreferences modPrefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-            if (!modPrefs.getBoolean("dark_default_v1", false)) {
-                modPrefs.edit().putBoolean("dark_default_v1", true).apply();
-                SharedPreferences sp = context.getSharedPreferences("sp_dark_mode", Context.MODE_PRIVATE);
-                sp.edit().putInt("dark_mode", 2).apply();
-                try {
-                    Class<?> delegate = Class.forName("X.005J");
-                    delegate.getMethod("LJJIII", int.class).invoke(null, 2);
-                } catch (Throwable ignored) {}
-            }
-        } catch (Throwable ignored) {}
     }
 
     private static SharedPreferences prefs() {
@@ -207,6 +201,8 @@ public final class AirTok {
         }
     }
 
+    
+
     public static boolean isEnabled() {
         SharedPreferences p = prefs();
         return p != null && p.getBoolean(KEY_ENABLED, true);
@@ -215,7 +211,6 @@ public final class AirTok {
     public static void setEnabled(boolean enabled) {
         SharedPreferences p = prefs();
         if (p != null) p.edit().putBoolean(KEY_ENABLED, enabled).apply();
-        frozenOn = enabled;
     }
 
     public static String iso() {
@@ -227,9 +222,9 @@ public final class AirTok {
     public static void setIso(String iso) {
         SharedPreferences p = prefs();
         if (p != null) p.edit().putString(KEY_COUNTRY, iso).apply();
-        frozen = row(iso);
     }
 
+    
     public static String[] row(String iso) {
         if (iso != null) {
             for (String[] country : COUNTRIES) {
@@ -245,6 +240,13 @@ public final class AirTok {
     private static volatile String[] frozen;
     private static volatile Boolean frozenOn;
 
+    
+
+
+
+
+
+
     public static String[] current() {
         String[] known = frozen;
         if (known != null) return known;
@@ -253,6 +255,7 @@ public final class AirTok {
         return known;
     }
 
+    
     public static boolean active() {
         if (context() == null) return false;
         Boolean known = frozenOn;

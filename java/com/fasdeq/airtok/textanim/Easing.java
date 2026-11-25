@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class Easing {
     public static final int COUNT = 8;
@@ -91,10 +95,10 @@ public final class Easing {
             case BOUNCE:
                 return bounce(t);
             case EXPO:
-
+                
                 return t >= 1.0f ? 1.0f : (float) (1.0 - Math.pow(2.0, -10.0 * t));
             case S_CURVE:
-
+                
                 return t * t * (3.0f - 2.0f * t);
             default: {
                 float inv = 1.0f - t;

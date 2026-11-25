@@ -3,6 +3,7 @@ package com.fasdeq.airtok;
 import android.graphics.Rect;
 import android.view.View;
 
+
 final class BackdropSource {
     private BackdropSource(){}
     static boolean visible(View view){

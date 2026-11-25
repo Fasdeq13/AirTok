@@ -23,6 +23,14 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Set;
 
+
+
+
+
+
+
+
+
 final class PhotoGrid {
 
     private PhotoGrid() {}
@@ -30,7 +38,7 @@ final class PhotoGrid {
     private static final int PER_LINE = 4;
     private static final java.util.concurrent.ExecutorService LOADER =
             java.util.concurrent.Executors.newFixedThreadPool(3, run -> {
-                Thread thread = new Thread(run, "MargyT photos");
+                Thread thread = new Thread(run, "AirTok photos");
                 thread.setDaemon(true);
                 thread.setPriority(Thread.MIN_PRIORITY);
                 return thread;
@@ -84,6 +92,7 @@ final class PhotoGrid {
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         tile.addView(image, new FrameLayout.LayoutParams(-1, -1));
 
+        
         TextView number = new TextView(c);
         number.setText(String.valueOf(index + 1));
         number.setTextColor(Color.WHITE);
@@ -140,6 +149,7 @@ final class PhotoGrid {
         }
     }
 
+    
     static Bitmap decode(byte[] data, int target) {
         if (data == null || data.length == 0) return null;
         try {
@@ -158,6 +168,7 @@ final class PhotoGrid {
         }
     }
 
+    
     private static final class Tick extends View {
         boolean on;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -192,6 +203,7 @@ final class PhotoGrid {
         }
     }
 
+    
     private static final class Ring extends View {
         boolean on;
         private final float radius;

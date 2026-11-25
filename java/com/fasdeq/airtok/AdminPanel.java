@@ -11,11 +11,20 @@ import org.json.JSONObject;
 import java.util.HashSet;
 import java.util.Set;
 
+
+
+
+
+
+
+
+
 final class AdminPanel {
     private AdminPanel() {}
 
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
+    
     static boolean owner() {
         try {
             Badges.Badge[] worn = Badges.of(Account.id());
@@ -25,6 +34,7 @@ final class AdminPanel {
         return false;
     }
 
+    
     static void open(final Context c, final String target, final View block) {
         Net.away("admin look", () -> {
             try {
@@ -44,6 +54,9 @@ final class AdminPanel {
         Screen.say("prove".equals(why) ? Text.VERDICT_PROVE : Text.ADMIN_FAILED);
     }
 
+    
+
+    
     private static void approve(final Context c, final Runnable then) {
         Net.away("admin device", () -> {
             try {
@@ -88,6 +101,8 @@ final class AdminPanel {
         panel.quiet(Text.CANCEL, null).show();
     }
 
+    
+
     private static void sheet(final Context c, final String target, final JSONObject look, final View block) {
         Panel panel = Panel.with(c, Skin.remembered(c), Text.ADMIN);
         String name = look.optString("name", "");
@@ -129,6 +144,7 @@ final class AdminPanel {
         panel.quiet(Text.CLOSE, null).show();
     }
 
+    
     private static void reason(final Context c, final String target, final boolean good, JSONObject verdict, final View block) {
         Panel panel = Panel.with(c, Skin.remembered(c), good ? Text.VERDICT_GOOD : Text.VERDICT_BAD);
         final android.widget.EditText why = panel.field(Text.VERDICT_REASON);
@@ -153,7 +169,7 @@ final class AdminPanel {
                 MAIN.post(() -> {
                     sheet(c, target, look, block);
                     if (block != null) {
-
+                        
                         block.postDelayed(() -> ProfileVerdict.apply(block), 1500);
                         block.postDelayed(() -> ProfileVerdict.apply(block), 4000);
                     }
@@ -168,6 +184,9 @@ final class AdminPanel {
         });
     }
 
+    
+
+    
     static void devices(final Context c) {
         Net.away("admin devices", () -> {
             try {

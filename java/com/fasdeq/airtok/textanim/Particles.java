@@ -50,6 +50,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -66,14 +67,15 @@ public final class Particles {
     static final float SEND_SPREAD = 1.7f;
     static final float SEND_FORCE_MIN = 2.6f;
     static final float SEND_FORCE_RANGE = 3.6f;
-
+    
     static final int MOTION_PRESET = 0;
     static final int MOTION_VORTEX = 9;
-
+    
     static final float GLIDE_REF_FRAMES = 40.0f;
-
+    
     static final float GLIDE_MIN_PX = 60.0f;
 
+    
     public static final int SEND_CLASSIC = 0;
     public static final int SEND_RISE = 1;
     public static final int SEND_BLAST = 2;
@@ -97,7 +99,7 @@ public final class Particles {
         "Закат", "Конфетные", "Матрица", "Океан", "Сакура", "Лаванда", "Telegram", "Токсик",
         "Монохром", "Конфетти-микс"
     };
-
+    
     static final int[][] PALETTES = {
         null,
         {0xFFFE2C55, 0xFF25F4EE, 0xFFFFFFFF},
@@ -127,6 +129,7 @@ public final class Particles {
         return out;
     }
 
+    
     static final String[] SHAPE_NAMES_RU = {
         "Как в эффекте", "Точки", "Штрихи-искры", "Снежинки", "Лепестки сакуры", "Пузыри",
         "Сердечки", "Конфетти", "Буквы"
@@ -135,7 +138,7 @@ public final class Particles {
     int sendShape;
     int sendSwirl = 100;
     int sendDir;
-
+    
     int sendMotion;
     int sendDuration = 600;
     int sendArc;
@@ -149,6 +152,8 @@ public final class Particles {
         sendWave = wave;
     }
 
+    
+    
     void routeSend(Particle particle) {
         if (sendMotion == MOTION_PRESET || particle.homing) return;
         float frames = Math.max(1.0f, sendDuration / 16.0f);
@@ -308,6 +313,7 @@ public final class Particles {
         return count > before;
     }
 
+    
     public boolean burstSend(EditText view, Config config, List<Ghost> cells, float bx, float by,
                              int preset, int palette, int amount, int speed) {
         if (count >= LIMIT) return false;
@@ -338,6 +344,7 @@ public final class Particles {
         per = Math.max(1, Math.min(per, (LIMIT - count) / Math.max(1, total)));
         int before = count;
 
+        
         float minX = Float.MAX_VALUE, maxX = -Float.MAX_VALUE, minY = Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
         for (int c = 0; c < total; c++) {
             Ghost cell = cells.get(c);
@@ -411,7 +418,7 @@ public final class Particles {
                         break;
                     }
                     case SEND_VORTEX: {
-
+                        
                         particle.init(random, pick(Config.STYLE_DUST), px + ox, py + oy, color, textSize, cell.text);
                         particle.color = color;
                         float dir = sendDir == 2 ? (random.nextBoolean() ? 1.0f : -1.0f) : (sendDir == 0 ? -1.0f : 1.0f);
@@ -429,7 +436,7 @@ public final class Particles {
                         break;
                     }
                     default: {
-
+                        
                         particle.init(random, pick(Config.STYLE_DUST), px + ox, py + oy, color, textSize, cell.text);
                         particle.color = color;
                         particle.launch((r1 - 0.5f) * 0.9f, -(1.5f + r2 * 2.6f) * spd,
@@ -592,6 +599,7 @@ public final class Particles {
         points[index * 2 + 1] = position[1];
     }
 
+    
     void glyph(TextPaint paint, Config config, Ghost cell, float ox, float oy, int baseColor) {
         int[] mask = mask(paint, cell.text, cell.width);
         int total = mask.length / 2;
@@ -623,7 +631,7 @@ public final class Particles {
             particle.tune(config.partSpeed / 100.0f, config.partLife / 100.0f, config.wind);
             if (smoke) {
                 particle.smokeTune(config.smokeRise / 100.0f, config.smokeSpread / 100.0f, config.smokeSwirl / 100.0f);
-
+                
                 particle.delay = (ry - minY) / spanY * holdSpan + random.nextFloat() * 3.0f;
             } else {
                 particle.delay = Motion.clamp(rx / width) * 13.0f + random.nextFloat() * 5.0f;
@@ -644,6 +652,7 @@ public final class Particles {
         }
     }
 
+    
     int[] mask(TextPaint paint, String text, float width) {
         String key = text + '|' + paint.getTextSize() + '|' + System.identityHashCode(paint.getTypeface());
         int[] cached = masks.get(key);
@@ -680,7 +689,7 @@ public final class Particles {
                 }
             }
         } catch (Throwable ignored) {
-
+            
         }
         masks.put(key, out);
         return out;
@@ -707,7 +716,7 @@ public final class Particles {
     void smoke(Canvas canvas, Particle particle, int alpha) {
         float age = 1.0f - particle.life;
         float radius = Math.max(1.2f, particle.size * 0.70f * (1.0f + particle.expand * 2.4f * age));
-
+        
         int tone = mix(particle.color, 0xFF8E8E98, Math.min(1.0f, age * 1.3f));
         float halo = Math.min(1.0f, age * 2.5f);
         if (halo > 0.02f) {
@@ -720,6 +729,7 @@ public final class Particles {
         canvas.drawCircle(particle.x - radius * 0.15f, particle.y - radius * 0.2f, radius * 0.5f, fill);
     }
 
+    
     void spark(Canvas canvas, Particle particle, int alpha) {
         float size = Math.max(1.5f, particle.size * (0.65f * particle.life + 0.35f));
         float length = Math.max(3.0f, size * particle.stretch);

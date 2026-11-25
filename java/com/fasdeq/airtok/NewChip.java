@@ -7,10 +7,15 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 
+
+
+
+
 final class NewChip {
 
     private NewChip() {}
 
+    
     static final String MARK = "⁣";
 
     static boolean marked(CharSequence title) {

@@ -1,5 +1,6 @@
 package com.fasdeq.airtok;
 
+
 final class FlagObjects {
     private FlagObjects() {}
 

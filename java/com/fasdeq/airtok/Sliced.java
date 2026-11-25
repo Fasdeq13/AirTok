@@ -7,19 +7,47 @@ import android.view.ViewGroup;
 import java.util.ArrayDeque;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Sliced {
 
     private Sliced() {}
 
+    
     interface Visit {
         void view(View view);
     }
 
+    
     private static final long STRETCH = 2;
     private static final int MOST = 12000;
     private static final int DEEP = 40;
 
     private static final class Walk implements Runnable, android.view.Choreographer.FrameCallback {
+        
+
+
+
+
+
 
         final java.lang.ref.WeakReference<View> root;
         final Visit[] visits;
@@ -67,7 +95,7 @@ final class Sliced {
                     }
                     if (depth < DEEP && view instanceof ViewGroup) {
                         ViewGroup group = (ViewGroup) view;
-
+                        
                         for (int i = group.getChildCount() - 1; i >= 0; i--) {
                             ahead.push(group.getChildAt(i));
                             depths.push(depth + 1);
@@ -97,7 +125,7 @@ final class Sliced {
             }
             ahead.clear();
             depths.clear();
-
+            
             if (top != null) {
                 synchronized (running) {
                     running.remove(top);
@@ -108,6 +136,7 @@ final class Sliced {
 
     private static final WeakHashMap<View, Walk> running = new WeakHashMap<View, Walk>();
 
+    
     static void walk(View root, Visit... visits) {
         if (root == null || visits.length == 0) return;
         Walk walk;
@@ -121,7 +150,8 @@ final class Sliced {
             running.put(root, walk);
         }
         walk.begin();
-
+        
+        
         walk.run();
     }
 }

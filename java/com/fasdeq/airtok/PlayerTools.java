@@ -15,20 +15,24 @@ public final class PlayerTools {
    post=new WeakReference<Object>(playing);
    Object manager=NativeRead.get(controller,"getPlayerManager");if(manager==null)return;
    current=new WeakReference<Object>(manager);
-   if(next.equals(aid)){return;}
+   if(next.equals(aid)){SponsorBlock.playing(next);return;}
    aid=next;cancelSmooth();
    VideoStats.report(playing);
+   SponsorBlock.playing(next);
   }catch(Throwable error){Diary.note("default speed: "+error);}
  }
  static void accountChanged(){aid="";current=new WeakReference<Object>(null);cancelSmooth();}
+ 
+
+
 
  public static void heard(Object controller,String eventAid){
   if(eventAid==null||eventAid.length()==0)return;
   if(android.os.Looper.myLooper()!=android.os.Looper.getMainLooper()){handler.post(()->heard(controller,eventAid));return;}
-  if(eventAid.equals(aid)&&current.get()!=null){return;}
+  if(eventAid.equals(aid)&&current.get()!=null){SponsorBlock.playing(eventAid);return;}
   resumed(controller,eventAid);
  }
-
+ 
  static Object manager(){return current.get();}
  static String aid(){return aid;}
  static Object post(){return post.get();}

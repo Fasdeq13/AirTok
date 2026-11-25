@@ -13,16 +13,17 @@ import java.util.*;
 import java.util.concurrent.*;
 import org.json.*;
 
+
 public final class OfflineComments {
  private static final String ENABLED="offline_comments_enabled",COUNT="offline_comments_count";
  private static final Handler MAIN=new Handler(Looper.getMainLooper());
- private static final ThreadPoolExecutor WORK=new ThreadPoolExecutor(2,2,30,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10000),r->{Thread t=new Thread(r,"margyt-offline-comments");t.setDaemon(true);t.setPriority(Thread.MIN_PRIORITY);return t;});
+ private static final ThreadPoolExecutor WORK=new ThreadPoolExecutor(2,2,30,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10000),r->{Thread t=new Thread(r,"airtok-offline-comments");t.setDaemon(true);t.setPriority(Thread.MIN_PRIORITY);return t;});
  private static final Set<String> pending=Collections.synchronizedSet(new HashSet<String>());
  private static final ConcurrentHashMap<String,String> errors=new ConcurrentHashMap<String,String>();
  private static WeakReference<Object> active=new WeakReference<Object>(null);
- private static SharedPreferences prefs(){return AirTok.context().getSharedPreferences("margyt",0);}
+ private static SharedPreferences prefs(){return AirTok.context().getSharedPreferences(AirTok.PREFS,0);}
  private static String account(){String uid=Account.liveId();return uid!=null&&uid.matches("[0-9]{1,24}")?uid:"local";}
- private static File archive(String account,String aid){return new File(new File(AirTok.context().getFilesDir(),"margyt"),"offline-comments-"+account+"-"+aid+".zip");}
+ private static File archive(String account,String aid){return new File(new File(AirTok.context().getFilesDir(),"airtok"),"offline-comments-"+account+"-"+aid+".zip");}
  public static void cached(Object post,String videoPath){
   try{
    if(AirTok.context()==null||!prefs().getBoolean(ENABLED,false))return;
@@ -55,7 +56,7 @@ public final class OfflineComments {
   if(request==null)throw new IOException("native comment API changed");
   LinkedHashMap<String,OfflineCommentArchive.Row> rows=new LinkedHashMap<String,OfflineCommentArchive.Row>();
   long cursor=0,deadline=SystemClock.elapsedRealtime()+120000;
-
+  
   int candidateCount=Math.min(1000,Math.max(50,count));
   for(int page=0;page<40&&rows.size()<candidateCount;page++){
    if(!prefs().getBoolean(ENABLED,false))throw new IOException("disabled");
@@ -103,14 +104,14 @@ public final class OfflineComments {
   Object pager=NativeRead.get(component,"Bc");
   return aid.equals(NativeRead.aid(NativeRead.get(pager,"LJII")))&&archive(account(),aid).isFile();
  }
-
+ 
  public static Object nativeTask(String aid){
   if(!hasNativeArchive(aid))return null;
   final String user=account();
   try{return Class.forName("X.0Vgo").getMethod("LIZ",Callable.class).invoke(null,(Callable<Object>)()->nativeResponse(user,aid));}
   catch(Throwable e){Diary.note("offline native task: "+e.getClass().getSimpleName());return null;}
  }
-
+ 
  public static Object nativeObservable(String aid){
   if(!hasNativeArchive(aid))return null;
   final String user=account();
@@ -154,7 +155,7 @@ public final class OfflineComments {
  public static void library(Activity activity){
   String user=account();
   if(!MediaQueue.add(()->{
-   File dir=new File(AirTok.context().getFilesDir(),"margyt");String prefix="offline-comments-"+user+"-";
+   File dir=new File(AirTok.context().getFilesDir(),"airtok");String prefix="offline-comments-"+user+"-";
    File[] files=dir.listFiles((d,name)->name.startsWith(prefix)&&name.endsWith(".zip"));
    if(files==null)files=new File[0];Arrays.sort(files,(a,b)->Long.compare(b.lastModified(),a.lastModified()));
    String[] ids=new String[files.length],titles=new String[files.length];for(int i=0;i<files.length;i++){ids[i]=files[i].getName().substring(prefix.length(),files[i].getName().length()-4);String title=prefs().getString("offline_title_"+user+":"+ids[i],"");titles[i]=title.isEmpty()?Local.of("Видео ")+ids[i]:title.substring(0,Math.min(80,title.length()));}

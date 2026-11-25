@@ -27,10 +27,23 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class TimeWheel extends View {
 
-    private static final float STEP = 19f;
-    private static final int SIDE = 5;
+    private static final float STEP = 19f;   
+    private static final int SIDE = 5;       
 
     private static final class Spring {
         float x, v, to;
@@ -39,10 +52,11 @@ final class TimeWheel extends View {
         boolean still() { return Math.abs(x - to) < .001f && Math.abs(v) < .01f; }
     }
 
+    
     private final class Drum {
         final String[] items;
         float pos, vel, tgt, k = 260f, c = 28f;
-        int mode, last;
+        int mode, last;   
 
         Drum(String[] items, int start) { this.items = items; pos = tgt = start; last = start; }
 
@@ -71,10 +85,10 @@ final class TimeWheel extends View {
 
     private final Skin skin;
     private final float density;
-    private final float H;
-    private final float R;
+    private final float H;                    
+    private final float R;                    
     private final Drum hour, minute;
-    private final Spring[] mix = {new Spring(1), new Spring(0), new Spring(1), new Spring(0)};
+    private final Spring[] mix = {new Spring(1), new Spring(0), new Spring(1), new Spring(0)}; 
     private final Spring held = new Spring(0);
     private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -86,14 +100,14 @@ final class TimeWheel extends View {
 
     private int accent;
     private boolean pm;
-    private int active;
+    private int active;                       
     private Drum dragging;
     private float downX, downY, startPos;
     private boolean movedFar;
-    private int pressedBox = -1;
-    private int tapBox = -1;
+    private int pressedBox = -1;              
+    private int tapBox = -1;                  
     private long tapAt;
-    private PopupWindow field;
+    private PopupWindow field;                
     private ViewTreeObserver.OnGlobalLayoutListener follow;
     private VelocityTracker tracker;
     private boolean running;
@@ -121,7 +135,10 @@ final class TimeWheel extends View {
         describe();
     }
 
+    
     int minuteOfDay() { return ((hour.index() + 1) % 12 + (pm ? 12 : 0)) * 60 + minute.index(); }
+
+    
 
     private boolean animated() { return Motion.enabled(getContext()); }
 
@@ -164,6 +181,8 @@ final class TimeWheel extends View {
         setContentDescription(hour.items[hour.index()] + ":" + minute.items[minute.index()] + (pm ? " PM" : " AM"));
     }
 
+    
+
     @Override protected void onMeasure(int widthSpec, int heightSpec) {
         int w = MeasureSpec.getMode(widthSpec) == MeasureSpec.UNSPECIFIED ? Math.round(320 * density) : MeasureSpec.getSize(widthSpec);
         setMeasuredDimension(w, Math.round((76 + 12 + 200) * density));
@@ -180,6 +199,8 @@ final class TimeWheel extends View {
         stage.set(0, bh + 12 * density, w, bh + 12 * density + 200 * density);
     }
 
+    
+
     private static int lerp(int a, int b, float t) {
         t = Math.max(0, Math.min(1, t));
         return ((int) (((a >>> 24) & 255) + (((b >>> 24) & 255) - ((a >>> 24) & 255)) * t) << 24)
@@ -190,7 +211,7 @@ final class TimeWheel extends View {
 
     private static float lum(int c) {
         float r = ((c >> 16) & 255) / 255f, g = ((c >> 8) & 255) / 255f, b = (c & 255) / 255f;
-        return .2126f * r * r + .7152f * g * g + .0722f * b * b;
+        return .2126f * r * r + .7152f * g * g + .0722f * b * b;   
     }
 
     private static float contrast(int a, int b) { float x = lum(a), y = lum(b); return (Math.max(x, y) + .05f) / (Math.min(x, y) + .05f); }
@@ -202,11 +223,12 @@ final class TimeWheel extends View {
     }
 
     @Override protected void onDraw(Canvas canvas) {
-        int surface = lerp(skin.card, skin.text, .10f);
-        int tonal = lerp(surface, accent, .26f);
+        int surface = lerp(skin.card, skin.text, .10f);                 
+        int tonal = lerp(surface, accent, .26f);                        
         int onTonal = contrast(accent, tonal) >= 3f ? accent : skin.text;
         float u = density;
 
+        
         RectF[] boxes = {hourBox, minuteBox, amBox, pmBox};
         for (int i = 0; i < 4; i++) {
             float t = mix[i].x;
@@ -221,6 +243,7 @@ final class TimeWheel extends View {
         tmp.set(hourBox.right, hourBox.top, minuteBox.left, hourBox.bottom);
         label(canvas, tmp, ":", 44 * u, regular, skin.text);
 
+        
         canvas.save();
         clip.reset(); clip.addRoundRect(stage, 28 * u, 28 * u, Path.Direction.CW);
         canvas.clipPath(clip);
@@ -259,11 +282,13 @@ final class TimeWheel extends View {
             text.setAlpha(Math.round(255f * (float) Math.pow(cos, 2.2) * (on ? 1f : .72f)));
             Paint.FontMetrics m = text.getFontMetrics();
             canvas.save();
-            canvas.scale(.92f + .08f * cos, cos, x, y);
+            canvas.scale(.92f + .08f * cos, cos, x, y);                 
             canvas.drawText(d.items[((idx % n) + n) % n], x, y - (m.ascent + m.descent) / 2f, text);
             canvas.restore();
         }
     }
+
+    
 
     private int boxAt(float x, float y) {
         if (hourBox.contains(x, y)) return 0;
@@ -302,7 +327,7 @@ final class TimeWheel extends View {
                     tracker.addMovement(e); tracker.computeCurrentVelocity(1000);
                     float v = Math.max(-90f, Math.min(90f, -tracker.getYVelocity() / H));
                     tracker.recycle(); tracker = null;
-                    if (up && !movedFar) {
+                    if (up && !movedFar) {                             
                         float s = Math.max(-1f, Math.min(1f, (y - stage.centerY()) / R));
                         d.goTo(Math.round(d.pos + (float) Math.toDegrees(Math.asin(s)) / STEP));
                     } else if (!up || Math.abs(v) < 6f || !animated()) d.goTo(Math.round(d.pos));
@@ -314,7 +339,7 @@ final class TimeWheel extends View {
                         active = pressedBox;
                         if (pressedBox == tapBox && now - tapAt <= ViewConfiguration.getDoubleTapTimeout()) {
                             int which = pressedBox; tapBox = -1; pressedBox = -1;
-                            targets(); edit(which);
+                            targets(); edit(which);                      
                             return true;
                         }
                         tapBox = pressedBox; tapAt = now;
@@ -336,6 +361,9 @@ final class TimeWheel extends View {
         synchronized (TimeWheel.class) { if (click != null) { try { click.release(); } catch (Throwable ignored) { } click = null; } }
     }
 
+    
+
+    
     private void edit(final int which) {
         if (field != null) field.dismiss();
         final Drum d = which == 0 ? hour : minute;
@@ -371,11 +399,12 @@ final class TimeWheel extends View {
         int[] at = new int[2]; getLocationOnScreen(at);
         w.showAtLocation(this, Gravity.NO_GRAVITY, at[0] + Math.round(box.left), at[1] + Math.round(box.top));
         in.requestFocus();
-
+        
         follow = () -> { int[] p = new int[2]; getLocationOnScreen(p); w.update(p[0] + Math.round(box.left), p[1] + Math.round(box.top), -1, -1); };
         getViewTreeObserver().addOnGlobalLayoutListener(follow);
     }
 
+    
     private void commit(int which, String typed) {
         int v;
         try { v = Integer.parseInt(typed.trim()); } catch (Throwable ignored) { return; }
@@ -390,10 +419,13 @@ final class TimeWheel extends View {
         targets();
     }
 
+    
     private void jumpTo(Drum d, int index) {
         int n = d.items.length, cur = Math.round(d.pos);
         d.goTo(cur + (((index - cur + n / 2) % n) + n) % n - n / 2);
     }
+
+    
 
     private static AudioTrack click;
     private static long lastClick;
@@ -413,6 +445,7 @@ final class TimeWheel extends View {
         } catch (Throwable ignored) { }
     }
 
+    
     private static AudioTrack makeClick() {
         int rate = 22050, n = rate * 30 / 1000;
         short[] pcm = new short[n];

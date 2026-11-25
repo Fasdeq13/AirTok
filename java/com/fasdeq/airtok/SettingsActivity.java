@@ -33,6 +33,18 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public class SettingsActivity extends Activity {
     void accountAppearanceChanged(){skin=Skin.forSettings(this);rebuild();}
 
@@ -63,26 +75,35 @@ public class SettingsActivity extends Activity {
         }
     };
 
+    
+
+
+
+
+
+
+
     private static boolean pending;
 
-    private static final String CHANNEL = "https://t.me/margytiktok";
-    private static final String FORUM = "https://t.me/margeletforum";
-    private static final String OWNER_TELEGRAM = "https://t.me/narezany";
+    
+    private static final String CHANNEL = "https://t.me/airtokiktok";
+    private static final String FORUM = "https://t.me/airtokforum";
+    private static final String OWNER_TELEGRAM = "https://t.me/fasdeq";
     private static final String OWNER_TIKTOK =
-            "https://tiktok.com/@narezany?_r=1&_t=ZT-99hPDJ26hji_";
-
-    private static final String CHANNEL_WRITE = "https://t.me/margytiktok?direct";
+            "https://tiktok.com/@fasdeq?_r=1&_t=ZT-99hPDJ26hji_";
+    
+    private static final String CHANNEL_WRITE = "https://t.me/airtokiktok?direct";
     private static final String TTCUZ = "https://t.me/ttcuzmod";
-    private static final String GIT = "https://git.narez.xyz/narezany/MargyT";
+    private static final String GIT = "https://git.narez.xyz/fasdeq/AirTok";
     private static final String DOCS_PLUGINS =
-            "https://git.narez.xyz/narezany/MargyT/src/branch/main/docs/plugins.md";
+            "https://git.narez.xyz/fasdeq/AirTok/src/branch/main/docs/plugins.md";
     private static final String DOCS_STYLES =
-            "https://git.narez.xyz/narezany/MargyT/src/branch/main/docs/mtui.md";
+            "https://git.narez.xyz/fasdeq/AirTok/src/branch/main/docs/mtui.md";
     private static final String YOOMONEY = "https://yoomoney.ru/to/4100118196133693";
     private static final String BOOSTY = "https://boosty.to/ega_link";
     private static final String FUNPAY = "https://funpay.com/lots/offer?id=80127335";
-
-    private static final String STARS = "https://t.me/narezany";
+    
+    private static final String STARS = "https://t.me/fasdeq";
 
     private boolean countriesOpen;
     private boolean accentOpen;
@@ -93,8 +114,12 @@ public class SettingsActivity extends Activity {
     private boolean fontOpen;
     private ScrollView page;
     private int settingsGroup;
-
+    
     private String settingsPage;
+
+    
+
+
 
     private static final class Shelf {
         final int group; final String id, icon, title, note; final String[] sections;
@@ -103,20 +128,17 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    private static final String DOWNLOADS = Local.of("Скачивание медиа");
-    private static final String TOOLS = Local.of("Умный плеер и режим чистого экрана");
-
     private static Shelf[] shelves;
 
     private Shelf[] shelves() {
         if (shelves != null) return shelves;
         shelves = new Shelf[] {
-            new Shelf(1, "style", "palette", Local.of("Оформление"), "", Text.DESIGN, Text.ACCENT, Text.FONT, MOTION_BLUR),
-            new Shelf(3, "feed_video", "play_circle", Local.of("Лента и видео"), "", Text.REGION, Text.FEED, BURN, REPOSTS),
-            new Shelf(4, "downloads", "download", Local.of("Скачивание медиа"), "", DOWNLOADS),
-            new Shelf(6, "tools", "tune", Local.of("Умный плеер и режим чистого экрана"), "", TOOLS),
-            new Shelf(7, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Text.NOTIFICATIONS),
-            new Shelf(5, "about", "info", Local.of("О проекте"), "", Local.of("О проекте"), Local.of("Благодарность")),
+            new Shelf(1, "appearance", "palette", Local.of("Оформление"), "", Local.of("Тема"), Local.of("Цвет акцента"), Text.FONT, MOTION_BLUR, Local.of("Экран запуска"), Local.of("Редактор интерфейса")),
+            new Shelf(2, "feed_video", "play_circle", Local.of("Лента и видео"), "", Text.REGION, Text.FEED, BURN, Local.of("Тёмная тема"), Local.of("Регион и время публикации")),
+            new Shelf(3, "downloads", "download", Local.of("Скачивание медиа"), "", Text.DOWNLOADS),
+            new Shelf(4, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Local.of("Точное время"), Text.NOTIFICATIONS),
+            new Shelf(5, "privacy", "lock", Local.of("Защита и приватность"), "", Local.of("Защита входа"), GHOST),
+            new Shelf(6, "about", "info", Local.of("О проекте"), "", Local.of("О проекте")),
         };
         return shelves;
     }
@@ -145,9 +167,9 @@ public class SettingsActivity extends Activity {
     private java.util.List<Mine.Held> ordering;
     private boolean streakOpen;
     private boolean diaryOpen;
-
+    
     private boolean rearranged;
-
+    
     private View donateAnchor;
     private final Runnable badgeUpdates = () -> {
         if (!isFinishing() && !isDestroyed()) rebuild();
@@ -160,14 +182,18 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         AirTok.attach(this);
-        Accent.reload();
-
+        
+        
         skin = Skin.forSettings(this);
         Unsaved.look(this);
         dressTheWindow();
-
+        
+        
         Badges.tell(badgeUpdates);
-
+        
+        
+        
+        
         Mine.ask(() -> {
             if (isFinishing() || isDestroyed()) return;
             rebuild();
@@ -193,15 +219,12 @@ public class SettingsActivity extends Activity {
         setContentView(root);
         Design.page(this, root, skin.page);
         rebuild();
-        maybeAskForSupport();
-        if(getIntent().getBooleanExtra("margyt_tutorial",false))root.postDelayed(()->Tutorial.show(this),350L);
-        openPluginFile(getIntent());
-        openStyleFile(getIntent());
         openStats(getIntent());
     }
 
     private Bundle stats;
 
+    
     private void openStats(Intent intent) {
         Bundle given = intent == null ? null : intent.getBundleExtra(VideoStats.EXTRA);
         if (given == null) return;
@@ -236,6 +259,7 @@ public class SettingsActivity extends Activity {
         return row;
     }
 
+    
     private View ratioRow(String picture, String title, long part, long of, long best) {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
@@ -269,6 +293,7 @@ public class SettingsActivity extends Activity {
         return "https://www.tiktok.com/@" + (handle.length() > 0 ? handle : "_") + (s.getInt("images") > 0 ? "/photo/" : "/video/") + s.getString("aid", "");
     }
 
+    
     private String statsText(Bundle s) {
         long views = s.getLong("play");
         StringBuilder out = new StringBuilder();
@@ -282,7 +307,7 @@ public class SettingsActivity extends Activity {
         out.append("⚡ ").append(Local.of("Вовлечённость")).append(": ").append(share(engaged, views)).append('\n');
         if (s.getLong("created") > 0) out.append("🕒 ").append(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.LONG,
                 java.text.DateFormat.SHORT).format(new java.util.Date(s.getLong("created") * 1000L))).append('\n');
-        out.append("🔗 ").append(postLink(s)).append("\n\nMargyT");
+        out.append("🔗 ").append(postLink(s)).append("\n\nAirTok");
         return out.toString();
     }
 
@@ -294,6 +319,7 @@ public class SettingsActivity extends Activity {
         startActivity(Intent.createChooser(send, Local.of("Поделиться статистикой")));
     }
 
+    
     private View tile(String picture, String name, long value, String under) {
         LinearLayout tile = new LinearLayout(this);
         tile.setOrientation(LinearLayout.VERTICAL);
@@ -339,6 +365,7 @@ public class SettingsActivity extends Activity {
     private int chartKind = 1;
     private long[][] chartPoints;
 
+    
     private final class Chart extends View {
         final Paint line = new Paint(Paint.ANTI_ALIAS_FLAG), area = new Paint(Paint.ANTI_ALIAS_FLAG),
                 text = new Paint(Paint.ANTI_ALIAS_FLAG), dot = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -363,7 +390,7 @@ public class SettingsActivity extends Activity {
             if (points == null) { canvas.drawText(Local.of("Загружаю…"), left, getHeight() / 2f, text); return; }
             if (points.length < 2) {
                 canvas.drawText(Local.of("Истории пока мало: точки добавляются,"), left, getHeight() / 2f - dp(8), text);
-                canvas.drawText(Local.of("когда ролик смотрят люди с MargyT."), left, getHeight() / 2f + dp(10), text);
+                canvas.drawText(Local.of("когда ролик смотрят люди с AirTok."), left, getHeight() / 2f + dp(10), text);
                 return;
             }
             long t0 = points[0][0], t1 = points[points.length - 1][0];
@@ -417,6 +444,7 @@ public class SettingsActivity extends Activity {
             topBar.addView(send, new LinearLayout.LayoutParams(dp(48), dp(48)));
         }
 
+        
         LinearLayout head = card();
         LinearLayout who = row();
         who.addView(icon("account_circle"));
@@ -443,11 +471,12 @@ public class SettingsActivity extends Activity {
         }
         column.addView(wrap(head));
 
+        
         LinearLayout grid = card();
         grid.addView(pair(tile("play_circle", Local.of("Просмотры"), views,
                 hours > 0 ? compact(Math.round(views / hours)) + " " + Local.of("в час") : null),
                 tile("bolt", Local.of("Вовлечённость"), 0, null)));
-
+        
         LinearLayout first = (LinearLayout) ((LinearLayout) grid.getChildAt(0)).getChildAt(1);
         ((TextView) first.getChildAt(1)).setText(share(likes + comments + shares + saves, views));
         grid.addView(pair(tile("favorite_border", Local.of("Лайки"), likes, share(likes, views)),
@@ -458,6 +487,7 @@ public class SettingsActivity extends Activity {
                 downloads > 0 ? tile("download", Local.of("Скачали"), downloads, null) : null));
         column.addView(wrap(grid));
 
+        
         column.addView(section(Local.of("Динамика")));
         LinearLayout chartCard = card();
         final Chart chart = new Chart();
@@ -467,7 +497,7 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(chartCard));
         final String aid = s.getString("aid", "");
         if (aid.length() > 0) VideoStats.history(aid, points -> {
-
+            
             long[] latest = {now, views, likes, comments, shares, saves};
             if (points.length == 0 || points[points.length - 1][0] < now - 600) {
                 long[][] more = java.util.Arrays.copyOf(points, points.length + 1);
@@ -478,6 +508,7 @@ public class SettingsActivity extends Activity {
             chart.invalidate();
         });
 
+        
         column.addView(section(Local.of("Подробно")));
         LinearLayout more = card();
         if (created > 0) more.addView(statRow("schedule", Local.of("Опубликовано"), java.text.DateFormat.getDateTimeInstance(
@@ -511,9 +542,10 @@ public class SettingsActivity extends Activity {
         if (topBar == null) column.addView(wrap(actionRow("share", Local.of("Поделиться статистикой"), null, this::shareStats)));
     }
 
-    static final String OPEN_PLUGIN = "margyt_open_plugin";
-
-    static final String OPEN_STYLE = "margyt_open_style";
+    
+    static final String OPEN_PLUGIN = "airtok_open_plugin";
+    
+    static final String OPEN_STYLE = "airtok_open_style";
 
     private void openStyleFile(Intent intent) {
         if (intent == null || !intent.getBooleanExtra(OPEN_STYLE, false) || intent.getData() == null) return;
@@ -557,9 +589,6 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Accent.reload();
-        skin = Skin.forSettings(this);
-        dressTheWindow();
         if(Streaks.isEnabled()){StreakAlarm.schedule(this,false);Streaks.round(this);}
         if(root!=null && column!=null)rebuild();
     }
@@ -572,15 +601,34 @@ public class SettingsActivity extends Activity {
 
     private void dressTheWindow() {
         try {
-            getWindow().setStatusBarColor(skin.page);
-            getWindow().setNavigationBarColor(skin.page);
-            if (!skin.dark()) {
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            int pageColor = skin.page;
+            boolean dark = NavBar.bright(pageColor) < 0.5f;
+            if (Design.frosted()) {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+                getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            } else {
+                getWindow().setStatusBarColor(pageColor);
+                getWindow().setNavigationBarColor(pageColor);
             }
+            View decor = getWindow().getDecorView();
+            int flags = decor.getSystemUiVisibility();
+            if (dark) {
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            } else {
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            }
+            decor.setSystemUiVisibility(flags);
         } catch (Throwable ignored) {
         }
     }
+
+    
 
     private void rebuild() {
         navigating=false;
@@ -591,7 +639,8 @@ public class SettingsActivity extends Activity {
         revealAnimationRequested = false;
         revealAnimationUsed = !animateReveal;
         final int previousScroll = page == null ? 0 : page.getScrollY();
-
+        
+        
         if (!keepPages) built = null;
         keepPages = false;
         renderDisclosureKey=null;
@@ -599,8 +648,10 @@ public class SettingsActivity extends Activity {
         topBar = null;
         column.addView(backArrow());
         if (settingsGroup == DONATE_PAGE) {
-            settingsGroup = 0;
-            rebuild();
+            column.addView(title(Text.DONATE_BANNER));
+            donatePage();
+            showRestartBar();
+            restoreScroll(0);
             return;
         }
         if (settingsGroup == STATS_PAGE) {
@@ -622,60 +673,20 @@ public class SettingsActivity extends Activity {
             restoreScroll(previousScroll);
             return;
         }
-
+        
         if (settingsGroup != 0 && settingsPage == null && searchQuery.length() == 0) {
             java.util.List<Shelf> pages = shelvesOf(settingsGroup);
             if (pages.size() == 1) settingsPage = pages.get(0).id;
         }
         Shelf open = shelf(settingsPage);
         if (open != null && open.group != settingsGroup) { settingsPage = null; open = null; }
-        column.addView(title(settingsGroup == 0 ? "AirTok" : open != null ? open.title : groupName(settingsGroup)));
+        column.addView(title(settingsGroup == 0 ? (Version.LITE ? "AirTok Lite" : "AirTok") : open != null ? open.title : groupName(settingsGroup)));
+        if(settingsGroup==0 || searchQuery.length()>0)column.addView(searchBox());
         if (open != null && open.note.length() > 0) { View lead = lead(open.note); lead.setTag(LEAD, Boolean.TRUE); column.addView(lead); }
-
+        
         final boolean searching = searchQuery.length() > 0;
         if (settingsGroup == 0 && !searching) {
-            LinearLayout lockCard = card();
-            TextView lockTitle = label(Local.of("Код-пароль при входе"));
-            lockTitle.setPadding(dp(16), dp(14), dp(16), dp(6));
-            lockTitle.setTextSize(Design.fluent() ? 15 : 16);
-            lockTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-            lockCard.addView(lockTitle);
-            if (!AppLock.isEnabled()) {
-                lockCard.addView(actionRow("lock_open", Local.of("Установить код-пароль"), Local.of("Задать 4-значный PIN"), () -> {
-                    AppLock.showSetupDialog(this, () -> {
-                        markChanged();
-                        rebuild();
-                    });
-                }));
-            } else {
-                lockCard.addView(actionRow("verified_user", Local.of("Статус защиты"), Local.of("Включена"), null));
-                lockCard.addView(line());
-                lockCard.addView(actionRow("key", Local.of("Изменить код-пароль"), Local.of("Ввести текущий и новый"), () -> {
-                    AppLock.promptVerifyPin(this, "Смена пароля", () -> {
-                        AppLock.showSetupDialog(this, () -> {
-                            markChanged();
-                            rebuild();
-                        });
-                    });
-                }));
-                lockCard.addView(line());
-                lockCard.addView(actionRow("lock_open", Local.of("Удалить код-пароль"), Local.of("Отключить защиту"), () -> {
-                    AppLock.promptVerifyPin(this, "Отключение пароля", () -> {
-                        AppLock.disable();
-                        android.widget.Toast.makeText(this, "Пароль удалён", android.widget.Toast.LENGTH_SHORT).show();
-                        markChanged();
-                        rebuild();
-                    });
-                }));
-                lockCard.addView(line());
-                lockCard.addView(toggleRow("fingerprint", Local.of("Вход по биометрии"), AppLock.isBioEnabled(), bioOn -> {
-                    AppLock.setBioEnabled(bioOn);
-                    markChanged();
-                }));
-            }
-            column.addView(wrap(lockCard));
             column.addView(groupNavigation());
-            column.addView(versions());
             showRestartBar();
             restoreScroll(0);
             if (built == null) android.os.Looper.myQueue().addIdleHandler(() -> { prebuild(); return false; });
@@ -684,7 +695,7 @@ public class SettingsActivity extends Activity {
 
         final int contentStart = column.getChildCount();
         if (built != null) {
-
+            
             for (View page : built) {
                 if (page.getParent() instanceof ViewGroup) ((ViewGroup) page.getParent()).removeView(page);
                 column.addView(page);
@@ -692,11 +703,7 @@ public class SettingsActivity extends Activity {
         } else {
             sectionTargets.clear();settingTargets.clear();
             disclosureBodies.clear();disclosureArrows.clear();
-            try {
-                buildContent();
-            } catch (Throwable t) {
-                Diary.note("settings buildContent error: " + t);
-            }
+            buildContent();
             built = new java.util.ArrayList<>();
             for (int i = contentStart; i < column.getChildCount(); i++) built.add(column.getChildAt(i));
         }
@@ -709,7 +716,8 @@ public class SettingsActivity extends Activity {
             return;
         }
         if (settingsGroup != 0 && open == null) {
-
+            
+            
             java.util.Set<String> small = smallSections(contentStart);
             java.util.List<Shelf> long_ = new java.util.ArrayList<>();
             java.util.Set<String> inline = new java.util.HashSet<>();
@@ -723,23 +731,23 @@ public class SettingsActivity extends Activity {
             if (!long_.isEmpty()) { column.addView(shelfList(long_), contentStart); from++; }
             filterSections(from, inline);
         } else filterGroup(contentStart);
-        column.addView(versions());
 
         showRestartBar();
         restoreScroll(previousScroll);
     }
 
+    
+
+
+
+
+
     private void buildContent() {
-        column.addView(section(Text.DESIGN));
+        column.addView(section(Local.of("Тема")));
         column.addView(wrap(designPicker()));
 
-        column.addView(section(Text.ACCENT));
+        column.addView(section(Local.of("Цвет акцента")));
         LinearLayout accentCard = card();
-        accentCard.addView(accentHead());
-        if (Accent.fromWallpaper() != 0) {
-            accentCard.addView(line());
-            accentCard.addView(wallpaperRow());
-        }
         accentCard.addView(palette());
         column.addView(wrap(accentCard));
 
@@ -755,337 +763,115 @@ public class SettingsActivity extends Activity {
             markChanged();
             rebuildAfterSwitchAnimation();
         }));
-        blur.addView(quiet(MOTION_BLUR_NOTE));
+        blur.addView(quiet(android.os.Build.VERSION.SDK_INT >= 31
+                ? Local.of("Всё, что листается, размывается по направлению движения.")
+                : Local.of("Нужен Android 12 или новее.")));
+        if (MotionBlur.on()) blur.addView(slider("tune", Local.of("Сила"), MotionBlur.strength(), 100, 0, "%",
+                value -> MotionBlur.setStrength(value)));
         column.addView(wrap(blur));
 
-        column.addView(section(FRAMES));
-        column.addView(wrap(framesCard()));
-
-        column.addView(section(Text.GRADIENT));
-        column.addView(wrap(gradientCard()));
-
-        column.addView(section(Text.BADGES));
-        column.addView(badgeTabs());
-        if (badgesTab == 1) {
-            badgesToGet();
-        } else {
-            LinearLayout badges = card();
-            final SettingsPictures.Badged badged = new SettingsPictures.Badged(this, skin, Badges.isEnabled());
-            badges.addView(badged);
-            badges.addView(toggleRow("favorite_border", Text.BADGES_ON, Badges.isEnabled(), on -> {
-                Badges.setEnabled(on);
-                badged.set(on);
-            }));
-            badges.addView(line());
-            badges.addView(mineHead());
-            if (mineOpen) badges.addView(appear(mineRows()));
-            if (AdminPanel.owner()) {
-
-                badges.addView(line());
-                badges.addView(actionRow("fingerprint", Text.ADMIN_DEVICES, null, () -> AdminPanel.devices(this)));
-            }
-            column.addView(wrap(badges));
-        }
-
-        column.addView(section(Text.ACCOUNT));
-        LinearLayout account = card();
-        account.addView(idRow(Text.ACCOUNT_ID, Account.id()));
-        account.addView(line());
-        account.addView(idRow(Text.ACCOUNT_SEC_ID, Account.secId()));
-        column.addView(wrap(account));
-
-        column.addView(section(Local.of("Код-пароль при входе")));
-        LinearLayout security = card();
-        if (!AppLock.isEnabled()) {
-            security.addView(actionRow("lock_open", Local.of("Установить код-пароль"), Local.of("Задать 4-значный PIN"), () -> {
-                AppLock.showSetupDialog(this, () -> {
-                    markChanged();
-                    rebuild();
-                });
-            }));
-        } else {
-            security.addView(actionRow("verified_user", Local.of("Статус защиты"), Local.of("Включена"), null));
-            security.addView(line());
-            security.addView(actionRow("key", Local.of("Изменить код-пароль"), Local.of("Ввести текущий и новый"), () -> {
-                AppLock.promptVerifyPin(this, "Смена пароля", () -> {
-                    AppLock.showSetupDialog(this, () -> {
-                        markChanged();
-                        rebuild();
-                    });
-                });
-            }));
-            security.addView(line());
-            security.addView(actionRow("lock_open", Local.of("Удалить код-пароль"), Local.of("Отключить защиту"), () -> {
-                AppLock.promptVerifyPin(this, "Отключение пароля", () -> {
-                    AppLock.disable();
-                    android.widget.Toast.makeText(this, "Пароль удалён", android.widget.Toast.LENGTH_SHORT).show();
-                    markChanged();
-                    rebuild();
-                });
-            }));
-            security.addView(line());
-            security.addView(toggleRow("fingerprint", Local.of("Вход по биометрии"), AppLock.isBioEnabled(), bioOn -> {
-                AppLock.setBioEnabled(bioOn);
-                markChanged();
+        column.addView(section(Local.of("Экран запуска")));
+        LinearLayout splash = card();
+        splash.addView(actionRow("image", Local.of("Выбрать изображение"), SplashCustom.hasCustom(this) ? Local.of("Установлено") : Local.of("Стандартное"), () -> SplashCustom.pick(this)));
+        if (SplashCustom.hasCustom(this)) {
+            splash.addView(line());
+            splash.addView(actionRow("restore", Local.of("Сбросить на стандартную"), null, () -> {
+                SplashCustom.reset(this);
+                Toast.makeText(this, Local.of("Изображение запуска сброшено"), Toast.LENGTH_SHORT).show();
+                rebuild();
             }));
         }
-        security.addView(quiet(Local.of("Защищает запуск AirTok PIN-кодом и биометрией при каждом открытии.")));
-        column.addView(wrap(security));
+        column.addView(wrap(splash));
 
-        column.addView(section(Text.PROFILE_VIEW));
-        LinearLayout look = card();
-        final SettingsPictures.Layout layout = new SettingsPictures.Layout(this, skin, Flags.isOn(Flags.KEY_NEW_PROFILE));
-        look.addView(layout);
-        look.addView(toggleRow("view_compact", Text.NEW_PROFILE, Flags.isOn(Flags.KEY_NEW_PROFILE), on -> {
-            Flags.set(Flags.KEY_NEW_PROFILE, on);
-            layout.set(on);
+        column.addView(section(Local.of("Редактор интерфейса")));
+        LinearLayout editor = card();
+        editor.addView(actionRow("tune", Local.of("Зайти в редактор интерфейса"), Local.of("Зажмите любой элемент для редактирования"), () -> {
+            ViewEditor.begin();
+            finish();
         }));
-        look.addView(quiet(Text.NEW_PROFILE_NOTE));
-        look.addView(line());
-        look.addView(toggleRow("image", Local.of("Баннеры и анимации профиля"), Flags.isOn(Flags.KEY_BANNER), on -> {
-            Flags.set(Flags.KEY_BANNER, on);
+        int editCount = ViewEditor.count();
+        editor.addView(line());
+        editor.addView(actionRow("restore", Local.of("Сбросить изменения"), editCount > 0 ? (Local.of("Изменено элементов: ") + editCount) : null, () -> {
+            ViewEditor.resetAll();
+            Toast.makeText(this, Local.of("Изменения интерфейса сброшены"), Toast.LENGTH_SHORT).show();
+            rebuild();
         }));
-        look.addView(quiet(Local.of("Включает шапку / фон (статический и анимированный баннер) в профиле.")));
-        column.addView(wrap(look));
+        column.addView(wrap(editor));
 
         column.addView(section(Text.REGION));
-        LinearLayout head = card();
-        head.addView(switchRow());
-        head.addView(line());
-        head.addView(countryHead());
-        column.addView(wrap(head));
+        LinearLayout regionCard = card();
+        regionCard.addView(switchRow());
+        regionCard.addView(line());
+        regionCard.addView(countryHead());
+        column.addView(wrap(regionCard));
 
         column.addView(section(Text.FEED));
-        LinearLayout feed = card();
-
-        final SettingsPictures.Feed strip = new SettingsPictures.Feed(this, skin)
-                .hide(SettingsPictures.Feed.AD, true)
-                .hide(SettingsPictures.Feed.LIVE, Feed.hides(Feed.KEY_LIVE))
-                .hide(SettingsPictures.Feed.PHOTO, Feed.hides(Feed.KEY_PHOTOS))
-                .hide(SettingsPictures.Feed.STORY, Feed.hides(Feed.KEY_STORIES));
-        feed.addView(strip);
-        feed.addView(toggleRow("visibility_off", Text.HIDE_LIVE, Feed.hides(Feed.KEY_LIVE), on -> {
-            Feed.setHides(Feed.KEY_LIVE, on);
-            strip.hide(SettingsPictures.Feed.LIVE, on).settle();
-        }));
-        feed.addView(line());
-        feed.addView(toggleRow("image", Text.HIDE_PHOTOS, Feed.hides(Feed.KEY_PHOTOS), on -> {
-            Feed.setHides(Feed.KEY_PHOTOS, on);
-            strip.hide(SettingsPictures.Feed.PHOTO, on).settle();
-        }));
-        feed.addView(line());
-        feed.addView(liveToggleRow("visibility_off",Text.HIDE_STORIES,Feed.hides(Feed.KEY_STORIES),on->{
-            Feed.setHides(Feed.KEY_STORIES,on);
-            strip.hide(SettingsPictures.Feed.STORY, on).settle();
-        }));
-        feed.addView(line());
-        feed.addView(liveToggleRow("schedule", Local.of("Показ даты и времени"), Dates.isEnabled(), on -> {
-            Dates.setEnabled(on);
-        }));
-        feed.addView(quiet(Local.of("Отображает дату, точное время и флаг страны публикации под автором видео.")));
-        feed.addView(line());
-        feed.addView(toggleRow("translate", Local.of("Кнопка перевода комментариев"), Flags.isOn(Flags.KEY_TRANSLATE_COMMENTS), on -> {
-            Flags.set(Flags.KEY_TRANSLATE_COMMENTS, on);
-            markChanged();
-        }));
-        feed.addView(quiet(Local.of("Кнопка автоперевода всех комментариев прямо в шапке окна комментариев.")));
-        feed.addView(line());
-        feed.addView(liveToggleRow("favorite", Local.of("Лайк комментария по двойному тапу"), Comments.isDoubleTapLikeEnabled(), on -> {
-            Comments.setDoubleTapLikeEnabled(on);
-        }));
-        feed.addView(quiet(Local.of("Поставить лайк комментарию двойным быстрым нажатием.")));
-        column.addView(wrap(feed));
-
-        column.addView(section(Text.SIMPLE_FEED));
-        LinearLayout simpler = card();
-        final SettingsArt.Phone simpleArt = phone("simple").simple(SimpleFeed.isOn());
-        simpler.addView(simpleArt);
-        simpler.addView(liveToggleRow("view_compact", Text.SIMPLE_FEED, SimpleFeed.isOn(), on -> {
-            SimpleFeed.set(this, on);
-            simpleArt.simple(on).settle();
-        }));
-        simpler.addView(quiet(Text.SIMPLE_FEED_NOTE));
-        column.addView(wrap(simpler));
-
-        column.addView(section(Text.DATE_FILTER));
-        LinearLayout dates = card();
-        final SettingsPictures.Ages ages = new SettingsPictures.Ages(this, skin, FeedDates.hours());
-        dates.addView(ages);
-        LinearLayout datesHead = row();
-        datesHead.addView(icon("schedule"));
-        datesHead.addView(label(Text.DATE_FILTER), grow());
-        final TextView datesNow = detail(FeedDates.describe(FeedDates.hours()));
-        datesNow.setTextColor(skin.text);
-        datesHead.addView(datesNow);
-        dates.addView(sized(datesHead, 52));
-        String[] limits = new String[FeedDates.HOURS.length];
-        int limitAt = 0;
-        for (int i = 0; i < limits.length; i++) {
-            limits[i] = FeedDates.describe(FeedDates.HOURS[i]);
-            if (FeedDates.HOURS[i] == FeedDates.hours()) limitAt = i;
-        }
-        dates.addView(chips(limits, limitAt, index -> {
-            FeedDates.setHours(FeedDates.HOURS[index]);
-            datesNow.setText(FeedDates.describe(FeedDates.HOURS[index]));
-            ages.set(FeedDates.HOURS[index]);
-        }));
-        dates.addView(caption(Text.DATE_FILTER_NOTE));
-        column.addView(wrap(dates));
-
-        column.addView(section(Text.VIDEO));
-        LinearLayout video = card();
-
-        final SettingsPictures.Speed speedArt = new SettingsPictures.Speed(this, skin, PlayerTools.speed(),
-                Flags.isOn(Flags.KEY_SPEED_LOCK));
-        video.addView(speedArt);
-        LinearLayout speedHead = row();
-        speedHead.addView(icon("speed"));
-        speedHead.addView(label(Text.PLAYER_SPEED), grow());
-        final TextView speedNow = detail(PlayerTools.speed() + "\u00D7");
-        speedNow.setTextColor(skin.text);
-        speedHead.addView(speedNow);
-        video.addView(sized(speedHead, 52));
-        final float[] speeds = {1f, 1.5f, 2f, 3f};
-        int speedAt = 4;
-        for (int i = 0; i < speeds.length; i++) if (Math.abs(PlayerTools.speed() - speeds[i]) < 0.01f) speedAt = i;
-        video.addView(segmented(new String[] {"1\u00D7", "1.5\u00D7", "2\u00D7", "3\u00D7", "\u2026"}, speedAt, index -> {
-            if (index == 4) { PlayerTools.choose(this, this::rebuild); return; }
-            PlayerTools.setSpeed(speeds[index]);
-            speedNow.setText(speeds[index] + "\u00D7");
-            speedArt.set(speeds[index], Flags.isOn(Flags.KEY_SPEED_LOCK));
-        }));
-        video.addView(toggleRow("lock", Text.SPEED_LOCK, Flags.isOn(Flags.KEY_SPEED_LOCK), on -> {
-            Flags.set(Flags.KEY_SPEED_LOCK, on);
-            speedArt.set(PlayerTools.speed(), on);
-        }));
-
-        column.addView(wrap(video));
-
-        column.addView(section(Text.FPS));
-        LinearLayout fps = card();
-
-        final SettingsPictures.Fps fpsArt = new SettingsPictures.Fps(this, skin, Rate.name());
-        fps.addView(fpsArt);
-        String rate = Rate.name();
-        String[] rates = new String[Rate.CHOICES.length];
-        int rateAt = 0;
-        for (int i = 0; i < Rate.CHOICES.length; i++) {
-            rates[i] = Rate.CHOICES[i].length() == 0 ? Text.FPS_AUTO : Rate.CHOICES[i];
-            if (Rate.CHOICES[i].equals(rate)) rateAt = i;
-        }
-        fps.addView(segmented(rates, rateAt, index -> {
-            Rate.choose(Rate.CHOICES[index]);
-            fpsArt.set(Rate.CHOICES[index]);
-            markChanged();
-        }));
-        fps.addView(quiet(Text.FPS_ABOUT));
-        if (!Rate.reachable(this)) fps.addView(quiet(Text.FPS_UNSUPPORTED));
-        column.addView(wrap(fps));
-
-        column.addView(section(MOTION));
-        LinearLayout cues = card();
-        cues.addView(liveToggleRow("animation", MOTION, MotionCues.enabled(), on -> MotionCues.setEnabled(this, on)));
-        cues.addView(quiet(Local.of("Точки по краям экрана двигаются вместе с машиной, как на iPhone. Глазам становится понятно, что ты едешь, и меньше укачивает. Когда телефон не двигается, точки исчезают.")));
-        column.addView(wrap(cues));
+        LinearLayout feedCard = card();
+        feedCard.addView(liveToggleRow("block", Local.of("Скрывать рекламу"), Feed.isEnabled(), Feed::setEnabled));
+        feedCard.addView(line());
+        feedCard.addView(liveToggleRow("play_circle", Local.of("Скрывать трансляции"), Feed.hides(Feed.KEY_LIVE), on -> Feed.setHides(Feed.KEY_LIVE, on)));
+        column.addView(wrap(feedCard));
 
         column.addView(section(BURN));
         LinearLayout burn = card();
-
-        final SettingsArt.Phone burnArt = phone("burn").burn(Dim.isConfigured(), Dim.strength(), NavBar.isKept());
-        burn.addView(burnArt);
-        burn.addView(liveToggleRow("eye_open", Text.DIM, Dim.isConfigured(), on -> {
+        burn.addView(liveToggleRow("eye_open", BURN, Dim.isConfigured(), on -> {
             Dim.setEnabled(on);
-            burnArt.burn(on, Dim.strength(), NavBar.isKept()).settle();
+            markChanged();
             rebuildAfterSwitchAnimation();
         }));
+        burn.addView(quiet(Local.of("Приглушает белые значки в ленте для защиты экрана.")));
         if (Dim.isConfigured()) {
-            burn.addView(line());
-            burn.addView(slider("contrast", Text.DIM_HOW, Dim.strength(), 100, 0, "%", value -> Dim.setStrength(value), false,
-                    value -> burnArt.burn(true, value, NavBar.isKept()).settle()));
-            burn.addView(line());
-            burn.addView(toggleRow("visibility_off", Text.KEEP_BAR, NavBar.isKept(), on -> {
-                NavBar.setKept(on);
-                burnArt.burn(true, Dim.strength(), on).settle();
-            }));
+            burn.addView(slider("tune", Local.of("Приглушение"), Dim.strength(), 100, 10, "%",
+                    value -> Dim.setStrength(value)));
         }
-        burn.addView(quiet(Local.of("Глаз в ленте включает и выключает приглушение на лету.")));
         column.addView(wrap(burn));
+
+        column.addView(section(Local.of("Тёмная тема")));
+        LinearLayout darkCard = card();
+        darkCard.addView(liveToggleRow("contrast", Local.of("Тёмная тема TikTok"), Themes.isForceDark(), on -> {
+            Themes.setForceDark(on);
+            markChanged();
+            rebuildAfterSwitchAnimation();
+        }));
+        darkCard.addView(quiet(Local.of("Тёмная тема включена по умолчанию.")));
+        column.addView(wrap(darkCard));
+
+        column.addView(section(Local.of("Регион и время публикации")));
+        LinearLayout dateCard = card();
+        dateCard.addView(liveToggleRow("schedule", Local.of("Регион и время публикации"), Dates.isEnabled(), on -> Dates.setEnabled(on)));
+        dateCard.addView(quiet(Local.of("Отображать флаг региона и дату/время публикации под видео.")));
+        column.addView(wrap(dateCard));
 
         column.addView(section(Text.DOWNLOADS));
         LinearLayout downloads = card();
-        downloads.addView(liveToggleRow("download", Text.DOWNLOAD_WINDOW, VideoActions.windowOn(), VideoActions::setWindow));
-        downloads.addView(quiet(Text.DOWNLOAD_WINDOW_NOTE));
-        downloads.addView(line());
-        LinearLayout qualityHead = row();
-        qualityHead.addView(icon("image"));
-        qualityHead.addView(label(Text.FRAME_QUALITY), grow());
-        downloads.addView(sized(qualityHead, 52));
-        final int[] qualities = {480, 720, 1080};
-        int qualityAt = FrameCapture.quality() == 480 ? 0 : FrameCapture.quality() == 1080 ? 2 : 1;
-        downloads.addView(segmented(new String[] {"480p", "720p", "1080p"}, qualityAt, index ->
-                AccountAppearance.prefs(this).edit().putInt(FrameCapture.KEY, qualities[index]).apply()));
-        final SettingsPictures.Watermark mark = new SettingsPictures.Watermark(this, skin, Download.isEnabled());
-        downloads.addView(mark, 0);
-        downloads.addView(toggleRow("image", Text.NO_WATERMARK, Download.isEnabled(), on -> {
+        downloads.addView(liveToggleRow("image", Text.NO_WATERMARK, Download.isEnabled(), on -> {
             Download.setEnabled(on);
-            mark.set(on);
+            markChanged();
         }));
+        downloads.addView(quiet(Local.of("Скачивание видео без водяного знака.")));
         downloads.addView(line());
-        downloads.addView(toggleRow("download", Text.DOWNLOAD_ALWAYS, Download.isAlways(),
-                Download::setAlways));
+        downloads.addView(liveToggleRow("download", Text.DOWNLOAD_ALWAYS, Download.isAlways(), on -> {
+            Download.setAlways(on);
+            markChanged();
+        }));
+        downloads.addView(quiet(Local.of("Принудительное включение кнопки скачивания на всех видео.")));
         downloads.addView(line());
-        downloads.addView(toggleRow("place", Text.SAVE_AVATARS_ON, Avatars.isEnabled(),
-                Avatars::setEnabled));
-        downloads.addView(line());
-        downloads.addView(toggleRow("star", Text.SAVE_STICKERS_ON, Stickers.isEnabled(),
-                Stickers::setEnabled));
+        downloads.addView(liveToggleRow("place", Text.SAVE_AVATARS_ON, Avatars.isEnabled(), on -> {
+            Avatars.setEnabled(on);
+            markChanged();
+        }));
+        downloads.addView(quiet(Local.of("Сохранение аватарок в оригинальном качестве при нажатии.")));
         column.addView(wrap(downloads));
-
-        column.addView(section(Text.BACKUP));
-        LinearLayout backup = card();
-        backup.addView(actionRow("upload", Text.BACKUP_EXPORT, Text.BACKUP_EXPORT_NOTE,
-                this::createBackup));
-        backup.addView(line());
-        backup.addView(actionRow("download", Text.BACKUP_IMPORT, Text.BACKUP_IMPORT_NOTE,
-                this::pickBackup));
-        backup.addView(line());
-        backup.addView(actionRow("restore", Text.BACKUP_RESET, Text.BACKUP_RESET_NOTE,
-                this::pickResetGroup));
-        column.addView(wrap(backup));
-
-        column.addView(section(Text.PLUGINS));
-        LinearLayout plugins = card();
-        plugins.addView(actionRow("add", Local.of("Добавить плагин"), null, this::showPluginAdd));
-        plugins.addView(line());
-        if (DevLink.linked(this)) {
-            plugins.addView(actionRow("extension", Local.of("MargyCode подключён"), Local.of("Его агент пишет и ставит плагины. Нажми, чтобы отключить"), () -> {
-                DevLink.unlink(this);
-                rebuild();
-            }));
-        } else {
-            plugins.addView(actionRow("extension", Local.of("Писать плагины через ИИ"), Local.of("Установи MargyCode и подключи MargyT в его настройках. Агент сам напишет плагин и проверит его прямо на телефоне"), () -> {
-                android.content.Intent code = getPackageManager().getLaunchIntentForPackage(DevLink.MARGYCODE);
-                if (code != null) startActivity(code); else Screen.say(Local.of("MargyCode не установлен, он есть в AirTok Store"));
-            }));
-        }
-        List<Plugins.Info> installed = Plugins.list();
-        List<ScriptPlugins.Program> commands=ScriptPlugins.list(this);
-        if(installed.isEmpty()&&commands.isEmpty())plugins.addView(quiet(Local.of("Пока нет установленных плагинов")));
-        for(ScriptPlugins.Program program:commands){
-            boolean enabled=getSharedPreferences(ScriptPlugins.STORE,0).getBoolean("on:"+program.id,false);
-            plugins.addView(actionRow("extension",program.name,enabled?Local.of("Включён"):Local.of("Выключен"),()->ScriptPlugins.details(this,program,this::rebuild)));
-        }
-        for(Plugins.Info info:installed)plugins.addView(pluginRow(info));
-        column.addView(wrap(plugins));
 
         column.addView(section(Text.STREAKS));
         LinearLayout streaks = card();
-        streaks.addView(betaRow("repeat", Text.STREAK_AUTO, Streaks.isEnabled(), on -> {
-            Streaks.setEnabled(on);
-        }));
+        streaks.addView(liveToggleRow("repeat", Text.STREAK_AUTO, Streaks.isEnabled(), on -> Streaks.setEnabled(on)));
         streaks.addView(line());
         streaks.addView(stickerHead());
-        if (streakOpen) streaks.addView(appear(stickerChoices()));
+        if (streakOpen) {
+            streaks.addView(line());
+            streaks.addView(appear(stickerChoices()));
+        }
         streaks.addView(line());
         streaks.addView(actionRow("bug_report", Text.STREAK_HEALTH, StreakAlarm.status(this), () -> {
             StreakAlarm.permissions(this);
@@ -1098,184 +884,192 @@ public class SettingsActivity extends Activity {
                 () -> Popup.ask(this, Text.STREAK_ALL, Text.STREAK_ALL_ASK,
                         Text.STREAK_ALL_SEND, () -> Streaks.sendAll(this),
                         Text.CANCEL, null, null, null)));
-        streaks.addView(line());
-        streaks.addView(liveToggleRow("schedule", Local.of("Точное время сообщений в чатах"), MessageTimes.enabled(), on -> {
-            AccountAppearance.prefs(this).edit().putBoolean(MessageTimes.KEY, on).apply();
-            MessageTimes.reload();
-        }));
         column.addView(wrap(streaks));
 
-        column.addView(section(Text.NOTIFICATIONS));
-        LinearLayout notifications=card();
+        column.addView(section(Local.of("Точное время")));
+        LinearLayout msgTimesCard = card();
+        msgTimesCard.addView(liveToggleRow("schedule", Local.of("Точное время сообщений в чатах"), MessageTimes.enabled(), on -> {
+            MessageTimes.setEnabled(on);
+            MessageTimes.reload();
+        }));
+        msgTimesCard.addView(quiet(Local.of("Показывать секунды и точное время отправки сообщений.")));
+        column.addView(wrap(msgTimesCard));
 
-        final SettingsPictures.Notices notices = new SettingsPictures.Notices(this, skin)
-                .set(0, ModNotifications.option(0)).set(1, ModNotifications.option(1)).set(2, ModNotifications.option(2));
-        notifications.addView(notices);
-        notifications.addView(liveToggleRow("chat",Text.NOTIFY_MESSAGES,ModNotifications.option(0),on->{ModNotifications.set(ModNotifications.MESSAGES,on);notices.set(0,on).settle();if(!on)rebuildAfterSwitchAnimation();}));
-        notifications.addView(liveToggleRow("notifications",Text.NOTIFY_PROMOS,ModNotifications.option(1),on->{ModNotifications.set(ModNotifications.PROMOS,on);notices.set(1,on).settle();if(!on)rebuildAfterSwitchAnimation();}));
-        notifications.addView(liveToggleRow("notifications",Text.NOTIFY_OTHER,ModNotifications.option(2),on->{ModNotifications.set(ModNotifications.OTHER,on);notices.set(2,on).settle();if(!on)rebuildAfterSwitchAnimation();}));
-        notifications.addView(liveToggleRow("notifications_off",Text.NOTIFY_NO_PROMPTS,ModNotifications.noPrompts(),on->{AccountAppearance.prefs(this).edit().putBoolean(ModNotifications.NO_PROMPTS,on).apply();ModNotifications.reload();}));
-        notifications.addView(actionRow("settings",Text.NOTIFY_SETTINGS,null,()->ModNotifications.settings(this)));
+        column.addView(section(Text.NOTIFICATIONS));
+        LinearLayout notifications = card();
+        notifications.addView(liveToggleRow("chat", Text.NOTIFY_MESSAGES, ModNotifications.option(0), on -> ModNotifications.set(ModNotifications.MESSAGES, on)));
+        notifications.addView(liveToggleRow("notifications", Text.NOTIFY_PROMOS, ModNotifications.option(1), on -> ModNotifications.set(ModNotifications.PROMOS, on)));
+        notifications.addView(liveToggleRow("notifications", Text.NOTIFY_OTHER, ModNotifications.option(2), on -> ModNotifications.set(ModNotifications.OTHER, on)));
+        notifications.addView(actionRow("settings", Text.NOTIFY_SETTINGS, null, () -> ModNotifications.settings(this)));
         column.addView(wrap(notifications));
 
-        column.addView(section(Text.CHANNEL));
-        column.addView(channelBanner());
+        column.addView(section(Local.of("Защита входа")));
+        column.addView(appLockCard());
 
-        column.addView(section(Text.LINKS));
-        LinearLayout links = card();
-        links.addView(linkRow("group", Text.FORUM, "@margeletforum", FORUM));
-        links.addView(line());
-        links.addView(linkRow("extension", Text.SOURCE, "narezany/MargyT", GIT));
-        column.addView(wrap(links));
-
-        column.addView(section(Text.DIAGNOSTICS));
-        LinearLayout diagnostics = card();
-        diagnostics.addView(liveToggleRow("bug_report", Local.of("Отчёты о сбоях"),CrashReports.enabled(this),on->CrashReports.set(this,on)));
-        diagnostics.addView(quiet(Local.of("Технический стек сбоя, без сообщений и аккаунта.")));
-        diagnostics.addView(quiet(Diagnostics.report()));
-        diagnostics.addView(line());
-        diagnostics.addView(liveToggleRow("timeline", Local.of("Записывать подвисания"), Lag.wanted(), on -> Lag.setWanted(on)));
-        diagnostics.addView(quiet(Local.of("Нужно, только если присылаешь отчёт о лагах. Пока включено, немного тратит батарею.")));
-        diagnostics.addView(line());
-        diagnostics.addView(actionRow("article", Text.COPY_DIAGNOSTICS, null,
-                () -> copy("MargyT diagnostics", DevMode.isOn()
-                        ? Diagnostics.fullReport() : Diagnostics.report())));
-        column.addView(wrap(diagnostics));
-
-        column.addView(section(Text.DIARY));
-        LinearLayout diary = card();
-        diary.addView(diaryHead());
-        if (diaryOpen) {
-            diary.addView(line());
-            diary.addView(appear(diaryLines()));
-        }
-        if (DevMode.isOn()) addDeveloperRows(diary);
-        column.addView(wrap(diary));
+        column.addView(section(GHOST));
+        LinearLayout ghost = card();
+        ghost.addView(liveToggleRow("visibility_off", Local.of("Режим призрака"), Ghost.isEnabled(), on -> {
+            Ghost.setEnabled(on);
+            rebuildAfterSwitchAnimation();
+        }));
+        ghost.addView(quiet(Local.of("Скрывает онлайн, прочитано, набор текста, просмотр историй и профилей.")));
+        column.addView(wrap(ghost));
 
         column.addView(section(Local.of("О проекте")));
-        LinearLayout aboutCard = card();
-        aboutCard.addView(creatorRow(Local.of("Создатель"), "Fasdeq13 (GitHub)", "https://github.com/fasdeq13"));
-        aboutCard.addView(line());
-        aboutCard.addView(actionRow("send", Local.of("Telegram"), "t.me/airtokmod", () -> open("https://t.me/airtokmod")));
-        aboutCard.addView(line());
-        aboutCard.addView(actionRow("link", Local.of("Открытый исходный код"), "github.com/Fasdeq13/AirTok", () -> open("https://github.com/Fasdeq13/AirTok")));
-        aboutCard.addView(line());
-        aboutCard.addView(actionRow("info", Local.of("Приложение"), "AirTok (v" + Version.TIKTOK + ")", null));
-        column.addView(wrap(aboutCard));
-
-        LinearLayout thanksCard = card();
-        TextView thanksTitle = label(Local.of("Благодарность"));
-        thanksTitle.setPadding(dp(16), dp(14), dp(16), dp(6));
-        thanksTitle.setTextSize(Design.fluent() ? 15 : 16);
-        thanksTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-        thanksCard.addView(thanksTitle);
-        String[] thanksList = {"montik", "Fezix"};
-        for (int i = 0; i < thanksList.length; i++) {
-            thanksCard.addView(line());
-            thanksCard.addView(actionRow("favorite_border", thanksList[i], null, null));
-        }
-        column.addView(wrap(thanksCard));
-
-        column.addView(section(DOWNLOADS));
-        LinearLayout dlCard = card();
-        dlCard.addView(liveToggleRow("download", Local.of("Скачивание без водяного знака"), Download.isEnabled(), on -> {
-            Download.setEnabled(on);
-            rebuildAfterSwitchAnimation();
-        }));
-        dlCard.addView(quiet(Local.of("Сохранение видео в чистом виде без водяного знака TikTok.")));
-        dlCard.addView(line());
-        dlCard.addView(liveToggleRow("lock", Local.of("Принудительное скачивание"), Download.isAlways(), on -> {
-            Download.setAlways(on);
-            rebuildAfterSwitchAnimation();
-        }));
-        dlCard.addView(quiet(Local.of("Возвращает кнопку скачивания, даже если автор запретил сохранять свои видео.")));
-        dlCard.addView(line());
-        final String[] videoQualities = new String[] {
-            Local.of("Обычное (по умолчанию)"),
-            Local.of("Максимальное (1080p / HD)"),
-            Local.of("Экономичное (сжатое)")
-        };
-        dlCard.addView(actionRow("hd", Local.of("Качество скачиваемого видео"), videoQualities[DownloadQuality.mode()], () -> {
-            new ModDialog.Builder(this).setItems(videoQualities, (dialog, index) -> {
-                DownloadQuality.setMode(index);
-                rebuild();
-            }).show();
-        }));
-        dlCard.addView(line());
-        dlCard.addView(liveToggleRow("account_circle", Local.of("Сохранение аватарок в оригинале"), Avatars.isEnabled(), on -> {
-            Avatars.setEnabled(on);
-            rebuildAfterSwitchAnimation();
-        }));
-        dlCard.addView(quiet(Local.of("Долгое нажатие на аватарку пользователя открывает её в полном максимальном разрешении.")));
-        column.addView(wrap(dlCard));
-
-        column.addView(section(TOOLS));
-        LinearLayout toolsCard = card();
-        toolsCard.addView(liveToggleRow("tune", Local.of("Шкала перемотки на всех видео"), Seekbar.isEnabled(), on -> {
-            Seekbar.setEnabled(on);
-            rebuildAfterSwitchAnimation();
-        }));
-        toolsCard.addView(quiet(Local.of("Всегда показывает полосу перемотки внизу экрана для любых роликов, даже коротких.")));
-        toolsCard.addView(line());
-        toolsCard.addView(liveToggleRow("visibility_off", Local.of("Режим чистого экрана (Zen)"), SimpleFeed.isOn(), on -> {
-            SimpleFeed.set(this, on);
-            rebuildAfterSwitchAnimation();
-        }));
-        toolsCard.addView(quiet(Local.of("Минималистичный плеер без мешающих кнопок, подписей и лишнего визуального шума поверх видео.")));
-        toolsCard.addView(line());
-        toolsCard.addView(liveToggleRow("link", Local.of("Чистые ссылки без слежки"), ShareLinks.enabled(), on -> {
-            ShareLinks.setEnabled(on);
-            rebuildAfterSwitchAnimation();
-        }));
-        toolsCard.addView(quiet(Local.of("При копировании ссылки удаляет все метки слежки, UTM-параметры и привязку к вашему аккаунту.")));
-        column.addView(wrap(toolsCard));
-
-        column.addView(section(REPOSTS));
-        LinearLayout reposts = card();
-        reposts.addView(new NewPictures.Reposts(this, skin));
-        reposts.addView(actionRow("repeat", Local.of("Удалить все мои репосты"), Local.of("Все репосты пропадут из профиля"), () -> RepostPurge.begin(this)));
-        column.addView(wrap(reposts));
+        column.addView(aboutCard());
     }
 
-    private View fatCat() {
-        final ImageView cat = new ImageView(this);
-        cat.setAdjustViewBounds(true);
-        cat.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        cat.setContentDescription(Text.FUN_CAT);
-        GradientDrawable round = new GradientDrawable();
-        round.setColor(skin.card);
-        round.setCornerRadius(dp(28));
-        cat.setBackground(round);
-        cat.setClipToOutline(true);
-        cat.setMinimumHeight(dp(160));
-        if (fatCatPicture != null) {
-            cat.setImageBitmap(fatCatPicture);
-        } else {
-            final Context app = getApplicationContext();
-            Net.away("fat cat", () -> {
-                try {
-                    byte[] raw = Cats.fat(app);
-                    if (raw == null) return;
-                    final android.graphics.Bitmap picture =
-                            android.graphics.BitmapFactory.decodeByteArray(raw, 0, raw.length);
-                    runOnUiThread(() -> {
-                        fatCatPicture = picture;
-                        if (picture != null && cat.isAttachedToWindow()) cat.setImageBitmap(picture);
-                    });
-                } catch (Throwable error) {
-                    Diary.note("fat cat: " + error);
-                }
-            });
+    private View appLockCard() {
+        LinearLayout box = card();
+        if (!AppLock.hasPin(this)) {
+            box.addView(actionRow("lock", Local.of("Создать пароль"), Local.of("Установить PIN-код для входа в AirTok"),
+                    () -> AppLock.promptSetPin(this, this::rebuild)));
+            return wrap(box);
         }
-        LinearLayout box = new LinearLayout(this);
-        box.setPadding(edge(), 0, edge(), dp(6));
-        box.addView(cat, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return box;
+        box.addView(liveToggleRow("lock", Local.of("Защита входа"), AppLock.isEnabled(this), on -> {
+            if (!on && AppLock.isEnabled(this)) {
+                AppLock.promptVerifyPin(this, () -> {
+                    AppLock.setEnabled(this, false);
+                    rebuild();
+                }, this::rebuild);
+            } else {
+                AppLock.setEnabled(this, on);
+                rebuild();
+            }
+        }));
+        box.addView(line());
+        box.addView(liveToggleRow("fingerprint", Local.of("Вход по биометрии"), AppLock.isBiometricEnabled(this), on -> {
+            if (!on && AppLock.isEnabled(this)) {
+                AppLock.promptVerifyPin(this, () -> {
+                    AppLock.setBiometricEnabled(this, false);
+                    rebuild();
+                }, this::rebuild);
+            } else {
+                if (on) AppLock.initBiometricKey();
+                AppLock.setBiometricEnabled(this, on);
+                rebuild();
+            }
+        }));
+        box.addView(line());
+        int timeout = AppLock.getTimeout(this);
+        String timeoutText = timeout == 0 ? Local.of("При каждом выходе") : timeout + " " + Local.of("минут");
+        box.addView(actionRow("timer", Local.of("Запрашивать пароль"), timeoutText, () -> {
+            Runnable showTimeoutPanel = () -> {
+                int currentTimeout = AppLock.getTimeout(this);
+                Panel panel = Panel.with(this, skin, Local.of("Запрашивать пароль"));
+                int[] minutes = {0, 5, 10, 15};
+                String[] labels = {Local.of("При каждом выходе"), Local.of("Через 5 минут"), Local.of("Через 10 минут"), Local.of("Через 15 минут")};
+                for (int i = 0; i < minutes.length; i++) {
+                    final int m = minutes[i];
+                    panel.option(labels[i], currentTimeout == m, false, () -> {
+                        AppLock.setTimeout(this, m);
+                        rebuild();
+                    });
+                }
+                panel.show();
+            };
+            if (AppLock.isEnabled(this)) {
+                AppLock.promptVerifyPin(this, showTimeoutPanel, null);
+            } else {
+                showTimeoutPanel.run();
+            }
+        }));
+        box.addView(line());
+        box.addView(actionRow("edit", Local.of("Изменить пароль"), null, () -> AppLock.promptChangePin(this, this::rebuild)));
+        box.addView(line());
+        box.addView(actionRow("delete", Local.of("Удалить пароль"), null, () -> AppLock.promptDeletePin(this, this::rebuild)));
+        return wrap(box);
+    }
+
+    private View aboutCard() {
+        LinearLayout box = card();
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(dp(20), dp(20), dp(20), dp(20));
+
+        TextView appTitle = new TextView(this);
+        appTitle.setText("AirTok");
+        appTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        appTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+        appTitle.setTextColor(skin.text);
+        box.addView(appTitle);
+
+        TextView appVer = new TextView(this);
+        appVer.setText(Local.of("Версия: ") + Version.TIKTOK);
+        appVer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        appVer.setTextColor(skin.muted());
+        appVer.setPadding(0, dp(2), 0, dp(14));
+        box.addView(appVer);
+
+        box.addView(line());
+
+        LinearLayout creatorBlock = new LinearLayout(this);
+        creatorBlock.setOrientation(LinearLayout.VERTICAL);
+        creatorBlock.setPadding(0, dp(12), 0, dp(12));
+
+        TextView creatorLabel = new TextView(this);
+        creatorLabel.setText("Создатель: fasdeq13");
+        creatorLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        creatorLabel.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        creatorLabel.setTextColor(skin.text);
+        creatorBlock.addView(creatorLabel);
+
+        TextView creatorLink = new TextView(this);
+        creatorLink.setText("https://github.com/fasdeq13");
+        creatorLink.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        creatorLink.setTextColor(Accent.colour());
+        creatorLink.setPadding(0, dp(4), 0, dp(10));
+        creatorLink.setOnClickListener(v -> open("https://github.com/fasdeq13"));
+        creatorBlock.addView(creatorLink);
+
+        TextView keepLink = new TextView(this);
+        keepLink.setText("https://keepandroidopen.org/");
+        keepLink.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        keepLink.setTextColor(Accent.colour());
+        keepLink.setPadding(0, 0, 0, dp(4));
+        keepLink.setOnClickListener(v -> open("https://keepandroidopen.org/"));
+        creatorBlock.addView(keepLink);
+
+        box.addView(creatorBlock);
+        box.addView(line());
+
+        LinearLayout thanksBox = new LinearLayout(this);
+        thanksBox.setOrientation(LinearLayout.VERTICAL);
+        thanksBox.setPadding(0, dp(12), 0, dp(4));
+
+        TextView thanksTitle = new TextView(this);
+        thanksTitle.setText("Благодарности:");
+        thanksTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        thanksTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        thanksTitle.setTextColor(skin.text);
+        thanksTitle.setPadding(0, 0, 0, dp(8));
+        thanksBox.addView(thanksTitle);
+
+        TextView p1 = new TextView(this);
+        p1.setText("Montik");
+        p1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        p1.setTextColor(skin.muted());
+        p1.setPadding(0, dp(2), 0, dp(4));
+        thanksBox.addView(p1);
+
+        TextView p2 = new TextView(this);
+        p2.setText("utowike");
+        p2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        p2.setTextColor(skin.muted());
+        p2.setPadding(0, dp(2), 0, dp(4));
+        thanksBox.addView(p2);
+
+        box.addView(thanksBox);
+        return wrap(box);
+    }
+
+    
+    private View fatCat() {
+        return new View(this);
     }
 
     private static android.graphics.Bitmap fatCatPicture;
 
+    
     private View chipRow(String picture, String title, String[] chips, final Runnable action) {
         LinearLayout row = row();
         row.addView(icon(picture));
@@ -1320,7 +1114,8 @@ public class SettingsActivity extends Activity {
             scrollRestore = null;
             return;
         }
-
+        
+        
         scrollRestoreListener = new android.view.ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
                 page.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -1331,6 +1126,13 @@ public class SettingsActivity extends Activity {
         };
         page.getViewTreeObserver().addOnPreDrawListener(scrollRestoreListener);
     }
+
+    
+
+
+
+
+
 
     private void showRestartBar() {
         if (pending && restartBar == null) {
@@ -1350,7 +1152,7 @@ public class SettingsActivity extends Activity {
             restartAction.setTextColor(onAccent());
             restartBackground.setColor(Accent.colour());
         }
-
+        
         if (!pending && restartBar != null) {
             restartBar.animate().withEndAction(null).cancel();
             root.removeView(restartBar);
@@ -1361,6 +1163,7 @@ public class SettingsActivity extends Activity {
                 dp(32) + (pending ? dp(92) + navigationBar() : 0));
     }
 
+    
     private void styleRestartBar(LinearLayout bar) {
         GradientDrawable shape = new GradientDrawable();
         shape.setColor(Expressive.mix(skin.card, Accent.colour(), 0.22f));
@@ -1369,26 +1172,34 @@ public class SettingsActivity extends Activity {
         bar.setElevation(dp(6));
     }
 
+    
+    
     static void restartOwed() {
         pending = true;
         Unsaved.other();
     }
 
     private void markChanged() {
-
+        
+        
         pending = Unsaved.after(this);
         showRestartBar();
     }
 
     @Override
     public boolean dispatchTouchEvent(android.view.MotionEvent event) {
-
+        
         if (event != null && event.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) {
             Unsaved.look(this);
         }
         return super.dispatchTouchEvent(event);
     }
 
+    
+
+    
+
+    
     private static final String VISITS = "settings_visits";
     private static final String ASKED = "settings_asked";
     private static final int ON_VISIT = 3;
@@ -1396,14 +1207,22 @@ public class SettingsActivity extends Activity {
     private java.util.List<Integer> gradientColours;
     private int gradientSlot;
 
+    
+
+
+
+    
     private boolean donateClosed;
 
+    
     static final String BANNER_ALWAYS = "donate_banner_always";
 
+    
     private boolean bannerAlways() {
         return false;
     }
 
+    
     private static boolean supporter() {
         try {
             if (Mine.holds(Tester.SUPPORTER)) return true;
@@ -1414,7 +1233,8 @@ public class SettingsActivity extends Activity {
     }
 
     private View donateBanner() {
-
+        
+        
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(dp(16), dp(8), dp(8), dp(16));
@@ -1478,8 +1298,31 @@ public class SettingsActivity extends Activity {
         return holder;
     }
 
+    
+
+
+
+
+
+
     private void maybeAskForSupport() {
-        return;
+        try {
+            android.content.SharedPreferences prefs =
+                    getSharedPreferences(AirTok.PREFS, MODE_PRIVATE);
+            if (prefs.getBoolean(ASKED, false)) return;
+
+            int visits = prefs.getInt(VISITS, 0) + 1;
+            prefs.edit().putInt(VISITS, visits).apply();
+            if (visits < ON_VISIT) return;
+            prefs.edit().putBoolean(ASKED, true).apply();
+
+            column.post(() -> Popup.ask(this, Text.REMIND_TITLE, Text.REMIND_TEXT,
+                    Text.REMIND_MORE, this::showDonations,
+                    Text.REMIND_NEVER, null,
+                    null, null));
+        } catch (Throwable error) {
+            Diary.note("settings: " + error);
+        }
     }
 
     private void tookFree(boolean ok, String trouble) {
@@ -1487,6 +1330,11 @@ public class SettingsActivity extends Activity {
         Screen.say(ok ? Text.FREE_BADGE_GOT : Text.MINE_TOO_OFTEN);
         rebuild();
     }
+
+    
+
+
+
 
     private View framesCard() {
         LinearLayout card = card();
@@ -1539,9 +1387,15 @@ public class SettingsActivity extends Activity {
             row.setOnClickListener(v -> toggle.performClick());
             card.addView(row);
         }
-        card.addView(quiet(Local.of("Рамка одна: включишь другую, эта снимется. Её видят все, у кого MargyT 2.2.1 или новее.")));
+        card.addView(quiet(Local.of("Рамка одна: включишь другую, эта снимется. Её видят все, у кого AirTok 2.2.1 или новее.")));
         return card;
     }
+
+    
+
+
+
+
 
     private View proveRow() {
         boolean done = Proof.proved();
@@ -1558,6 +1412,11 @@ public class SettingsActivity extends Activity {
         if (!done) row.setOnClickListener(v -> proveAccount());
         return sized(row, 64);
     }
+
+    
+
+
+
 
     private void proveAccount() {
         if (!BioProof.available()) {
@@ -1579,6 +1438,7 @@ public class SettingsActivity extends Activity {
         });
     }
 
+    
     private void proveByHand() {
         String already = Proof.waiting();
         if (already.length() > 0) {
@@ -1595,6 +1455,7 @@ public class SettingsActivity extends Activity {
         });
     }
 
+    
     private boolean needsProof(boolean ok, String trouble) {
         if (ok || !Mine.PROVE.equals(trouble)) return false;
         proveAccount();
@@ -1608,7 +1469,7 @@ public class SettingsActivity extends Activity {
                 ordering = null;
                 Mine.ask(this::rebuild);
             }
-
+            
             reply.said(ok, trouble, Proof.waiting(), Proof.wantsName());
             rebuild();
         }), reply -> Proof.fresh((ok, trouble) ->
@@ -1717,6 +1578,7 @@ public class SettingsActivity extends Activity {
         return badge.text;
     }
 
+    
     private static String spaced(String digits) {
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < digits.length(); i++) {
@@ -1726,11 +1588,23 @@ public class SettingsActivity extends Activity {
         return out.toString();
     }
 
+    
+    
     private static final int DONATE_PAGE = 99;
 
     private void showDonations() {
-        return;
+        settingsGroup = DONATE_PAGE;
+        searchQuery = "";
+        rebuild();
     }
+
+    
+
+
+
+
+
+
 
     private void donatePage() {
         LinearLayout what = card();
@@ -1767,6 +1641,8 @@ public class SettingsActivity extends Activity {
         else rebuildQueued = true;
         column.postDelayed(delayedRebuild, M3Switch.ANIMATION_DURATION_MS);
     }
+
+    
 
     private View switchRow() {
         LinearLayout row = row();
@@ -1806,6 +1682,7 @@ public class SettingsActivity extends Activity {
         row.addView(text, grow());
         row.addView(away());
 
+        
         if (AirTok.isEnabled()) row.setOnClickListener(v -> showCountries());
         return sized(row, 60);
     }
@@ -1832,13 +1709,22 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
+    
+
+
+
+
+
+
+
+
     private View flag(String iso) {
         TextView view = new TextView(this);
         StringBuilder out = new StringBuilder();
         String code = iso.toUpperCase(Locale.US);
-
+        
         if ("XX".equals(code)) { out.append("\uD83D\uDCDA"); code = ""; }
-
+        
         if ("XA".equals(code)) { out.append("\uD83D\uDD31"); code = ""; }
         if ("XP".equals(code)) { out.append("\uD83C\uDFF4\u200D\u2620\uFE0F"); code = ""; }
         for (int i = 0; i < code.length() && i < 2; i++) {
@@ -1847,7 +1733,8 @@ public class SettingsActivity extends Activity {
             out.appendCodePoint(0x1F1E6 + letter);
         }
         view.setText(out.toString());
-
+        
+        
         android.graphics.Typeface flags = Fonts.twemoji(this);
         if (flags != null) view.setTypeface(flags);
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -1875,7 +1762,7 @@ public class SettingsActivity extends Activity {
         LinearLayout row = row();
         row.addView(icon("palette"));
         row.addView(label(Text.ACCENT_COLOUR), grow());
-        row.addView(new Dot(this, Accent.colour(), true));
+        row.addView(new Dot(this, Accent.colour(), false));
 
         row.addView(disclosure(accentOpen,"accentOpen"));
 
@@ -1902,8 +1789,12 @@ public class SettingsActivity extends Activity {
         return sized(row, 52);
     }
 
+    
+
+    
     private int badgesTab;
 
+    
     private View badgeTabs() {
         LinearLayout strip = new LinearLayout(this);
         strip.setOrientation(LinearLayout.HORIZONTAL);
@@ -1938,6 +1829,7 @@ public class SettingsActivity extends Activity {
         return strip;
     }
 
+    
     private void badgesToGet() {
         if (!Proof.proved()) {
             LinearLayout prove = card();
@@ -1945,9 +1837,9 @@ public class SettingsActivity extends Activity {
             column.addView(wrap(prove));
         }
         column.addView(wrap(getCard(Tester.SUPPORTER,
-                Local.of("Поддержать разработку MargyT. Вместе со значком даётся золотая рамка на аватарку и градиент ника."),
+                Local.of("Поддержать разработку AirTok. Вместе со значком даётся золотая рамка на аватарку и градиент ника."),
                 Local.of("Поддержать"), this::showDonations)));
-        column.addView(wrap(getCard("margychat",
+        column.addView(wrap(getCard("airtokchat",
                 Local.of("Зарегистрироваться в AirTok Chat, худшей соцсети на свете, и заработать там 30 💎 за посты. Потом взять код в настройках аккаунта AirTok Chat и ввести его здесь. Только для личных аккаунтов, не каналов и не ботов."),
                 Local.of("Ввести код"), this::askChatCode)));
     }
@@ -1962,25 +1854,26 @@ public class SettingsActivity extends Activity {
         LinearLayout words = new LinearLayout(this);
         words.setOrientation(LinearLayout.VERTICAL);
         words.addView(label(badge == null ? id : named(badge)));
-        if (have) words.addView(detail(Local.of("Уже у тебя")));
+        if (have) words.addView(detail(Local.of("Уже у Вас")));
         row.addView(words, grow());
         card.addView(row);
         card.addView(quiet(how));
         if (!have) card.addView(button(act, action));
-        if ("margychat".equals(id)) {
+        if ("airtokchat".equals(id)) {
             card.addView(line());
             card.addView(actionRow("chat", Local.of("Открыть AirTok Chat"), "chat.narez.xyz", () -> open("https://chat.narez.xyz/settings/account")));
         }
         return card;
     }
 
+    
     private void askChatCode() {
         if (!Proof.proved()) {
             proveAccount();
             return;
         }
         final Panel panel = Panel.with(this, skin, Local.of("Код из AirTok Chat"));
-        panel.text(Local.of("Его показывает AirTok Chat в настройках, в разделе «Аккаунт»: «Привязать MargyT». Код живёт 15 минут."));
+        panel.text(Local.of("Его показывает AirTok Chat в настройках, в разделе «Аккаунт»: «Привязать AirTok». Код живёт 15 минут."));
         final android.widget.EditText code = panel.field("ABC123");
         code.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         code.setFilters(new android.text.InputFilter[] {new android.text.InputFilter.LengthFilter(6), new android.text.InputFilter.AllCaps()});
@@ -1995,7 +1888,7 @@ public class SettingsActivity extends Activity {
                     if (isFinishing() || isDestroyed()) return;
                     if (ok) {
                         panel.close();
-                        Screen.say(Local.of("Значок «Выжил в AirTok Chat» твой"));
+                        Screen.say(Local.of("Значок «Выжил в AirTok Chat» Ваш"));
                         ordering = null;
                         badgesTab = 0;
                         rebuild();
@@ -2006,7 +1899,7 @@ public class SettingsActivity extends Activity {
                         proveAccount();
                         return;
                     }
-                    code.setError(trouble.length() > 0 ? trouble : Local.of("Не получилось, попробуй ещё раз"));
+                    code.setError(trouble.length() > 0 ? trouble : Local.of("Не получилось, попробуйте ещё раз"));
                 });
             }
         });
@@ -2041,6 +1934,9 @@ public class SettingsActivity extends Activity {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
 
+        
+        
+        
         if (Mine.tookFresh() && !rearranged) ordering = null;
         if (ordering == null) ordering = Mine.held();
         rows.addView(proveRow());
@@ -2059,9 +1955,12 @@ public class SettingsActivity extends Activity {
 
             Badges.Badge badge = Badges.byId(one.id);
             row.addView(badgeDot(badge));
-
+            
+            
             row.addView(label(badge == null ? one.id : named(badge)), grow());
 
+            
+            
             row.addView(mover(true, at > 0, () -> {
                 java.util.Collections.swap(ordering, at, at - 1);
                 rearranged = true;
@@ -2101,6 +2000,7 @@ public class SettingsActivity extends Activity {
         return rows;
     }
 
+    
     private View button(String title, final Runnable action) {
         TextView view = new TextView(this);
         view.setText(title);
@@ -2112,14 +2012,14 @@ public class SettingsActivity extends Activity {
         if (Design.frosted()) {
             view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             view.setPadding(0, dp(15), 0, dp(15));
-
+            
             view.setBackground(Expressive.tile(this, Accent.colour(), 0x33FFFFFF, dp(28), dp(28), dp(12)));
             holder.setPadding(dp(16), dp(12), dp(16), dp(16));
             holder.addView(view, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return holder;
         }
-
+        
         M3Type.line(view, 14, 0.1f);
         view.setPadding(dp(16), 0, dp(16), 0);
         view.setBackground(Expressive.tile(this, Accent.colour(), 0x33FFFFFF, dp(20), dp(20), dp(8)));
@@ -2152,7 +2052,8 @@ public class SettingsActivity extends Activity {
         if (picture != null) {
             view.setImageBitmap(picture);
         } else {
-
+            
+            
             view.setImageBitmap(Badges.note());
         }
         if (badge.colour != 0) {
@@ -2161,6 +2062,7 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
+    
     private View freeBanner() {
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -2215,14 +2117,17 @@ public class SettingsActivity extends Activity {
         return holder;
     }
 
+    
+
     private android.content.SharedPreferences animPrefs() {
-        return getSharedPreferences("margyt_text_animation", MODE_PRIVATE);
+        return getSharedPreferences("airtok_text_animation", MODE_PRIVATE);
     }
 
     private static String ta(String ru) {
         return com.fasdeq.airtok.textanim.Strings.t(ru);
     }
 
+    
     private TextView subhead(String words) {
         TextView view = new TextView(this);
         view.setText(words);
@@ -2251,6 +2156,7 @@ public class SettingsActivity extends Activity {
         }).show());
     }
 
+    
     private void textAnimationCards() {
         column.addView(subhead(ta("Свечение текста (Glow)")));
         LinearLayout glow = card();
@@ -2311,8 +2217,10 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(send));
     }
 
+    
     private static int seedScroll;
 
+    
     private View seedPicker() {
         android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this) {
             @Override
@@ -2348,7 +2256,7 @@ public class SettingsActivity extends Activity {
                         canvas.drawCircle(cx, cy, dp(25), paint);
                     }
                     if (seed == 0) {
-
+                        
                         paint.setStyle(android.graphics.Paint.Style.FILL);
                         paint.setColor(skin.card);
                         canvas.drawCircle(cx, cy, dp(5), paint);
@@ -2378,6 +2286,8 @@ public class SettingsActivity extends Activity {
         return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
 
+    
+
     private View wallpaperRow() {
         final int colour = Accent.fromWallpaper();
         LinearLayout row = row();
@@ -2392,6 +2302,7 @@ public class SettingsActivity extends Activity {
         return sized(row, 52);
     }
 
+    
     private View appear(View view) {
         boolean animated=!revealAnimationUsed && Motion.enabled(this);
         if(animated)revealAnimationUsed=true;
@@ -2420,15 +2331,21 @@ public class SettingsActivity extends Activity {
         revealAnimationRequested=expanded;rebuild();disclosureKey=null;
     }
 
-    private static final int CREATE_BACKUP = 0x4D42;
-    private static final int PICK_BACKUP = 0x4D49;
+
+
+
+
+
+
+    private static final int CREATE_BACKUP = 0x4D42; 
+    private static final int PICK_BACKUP = 0x4D49;   
 
     private void createBackup() {
         try {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/json");
-            intent.putExtra(Intent.EXTRA_TITLE, "margyt-settings.json");
+            intent.putExtra(Intent.EXTRA_TITLE, "airtok-settings.json");
             startActivityForResult(intent, CREATE_BACKUP);
         } catch (Throwable error) {
             Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
@@ -2453,7 +2370,8 @@ public class SettingsActivity extends Activity {
             if (review.fits()) Screen.progressDone(); else Screen.progressGone();
             runOnUiThread(() -> {
                 if (!review.fits()) {
-                    Screen.say(Text.BACKUP_FAILED);
+                    String err = review.error();
+                    Toast.makeText(this, err != null ? err : Text.BACKUP_FAILED, Toast.LENGTH_LONG).show();
                     return;
                 }
                 new ModDialog.Builder(this, skin)
@@ -2501,6 +2419,7 @@ public class SettingsActivity extends Activity {
                 .show();
     }
 
+    
     private interface Chosen {
         void at(int value);
     }
@@ -2509,10 +2428,12 @@ public class SettingsActivity extends Activity {
         return slider(title, now, most, 0, "", chosen);
     }
 
+    
     private View slider(String title, int now, int most, final int shift, final String unit, final Chosen chosen) {
         return slider("tune", title, now, most, shift, unit, chosen);
     }
 
+    
     private View slider(String picture, String title, int now, int most, final int shift, final String unit, final Chosen chosen) {
         return slider(picture,title,now,most,shift,unit,chosen,false);
     }
@@ -2523,6 +2444,7 @@ public class SettingsActivity extends Activity {
         return slider(picture, title, now, most, shift, unit, chosen, live, null);
     }
 
+    
     private View slider(String picture, String title, int now, int most, final int shift, final String unit,
                         final Chosen chosen, final boolean live, final Chosen moving) {
         LinearLayout rows = new LinearLayout(this);
@@ -2571,9 +2493,15 @@ public class SettingsActivity extends Activity {
         return rows;
     }
 
-    private static final int PICK_FONT = 0x4D46;
-    private static final int PICK_EMOJI = 0x4D45;
-    private static final int PICK_PROFILE_BADGE = 0x5450;
+
+    
+
+    private static final int PICK_FONT = 0x4D46;  
+    private static final int PICK_EMOJI = 0x4D45;  
+    private static final int PICK_PROFILE_BADGE = 0x5450; 
+
+
+
 
     private GradientDrawable colourPreview(int colour) {
         GradientDrawable preview = new Design.ColourSample();
@@ -2588,6 +2516,9 @@ public class SettingsActivity extends Activity {
                 + 0.114f * Color.blue(colour)) / 255f;
         return luminance > 0.55f ? Color.BLACK : Color.WHITE;
     }
+
+
+
 
     private View fontHead() {
         LinearLayout row = row();
@@ -2638,37 +2569,6 @@ public class SettingsActivity extends Activity {
         rows.addView(line());
         rows.addView(actionRow("download", Text.FONT_PICK,
                 Fonts.FILE.equals(now) ? Text.FONT_FILE : null, this::pickFont));
-
-        rows.addView(line());
-        rows.addView(section(Text.EMOJI));
-        String emoji = Fonts.emoji();
-        List<EmojiPackManager.Pack> packs = EmojiPackManager.packs(this);
-        boolean firstPack = true;
-        for (EmojiPackManager.Pack pack : packs) {
-            final String which = pack.id;
-            if (Fonts.EMOJI_FILE.equals(which)) continue;
-            if (!firstPack) rows.addView(line());
-            firstPack = false;
-            rows.addView(pickRow(emojiName(pack), which.equals(emoji), null, () -> {
-                Fonts.chooseEmoji(this, which);
-                markChanged();
-                rebuild();
-            }));
-        }
-        rows.addView(line());
-        rows.addView(actionRow("download", Text.EMOJI_FILE,
-                Fonts.EMOJI_FILE.equals(emoji) ? Text.EMOJI_FILE : null, this::pickEmoji));
-        TextView sample = new TextView(this);
-        sample.setText(Text.EMOJI_PREVIEW);
-        sample.setTextColor(skin.text);
-        sample.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        sample.setGravity(Gravity.CENTER);
-        sample.setPadding(dp(16), dp(12), dp(16), dp(12));
-        android.graphics.Typeface emojiPreview = Fonts.preview(this, emoji);
-        if (emojiPreview != null) sample.setTypeface(emojiPreview);
-        rows.addView(sample, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(64)));
-        rows.addView(quiet(Text.EMOJI_NOTE));
         return rows;
     }
 
@@ -2688,7 +2588,7 @@ public class SettingsActivity extends Activity {
         for (final String which : Fonts.PRESETS) {
             Typeface face = Fonts.SYSTEM.equals(which) ? Typeface.DEFAULT
                     : Fonts.ROUNDED.equals(which) ? Fonts.rounded(this) : Typeface.create(which, Typeface.NORMAL);
-            View tile = typeTile(face, "Аа", fontName(which), which.equals(font), () -> {
+            View tile = typeTile(face, "\u0410\u0430", fontName(which), which.equals(font), () -> {
                 Fonts.choose(which);
                 markChanged();
                 rebuild();
@@ -2699,8 +2599,14 @@ public class SettingsActivity extends Activity {
         android.widget.HorizontalScrollView one = carousel(letters);
         box.addView(one);
         centre(one, chosen);
+        box.addView(actionRow("download", Text.FONT_PICK, Fonts.FILE.equals(font) ? Text.FONT_FILE : null, this::pickFont));
         return box;
     }
+
+    
+
+
+
 
     private static final class SampleIcon extends TextView {
         SampleIcon(Context context) { super(context); }
@@ -2753,6 +2659,12 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
+
+
+
+
+
     private View pickRow(String title, boolean chosen, String preview, final Runnable action) {
         LinearLayout row = row();
         row.setPadding(edge(), 0, edge(), 0);
@@ -2782,6 +2694,11 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
+
+    
+
+    
     private View labeled(String words, View control) {
         LinearLayout tile = new LinearLayout(this);
         tile.setOrientation(LinearLayout.VERTICAL);
@@ -2796,67 +2713,24 @@ public class SettingsActivity extends Activity {
         return tile;
     }
 
+    
+
+
+
     private View tilcayoSkins() {
-        android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
-        scroll.setHorizontalScrollBarEnabled(false);
-        LinearLayout strip = new LinearLayout(this);
-        strip.setOrientation(LinearLayout.HORIZONTAL);
-        strip.setPadding(edge(), dp(8), edge(), dp(14));
-        scroll.addView(strip);
-        fillTilcayoSkins(strip);
-        return scroll;
+        return new View(this);
     }
 
     private void fillTilcayoSkins(LinearLayout strip) {
         strip.removeAllViews();
-        String worn = TilcayoRun.skin(this);
-        boolean supporter = Mine.holds(Tester.SUPPORTER);
-        for (int i = 0; i < TilcayoRun.SKINS.length; i++) {
-            final String id = TilcayoRun.SKINS[i];
-            boolean locked = TilcayoRun.GOLD.equals(id) && !supporter;
-            LinearLayout tile = new LinearLayout(this);
-            tile.setOrientation(LinearLayout.VERTICAL);
-            tile.setGravity(Gravity.CENTER_HORIZONTAL);
-            tile.setPadding(dp(10), dp(10), dp(10), dp(10));
-            GradientDrawable back = new GradientDrawable();
-            back.setCornerRadius(dp(20));
-            back.setColor(Expressive.mix(skin.card, Accent.colour(), id.equals(worn) ? 0.22f : 0.06f));
-            if (id.equals(worn)) back.setStroke(dp(2), Accent.colour());
-            tile.setBackground(back);
-            android.widget.ImageView picture = new android.widget.ImageView(this);
-            picture.setImageBitmap(TilcayoRun.picture(this, id));
-            picture.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
-            if (locked) picture.setAlpha(0.35f);
-            tile.addView(picture, new LinearLayout.LayoutParams(dp(76), dp(80)));
-            TextView name = new TextView(this);
-            name.setText(Text.TILCAYO_SKIN_NAMES[i] + (locked ? " 🔒" : ""));
-            name.setTextColor(skin.text);
-            name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            name.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-            name.setGravity(Gravity.CENTER);
-            tile.addView(name);
-            TextView author = new TextView(this);
-            String who = TilcayoRun.AUTHORS[i];
-            author.setText(who.length() > 0 ? String.format(Text.TILCAYO_SKIN_AUTHOR, who) : " ");
-            author.setTextColor(skin.muted());
-            author.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-            author.setGravity(Gravity.CENTER);
-            tile.addView(author);
-            tile.setOnClickListener(v -> {
-                if (locked) {
-                    Toast.makeText(this, Text.TILCAYO_SKIN_LOCKED, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                TilcayoRun.setSkin(this, id);
-                fillTilcayoSkins(strip);
-            });
-            LinearLayout.LayoutParams place = new LinearLayout.LayoutParams(dp(112), LinearLayout.LayoutParams.WRAP_CONTENT);
-            place.setMarginEnd(dp(10));
-            strip.addView(tile, place);
-        }
     }
 
+    
     private interface Picked { void picked(int index); }
+
+    
+
+
 
     private View segmented(final String[] labels, int chosen, final Picked picked) {
         LinearLayout box = new LinearLayout(this);
@@ -2902,6 +2776,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private View chips(final String[] labels, int chosen, final Picked picked) {
         LinearLayout strip = new LinearLayout(this);
         final java.util.List<TextView> all = new java.util.ArrayList<TextView>();
@@ -2943,6 +2818,11 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
+
+
+
+
     private SettingsArt.Phone phone(String card) {
         SettingsArt.Phone art = new SettingsArt.Phone(this, skin, card)
                 .burn(false, 0, true).simple(false)
@@ -2951,6 +2831,7 @@ public class SettingsActivity extends Activity {
         return art;
     }
 
+    
     private static M3Switch switchIn(View row) {
         if (row instanceof M3Switch) return (M3Switch) row;
         if (row instanceof ViewGroup) {
@@ -2963,6 +2844,9 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
+    
+
+    
     private android.widget.HorizontalScrollView carousel(LinearLayout strip) {
         final android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
         scroll.setHorizontalScrollBarEnabled(false);
@@ -2973,12 +2857,14 @@ public class SettingsActivity extends Activity {
         return scroll;
     }
 
+    
     private void centre(final android.widget.HorizontalScrollView scroll, final View chosen) {
         if (chosen == null) return;
         scroll.post(() -> scroll.scrollTo(Math.max(0,
                 chosen.getLeft() - (scroll.getWidth() - chosen.getWidth()) / 2), 0));
     }
 
+    
     private View iconCarousel() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -2998,7 +2884,7 @@ public class SettingsActivity extends Activity {
             if (which.equals(Launcher.chosen())) chosen = tile;
             strip.addView(tile);
         }
-
+        
         if (Launcher.legacyOffered()) {
             TextView legacy = new TextView(this);
             legacy.setText(Text.ICON_LEGACY);
@@ -3039,13 +2925,12 @@ public class SettingsActivity extends Activity {
         });
         picture.setClipToOutline(true);
         frame.addView(picture, new android.widget.FrameLayout.LayoutParams(dp(60), dp(60)));
-
+        
         tile.addView(frame, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         frames.add(frame);
         TextView name = new TextView(this);
         name.setText(Launcher.nameOf(which));
         M3Type.line(name, 12, 0.4f);
-        name.setTextColor((skin.text & 0xFFFFFF) | 0xDD000000);
         name.setGravity(Gravity.CENTER);
         name.setMaxLines(2);
         name.setEllipsize(android.text.TextUtils.TruncateAt.END);
@@ -3062,6 +2947,7 @@ public class SettingsActivity extends Activity {
         return tile;
     }
 
+    
     private void ring(java.util.List<View> frames, String chosen) {
         for (View frame : frames) {
             boolean on = chosen.equals(frame.getTag());
@@ -3078,6 +2964,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private View avatarShapes() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -3110,7 +2997,7 @@ public class SettingsActivity extends Activity {
             name.setMaxLines(2);
             name.setTag("name");
             name.setPadding(0, dp(6), 0, 0);
-
+            
             chip.addView(name, new LinearLayout.LayoutParams(dp(76), ViewGroup.LayoutParams.WRAP_CONTENT));
             chips.add(chip);
             if (shape.equals(AvatarShape.chosen())) chosen = chip;
@@ -3120,7 +3007,7 @@ public class SettingsActivity extends Activity {
                 art.shape(shape);
                 named.setText(AvatarShape.nameOf(shape));
                 shapeChips(chips);
-
+                
                 markChanged();
             });
             Motion.press(chip);
@@ -3155,6 +3042,14 @@ public class SettingsActivity extends Activity {
         }
     }
 
+
+    
+
+
+
+
+
+
     private static final int[] DARKS = {
             0xFF000000, 0xFF0B0B0F, 0xFF121212, 0xFF161823, 0xFF1B1B1B,
             0xFF0D1B2A, 0xFF12232E, 0xFF1A1423, 0xFF14261C, 0xFF241A1A,
@@ -3164,6 +3059,7 @@ public class SettingsActivity extends Activity {
             0xFFFFFFFF, 0xFFF6F6F6, 0xFFEDEDED, 0xFFE8E4DA, 0xFFDCDCDC,
             0xFFCFD8DC, 0xFFB0B8C4, 0xFF8A8A8A, 0xFF5A5A5A, 0xFF2E2E2E,
     };
+
 
     private interface ColourPicked { void set(int colour); }
 
@@ -3207,10 +3103,11 @@ public class SettingsActivity extends Activity {
         panel.quiet(Text.CANCEL,null); panel.show();
     }
 
+    
     private void chooseThemePreset() {
         final String[] choices = {Text.THEME_PRESET_DARK, Text.THEME_PRESET_BLUE,
                 Text.THEME_PRESET_VICE + NewChip.MARK, Text.THEME_RESET};
-
+        
         int on = Themes.currentPreset();
         new ModDialog.Builder(this, skin)
                 .setTitle(Text.THEME_PRESETS)
@@ -3267,10 +3164,17 @@ public class SettingsActivity extends Activity {
         strip.addView(picker,new LinearLayout.LayoutParams(dp(48),dp(48)));scroll.addView(strip);return scroll;
     }
 
+    
+
+
+
+
+
     private View icon(String name) {
         return icon(name, false, 40);
     }
 
+    
     private static final java.util.Map<String, Integer> SHAPES = new java.util.HashMap<String, Integer>();
     static {
         SHAPES.put("palette", Expressive.COOKIE9);
@@ -3287,9 +3191,15 @@ public class SettingsActivity extends Activity {
         return fixed != null ? fixed : (name.hashCode() & 0x7FFFFFFF) % Expressive.KINDS;
     }
 
+    
+
+
+
+
+
     private View icon(String name, boolean toggle, int sizeDp) {
         if (!Design.frosted()) {
-
+            
             android.graphics.drawable.Drawable plain = name.equals("search")
                     ? new Expressive.Magnifier(iconInk()) : SettingsGlyph.make(name, iconInk());
             if (plain != null) {
@@ -3310,9 +3220,6 @@ public class SettingsActivity extends Activity {
         if (vector == null) {
             Bitmap picture = pictureFor(name);
             if (picture != null) vector = new android.graphics.drawable.BitmapDrawable(getResources(), picture);
-        }
-        if (vector == null) {
-            vector = SettingsGlyph.make("tune", 0xFFFFFFFF);
         }
         int accent = Accent.colour();
         int tonal = accentTonal();
@@ -3346,6 +3253,7 @@ public class SettingsActivity extends Activity {
     private static final java.util.Map<String, Bitmap> ICONS =
             new java.util.HashMap<String, Bitmap>();
 
+    
     private interface Setting {
         void set(boolean on);
     }
@@ -3383,6 +3291,19 @@ public class SettingsActivity extends Activity {
         });
         return sized(row, 48);
     }
+
+    
+
+
+
+
+
+    
+
+
+
+
+
 
     private View betaRow(String picture, String title, boolean on, final Setting setting) {
         LinearLayout row = row();
@@ -3431,22 +3352,6 @@ public class SettingsActivity extends Activity {
         text.addView(detail(many == 0 ? Text.STREAK_NOTHING : String.valueOf(many)));
         row.addView(text, grow());
 
-        ImageView refreshBtn = new ImageView(this);
-        refreshBtn.setImageDrawable(SettingsGlyph.make("refresh", skin.muted()));
-        refreshBtn.setScaleType(ImageView.ScaleType.CENTER);
-        int pad = dp(8);
-        refreshBtn.setPadding(pad, pad, pad, pad);
-        refreshBtn.setOnClickListener(v -> {
-            FavouriteStickers.read();
-            FavouriteStickers.load(() -> {
-                if (!isFinishing()) rebuild();
-            });
-            Screen.say("Стикеры обновлены");
-        });
-        LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(dp(36), dp(36));
-        rlp.rightMargin = dp(4);
-        row.addView(refreshBtn, rlp);
-
         row.addView(disclosure(streakOpen,"streakOpen"));
 
         row.setOnClickListener(v -> {
@@ -3457,6 +3362,7 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
+    
     private View stickerChoices() {
         LinearLayout rows = new LinearLayout(this);
         rows.setOrientation(LinearLayout.VERTICAL);
@@ -3512,6 +3418,7 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
+    
     private View actionRow(String picture, String title, String detail, final Runnable action) {
         LinearLayout row = row();
         row.addView(icon(picture));
@@ -3520,7 +3427,7 @@ public class SettingsActivity extends Activity {
         LinearLayout text = new LinearLayout(this);
         text.setOrientation(LinearLayout.VERTICAL);
         if (NewChip.marked(title)) {
-
+            
             LinearLayout line = new LinearLayout(this);
             line.setOrientation(LinearLayout.HORIZONTAL);
             line.setGravity(Gravity.CENTER_VERTICAL);
@@ -3542,46 +3449,37 @@ public class SettingsActivity extends Activity {
             shown.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);shown.setPadding(dp(8), 0, dp(6), 0);
             row.addView(shown);
         }
-        if (action != null) {
-            if (Design.frosted()) {
-                ImageView chevron = new ImageView(this);
-                chevron.setImageDrawable(SettingsGlyph.make("chevron_right", skin.muted()));
-                row.addView(chevron, new LinearLayout.LayoutParams(dp(24), dp(24)));
-            }
-            row.setOnClickListener(v -> action.run());
-        } else {
-            row.setClickable(false);
-            row.setFocusable(false);
+        if (Design.frosted()) {
+            ImageView chevron = new ImageView(this);
+            chevron.setImageDrawable(SettingsGlyph.make("chevron_right", skin.muted()));
+            row.addView(chevron, new LinearLayout.LayoutParams(dp(24), dp(24)));
         }
+
+        row.setOnClickListener(v -> action.run());
         return sized(row, detail == null || value ? 48 : 60);
     }
 
+    
+
+
+
+
+
     private View versions() {
-        LinearLayout box = new LinearLayout(this);
-        box.setOrientation(LinearLayout.VERTICAL);
-        box.setGravity(Gravity.CENTER);
-        box.setPadding(dp(20), dp(24), dp(20), dp(8));
-
-        TextView creator = new TextView(this);
-        creator.setText("AirTok · Создатель: Fasdeq13");
-        creator.setTextColor(0xFFFE2C55);
-        creator.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        creator.setGravity(Gravity.CENTER);
-        creator.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/fasdeq13")));
-            } catch (Throwable ignored) {}
-        });
-
-        TextView thanks = new TextView(this);
-        thanks.setText("Благодарность: narezany, montik, Fezix");
-        thanks.setTextColor(skin.muted());
-        thanks.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-        thanks.setGravity(Gravity.CENTER);
-        thanks.setPadding(0, dp(4), 0, 0);
-
-        box.addView(creator);
-        return box;
+        TextView view = new TextView(this);
+        
+        
+        
+        
+        String mod = Version.NAME.length() > 0 ? Version.NAME + " (" + Version.MOD + ")" : Version.MOD;
+        view.setText((Version.LITE ? "AirTok Lite " : "AirTok ") + mod
+                + (Version.LITE ? " beta  ·  TikTok Lite " : "  ·  TikTok ") + Version.TIKTOK
+                + "\n" + Text.MADE_BY);
+        view.setTextColor(skin.muted());
+        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        view.setGravity(Gravity.CENTER);
+        view.setPadding(dp(20), dp(24), dp(20), dp(8));
+        return view;
     }
 
     private View idRow(String title, final String value) {
@@ -3609,17 +3507,23 @@ public class SettingsActivity extends Activity {
         return value.substring(0, 14) + "…" + value.substring(value.length() - 8);
     }
 
+    
+
     private void showPluginAdd(){
         Panel panel=Panel.with(this,skin,Local.of("Добавить плагин"));
         panel.primary(Local.of("Создать из кнопок"),()->ScriptPlugins.edit(this,ScriptPlugins.SAMPLE,this::rebuild));
         panel.quiet(Local.of("Вставить JSON"),()->ScriptPlugins.edit(this,"",this::rebuild));
-        panel.quiet(Local.of("Установить файл .mtp"),this::pickPlugin);
-        panel.quiet(Local.of("Магазин"),()->startActivity(new Intent(this,StoreActivity.class)));
         panel.quiet(Local.of("Документация"),()->startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(DOCS_PLUGINS))));
         panel.quiet(Text.CLOSE,null);panel.show();
     }
 
-    private static final int PICK_PLUGIN = 0x4D50;
+    private static final int PICK_PLUGIN = 0x4D50;  
+
+    
+
+
+
+
 
     private View pluginSettingRow(final Plugins.Row item,
                                   final android.content.SharedPreferences store) {
@@ -3692,6 +3596,13 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
+    
+
+
+
+
+
+
     private View pluginRow(final Plugins.Info info) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -3722,7 +3633,7 @@ public class SettingsActivity extends Activity {
         if (!info.description.isEmpty()) by = by + "  ·  " + info.description;
         text.addView(detail(by));
         if (info.trouble != null) text.addView(detail(info.trouble));
-        long stalled = Lag.cost(info.id);
+        long stalled = 0;
         if (stalled >= 1000L) {
             TextView slow = detail(Local.of("Тормозит приложение: подвисаний за этот запуск") + " " + (stalled + 500L) / 1000L + " " + Local.of("с"));
             slow.setTextColor(0xFFE57373);
@@ -3734,7 +3645,7 @@ public class SettingsActivity extends Activity {
         final M3Switch toggle = new M3Switch(this);
         toggle.colours(Accent.colour(), skin.muted(), skin.card);
         toggle.setChecked(Plugins.isEnabled(info.id));
-
+        
         toggle.setEnabled(true);
         toggle.setOnChanged(checked -> {
             activatePlugin(info,checked);
@@ -3745,7 +3656,6 @@ public class SettingsActivity extends Activity {
         Motion.press(row);
         row.setOnLongClickListener(v -> {
             Panel actions=Panel.with(this,skin,info.name).compact();
-            actions.primary(Local.of("Редактировать"),()->PluginEditorActivity.binary(this,info.id));
             actions.quiet(Local.of("Удалить с устройства"),()->askToRemove(info));
             if(AdminAccess.current())actions.quiet(Local.of("Управление магазином"),()->PluginAdmin.show(this));
             actions.quiet(Text.CLOSE,null);actions.show();
@@ -3755,9 +3665,11 @@ public class SettingsActivity extends Activity {
     }
 
     private void activatePlugin(final Plugins.Info info,boolean enabled){
-
+        
+        
+        
         if(!enabled){Net.away("plugin stop",()->{Plugins.setEnabled(info.id,false);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});return;}
-
+        
         Net.away("plugin start",()->{Plugins.setEnabled(info.id,true);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});
     }
 
@@ -3767,7 +3679,7 @@ public class SettingsActivity extends Activity {
         if(info.safety!=null&&!info.safety.isEmpty())panel.text(info.safety);
         LinearLayout body=new LinearLayout(this);
         body.setOrientation(LinearLayout.VERTICAL);
-        android.content.SharedPreferences store=getSharedPreferences("margyt_plugin_"+info.id,MODE_PRIVATE);
+        android.content.SharedPreferences store=getSharedPreferences("airtok_plugin_"+info.id,MODE_PRIVATE);
         int count=0;
         if(Plugins.isEnabled(info.id)) for(Plugins.Row item:Plugins.rows()) {
             if(!info.id.equals(item.plugin))continue;
@@ -3793,7 +3705,7 @@ public class SettingsActivity extends Activity {
         try {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-
+            
             intent.setType("*/*");
             startActivityForResult(intent, PICK_PLUGIN);
         } catch (Throwable error) {
@@ -3850,6 +3762,12 @@ public class SettingsActivity extends Activity {
             CustomIcon.offer(this, source);
             return;
         }
+        if (request == SplashCustom.PICK) {
+            boolean ok = SplashCustom.save(this, source);
+            Toast.makeText(this, ok ? Local.of("Изображение запуска установлено") : Local.of("Не удалось сохранить изображение"), Toast.LENGTH_SHORT).show();
+            rebuild();
+            return;
+        }
         if (request != PICK_PLUGIN) return;
         reviewPlugin(source);
     }
@@ -3886,6 +3804,8 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
+
     private View linkRow(String picture, String title, String handle, final String url) {
         LinearLayout row = row();
         row.addView(icon(picture));
@@ -3901,61 +3821,38 @@ public class SettingsActivity extends Activity {
         return sized(row, 60);
     }
 
-    private View creatorRow(String title, String handle, final String url) {
-        LinearLayout row = row();
-        ImageView avatarView = new ImageView(this);
-        avatarView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        android.graphics.Bitmap avBmp = FasdeqAvatar.getCircle(dp(36));
-        if (avBmp != null) {
-            avatarView.setImageDrawable(new android.graphics.drawable.BitmapDrawable(getResources(), avBmp));
-        } else {
-            avatarView.setImageDrawable(SettingsGlyph.make("account_circle", skin.text));
-        }
-        LinearLayout.LayoutParams avParams = new LinearLayout.LayoutParams(dp(36), dp(36));
-        avParams.rightMargin = dp(Design.frosted() ? 12 : 16);
-        row.addView(avatarView, avParams);
-
-        LinearLayout text = new LinearLayout(this);
-        text.setOrientation(LinearLayout.VERTICAL);
-        text.addView(label(title));
-        text.addView(detail(handle));
-        row.addView(text, grow());
-        row.addView(away());
-
-        row.setOnClickListener(v -> open(url));
-        return sized(row, 60);
-    }
-
+    
     private View channelBanner() {
-        ChannelBanner banner = new ChannelBanner(this);
-        banner.setOnClickListener(v -> open(ChannelBanner.URL));
-        LinearLayout box = new LinearLayout(this);
-        box.setPadding(edge(), dp(2), edge(), dp(10));
-        box.addView(banner, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return box;
+        return new View(this);
     }
+
+
+
+    
+
+
+
 
     private View space() {
         java.util.List<ThanksSpace.Person> people = new java.util.ArrayList<>();
-        people.add(new ThanksSpace.Person("@narezany", Text.THANKS_OWNER, ThanksSpace.EGG_TILCAYO, this::ownerLinks));
+        people.add(new ThanksSpace.Person("@fasdeq", Text.THANKS_OWNER, ThanksSpace.EGG_TILCAYO, this::ownerLinks));
         people.add(new ThanksSpace.Person("Claude Opus 5.5", Text.THANKS_CLAUDE, ThanksSpace.EGG_CONSTELLATION, null));
         people.add(new ThanksSpace.Person("someone's mf", Text.THANKS_TTCUZ, ThanksSpace.EGG_SCATTER, () -> open(TTCUZ)));
         people.add(new ThanksSpace.Person("@saintcursed", Local.of("Автор LotusTok: призрак, папки, редактор интерфейса, анимация набора и другое"),
                 ThanksSpace.EGG_LOTUS, () -> open(LOTUSTOK)));
-        people.add(new ThanksSpace.Person("TT Extras", Local.of("Плагин для MargyT: из него призрак и длинные комментарии"),
+        people.add(new ThanksSpace.Person("TT Extras", Local.of("Плагин для AirTok: из него призрак и длинные комментарии"),
                 ThanksSpace.EGG_GHOST, null));
-        people.add(new ThanksSpace.Person("санек :3 (санечек)", Local.of("Часть дизайна MargyT"), ThanksSpace.EGG_HEART, () -> open(SANEK)));
-        people.add(new ThanksSpace.Person("Fezix", Local.of("Участник и поддержка проекта"), ThanksSpace.EGG_HEART, null));
+        people.add(new ThanksSpace.Person("санек :3 (санечек)", Local.of("Часть дизайна AirTok"), ThanksSpace.EGG_HEART, () -> open(SANEK)));
         java.util.List<ThanksSpace.Planet> planets = new java.util.ArrayList<>();
         planets.add(new ThanksSpace.Planet(Text.YOOMONEY, 0xFF8B5CF6, () -> open(YOOMONEY)));
         planets.add(new ThanksSpace.Planet(Text.BOOSTY, 0xFFF97316, () -> open(BOOSTY)));
         planets.add(new ThanksSpace.Planet(Text.FUNPAY, 0xFF38BDF8, () -> open(FUNPAY)));
         planets.add(new ThanksSpace.Planet(Text.STARS, 0xFFFACC15, () -> open(STARS)));
         return new ThanksSpace(this, people, planets,
-                Local.of("нажми на имя · зажми, чтобы открыть ссылку"), Text.DONATE);
+                Local.of("нажмите на имя · зажмите, чтобы открыть ссылку"), Text.DONATE);
     }
 
+    
     private void showThanks() {
         final android.app.Dialog sky = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
@@ -3990,10 +3887,11 @@ public class SettingsActivity extends Activity {
         sky.show();
     }
 
+    
     private void ownerLinks() {
         try {
             new ModDialog.Builder(this, skin)
-                    .setTitle("@narezany")
+                    .setTitle("@fasdeq")
                     .setItems(new CharSequence[]{"Telegram", "TikTok"}, (dialog, which) ->
                             open(which == 0 ? OWNER_TELEGRAM : OWNER_TIKTOK))
                     .setNegativeButton(Text.CANCEL, null)
@@ -4003,14 +3901,18 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    private View away() {
 
+
+    
+    private View away() {
+        
         if (!Design.frosted()) { View none = new View(this); none.setVisibility(View.GONE); return none; }
         Chevron arrow=new Chevron(this,skin.muted(),false,false);
         arrow.setRotation(-90f);
         return arrow;
     }
 
+    
     private TextView quiet(String message) {
         TextView view = new TextView(this);
         view.setText(message);
@@ -4022,13 +3924,26 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
-    private void open(String url) {
+    
 
+
+    private void open(String url) {
+        
+        
+        
         url = inApp(url);
         if (url.contains("tiktok.com") && openWith(url, getPackageName())) return;
         if (openWith(url, null)) return;
         Toast.makeText(this, Text.NO_BROWSER, Toast.LENGTH_SHORT).show();
     }
+
+    
+
+
+
+
+
+
 
     private static String inApp(String url) {
         if (url.startsWith("https://tiktok.com/")) {
@@ -4060,33 +3975,14 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private void developerTap() {
-        if (!DevMode.tapped()) return;
-        if (DevMode.isOn()) {
-            Toast.makeText(this, Text.DEV_ALREADY, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        DevMode.set(true);
-        Diary.note("developer mode on");
-        Toast.makeText(this, Text.DEV_ON, Toast.LENGTH_SHORT).show();
-        rebuild();
     }
 
     private void addDeveloperRows(LinearLayout into) {
-        into.addView(line());
-        into.addView(actionRow("tune", Text.DEV_FLAGS, Text.DEV_FLAGS_NOTE, this::showFlags));
-        into.addView(line());
-        into.addView(actionRow("article", Text.DEV_FULL_REPORT, Text.DEV_FULL_NOTE,
-                () -> copy("MargyT full report", Diagnostics.fullReport())));
-        into.addView(line());
-        into.addView(toggleRow("tune", Text.DEV_SWITCH, true, on -> {
-            if (!on) {
-                DevMode.set(false);
-                rebuildAfterSwitchAnimation();
-            }
-        }));
     }
 
+    
     private void chooseAvatarShape() {
         final Panel panel = Panel.with(this, skin, Text.AVATAR_SHAPE);
         LinearLayout grid = new LinearLayout(this);
@@ -4107,7 +4003,7 @@ public class SettingsActivity extends Activity {
                 panel.close();
                 if (shape.equals(now)) return;
                 AvatarShape.choose(this, shape);
-
+                
                 markChanged();
                 rebuild();
             });
@@ -4117,7 +4013,7 @@ public class SettingsActivity extends Activity {
             place.setMargins(dp(3), dp(3), dp(3), dp(3));
             line.addView(tile, place);
         }
-
+        
         for (int i = AvatarShape.ALL.length; i % 4 != 0; i++) {
             line.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
             ((LinearLayout.LayoutParams) line.getChildAt(line.getChildCount() - 1).getLayoutParams())
@@ -4127,6 +4023,8 @@ public class SettingsActivity extends Activity {
         panel.quiet(Text.CLOSE, null);
         panel.show();
     }
+
+    
 
     private static final int COUNTRY_PAGE = 97;
     private int countryFromGroup;
@@ -4149,6 +4047,7 @@ public class SettingsActivity extends Activity {
         });
     }
 
+    
     private void countriesPage() {
         LinearLayout field = new LinearLayout(this);
         field.setOrientation(LinearLayout.HORIZONTAL);
@@ -4176,6 +4075,7 @@ public class SettingsActivity extends Activity {
         box.addView(sized(field, 56));
         column.addView(box);
 
+        
         java.util.List<String[]> all = new java.util.ArrayList<>(java.util.Arrays.asList(AirTok.COUNTRIES));
         final java.text.Collator order = java.text.Collator.getInstance();
         final String chosen = AirTok.iso();
@@ -4215,7 +4115,7 @@ public class SettingsActivity extends Activity {
     }
 
     private static final int FLAGS_PAGE = 98;
-
+    
     private static final int FLAG_ROWS = 60;
 
     private String flagQuery = "";
@@ -4229,6 +4129,13 @@ public class SettingsActivity extends Activity {
         page.scrollTo(0, 0);
         rebuild();
     }
+
+    
+
+
+
+
+
 
     private void flagsPage() {
         LinearLayout warning = card();
@@ -4254,7 +4161,8 @@ public class SettingsActivity extends Activity {
             column.addView(wrap(wait));
             if (flagsLoading) return;
             flagsLoading = true;
-
+            
+            
             new Thread(() -> {
                 final java.util.List<Flags.Known> all = Flags.catalogue();
                 runOnUiThread(() -> {
@@ -4262,7 +4170,7 @@ public class SettingsActivity extends Activity {
                     flagsLoading = false;
                     if (settingsGroup == FLAGS_PAGE && !isFinishing()) rebuild();
                 });
-            }, "margyt-flags").start();
+            }, "airtok-flags").start();
             return;
         }
 
@@ -4356,6 +4264,7 @@ public class SettingsActivity extends Activity {
         return box;
     }
 
+    
     private View flagRow(final Flags.Known flag, final Object mine) {
         LinearLayout row = row();
         row.setPadding(dp(16), dp(10), dp(16), dp(10));
@@ -4431,11 +4340,12 @@ public class SettingsActivity extends Activity {
     private void answerFlag(Flags.Known flag, Object value) {
         Flags.override(flag, value);
         Diary.note("flag " + flag.key + " = " + (value == null ? "TikTok's own" : value));
-
+        
         restartOwed();
         rebuild();
     }
 
+    
     private View fullReportView() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -4454,6 +4364,8 @@ public class SettingsActivity extends Activity {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
 
+        
+        
         LinearLayout row = row();
         row.addView(icon("article"));
         TextView title = label(Text.DIARY_TITLE);
@@ -4512,7 +4424,6 @@ public class SettingsActivity extends Activity {
     }
 
     private View diaryLines() {
-        if (DevMode.isOn()) return fullReportView();
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setPadding(dp(16), dp(8), dp(16), dp(12));
@@ -4526,6 +4437,12 @@ public class SettingsActivity extends Activity {
         }
         return box;
     }
+
+    
+
+
+
+
 
     private void restartTikTok() {
         try {
@@ -4544,17 +4461,18 @@ public class SettingsActivity extends Activity {
 
     private void copyDiary() {
         try {
-            StringBuilder out = new StringBuilder("MargyT\n");
-            if (DevMode.isOn()) out.append(Diagnostics.fullReport());
-            else for (String line : Diary.lines()) out.append(line).append('\n');
+            StringBuilder out = new StringBuilder("AirTok\n");
+            for (String line : Diary.lines()) out.append(line).append('\n');
             ClipboardManager clipboard =
                     (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("MargyT", out.toString()));
+            clipboard.setPrimaryClip(ClipData.newPlainText("AirTok", out.toString()));
             Toast.makeText(this, Text.COPIED, Toast.LENGTH_SHORT).show();
         } catch (Throwable error) {
             Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
         }
     }
+
+    
 
     private View backArrow() {
         LinearLayout bar = new LinearLayout(this);
@@ -4567,12 +4485,12 @@ public class SettingsActivity extends Activity {
         } else {
             bar.setPadding(dp(12), dp(8), dp(16), dp(4));
         }
-
+        
         View button = Expressive.roundButton(this, SettingsGlyph.make("arrow_forward", skin.text),
                 skin.card, (Accent.colour() & 0xFFFFFF) | 0x33000000, skin.text, m3 ? 40 : 48);
         ((ViewGroup) button).getChildAt(0).setScaleX(-1f);
         if (m3) {
-
+            
             ((LinearLayout.LayoutParams) button.getLayoutParams()).setMargins(dp(4), dp(4), dp(4), dp(4));
             bar.addView(button);
             topBar = bar;
@@ -4595,6 +4513,7 @@ public class SettingsActivity extends Activity {
 
     private static android.graphics.Bitmap launcherIcon;
 
+    
     private android.graphics.drawable.Drawable launcherIcon() {
         if (launcherIcon == null) {
             int size = dp(32);
@@ -4602,26 +4521,25 @@ public class SettingsActivity extends Activity {
             android.graphics.Canvas canvas = new android.graphics.Canvas(out);
             android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG | android.graphics.Paint.FILTER_BITMAP_FLAG);
             android.graphics.RectF whole = new android.graphics.RectF(0, 0, size, size);
+            android.graphics.Path round = new android.graphics.Path();
+            round.addRoundRect(whole, size * 0.28f, size * 0.28f, android.graphics.Path.Direction.CW);
+            canvas.clipPath(round);
             try {
                 byte[] png = android.util.Base64.decode(Emblem.PNG, android.util.Base64.DEFAULT);
-                android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.length);
-                android.graphics.Path round = new android.graphics.Path();
-                round.addRoundRect(whole, size * 0.28f, size * 0.28f, android.graphics.Path.Direction.CW);
-                canvas.clipPath(round);
-                canvas.drawBitmap(bmp, null, whole, paint);
-                launcherIcon = out;
-                return new android.graphics.drawable.BitmapDrawable(getResources(), launcherIcon);
+                android.graphics.Bitmap note = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.length);
+                if (note != null) {
+                    canvas.drawBitmap(note, null, whole, paint);
+                }
             } catch (Throwable ignored) {
             }
-            paint.setColor(0xFFFE2C55);
-            canvas.drawRoundRect(whole, size * 0.28f, size * 0.28f, paint);
             launcherIcon = out;
         }
         return new android.graphics.drawable.BitmapDrawable(getResources(), launcherIcon);
     }
 
+    
     private LinearLayout topBar;
-
+    
     private boolean searchOpen;
 
     private View title(String text) {
@@ -4629,14 +4547,14 @@ public class SettingsActivity extends Activity {
         view.setText(text);
         view.setTextColor(skin.text);
         if (!Design.frosted() && topBar != null && topBar.getParent() == column) {
-
+            
             M3Type.titleLarge(view);
             view.setSingleLine(true);
             view.setEllipsize(android.text.TextUtils.TruncateAt.END);
             view.setPadding(dp(4), 0, dp(8), 0);
-            view.setOnClickListener(v -> { Cats.tapped(view); developerTap(); });
+            view.setOnClickListener(v -> developerTap());
             if (settingsGroup == 0) {
-
+                
                 ImageView mark = new ImageView(this);
                 mark.setImageDrawable(launcherIcon());
                 LinearLayout.LayoutParams markSize = new LinearLayout.LayoutParams(dp(32), dp(32));
@@ -4657,13 +4575,15 @@ public class SettingsActivity extends Activity {
             else M3Type.headlineMedium(view);
             view.setPadding(dp(32), dp(12), dp(24), dp(20));
         }
-
-        view.setOnClickListener(v -> {
-            Cats.tapped(view);
-            developerTap();
-        });
+        
+        view.setOnClickListener(v -> developerTap());
         return view;
     }
+
+    
+
+
+
 
     private View searchBox() {
         if (!Design.frosted() && topBar != null && topBar.getParent() == column) {
@@ -4686,7 +4606,7 @@ public class SettingsActivity extends Activity {
             if (!open) { View none = new View(this); none.setVisibility(View.GONE); return none; }
             View box = searchField();
             if (searchQuery.length() == 0) {
-
+                
                 final EditText field = findEditText(box);
                 if (field != null) field.post(() -> {
                     field.requestFocus();
@@ -4776,6 +4696,7 @@ public class SettingsActivity extends Activity {
         rebuild();
     }
 
+
     private void chooseSeekStep(){
         new ModDialog.Builder(this).setItems(new String[]{"5","10","15","30","60",Text.CUSTOM_SPEED},(dialog,index)->{
             if(index<5){AccountAppearance.prefs(this).edit().putInt(PlayerTools.STEP,new int[]{5,10,15,30,60}[index]).apply();rebuild();return;}
@@ -4826,11 +4747,13 @@ public class SettingsActivity extends Activity {
         panel.view(rows);panel.quiet(Text.CLOSE,null);panel.show();
     }
 
+    
     private static final class Found {
         final String section, title, words;
         Found(String section, String title, String words) { this.section = section; this.title = title; this.words = words; }
     }
 
+    
     private java.util.List<Found> harvest(int from) {
         java.util.List<Found> out = new java.util.ArrayList<>();
         java.util.Set<String> seen = new java.util.HashSet<>();
@@ -4876,10 +4799,12 @@ public class SettingsActivity extends Activity {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) texts(((ViewGroup) view).getChildAt(i), into);
     }
 
+    
     private static String plain(String words) {
         return words == null ? "" : words.toLowerCase(Locale.ROOT).replace('ё', 'е');
     }
 
+    
     private boolean matches(String haystack) {
         String hay = plain(haystack);
         for (String word : plain(searchQuery).split("\\s+")) {
@@ -4895,7 +4820,7 @@ public class SettingsActivity extends Activity {
         column.addView(section(Text.SEARCH_RESULTS));
         LinearLayout results = card();
         int found = 0;
-
+        
         for (Shelf shelf : shelves()) {
             if (Version.LITE && shelf.sections.length > 0 && !inLite(shelf.sections[0])) continue;
             if (!matches(shelf.title + " " + shelf.note)) continue;
@@ -4909,7 +4834,7 @@ public class SettingsActivity extends Activity {
             }));
             found++;
         }
-
+        
         java.util.List<Found> named = new java.util.ArrayList<>(), mentioned = new java.util.ArrayList<>();
         for (Found one : index) {
             if (matches(one.title)) named.add(one);
@@ -4925,7 +4850,7 @@ public class SettingsActivity extends Activity {
             found++;
         }
         if (found == 0) {
-
+            
             found += searchHit(results, Text.REGION, Text.SEARCH_REGION, () -> { });
             found += searchHit(results, Text.THEME, Text.SEARCH_ACCENT, () -> { themeColoursOpen = true; });
             found += searchHit(results, Text.THEME, Text.SEARCH_THEME, () -> { themeColoursOpen = true; });
@@ -4940,6 +4865,7 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(results));
     }
 
+    
     private void openFound(Found one) {
         searchQuery = "";
         settingsGroup = groupOf(one.section);
@@ -4964,6 +4890,7 @@ public class SettingsActivity extends Activity {
         });
     }
 
+    
     private static View shown(View view, String text) {
         if (view == null || view.getVisibility() != View.VISIBLE) return null;
         if (view instanceof TextView) return text.equals(String.valueOf(((TextView) view).getText()).trim()) ? view : null;
@@ -5025,42 +4952,30 @@ public class SettingsActivity extends Activity {
     private String groupName(int group) {
         switch (group) {
             case 1: return Local.of("Оформление");
-            case 2: return Local.of("Профиль");
-            case 3: return Local.of("Лента и видео");
-            case 4: return Local.of("Скачивание медиа");
-            case 5: return Local.of("О проекте");
-            case 6: return Local.of("Умный плеер и режим чистого экрана");
-            case 7: return Local.of("Чаты, серии, уведомления");
-            case 8: return Text.FUN;
+            case 2: return Local.of("Лента и видео");
+            case 3: return Local.of("Скачивание медиа");
+            case 4: return Local.of("Чаты, серии, уведомления");
+            case 5: return Local.of("Защита и приватность");
+            case 6: return Local.of("О проекте");
             default: return "AirTok";
         }
     }
 
     private void showSectionHelp() {
         String[] notes = {"", Local.of("Акцент меняет цвет кнопок и вкладок. Тема и шрифты отдельно."),
-                Local.of("Значки и градиент на ник. Сначала надо один раз подтвердить аккаунт."),
-                Local.of("Удержание «Отправить» открывает скачивание и перемотку, удержание края видео ускоряет его."),
-                Local.of("Скачивание, копии настроек, диагностика и журнал."),
-                Local.of("Здесь находятся версия мода, обновления, журнал и участники."), Local.of("Магазин и настройки плагинов. Ставь только те, которым доверяешь."),
-                Local.of("Автопродление серий и уведомления мода."),
-                Text.FUN_HELP};
+                Local.of("Менять регион, регион, лента, анти выгорание и лайк по двойному тапу."),
+                Local.of("Скачивание без водяного знака, принудительное сохранение, аватарки."),
+                Local.of("Серии, точное время сообщений, уведомления."),
+                Local.of("Защита входа и режим призрака."),
+                Local.of("Создатель и благодарности.")};
         Panel.with(this,skin,Local.of("Подсказки")).text(notes[Math.max(0,Math.min(notes.length-1,settingsGroup))])
-                .quiet(Local.of("Обучение"),() -> Tutorial.show(this)).primary(Local.of("Понятно"),null).show();
+                .primary(Local.of("Понятно"),null).show();
     }
 
     private View groupNavigation() {
         LinearLayout list = card();
-        String[] icons = {"palette", "group", "play_circle", "download", "info", "tune", "chat", "flare"};
-        String[] notes = {Local.of("Акцент и шрифт"),
-                "",
-                Local.of("Регион, лента и защита экрана"),
-                Local.of("Без водяного знака, 1080p и аватарки"),
-                Local.of("Создатель и благодарности"),
-                Local.of("Шкала перемотки, чистый экран и плеер"),
-                Local.of("Автопродление серий и уведомления"),
-                ""};
-
-        int[] shelf = new int[] {1, 3, 4, 6, 7, 5};
+        String[] icons = {"palette", "play_circle", "download", "chat", "lock", "info"};
+        int[] shelf = new int[] {1, 2, 3, 4, 5, 6};
         for (int n = 0; n < shelf.length; n++) {
             final int i = shelf[n];
             final int chosen = i;
@@ -5071,30 +4986,30 @@ public class SettingsActivity extends Activity {
             LinearLayout words = new LinearLayout(this); words.setOrientation(LinearLayout.VERTICAL);
             TextView head = label(groupName(i)); head.setTextSize(Design.fluent()?16:Design.frosted()?19:17);
             head.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
-            words.addView(head);words.addView(detail(notes[i-1]));entry.setContentDescription(groupName(i)+". "+notes[i-1]);
+            words.addView(head);
+            entry.setContentDescription(groupName(i));
             entry.addView(words,grow()); entry.addView(away());
             entry.setMinimumHeight(dp(Design.frosted()?80:72));Motion.touch(entry);
             entry.setOnClickListener(v -> {
                 if(navigating)return;navigating=true;
-                Motion.navigate(column,1f,()->{
-                    settingsGroup=chosen;
-                    java.util.List<Shelf> p = shelvesOf(chosen);
-                    settingsPage = p.isEmpty() ? null : p.get(0).id;
-                    page.scrollTo(0,0);
-                    navigate();
-                    navigating=false;
-                });
+                Motion.navigate(column,1f,()->{settingsGroup=chosen;settingsPage=null;page.scrollTo(0,0);navigate();navigating=false;});
             });
             list.addView(entry);
         }
         return wrap(list);
     }
 
+    
+
+
+
+
     private int groupOf(String section) {
         Shelf one = shelfOfSection(section);
         return one == null ? 4 : one.group;
     }
 
+    
     private View shelfList(java.util.List<Shelf> pages) {
         LinearLayout list = card();
         for (int n = 0; n < pages.size(); n++) {
@@ -5112,7 +5027,7 @@ public class SettingsActivity extends Activity {
             entry.addView(words, grow()); entry.addView(away());
             entry.setMinimumHeight(dp(72)); Motion.touch(entry);
             entry.setOnClickListener(v -> {
-
+                
                 if ("thanks".equals(one.id)) { showThanks(); return; }
                 if (navigating) return; navigating = true;
                 Motion.navigate(column, 1f, () -> { settingsPage = one.id; page.scrollTo(0, 0); navigate(); navigating = false; });
@@ -5122,6 +5037,7 @@ public class SettingsActivity extends Activity {
         return wrap(list);
     }
 
+    
     private View lead(String words) {
         TextView view = new TextView(this);
         view.setText(words);
@@ -5132,6 +5048,7 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
+    
     private java.util.Set<String> smallSections(int contentStart) {
         java.util.Map<String, Integer> rows = new java.util.HashMap<>();
         java.util.Set<String> odd = new java.util.HashSet<>();
@@ -5153,7 +5070,7 @@ public class SettingsActivity extends Activity {
                     View row = card.getChildAt(k);
                     if (row.getVisibility() == View.GONE) continue;
                     if (functionRow(row) != null || holdsSlider(row)) count++;
-
+                    
                     else if (!(row instanceof TextView) && !(row instanceof SettingsPictures.Art)) other = true;
                 }
             } else if (item.getTag(LEAD) == null) other = true;
@@ -5163,12 +5080,14 @@ public class SettingsActivity extends Activity {
         java.util.Set<String> small = new java.util.HashSet<>();
         for (java.util.Map.Entry<String, Integer> one : rows.entrySet())
             if (one.getValue() >= 1 && one.getValue() <= 2 && !odd.contains(one.getKey())) small.add(one.getKey());
-
+        
+        
         small.add(MOTION_BLUR);
         small.add(CLEAN_LINKS);
         return small;
     }
 
+    
     private static boolean holdsSlider(View row) {
         if (row instanceof android.widget.SeekBar) return true;
         if (!(row instanceof ViewGroup)) return false;
@@ -5177,6 +5096,7 @@ public class SettingsActivity extends Activity {
         return false;
     }
 
+    
     private void filterSections(int from, java.util.Set<String> sections) {
         boolean shown = false;
         for (int i = from; i < column.getChildCount(); i++) {
@@ -5199,13 +5119,17 @@ public class SettingsActivity extends Activity {
                 shown = false;
                 if (open != null) for (String name : open.sections) shown |= name.equals(section);
                 offered = !Version.LITE || inLite(section);
-
+                
                 if (shown && open != null && open.sections.length == 1) { item.setVisibility(View.GONE); continue; }
             } else if (item.getTag(LEAD) != null) continue;
             item.setVisibility(shown && offered ? View.VISIBLE : View.GONE);
         }
     }
     private static final int LEAD = 0x7e0c0340;
+
+    
+
+
 
     private static boolean inLite(String section) {
         return section.equals(Text.REGION) || section.equals(Text.COUNTRY)
@@ -5245,10 +5169,11 @@ public class SettingsActivity extends Activity {
             SPONSOR_NOTE = Local.of("Пропуск рекламы, которую читают авторы");
 
     private boolean navigating;
-
+    
     private java.util.List<View> built;
     private boolean keepPages;
 
+    
     private void prebuild() {
         if (built != null || isFinishing()) return;
         LinearLayout real = column;
@@ -5271,6 +5196,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private void navigate() {
         keepPages = true;
         rebuild();
@@ -5279,12 +5205,17 @@ public class SettingsActivity extends Activity {
         if(navigating)return;
         if (settingsGroup == STATS_PAGE) { finish(); return; }
         if (searchQuery.length() > 0) { searchQuery = ""; rebuild(); }
+        else if (settingsPage != null && shelvesOf(settingsGroup).size() > 1) {
+            navigating=true;Motion.navigate(column,-1f,()->{settingsPage=null;navigate();navigating=false;});
+        }
         else if (settingsGroup == COUNTRY_PAGE) {
-
+            
             navigating=true;Motion.navigate(column,-1f,()->{settingsGroup=countryFromGroup;settingsPage=countryFromPage;page.scrollTo(0,0);rebuild();navigating=false;});
         }
         else if (settingsGroup != 0) {
-            navigating=true;Motion.navigate(column,-1f,()->{settingsGroup=0;settingsPage=null;page.scrollTo(0,0);navigate();navigating=false;});
+            
+            final int to = settingsGroup == FLAGS_PAGE ? 4 : 0;
+            navigating=true;Motion.navigate(column,-1f,()->{settingsGroup=to;settingsPage=to==4?"diary":null;navigate();navigating=false;});
         }
         else finish();
     }
@@ -5311,6 +5242,11 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
+    
+
+
+
+    
     private View designPicker() {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
@@ -5318,9 +5254,8 @@ public class SettingsActivity extends Activity {
         head.addView(icon("palette"));
         head.addView(label(Text.DESIGN), grow());
         box.addView(sized(head, 52));
-        java.util.List<UiStyle> styles = new java.util.ArrayList<>();
-        styles.add(UiStyle.MATERIAL);
-        styles.add(UiStyle.LIQUID);
+
+        java.util.List<UiStyle> styles = new java.util.ArrayList<>(java.util.Arrays.asList(UiStyle.MATERIAL, UiStyle.LIQUID));
         LinearLayout strip = new LinearLayout(this);
         strip.setPadding(dp(12), 0, dp(12), dp(14));
         String[] bases = {"md3", "glass"};
@@ -5331,7 +5266,7 @@ public class SettingsActivity extends Activity {
             boolean on = style.key.equals(Design.key());
             tile.addView(new SettingsArt.Style(this, skin, bases[style.base], on));
             TextView name = new TextView(this);
-            name.setText(style.key.equals("md3") ? Local.of("Стандартный") : style.name);
+            name.setText(style.name);
             M3Type.line(name, 12, 0.4f);
             name.setTextColor(on ? skin.text : skin.muted());
             name.setTypeface(Typeface.create(on ? "sans-serif-medium" : "sans-serif", Typeface.NORMAL));
@@ -5346,17 +5281,18 @@ public class SettingsActivity extends Activity {
             strip.addView(tile, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         }
         box.addView(strip);
+        box.addView(quiet(Text.DESIGN_NOTE));
         return box;
     }
 
-    private static final int PICK_STYLE = 0x4D55;
-    private static final int CREATE_STYLE = 0x4D56;
+    private static final int PICK_STYLE = 0x4D55;   
+    private static final int CREATE_STYLE = 0x4D56; 
 
     private void pickStyle() {
         try {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-
+            
             intent.setType("*/*");
             startActivityForResult(intent, PICK_STYLE);
         } catch (Throwable error) {
@@ -5432,24 +5368,22 @@ public class SettingsActivity extends Activity {
     }
 
     private void chooseDesign() {
-        Panel panel=Panel.with(this,skin,Text.DESIGN);
+        Panel panel = Panel.with(this, skin, Text.DESIGN);
         panel.text(Text.DESIGN_NOTE).section(null);
-        panel.option(Local.of("Стандартный"),"md3".equals(Design.key()),true,()->applyDesign("md3"));
-        panel.option("Liquid Glass","glass".equals(Design.key()),true,()->applyDesign("glass"));
+        panel.option(Local.of("Обычный"), "md3".equals(Design.key()), true, () -> applyDesign("md3"));
+        panel.option("Liquid Glass", "glass".equals(Design.key()), true, () -> applyDesign("glass"));
         panel.show();
     }
 
     private void applyDesign(String mode) {
-        Design.choose(this,mode);
-        NavBar.reloadSettings();
+        Design.choose(this, mode);
         dressTheWindow();
-        Design.page(this,root,skin.page);
+        Design.page(this, root, skin.page);
         rebuild();
-        root.post(()->Design.own(root));
-        restartOwed();
-        Panel.with(this, skin, Local.of("Смена темы"))
-                .text(Local.of("Для полного применения темы к нижней панели и кнопкам требуется перезапуск."))
-                .primary(Local.of("Перезапустить сейчас"), this::restartTikTok)
+        root.post(() -> Design.own(root));
+        Panel.with(this, skin, Local.of("Стиль изменен"))
+                .text(Local.of("Для корректного применения стиля интерфейса рекомендуется перезапустить AirTok."))
+                .primary(Local.of("Перезапустить"), this::restartTikTok)
                 .quiet(Local.of("Позже"), null)
                 .show();
     }
@@ -5458,7 +5392,13 @@ public class SettingsActivity extends Activity {
         return new Expressive.Group(this, skin.card, (Accent.colour() & 0xFFFFFF) | 0x33000000);
     }
 
+    
     private static final int CAPTION = 0x7e0c0440, INFO = 0x7e0c0441;
+
+    
+
+
+
 
     private void explain(ViewGroup card) {
         for (int i = 0; i < card.getChildCount(); i++) {
@@ -5474,6 +5414,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private LinearLayout functionRow(View view) {
         if (!(view instanceof LinearLayout) || view.getVisibility() != View.VISIBLE) return null;
         LinearLayout row = (LinearLayout) view;
@@ -5524,6 +5465,7 @@ public class SettingsActivity extends Activity {
         return null;
     }
 
+    
     private View wrap(View card) {
         if (card instanceof Expressive.Group) explain((ViewGroup) card);
         LinearLayout box = new LinearLayout(this);
@@ -5539,19 +5481,23 @@ public class SettingsActivity extends Activity {
         return box;
     }
 
+    
     private int edge() {
         return dp(Design.frosted() ? 12 : 16);
     }
 
+    
     private int accentInk() {
         return skin.dark() ? Expressive.mix(Accent.colour(), 0xFFFFFFFF, 0.45f)
                 : Expressive.mix(Accent.colour(), 0xFF000000, 0.35f);
     }
 
+    
     private int iconInk() {
         return Expressive.mix(skin.card, skin.text, 0.78f);
     }
 
+    
     private int accentTonal() {
         return Expressive.mix(skin.card, Accent.colour(), 0.24f);
     }
@@ -5609,6 +5555,14 @@ public class SettingsActivity extends Activity {
         return view;
     }
 
+    
+
+
+
+
+
+
+
     private View restartBar() {
         LinearLayout bar = new LinearLayout(this);
         bar.setOrientation(LinearLayout.VERTICAL);
@@ -5652,12 +5606,23 @@ public class SettingsActivity extends Activity {
         return bar;
     }
 
+    
+
+
+
     private int onAccent() {
         int colour = Accent.colour();
         int red = (colour >> 16) & 0xFF, green = (colour >> 8) & 0xFF, blue = colour & 0xFF;
         int brightness = (red * 299 + green * 587 + blue * 114) / 1000;
         return brightness > 150 ? 0xFF1C2C24 : 0xFFFFFFFF;
     }
+
+    
+
+
+
+
+
 
     private int navigationBar() {
         try {
@@ -5694,8 +5659,11 @@ public class SettingsActivity extends Activity {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
+    
+
     private interface ColourChanged { void changed(int colour); }
 
+    
     private static final class AccentColourPicker extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final float[] hsv = new float[3];
@@ -5775,6 +5743,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private static final class Check extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -5802,6 +5771,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
+    
     private static final class Dot extends View {
         private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint ring = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -5846,7 +5816,7 @@ public class SettingsActivity extends Activity {
             float unit=getResources().getDisplayMetrics().density;
             float x=getWidth()/2f,y=getHeight()/2f;
             float radius=Math.max(1f,Math.min(x,y)-6*unit);
-
+            
             Expressive.shape(outline,Expressive.COOKIE9,x,y,radius+3*unit*selection,selection,selection*360f/Expressive.lobes(Expressive.COOKIE9));
             canvas.drawPath(outline,fill);
             if(customProgress>0){customInk.setAlpha(Math.round(255*customProgress));canvas.drawPath(outline,customInk);}

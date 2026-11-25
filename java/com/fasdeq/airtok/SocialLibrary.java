@@ -7,24 +7,29 @@ final class SocialLibrary {
  private static String account;private static long last;private static boolean started;
  private static volatile boolean missing;
  static synchronized void start(){if(started)return;started=true;main.postDelayed(new Runnable(){public void run(){
-
+  
   if(Watch.here()!=null){NativeStreaks.prepare();refresh(null);}
   main.postDelayed(this,60000);}},3000);}
  static void refresh(Runnable ready){if(missing)return;String uid=Account.liveId();if(uid==null)return;
   synchronized(SocialLibrary.class){if(!uid.equals(account)){account=uid;last=0;}if(last!=0&&android.os.SystemClock.uptimeMillis()-last<300000)return;if(!busy.compareAndSet(false,true))return;last=android.os.SystemClock.uptimeMillis();}
   main.post(()->{try{FavouriteStickers.load(ready);}catch(Throwable e){Diary.note("sticker library: "+e);}});
   Net.away("friends-library",()->{try{load(uid,ready);}catch(ClassNotFoundException|NoSuchMethodException|NoSuchFieldException e){
-
+   
    missing=true;Diary.note("friends library is not in this TikTok: "+e);
   }catch(Throwable e){
-
+   
+   
    Diary.note("friends library: "+e.getClass().getSimpleName()+(e.getMessage()==null?"":": "+e.getMessage()));
   }finally{busy.set(false);}});
  }
+ 
+
+
+
 
  static Object emptyContext()throws Exception{
   for(String name:new String[]{"kotlin.coroutines.EmptyCoroutineContext","X.0D4q"}){
-
+   
    try{Object found=Class.forName(name).getField("INSTANCE").get(null);if(found!=null&&(name.startsWith("kotlin.")||"EmptyCoroutineContext".equals(found.toString())))return found;}catch(Throwable ignored){}
   }
   Class<?> kind=Class.forName("kotlin.coroutines.CoroutineContext");
@@ -48,7 +53,7 @@ final class SocialLibrary {
    Object callback=Proxy.newProxyInstance(continuation.getClassLoader(),new Class<?>[]{continuation},(proxy,m,args)->{
     if(m.getName().equals("getContext"))return context;
     if(m.getName().equals("resumeWith")){answer[0]=args[0];latch.countDown();return null;}
-    if(m.getName().equals("toString"))return "margyt-friends";if(m.getName().equals("hashCode"))return System.identityHashCode(proxy);if(m.getName().equals("equals"))return proxy==args[0];return null;});
+    if(m.getName().equals("toString"))return "airtok-friends";if(m.getName().equals("hashCode"))return System.identityHashCode(proxy);if(m.getName().equals("equals"))return proxy==args[0];return null;});
    Object immediate=request.invoke(service,source,30,sec,page,callback);
    if(immediate!=null&&immediate.getClass().getName().equals("com.ss.android.ugc.aweme.relation.model.FriendsListResponse"))answer[0]=immediate;
    else if(!latch.await(20,TimeUnit.SECONDS))throw new java.io.IOException("friends timeout");

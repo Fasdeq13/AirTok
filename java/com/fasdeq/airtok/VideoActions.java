@@ -13,6 +13,11 @@ public final class VideoActions {
  public static long currentPublishedTime(){Object post=downloadPost();return post==null?0:NativeRead.number(NativeRead.get(post,"getCreateTime"));}
  public static void captureShare(Object component){Object content=NativeRead.get(component,"getContentView"),post=NativeRead.get(NativeRead.item(component),"getAweme");if(content instanceof View&&post!=null){selected=post;selectedView=new WeakReference<View>((View)content);}}
  static Object downloadPost(){View row=selectedView.get();return row!=null&&row.isShown()&&row.isAttachedToWindow()?selected:null;}
+ 
+
+
+
+
 
  static Object downloadPost(Context from){
   Object post=downloadPost();if(post==null)return null;
@@ -29,9 +34,18 @@ public final class VideoActions {
  }
  private static final int[] SHARE={0x7f0a76eb,0x7f0a76d4,0x7f0a5f35};
  private static final java.util.Map<View,Object> components=new java.util.WeakHashMap<View,Object>();
+ 
+
+
+
 
  static void touched(android.app.Activity activity,android.view.MotionEvent event){
-  return;
+  if(event.getActionMasked()!=android.view.MotionEvent.ACTION_DOWN)return;
+  View hit=shareAt(activity.getWindow().getDecorView(),(int)event.getRawX(),(int)event.getRawY(),0);
+  if(hit==null)return;
+  Object found=null;for(Object up=hit;up instanceof View&&found==null;up=((View)up).getParent())found=components.get(up);
+  final Object component=found;
+  hit.setOnLongClickListener(v->{Object post=component!=null?NativeRead.get(NativeRead.item(component),"getAweme"):downloadPost();show(v,post);return true;});
  }
  private static View shareAt(View view,int x,int y,int depth){
   if(view==null||depth>45||view.getVisibility()!=View.VISIBLE)return null;
@@ -41,10 +55,27 @@ public final class VideoActions {
   return null;
  }
  public static void bindNative(Object component){
-  return;
+  Object content=NativeRead.get(component,"getContentView");
+  if(content instanceof View){View root=(View)content;components.put(root,component);View.OnLongClickListener hold=v->{Object post=NativeRead.get(NativeRead.item(component),"getAweme");show(v,post);return true;};
+   root.setOnLongClickListener(hold);
+   for(int id:new int[]{0x7f0a76eb,0x7f0a76d4,0x7f0a5f35}){View target=root.findViewById(id);if(target!=null)target.setOnLongClickListener(hold);}
+  }
  }
  private static void show(View anchor,final Object post){
-  return;
+  View row=selectedView.get();
+  if(post==null || NativeRead.aid(post).length()==0){Screen.say(Text.VIDEO_NOT_READY);return;}
+  final View selectedRow=row!=null&&row.isShown()&&row.getRootView()==anchor.getRootView()&&NativeRead.aid(post).equals(NativeRead.aid(selected))?row:anchor;
+  Context c=anchor.getContext();Panel panel=Panel.with(c,Skin.remembered(c),Text.VIDEO_ACTIONS);
+   panel.item("download",Text.ACT_DOWNLOAD,Text.ACT_DOWNLOAD_HINT,()->chooseDownload(c,post));
+ panel.item("play_circle",Text.ACT_PLAYBACK,Text.ACT_PLAYBACK_HINT,()->playback(c));
+  if(!SponsorBlock.photos(post))panel.item("fast_forward",Local.of("Отметить рекламу"),Local.of("Где автор рекламирует что-то в видео"),()->SponsorBlock.mark(c,post));
+  panel.item("image",Text.SAVE_FRAME,Text.ACT_FRAME_HINT,()->FrameCapture.capture(selectedRow,NativeRead.aid(post)));
+  panel.item("visibility_off",Text.ACT_HIDE,Text.ACT_HIDE_HINT,()->{
+   Panel more=Panel.with(c,Skin.remembered(c),Text.ACT_HIDE);
+   if(NativeRead.number(NativeRead.get(post,"getRecommendCardType"))>0)more.item("block",Text.BLOCK_SUGGESTION,null,()->FeedBlacklist.addCard(post));
+   more.danger("block",Text.BLOCK_AUTHOR,null,()->FeedBlacklist.addPost(post));more.quiet(Text.CLOSE,null).show();
+  });
+  panel.quiet(Text.CLOSE,null);panel.show();
  }
  static void playback(Context c){Panel panel=Panel.with(c,Skin.remembered(c),Text.ACT_PLAYBACK);
   panel.item("speed",Text.PLAYER_SPEED,null,()->PlayerTools.choose(c));
@@ -55,9 +86,10 @@ public final class VideoActions {
 
     static final String WINDOW_KEY = "download_window";
 
+    
     static boolean windowOn() {
         try {
-            return AirTok.context().getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE).getBoolean(WINDOW_KEY, true);
+            return AirTok.context().getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE).getBoolean(WINDOW_KEY, true);
         } catch (Throwable ignored) {
             return true;
         }
@@ -65,7 +97,7 @@ public final class VideoActions {
 
     static void setWindow(boolean on) {
         try {
-            AirTok.context().getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE).edit().putBoolean(WINDOW_KEY, on).apply();
+            AirTok.context().getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE).edit().putBoolean(WINDOW_KEY, on).apply();
         } catch (Throwable ignored) {
         }
     }
@@ -73,7 +105,8 @@ public final class VideoActions {
  static void chooseDownload(Context c,Object post){
   if(post==null){Screen.say(Text.VIDEO_NOT_READY);return;}
   java.util.List<DownloadQuality.Choice> photos=DownloadQuality.photos(post,Download.isEnabled());
-
+  
+  
   final boolean photoPost=!photos.isEmpty();
   Object video=photoPost?null:NativeRead.get(post,"getVideo");
   java.util.List<DownloadQuality.Choice> qualities=new java.util.ArrayList<>();
@@ -111,7 +144,7 @@ public final class VideoActions {
   if(post==null||choice==null||choice.candidates().isEmpty()){Screen.say(Text.VIDEO_NOT_READY);return;}
   Context context=AirTok.context();if(context!=null)transfer(context.getApplicationContext(),choice.candidates(),0,NativeRead.aid(post));
  }
-
+ 
  private static String fetchOne(Context c,String key,java.util.List<String> addresses,int kind,String aid,java.io.File temporary,DownloadTasks.Control control,int index,int total,String suffix)throws Exception{
   final boolean audio=kind==1,image=kind==2;final int slot=index,count=Math.max(1,total);
   Throwable last=null;
@@ -122,7 +155,7 @@ public final class VideoActions {
     if(!Net.download(address,temporary,(percent,got,size)->{int overall=(slot*100+percent)/count;DownloadTasks.progress(key,overall);Screen.progress(key,Text.DOWNLOADING,overall);},control)){last=new java.io.IOException("Download failed or cancelled");continue;}
     String[] format=audio?DownloadQuality.audioFormat(temporary):image?DownloadQuality.imageFormat(temporary):DownloadQuality.videoFormat(temporary);
     String base=aid==null||aid.length()==0?"post":aid.replaceAll("[^A-Za-z0-9_-]","_");
-    return MediaFiles.save(c,temporary,"margyt_"+base+suffix+"_"+java.util.UUID.randomUUID()+"."+format[0],format[1],control);
+    return MediaFiles.save(c,temporary,"airtok_"+base+suffix+"_"+java.util.UUID.randomUUID()+"."+format[0],format[1],control);
    }catch(Throwable error){last=error;Diary.note("media source failed: "+error);}
   }
   if(last instanceof Exception)throw (Exception)last;
@@ -134,7 +167,7 @@ public final class VideoActions {
   final Context c=context.getApplicationContext();final String aid=NativeRead.aid(post);
   final java.util.List<DownloadQuality.Choice> list=new java.util.ArrayList<>(photos);
   final String key="media_"+java.util.UUID.randomUUID();
-  final DownloadTasks.Control control=DownloadTasks.begin(key,Text.photosCount(list.size()),"margyt",()->saveAllPhotos(post,list));
+  final DownloadTasks.Control control=DownloadTasks.begin(key,Text.photosCount(list.size()),"airtok",()->saveAllPhotos(post,list));
   control.limit=320L*1024L*1024L;Screen.progress(key,Text.DOWNLOADING,0);
   boolean queued=MediaQueue.add(()->{
    int saved=0;String where=null;java.io.File temporary=new java.io.File(c.getCacheDir(),key+".media");
@@ -156,7 +189,7 @@ public final class VideoActions {
  private static void transfer(Context c,java.util.List<String> addresses,int kind,String aid){
   final boolean audio=kind==1,image=kind==2;
   final String key="media_"+java.util.UUID.randomUUID();
-  final DownloadTasks.Control control=DownloadTasks.begin(key,audio?Text.SAVE_AUDIO:image?Text.SAVE_IMAGE:Text.SAVE_VIDEO,"margyt",()->transfer(c,addresses,kind,aid));
+  final DownloadTasks.Control control=DownloadTasks.begin(key,audio?Text.SAVE_AUDIO:image?Text.SAVE_IMAGE:Text.SAVE_VIDEO,"airtok",()->transfer(c,addresses,kind,aid));
   control.limit=320L*1024L*1024L;Screen.progress(key,Text.DOWNLOADING,0);
   boolean queued=MediaQueue.add(()->{
    boolean success=false;String savedTo=null;java.io.File temporary=new java.io.File(c.getCacheDir(),key+".media");

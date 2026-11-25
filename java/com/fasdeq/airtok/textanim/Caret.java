@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class Caret {
     public static final long IDLE = -1L;
@@ -87,7 +91,7 @@ public final class Caret {
     boolean focused;
     long period = BLINK_PERIOD;
     final RectF halo = new RectF();
-
+    
     final float[] shapeW = new float[4];
     final float[] shapeL = new float[4];
     final float[] shapeT = new float[4];
@@ -96,9 +100,9 @@ public final class Caret {
     final float[] shapeRad = new float[4];
     static final float[] SHAPE_ALPHA = {1.0f, 1.0f, 1.0f, 0.55f};
     boolean shapeInit;
-
+    
     float charW = Float.NaN;
-
+    
     static final long SELECTION_MS = 360L;
     int selLo = -1;
     int selHi = -1;
@@ -274,22 +278,23 @@ public final class Caret {
             b += (vy - b) * jump;
             radius += (size / 2.0f - radius) * jump;
         }
-
+        
         float strL = direction < 0.0f ? stretch : 0.0f;
         float strR = direction >= 0.0f ? stretch : 0.0f;
         float bar = Math.max(2.0f * density, width * 1.1f);
         float body = vx - w / 2.0f;
         shapeL[0] = l; shapeT[0] = t; shapeR[0] = r; shapeB[0] = b; shapeRad[0] = radius;
-
+        
         shapeL[1] = vx - w * 0.75f - strL; shapeT[1] = t; shapeR[1] = vx + w * 0.75f + strR; shapeB[1] = b;
         shapeRad[1] = 2.0f * density;
-
+        
         shapeL[2] = body - strL; shapeT[2] = b - bar; shapeR[2] = body + charW + strR; shapeB[2] = b;
         shapeRad[2] = bar / 2.0f;
-
+        
         shapeL[3] = body - strL; shapeT[3] = t; shapeR[3] = body + charW + strR; shapeB[3] = b;
         shapeRad[3] = 3.0f * density;
 
+        
         int want = config.caretShape;
         if (!shapeInit) {
             for (int i = 0; i < 4; i++) shapeW[i] = i == want ? 1.0f : 0.0f;
@@ -319,7 +324,7 @@ public final class Caret {
             mRad += shapeRad[i] * k;
             mA += SHAPE_ALPHA[i] * k;
         }
-
+        
         float ball = jump > 0.001f ? Math.min(1.0f, jump * 6.0f) : 0.0f;
         if (ball > 0.0f) {
             mL += (l - mL) * ball;
@@ -338,7 +343,7 @@ public final class Caret {
         float alpha = blinking && !moving ? blink(now) : hold(now);
         if (alpha > 0.004f) {
             if (config.caretGlow > 0) {
-
+                
                 float g = config.caretGlow / 100.0f;
                 paint.setColor(color);
                 for (int k = 2; k >= 1; k--) {
@@ -363,6 +368,7 @@ public final class Caret {
         return blinking ? untilFade(now) : IDLE;
     }
 
+    
     static boolean metrics(EditText view, Layout layout, int offset, float[] out) {
         try {
             int at = Math.max(0, Math.min(offset, view.getText().length()));
@@ -381,6 +387,8 @@ public final class Caret {
         }
     }
 
+    
+    
     public long drawSelection(EditText view, Canvas canvas, Config config, int color, boolean active, long now) {
         Layout layout = view.getLayout();
         int a = view.getSelectionStart();
@@ -422,7 +430,7 @@ public final class Caret {
         float sideK = config.selSide / 100.0f;
         float merge = Math.min(1.15f, 0.35f * stretchK + 0.22f * sideK) + 0.88f;
         float follow = Math.max(0.12f, Math.min(0.42f, 0.30f - stretchK * 0.055f));
-
+        
         follow = 1.0f - (float) Math.pow(1.0f - follow, dt / 16.0f);
         if (Float.isNaN(selStartX)) {
             selStartX = selMetricsA[0];

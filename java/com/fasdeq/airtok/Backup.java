@@ -4,6 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+
+
+
+
+
+
+
+
 public final class Backup {
 
     private Backup() {}
@@ -31,14 +39,12 @@ public final class Backup {
             "streak_send_minute","repost_btn","repost_pos","profile_layout","friends_pinned","message_times","notify_messages","notify_promos","notify_other","notify_no_prompts",
             "dl_quality","frame_quality","player_default_speed","player_seek_step","player_reverse_rate","feed_blocked_authors","feed_blocked_cards",Feed.KEY_STORIES,Feed.KEY_SUGGESTIONS,
             Sound.KEY, Seekbar.KEY, Dates.KEY,
-            Dim.KEY_ON, Dim.KEY_HOW,
+            Dim.KEY_ON, Dim.KEY_HOW, 
             Download.KEY, Download.KEY_ALWAYS, Avatars.KEY, Stickers.KEY,
             Comments.KEY_COPY,
             Flags.KEY_VOICE, Flags.KEY_BANNER, Flags.KEY_SPEED_LOCK,
             Flags.KEY_COMMENT_REPOST, Flags.KEY_SELF_REPOST, Flags.KEY_NEW_PROFILE, AvatarShape.KEY, AvatarShape.SPIN_KEY,
-            Screamer.KEY, Screamer.KEY_SOUND,
-            Streaks.KEY_ON, Streaks.KEY_MODE, Streaks.KEY_TEXT,
-            Updater.KEY_REMIND
+            Streaks.KEY_ON, Streaks.KEY_MODE, Streaks.KEY_TEXT
     };
 
     static String[] settingKeys(){return SAFE.clone();}
@@ -59,7 +65,7 @@ public final class Backup {
     public static boolean write(Context context, Uri where) {
         if (context == null || where == null) return false;
         try {
-            SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
             java.util.Map<String, ?> all = prefs.getAll();
             java.util.Map<String,?> appearance=AccountAppearance.prefs(context).getAll();
             org.json.JSONObject settings = new org.json.JSONObject();
@@ -89,6 +95,7 @@ public final class Backup {
         }
     }
 
+    
     public static Review review(Context context, Uri source) {
         if (context == null || source == null) return new Review(null, "no file");
         try {
@@ -101,47 +108,70 @@ public final class Backup {
                 in.close();
             }
             org.json.JSONObject root = new org.json.JSONObject(new String(raw, "UTF-8"));
-            if (root.optInt("schema", -1) != SCHEMA) return new Review(null, "unsupported backup");
             org.json.JSONObject settings = root.optJSONObject("settings");
-            if (settings == null) return new Review(null, "settings missing");
+            if (settings == null) {
+                settings = root;
+            }
 
             android.os.Bundle clean = new android.os.Bundle();
             for (String key : SAFE) {
                 if (!settings.has(key) || settings.isNull(key)) continue;
-                Object value = settings.get(key);
-                if (key.equals(Design.KEY) && (!(value instanceof String) || !Design.valid((String)value)))
-                    return new Review(null,"invalid interface style");
-                if(key.startsWith("rail_")||key.startsWith("notify_")||key.equals("repost_btn")||key.equals("message_times")||key.equals(Feed.KEY_STORIES)||key.equals(Feed.KEY_SUGGESTIONS)) {
-                    if(!(value instanceof Boolean))return new Review(null,"invalid boolean: "+key);
-                }
-                if(key.equals("streak_send_minute")) {
-                    if(!(value instanceof Number))return new Review(null,"invalid schedule");
-                    double n=((Number)value).doubleValue();
-                    if(Double.isNaN(n)||Double.isInfinite(n)||n!=Math.rint(n)||n < -1||n > 1439)return new Review(null,"invalid schedule");
-                    clean.putInt(key,(int)n);continue;
-                }
-                if(key.equals("player_default_speed")||key.equals("player_reverse_rate")) {
-                    if(!(value instanceof Number)||!PlayerTools.validSpeed(((Number)value).floatValue()))return new Review(null,"invalid speed: "+key);
-                    clean.putFloat(key,((Number)value).floatValue());continue;
-                }
-                if(key.equals("dl_quality")||key.equals("frame_quality")||key.equals("player_seek_step")||key.equals("repost_pos")||key.equals("profile_layout")) {
-                    if(!(value instanceof Number))return new Review(null,"invalid number: "+key);
-                    double n=((Number)value).doubleValue();if(Double.isNaN(n)||Double.isInfinite(n)||n!=Math.rint(n)||n<0||n>1080)return new Review(null,"invalid number: "+key);
-                    clean.putInt(key,(int)n);continue;
-                }
-                if(key.equals("friends_pinned")||key.startsWith("feed_blocked_")) {
-                    if(!(value instanceof String)||((String)value).length()>(key.equals("friends_pinned")?4096:16384))return new Review(null,"invalid list: "+key);
-                }
-                if (value instanceof Boolean) clean.putBoolean(key, ((Boolean) value).booleanValue());
-                else if (value instanceof Integer) clean.putInt(key, ((Integer) value).intValue());
-                else if (value instanceof Long) clean.putLong(key, ((Long) value).longValue());
-                else if (value instanceof Double) clean.putFloat(key, ((Double) value).floatValue());
-                else if (value instanceof String) clean.putString(key, (String) value);
+                try {
+                    Object value = settings.get(key);
+                    if (key.equals(Design.KEY)) {
+                        if (value instanceof String && Design.valid((String) value)) {
+                            clean.putString(key, (String) value);
+                        }
+                        continue;
+                    }
+                    if (key.startsWith("rail_") || key.startsWith("notify_") || key.equals("repost_btn") || key.equals("message_times") || key.equals(Feed.KEY_STORIES) || key.equals(Feed.KEY_SUGGESTIONS)) {
+                        if (value instanceof Boolean) clean.putBoolean(key, ((Boolean) value).booleanValue());
+                        else if (value instanceof String) clean.putBoolean(key, Boolean.parseBoolean((String) value));
+                        continue;
+                    }
+                    if (key.equals("streak_send_minute")) {
+                        if (value instanceof Number) {
+                            double n = ((Number) value).doubleValue();
+                            if (!Double.isNaN(n) && !Double.isInfinite(n) && n >= -1 && n <= 1439) {
+                                clean.putInt(key, (int) n);
+                            }
+                        }
+                        continue;
+                    }
+                    if (key.equals("player_default_speed") || key.equals("player_reverse_rate")) {
+                        if (value instanceof Number && PlayerTools.validSpeed(((Number) value).floatValue())) {
+                            clean.putFloat(key, ((Number) value).floatValue());
+                        }
+                        continue;
+                    }
+                    if (key.equals("dl_quality") || key.equals("frame_quality") || key.equals("player_seek_step") || key.equals("repost_pos") || key.equals("profile_layout")) {
+                        if (value instanceof Number) {
+                            double n = ((Number) value).doubleValue();
+                            if (!Double.isNaN(n) && !Double.isInfinite(n) && n >= 0 && n <= 1080) {
+                                clean.putInt(key, (int) n);
+                            }
+                        }
+                        continue;
+                    }
+                    if (key.equals("friends_pinned") || key.startsWith("feed_blocked_")) {
+                        if (value instanceof String && ((String) value).length() <= (key.equals("friends_pinned") ? 4096 : 16384)) {
+                            clean.putString(key, (String) value);
+                        }
+                        continue;
+                    }
+                    if (value instanceof Boolean) clean.putBoolean(key, ((Boolean) value).booleanValue());
+                    else if (value instanceof Integer) clean.putInt(key, ((Integer) value).intValue());
+                    else if (value instanceof Long) clean.putLong(key, ((Long) value).longValue());
+                    else if (value instanceof Double) clean.putFloat(key, ((Double) value).floatValue());
+                    else if (value instanceof Float) clean.putFloat(key, ((Float) value).floatValue());
+                    else if (value instanceof String) clean.putString(key, (String) value);
+                } catch (Throwable ignored) {}
             }
+            if (clean.isEmpty()) return new Review(null, "Неверная конфигурация");
             return new Review(clean, null);
         } catch (Throwable error) {
             Diary.note("backup import: " + error);
-            return new Review(null, "invalid backup");
+            return new Review(null, "Неверная конфигурация");
         }
     }
 
@@ -149,23 +179,35 @@ public final class Backup {
         if (context == null || review == null || !review.fits()) return false;
         try {
             SharedPreferences.Editor global = context.getSharedPreferences(
-                    "margyt", Context.MODE_PRIVATE).edit();
-            SharedPreferences.Editor appearance=AccountAppearance.prefs(context).edit();
+                    AirTok.PREFS, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor appearance = AccountAppearance.prefs(context).edit();
             for (String key : review.values.keySet()) {
-                SharedPreferences.Editor edit=AccountAppearance.appearanceKey(key)?appearance:global;
-                Object value = review.values.get(key);
-                if (value instanceof Boolean) edit.putBoolean(key, ((Boolean) value).booleanValue());
-                else if (value instanceof Integer) edit.putInt(key, ((Integer) value).intValue());
-                else if (value instanceof Long) edit.putLong(key, ((Long) value).longValue());
-                else if (value instanceof Float) edit.putFloat(key, ((Float) value).floatValue());
-                else if (value instanceof String) edit.putString(key, (String) value);
+                try {
+                    SharedPreferences.Editor edit = AccountAppearance.appearanceKey(key) ? appearance : global;
+                    Object value = review.values.get(key);
+                    if (value instanceof Boolean) edit.putBoolean(key, ((Boolean) value).booleanValue());
+                    else if (value instanceof Integer) edit.putInt(key, ((Integer) value).intValue());
+                    else if (value instanceof Long) edit.putLong(key, ((Long) value).longValue());
+                    else if (value instanceof Float) edit.putFloat(key, ((Float) value).floatValue());
+                    else if (value instanceof String) edit.putString(key, (String) value);
+                } catch (Throwable ignored) {}
             }
-            global.apply();appearance.apply();AppearanceColors.reload();Design.reload();
-            FeedRail.reloadSettings();AvatarShape.reloadSettings();NavBar.reloadSettings();
-            FeedBlacklist.reload();PlayerTools.accountChanged();ProfileLayout.reload();MessageTimes.reload();ModNotifications.reload();Repost.reload();
-            Themes.forget();
-            Fonts.reload();
-            LikeColors.reload();
+            try { global.apply(); } catch (Throwable ignored) {}
+            try { appearance.apply(); } catch (Throwable ignored) {}
+            try { AppearanceColors.reload(); } catch (Throwable ignored) {}
+            try { Design.reload(); } catch (Throwable ignored) {}
+            try { FeedRail.reloadSettings(); } catch (Throwable ignored) {}
+            try { AvatarShape.reloadSettings(); } catch (Throwable ignored) {}
+            try { NavBar.reloadSettings(); } catch (Throwable ignored) {}
+            try { FeedBlacklist.reload(); } catch (Throwable ignored) {}
+            try { PlayerTools.accountChanged(); } catch (Throwable ignored) {}
+            try { ProfileLayout.reload(); } catch (Throwable ignored) {}
+            try { MessageTimes.reload(); } catch (Throwable ignored) {}
+            try { ModNotifications.reload(); } catch (Throwable ignored) {}
+            try { Repost.reload(); } catch (Throwable ignored) {}
+            try { Themes.forget(); } catch (Throwable ignored) {}
+            try { Fonts.reload(); } catch (Throwable ignored) {}
+            try { LikeColors.reload(); } catch (Throwable ignored) {}
             return true;
         } catch (Throwable error) {
             Diary.note("backup apply: " + error);
@@ -173,6 +215,7 @@ public final class Backup {
         }
     }
 
+    
     public static void reset(Context context, int group) {
         if (context == null) return;
         String[] keys;
@@ -199,11 +242,11 @@ public final class Backup {
                 "rail_show_like","rail_show_comment","rail_show_fav","rail_show_share",
             "streak_send_minute","repost_btn","repost_pos","notify_messages","notify_promos","notify_other","notify_no_prompts",
                 "feed_blocked_authors","feed_blocked_cards",Feed.KEY_STORIES,Feed.KEY_SUGGESTIONS,
-                AirTok.KEY_ENABLED, AirTok.KEY_COUNTRY, Updater.KEY_REMIND
+                AirTok.KEY_ENABLED, AirTok.KEY_COUNTRY
         };
         else keys = SAFE;
         SharedPreferences.Editor edit = context.getSharedPreferences(
-                "margyt", Context.MODE_PRIVATE).edit();
+                AirTok.PREFS, Context.MODE_PRIVATE).edit();
         SharedPreferences.Editor appearance=AccountAppearance.prefs(context).edit();
         for (String key : keys) (AccountAppearance.appearanceKey(key)?appearance:edit).remove(key);
         appearance.apply();AppearanceColors.reload();

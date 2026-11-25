@@ -6,23 +6,39 @@ import android.view.View;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class SpeedGesture {
 
     private SpeedGesture() {}
 
+    
     private static final float NATIVE = 2f;
 
     private static Runnable watching;
 
+    
     public static boolean onTouch(Object listener, final View target, MotionEvent event) {
         try {
             if (listener == null || target == null || event == null) return false;
             if (event.getActionMasked() != MotionEvent.ACTION_DOWN) return false;
             if (Math.abs(PlayerTools.speed() - NATIVE) < 0.01f) return false;
             Object inside = read(listener, "l0");
-            final Object component = inside == null ? listener : inside;
+            final Object component = inside == null ? listener : inside;  
             if (watching != null) target.removeCallbacks(watching);
-
+            
+            
             watching = new Runnable() {
                 private int looks;
 
@@ -45,11 +61,11 @@ public final class SpeedGesture {
     }
 
     private static Object ability(Object component) {
-        Object edge = read(component, "LLJL");
+        Object edge = read(component, "LLJL"); 
         if (edge != null) return edge;
         edge = read(component, "LLLILZJ");
         if (edge != null) return edge;
-
+        
         return call(read(component, "LLLL"), "getValue");
     }
 

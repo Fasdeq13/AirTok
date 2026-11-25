@@ -2,6 +2,13 @@ package com.fasdeq.airtok;
 
 import java.util.Locale;
 
+
+
+
+
+
+
+
 final class Text {
 
     private Text() {}
@@ -191,12 +198,15 @@ final class Text {
 
     static final String ACCENT_NOTE = pick("Цвет вместо розового TikTok: лайки, кнопки, вкладки. Некоторые значки остаются как были.", "Колір замість рожевого TikTok: лайки, кнопки, вкладки. Деякі значки лишаються як були.", "A colour in place of TikTok’s pink: likes, buttons, tabs. Some icons stay as they were.");
 
+    
     static final String RESTART_PENDING = pick(
             "Нужен перезапуск",
             "Потрібен перезапуск",
             "Restart needed");
 
     static final String RESTART = pick("Перезапустить", "Перезапустити", "Restart");
+
+    
 
     static final String HIDDEN = pick("Анти A/B", "Анти A/B", "Anti A/B");
 
@@ -291,7 +301,11 @@ final class Text {
     static final String ACCENT_WALLPAPER = pick(
             "Цвет своего телефона", "Колір свого телефона", "Your phone's own colour");
 
+    
+
     static final String FONT = pick("Шрифт", "Шрифт", "Typeface");
+
+    
 
     static final String TEST_NOBODY = pick("не вошёл", "не увійшов", "not signed in");
 
@@ -319,6 +333,8 @@ final class Text {
 
     static final String OWN_BRIGHTNESS_NOTE = pick("Не выкручивает яркость в камере и на HDR-видео.", "Не викручує яскравість у камері й на HDR-відео.", "No full brightness in the camera or on HDR videos.");
 
+    
+
     static final String GRADIENT = pick("Градиент на ник", "Градієнт на нік", "Name gradient");
 
     static final String GRADIENT_NOTE = pick("Видят все с AirTok. Менять можно раз в минуту.", "Бачать усі з AirTok. Змінювати можна раз на хвилину.", "Seen by everyone with AirTok. Can change once a minute.");
@@ -345,6 +361,8 @@ final class Text {
     static final String GRADIENT_NO_ACCOUNT = pick(
             "Сначала войди в аккаунт", "Спочатку увійди в акаунт", "Sign in first");
 
+    
+
     static final String PROVE = pick(
             "Подтвердить аккаунт", "Підтвердити акаунт", "Prove the account is yours");
 
@@ -364,7 +382,7 @@ final class Text {
     static final String PROVE_HOW = pick(
             "1. Скопируй код.\n"
                     + "2. Вставь его в описание профиля в TikTok и сохрани.\n"
-                    + "3. Вернись сюда и нажми «Проверить».\n"
+                    + "3. Вернись сюда и нажмите «Проверить».\n"
                     + "Потом код можно убрать из описания.",
             "1. Скопіюй код.\n"
                     + "2. Встав його в опис профілю в TikTok і збережи.\n"
@@ -406,7 +424,7 @@ final class Text {
             "Не можу знайти твою сторінку за айді. Впиши свій нік і тисни ще раз.",
             "Your page cannot be found from the id. Write your name and press again.");
 
-    static final String PROVE_NAME = pick("твой ник без @", "твій нік без @",
+    static final String PROVE_NAME = pick("Ваш ник без @", "твій нік без @",
             "your name without the @");
 
     static final String PROVE_NOT_YOURS = pick(
@@ -425,7 +443,7 @@ final class Text {
     static final String PROVE_CHECK = pick("Проверить", "Перевірити", "Check");
 
     static final String PROVE_OK = pick(
-            "Готово, аккаунт твой", "Готово, акаунт твій", "Done, it is yours");
+            "Готово, аккаунт Ваш", "Готово, акаунт твій", "Done, it is yours");
 
     static final String PROVE_NOT_THERE = pick(
             "Кода в описании не видно. Сохрани описание и жми ещё раз, "
@@ -441,7 +459,7 @@ final class Text {
             "That name belongs to another account");
 
     static final String PROVE_NO_TIKTOK = pick(
-            "TikTok не ответил, попробуй ещё раз",
+            "TikTok не ответил, попробуйте ещё раз",
             "TikTok не відповів, спробуй ще раз",
             "TikTok did not answer, try again");
 
@@ -462,6 +480,8 @@ final class Text {
 
     static final String PROVE_FAILED = pick(
             "Не вышло", "Не вийшло", "That did not work");
+
+    
 
     static final String MADE_BY = pick(
             "Сделал @fasdeq · GPL-3.0 с доп. условиями",
@@ -525,17 +545,21 @@ final class Text {
             "Готово — перезапусти приложение", "Готово — перезапусти застосунок",
             "Done -- restart the app");
 
+    
+
     static final String ICON = pick("Иконка", "Іконка", "The icon");
 
     static final String ICON_NOTE = pick(
-            "Иконки с конкурса. Хочешь, чтобы твоя была здесь — участвуй.",
-            "Іконки з конкурсу. Хочеш, щоб твоя була тут — бери участь.",
+            "Иконки с конкурса. Хочешь, чтобы Ваша была здесь — участвуй.",
+            "Іконки з конкурсу. Хочеш, щоб Ваша була тут — бери участь.",
             "These came from a contest. Enter it if you want yours here.");
 
     static final String ICON_CONTEST = pick(
             "Участвовать в конкурсе", "Взяти участь у конкурсі", "Enter the contest");
 
     static final String ICON_DEFAULT = pick("Вайс-Сити (GTA VI)", "Вайс-Сіті (GTA VI)", "Vice City (GTA VI)");
+
+    
 
     static final String DONATE_BANNER = pick(
             "Значок за поддержку", "Значок за підтримку", "A badge for supporting");
@@ -625,7 +649,7 @@ final class Text {
     static final String SHAPE_HEART = pick("Сердце", "Серце", "Heart");
 
     static final String DEP_TITLE = pick("Деп калькулятор мини", "Деп калькулятор міні", "Dep Calculator mini");
-    static final String DEP_HINT = pick("Наберите число и нажмите «ДЕП»", "Наберіть число й натисніть «ДЕП»",
+    static final String DEP_HINT = pick("Наберите число и нажмитете «ДЕП»", "Наберіть число й натисніть «ДЕП»",
             "Type a number and press DEP");
     static final String DEP_SPIN = pick("ДЕП", "ДЕП", "DEP");
     static final String DEP_BALANCE = pick("Баланс", "Баланс", "Balance");
@@ -711,7 +735,7 @@ final class Text {
     static final String UI_FILE_NO_BASE = pick("Поле \"base\" должно быть md3, glass или fluent.", "Поле \"base\" має бути md3, glass або fluent.", "\"base\" must be md3, glass or fluent.");
     static final String UI_FILE_BAD_VALUE = pick("Неверное значение:", "Неправильне значення:", "A wrong value:");
     static final String FUN_TILCAYO_RUN = pick("Бегающие тилкайо", "Бігаючі тілкайо", "Running tilcayos");
-    static final String TILCAYO_RUN_NOTE = pick("Внизу экрана бегают толстые тилкайо. Нажми на кота, чтобы погладить, зажми, чтобы почесать, нажми два раза, чтобы покормить, много раз, чтобы пощекотать, или схвати и подкинь.", "Унизу екрана бігають товсті тілкайо. Натисни на кота, щоб погладити, затисни, щоб почухати, натисни двічі, щоб погодувати, багато разів, щоб полоскотати, або схопи й підкинь.", "Fat tilcayos run along the bottom of the screen. Tap one to pet it, hold to scratch, tap twice to feed, tap a lot to tickle, or grab and toss it.");
+    static final String TILCAYO_RUN_NOTE = pick("Внизу экрана бегают толстые тилкайо. Нажми на кота, чтобы погладить, зажмите, чтобы почесать, нажмите два раза, чтобы покормить, много раз, чтобы пощекотать, или схвати и подкинь.", "Унизу екрана бігають товсті тілкайо. Натисни на кота, щоб погладити, затисни, щоб почухати, натисни двічі, щоб погодувати, багато разів, щоб полоскотати, або схопи й підкинь.", "Fat tilcayos run along the bottom of the screen. Tap one to pet it, hold to scratch, tap twice to feed, tap a lot to tickle, or grab and toss it.");
     static final String TILCAYO_SKINS = pick("Скин тилкайо", "Скін тілкайо", "Tilcayo skin");
     static final String[] TILCAYO_SKIN_NAMES = {pick("Обычный", "Звичайний", "Classic"), pick("Инопланетянин", "Іншопланетянин", "Alien"),
             pick("Золотой", "Золотий", "Gold"), pick("Королевский", "Королівський", "Royal"), pick("Флоулесс", "Флоулес", "Flawless"),
@@ -794,19 +818,19 @@ final class Text {
             "Отправить огонёк всем", "Надіслати вогник усім", "Send the flame to everyone");
 
     static final String STREAK_ALL_NOTE = pick(
-            "Выбранный стикер уйдёт всем, с кем у тебя есть серия, прямо сейчас",
-            "Вибраний стікер піде всім, з ким у тебе є серія, просто зараз",
+            "Выбранный стикер уйдёт всем, с кем у Вас есть серия, прямо сейчас",
+            "Вибраний стікер піде всім, з ким у Вас є серія, просто зараз",
             "The chosen sticker goes to everyone you have a streak with, right now");
 
     static final String STREAK_ALL_ASK = pick(
-            "Выбранный стикер будет отправлен всем, с кем у тебя есть серия, — и тем, у кого огонёк уже горит. Это настоящие сообщения.",
-            "Вибраний стікер буде надіслано всім, з ким у тебе є серія, — і тим, у кого вогник уже горить. Це справжні повідомлення.",
+            "Выбранный стикер будет отправлен всем, с кем у Вас есть серия, — и тем, у кого огонёк уже горит. Это настоящие сообщения.",
+            "Вибраний стікер буде надіслано всім, з ким у Вас є серія, — і тим, у кого вогник уже горить. Це справжні повідомлення.",
             "The chosen sticker will be sent to everyone you have a streak with, including lit ones. These are real messages.");
 
     static final String STREAK_ALL_SEND = pick("Отправить", "Надіслати", "Send");
 
     static final String STREAK_ALL_NO_STICKER = pick(
-            "Сначала выбери стикер для серий (текст пока недоступен)",
+            "Сначала выберите стикер для серий (текст пока недоступен)",
             "Спочатку обери стікер для серій (текст поки недоступний)",
             "Choose a streak sticker first (text is not available yet)");
 
@@ -832,7 +856,7 @@ final class Text {
             "Want your cat here? Write to @fasdeq on Telegram");
 
     static final String CAT_WAIT = pick(
-            "Коты ещё едут, попробуй ещё раз", "Коти ще їдуть, спробуй ще раз",
+            "Коты ещё едут, попробуйте ещё раз", "Коти ще їдуть, спробуй ще раз",
             "The cats are still on their way; try again");
 
     static final String HIDE_LIVE = pick(
@@ -864,6 +888,8 @@ final class Text {
             "Насколько сдвигать, dp", "Наскільки зсувати, dp", "How far to drift, dp");
 
     static final String DIM_NOTE = pick("Приглушение делает кнопки и подписи поверх видео тусклее, само видео не трогает. Сдвиг понемногу водит их по экрану, чтобы он не выгорал в одних местах.", "Приглушення робить кнопки й підписи поверх відео тьмянішими, саме відео не чіпає. Зсув потроху водить їх екраном, щоб він не вигорав в одних місцях.", "Dimming makes the buttons and captions over a video fainter and leaves the video alone. Shifting moves them about a little so the screen does not burn in.");
+
+    
 
     static final String MINE = pick("Мои значки", "Мої значки", "My badges");
 
@@ -903,7 +929,7 @@ final class Text {
     static final String FREE_BADGE_TAKE = pick("Забрать", "Забрати", "Take it");
 
     static final String FREE_BADGE_GOT = pick(
-            "Значок твой", "Значок твій", "It is yours");
+            "Значок Ваш", "Значок твій", "It is yours");
 
     static final String ALWAYS_DATE = pick(
             "Дата под каждым видео", "Дата під кожним відео",
@@ -913,6 +939,8 @@ final class Text {
             "Тикток показывает её только если открыть видео с профиля автора.",
             "Тікток показує її лише якщо відкрити відео з профілю автора.",
             "TikTok shows it only when the video was opened from a profile.");
+
+    
 
     static final String STORE = pick("Магазин плагинов", "Магазин плагінів",
             "The plugin store");
@@ -938,6 +966,8 @@ final class Text {
     static final String STORE_NOTE = pick("Ставь только те плагины, которым доверяешь: они работают в TikTok с твоим аккаунтом.", "Став лише ті плагіни, яким довіряєш: вони працюють у TikTok з твоїм акаунтом.", "Install only plugins you trust: they run inside TikTok with your account.");
 
     static final String SAVE = pick("Сохранить", "Зберегти", "Save");
+
+    
 
     static final String DOWNLOADS = pick("Скачивание", "Завантаження", "Downloads");
 
@@ -991,6 +1021,8 @@ final class Text {
 
     static final String HIDE_ADS = pick(
             "Убирать рекламу", "Прибирати рекламу", "Drop the advertisements");
+
+    
 
     static final String PLUGINS = pick("Плагины", "Плагіни", "Plugins");
 
@@ -1051,11 +1083,15 @@ final class Text {
             "Довге натискання — видалити",
             "Hold to remove");
 
+    
+
     static final String LINKS = pick("Ссылки", "Посилання", "Links");
 
     static final String CHANNEL = pick("Канал", "Канал", "Channel");
 
     static final String FORUM = pick("Форум", "Форум", "Forum");
+
+    
 
     static final String STREAKS = pick("Серии", "Серії", "Streaks");
 
@@ -1082,6 +1118,8 @@ final class Text {
             "Обрані стікери завантажуються з TikTok",
             "Favourite stickers load from TikTok");
 
+    
+
     static final String UPDATE = pick("Обновление", "Оновлення", "An update");
 
     static final String UPDATE_THERE_IS = pick(
@@ -1090,7 +1128,7 @@ final class Text {
     static final String UPDATE_GET = pick("Скачать", "Завантажити", "Get it");
     static final String UPDATE_IN_STORE = pick("Обновления выходят в AirTok Store, данные остаются.", "Оновлення виходять у AirTok Store, дані лишаються.", "Updates come out in AirTok Store, and your data stays.");
     static final String UPDATE_GET_STORE = pick(
-            "AirTok Store у тебя ещё нет, его можно скачать отсюда.", "AirTok Store у тебе ще немає, його можна завантажити звідси.", "You don't have AirTok Store yet; get it here.");
+            "AirTok Store у Вас ещё нет, его можно скачать отсюда.", "AirTok Store у Вас ще немає, його можна завантажити звідси.", "You don't have AirTok Store yet; get it here.");
     static final String UPDATE_OPEN_STORE = pick("Открыть AirTok Store", "Відкрити AirTok Store", "Open AirTok Store");
     static final String UPDATE_DOWNLOAD_STORE = pick("Скачать AirTok Store", "Завантажити AirTok Store", "Get AirTok Store");
 
@@ -1128,6 +1166,7 @@ final class Text {
     static final String VERSIONS = pick("Версии", "Версії", "Versions");
 
     static final String SOURCE = pick("Исходники", "Вихідники", "The source");
+
 
     static final String CHANNEL_TITLE = pick("Канал", "Канал", "Channel");
 
@@ -1219,6 +1258,7 @@ final class Text {
     static final String YOOMONEY_NOTE = pick(
             "Перевод напрямую", "Переказ напряму", "Straight to the transfer page");
 
+    
     static final String VERDICT_GOOD = pick("✅ Рекомендуемый", "✅ Рекомендований", "✅ Recommended");
     static final String VERDICT_BAD = pick("⛔ Не рекомендуемый", "⛔ Не рекомендований", "⛔ Not recommended");
     static final String VERDICT_PROVE = pick("Сначала подтверди аккаунт в настройках значков", "Спершу підтвердь акаунт у налаштуваннях значків", "Prove the account in the badge settings first");
@@ -1237,6 +1277,7 @@ final class Text {
             "Кнопки на картинці теж натискаються: так їх можна сховати й повернути.",
             "The buttons on the picture can be tapped too, to hide them and bring them back.");
 
+    
     static final String CUSTOM_ICON = pick("Своя иконка", "Своя іконка", "Your own icon");
     static final String CUSTOM_ICON_NOTE = pick("Ярлык с твоей картинкой на рабочем столе. Значок в списке приложений Android менять не даёт.",
             "Ярлик із твоєю картинкою на робочому столі. Значок у списку застосунків Android змінювати не дає.",
@@ -1248,6 +1289,7 @@ final class Text {
     static final String CUSTOM_ICON_FAILED = pick("Не получилось открыть картинку", "Не вдалося відкрити картинку", "Could not open the picture");
     static final String CUSTOM_ICON_UNSUPPORTED = pick("Этот рабочий стол не умеет добавлять ярлыки", "Цей робочий стіл не вміє додавати ярлики", "This home screen cannot add shortcuts");
 
+    
     static final String ADMIN = pick("Админка", "Адмінка", "Admin");
     static final String ADMIN_CODE = pick("Код из Telegram", "Код із Telegram", "Code from Telegram");
     static final String ADMIN_CODE_NOTE = pick("Код ушёл в Telegram. Без него это устройство не станет админским.",
@@ -1335,10 +1377,12 @@ final class Text {
             "Пристрій, збірка, хуки, плагіни та весь журнал. Без id акаунта й токенів.",
             "Device, build, hooks, plugins and the whole diary. No account id or tokens.");
 
+    
     static final String PROFILE_LOOK = pick("Вид ника", "Вигляд імені", "Nickname look");
     static final String PROFILE_SYNC = pick("Синхронизация", "Синхронізація", "Sync");
     static final String PROFILE_FINE = pick("Тонкая настройка", "Тонке налаштування", "Fine tuning");
 
+    
     static final String SHEET_DL_HINT = pick("Чем выше качество, тем больше файл", "Чим вища якість, тим більший файл", "Higher quality means a bigger file");
     static final String ACT_DOWNLOAD_HINT = pick("Видео, фото или только звук", "Відео, фото або лише звук", "Video, photo or audio only");
     static final String ACT_PLAYBACK_HINT = pick("Скорость и перемотка", "Швидкість і перемотування", "Speed and seeking");
@@ -1355,7 +1399,7 @@ final class Text {
     static String allPhotos(int count) {
         return pick("Скачать все фото (" + count + ")", "Завантажити всі фото (" + count + ")", "Download all photos (" + count + ")");
     }
-
+    
     private static String counted(int n, String one, String few, String many) {
         int tens = n % 100, last = n % 10;
         String word = tens >= 11 && tens <= 14 ? many : last == 1 ? one : last >= 2 && last <= 4 ? few : many;
@@ -1373,13 +1417,13 @@ final class Text {
         return pick(counted(n, "день", "дня", "дней"), counted(n, "день", "дні", "днів"),
                 n + (n == 1 ? " day" : " days"));
     }
-
+    
     static final String PAGE_STYLE = pick("Стиль и значок", "Стиль і значок", "Style and icon");
     static final String PAGE_STYLE_NOTE = pick("Material 3, Liquid Glass или Fluent и значок на рабочем столе", "Material 3, Liquid Glass або Fluent і значок на робочому столі", "Material 3, Liquid Glass or Fluent, and the home screen icon");
     static final String PAGE_ACCENT_NOTE = pick("Цвет кнопок, вкладок и переключателей", "Колір кнопок, вкладок і перемикачів", "The colour of buttons, tabs and switches");
     static final String MD3_TIKTOK = pick("TikTok в стиле Material 3", "TikTok у стилі Material 3", "TikTok in Material 3 style");
     static final String PAGE_MD3_NOTE = pick("Панель, лента, профиль, входящие и комментарии", "Панель, стрічка, профіль, вхідні й коментарі", "Tab bar, feed, profile, inbox and comments");
-    static final String PAGE_THEME_NOTE = pick("Цвета фона и текста, цвета телефона", "Кольори фону й тексту, кольори телефона", "Background and text colours, the phone's palette");
+    static final String PAGE_THEME_NOTE = pick("Цвета фона и текста, цвета телефона и AMOLED", "Кольори фону й тексту, кольори телефона та AMOLED", "Background and text colours, the phone's palette and AMOLED");
     static final String PAGE_FONT_NOTE = pick("Шрифт для всего TikTok", "Шрифт для всього TikTok", "A typeface for all of TikTok");
     static final String PAGE_BADGES_NOTE = pick("Твои значки, их порядок и подтверждение аккаунта", "Твої значки, їх порядок і підтвердження акаунта", "Your badges, their order and proving the account");
     static final String PAGE_GRADIENT_NOTE = pick("Цветной ник, который видят все с AirTok", "Кольоровий нік, який бачать усі з AirTok", "A coloured name everyone with AirTok sees");
@@ -1444,6 +1488,7 @@ final class Text {
     static final String SHEET_AUDIO = pick("Скачать аудио", "Завантажити аудіо", "Download audio");
     static final String SHEET_ONE_SIZE = pick("Для этого видео TikTok отдаёт только одно качество", "Для цього відео TikTok віддає лише одну якість", "TikTok offers only one quality for this video");
 
+    
     static final String CONSENT_TITLE = pick("Помочь исправлять сбои?", "Допомогти виправляти збої?", "Help fix crashes?");
     static final String CONSENT_BODY = pick(
             "Если AirTok вылетит, он отправит разработчику технический след сбоя: версию мода и Android, список вызовов. Без сообщений, аккаунта и личных данных.",
@@ -1457,6 +1502,7 @@ final class Text {
     static final String CONSENT_YES = pick("Да, отправлять", "Так, надсилати", "Yes, send them");
     static final String CONSENT_NO = pick("Нет", "Ні", "No");
 
+    
     static final String TUTORIAL_NEXT = pick("Далее", "Далі", "Next");
     static final String TUTORIAL_BACK = pick("Назад", "Назад", "Back");
     static final String TUTORIAL_DONE = pick("Готово", "Готово", "Done");
@@ -1484,6 +1530,7 @@ final class Text {
                     "Прозорість змінюється одразу. Якщо іншому налаштуванню потрібен перезапуск, знизу з’явиться кнопка. Звіти про збої вмикаються в «Діагностиці». Це навчання можна відкрити знову в AirTok.",
                     "Transparency changes at once. When another setting needs a restart, a button appears at the bottom. Crash reports are switched in Diagnostics. You can reopen this tour in AirTok.")};
 
+    
     static int language3() {
         return RU ? 0 : UK ? 1 : 2;
     }

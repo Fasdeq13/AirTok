@@ -7,6 +7,11 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
+
+
+
+
+
 final class NewPictures {
 
     private NewPictures() {}
@@ -16,6 +21,7 @@ final class NewPictures {
         return 1f - (1f - t) * (1f - t) * (1f - t);
     }
 
+    
     private static float spring(float t) {
         t = Math.max(0f, Math.min(1f, t));
         return (float) (1 - Math.exp(-6 * t) * Math.cos(9 * t));
@@ -29,6 +35,9 @@ final class NewPictures {
         picture.draw(canvas);
     }
 
+    
+
+    
     static final class Ghosting extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
         private final Bitmap avatar;
@@ -36,7 +45,7 @@ final class NewPictures {
         Ghosting(Context context, Skin skin, boolean on) {
             super(context, skin, 150);
             this.on = new SettingsPictures.Eased(on ? 1f : 0f);
-            avatar = FasdeqAvatar.get() != null ? FasdeqAvatar.get() : Launcher.preview("tilcayo");
+            avatar = Launcher.preview("tilcayo");
         }
 
         void set(boolean value) {
@@ -47,16 +56,15 @@ final class NewPictures {
         protected void onDraw(Canvas canvas) {
             float g = on.value, t = clock();
             float left = 22 * d, top = 20 * d;
-            Bitmap av = FasdeqAvatar.get();
-            if (av == null) av = avatar;
-            round(canvas, av, left + 18 * d, top + 18 * d, 18 * d, 255);
+            round(canvas, avatar, left + 18 * d, top + 18 * d, 18 * d, 255);
             words(canvas, "fasdeq", left + 46 * d, top + 13 * d, 14, skin.text, true, Paint.Align.LEFT);
-
+            
             paint.setColor(faint(0xFF35C46A, 1f - g));
             canvas.drawCircle(left + 31 * d, top + 31 * d, 5 * d, paint);
             words(canvas, Local.of("в сети"), left + 46 * d, top + 31 * d, 12, faint(skin.muted(), 1f - g), false, Paint.Align.LEFT);
             words(canvas, Local.of("был(а) давно"), left + 46 * d, top + 31 * d, 12, faint(skin.muted(), g), false, Paint.Align.LEFT);
 
+            
             float right = getWidth() - 22 * d, y = top + 56 * d;
             String said = Local.of("ты тут?");
             text.setTextSize(14 * d);
@@ -68,6 +76,7 @@ final class NewPictures {
             words(canvas, Local.of("Прочитано"), right, y + 48 * d, 11, faint(skin.muted(), 1f - g), false, Paint.Align.RIGHT);
             words(canvas, Local.of("Отправлено"), right, y + 48 * d, 11, faint(skin.muted(), g), false, Paint.Align.RIGHT);
 
+            
             float bx = left, by = y + 28 * d;
             paint.setColor(faint(surface(0.12f), 1f - g * 0.85f));
             box.set(bx, by, bx + 62 * d, by + 28 * d);
@@ -77,7 +86,7 @@ final class NewPictures {
                 paint.setColor(faint(skin.muted(), (1f - g) * 0.9f + 0.1f * (1f - g)));
                 canvas.drawCircle(bx + 18 * d + i * 13 * d, by + 14 * d - Math.max(0f, hop) * 4 * d * (1f - g), 3.5f * d, paint);
             }
-
+            
             if (g > 0.01f) {
                 float drift = (float) Math.sin(t * 2f) * 4 * d;
                 glyph(canvas, "visibility_off", Accent.colour(), bx + 31 * d, by + 14 * d + drift, 22 * d, Math.round(255 * g));
@@ -86,6 +95,9 @@ final class NewPictures {
         }
     }
 
+    
+
+    
     static final class Folders extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
         private final float[] shown = {1, 1, 1, 1};
@@ -103,7 +115,7 @@ final class NewPictures {
         protected void onDraw(Canvas canvas) {
             float f = on.value, t = clock();
             String[] chips = {Local.of("Основные"), Local.of("Друзья"), Local.of("Учёба")};
-
+            
             int chosen = f > 0.5f ? (int) (t / 1.8f) % 3 : 0;
             boolean[][] in = {{true, true, true, true}, {true, false, true, false}, {false, true, false, true}};
             float x = 22 * d, y = 16 * d;
@@ -120,7 +132,7 @@ final class NewPictures {
                 words(canvas, chips[i], x + w / 2f, y + 20 * d, 13, faint(pick ? skin.text : skin.muted(), alpha), pick, Paint.Align.CENTER);
                 x += w + 8 * d;
             }
-
+            
             float row = y + 42 * d, width = getWidth() - 44 * d;
             int[] tints = {0xFFF2A65A, 0xFF7FB7E8, 0xFF9CD08F, 0xFFD78FD1};
             float[] names = {0.42f, 0.30f, 0.50f, 0.36f};
@@ -144,6 +156,13 @@ final class NewPictures {
             again();
         }
     }
+
+    
+
+    
+
+
+
 
     static final class Typing extends SettingsPictures.Art {
         private final SettingsPictures.Eased on;
@@ -219,6 +238,9 @@ final class NewPictures {
         }
     }
 
+    
+
+    
     static final class Sponsor extends SettingsPictures.Art {
 
         Sponsor(Context context, Skin skin) {
@@ -230,7 +252,7 @@ final class NewPictures {
             float t = clock() % 4.6f;
             float left = 28 * d, right = getWidth() - 28 * d, y = 54 * d;
             float a = 0.38f, b = 0.62f;
-
+            
             float place = t < 1.6f ? (t / 1.6f) * a : t < 1.9f ? a : Math.min(1f, b + (t - 1.9f) / 2.4f * (1f - b));
             boolean jumped = t >= 1.9f && t < 3.4f;
             paint.setColor(surface(0.14f));
@@ -259,6 +281,9 @@ final class NewPictures {
         }
     }
 
+    
+
+    
     static final class Editor extends SettingsPictures.Art {
         private final Paint dashes = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -272,14 +297,14 @@ final class NewPictures {
         protected void onDraw(Canvas canvas) {
             float t = clock() % 4.8f;
             float w = 108 * d, h = 146 * d, left = (getWidth() - w) / 2f, top = 12 * d;
-
+            
             paint.setColor(surface(0.08f));
             box.set(left, top, left + w, top + h);
             canvas.drawRoundRect(box, 18 * d, 18 * d, paint);
-
+            
             float cx = left + w - 20 * d;
             String[] icons = {"favorite_border", "chat", "share"};
-
+            
             float move = ease((t - 1.0f) / 0.6f) * -34 * d, grow = 1f + 0.5f * ease((t - 2.0f) / 0.6f);
             float paintIn = ease((t - 2.8f) / 0.6f);
             for (int i = 0; i < 3; i++) {
@@ -302,7 +327,7 @@ final class NewPictures {
             paint.setColor(faint(skin.muted(), 0.4f));
             box.set(left + 12 * d, top + h - 20 * d, left + 56 * d, top + h - 15 * d);
             canvas.drawRoundRect(box, 3 * d, 3 * d, paint);
-
+            
             if (t > 0.3f && t < 1.0f) {
                 float tap = ease((t - 0.3f) / 0.3f);
                 paint.setColor(faint(Accent.colour(), 0.35f * (1f - Math.max(0f, (t - 0.7f) / 0.3f))));
@@ -312,6 +337,9 @@ final class NewPictures {
         }
     }
 
+    
+
+    
     static final class Reposts extends SettingsPictures.Art {
 
         Reposts(Context context, Skin skin) {

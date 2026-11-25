@@ -18,11 +18,19 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.PathInterpolator;
 
+
+
+
+
+
+
+
 final class SettingsPictures {
     private SettingsPictures() {}
 
     private static final PathInterpolator EMPHASIZED = new PathInterpolator(0.2f, 0f, 0f, 1f);
 
+    
     abstract static class Art extends View {
         final Skin skin;
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
@@ -45,6 +53,11 @@ final class SettingsPictures {
             setMeasuredDimension(MeasureSpec.getSize(widthSpec), Math.round(tall * d));
         }
 
+        
+
+
+
+
         void again() {
             if (!isAttachedToWindow()) return;
             if (isShown() && getGlobalVisibleRect(seen)) postInvalidateOnAnimation();
@@ -65,6 +78,7 @@ final class SettingsPictures {
             removeCallbacks(lookAgain);
         }
 
+        
         float clock() {
             return (SystemClock.uptimeMillis() % 1000000L) / 1000f;
         }
@@ -100,6 +114,7 @@ final class SettingsPictures {
         }
     }
 
+    
     static final class Eased {
         float value;
         private ValueAnimator animator;
@@ -124,6 +139,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Fps extends Art {
         private int rate;
 
@@ -155,7 +173,7 @@ final class SettingsPictures {
             paint.setColor(surface(0.1f));
             box.set(left - 14 * d, y - 14 * d, right + 14 * d, y + 14 * d);
             canvas.drawRoundRect(box, 14 * d, 14 * d, paint);
-
+            
             float step = 1f / fps;
             for (int ghost = 5; ghost >= 0; ghost--) {
                 float at = (float) Math.floor((t - ghost * step) / step) * step;
@@ -169,6 +187,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Speed extends Art {
         private boolean lock;
         private float speed;
@@ -195,7 +216,7 @@ final class SettingsPictures {
             canvas.drawRoundRect(box, w * 0.14f, w * 0.14f, paint);
             paint.setShader(null);
             float cycle = 3.6f, t = (clock() % cycle) / cycle;
-
+            
             boolean down = t > 0.1f && (lock ? t < 0.78f : t < 0.6f);
             boolean fast = t > 0.2f && (lock ? t < 0.97f : t < 0.62f);
             boolean kept = lock && t > 0.72f && t < 0.97f;
@@ -231,8 +252,11 @@ final class SettingsPictures {
         }
     }
 
-    static final class Feed extends Art {
+    
 
+    
+    static final class Feed extends Art {
+        
         static final int VIDEO = 0, AD = 1, LIVE = 2, PHOTO = 3, STORY = 4, SUGGEST = 5;
         private static final int[] STRIP = {VIDEO, AD, LIVE, VIDEO, PHOTO, STORY, SUGGEST, VIDEO};
         private final Eased[] shown = new Eased[6];
@@ -306,6 +330,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Grid extends Art {
         private static float last = 0f;
         private final Eased round = new Eased(last);
@@ -346,6 +373,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Layout extends Art {
         private static float last = 1f;
         private final Eased fresh = new Eased(last);
@@ -374,7 +404,7 @@ final class SettingsPictures {
         protected void onDraw(Canvas canvas) {
             float t = fresh.value, w = getWidth();
             float left = 20 * d, right = w - 20 * d, top = 10 * d;
-
+            
             float banner = 64 * d * t;
             if (banner > 1) {
                 box.set(left, top, right, top + banner);
@@ -389,7 +419,7 @@ final class SettingsPictures {
             paint.setColor(skin.page);
             canvas.drawCircle(cx, cy, r + 3 * d, paint);
             round(canvas, avatar, cx, cy, r, 255);
-
+            
             float nameX = w / 2f + (cx + r + 14 * d - w / 2f) * t;
             float nameY = (cy + r + 22 * d) * (1 - t) + (cy + 6 * d) * t;
             Paint.Align align = t < 0.5f ? Paint.Align.CENTER : Paint.Align.LEFT;
@@ -412,6 +442,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Black extends Art {
         private static float last = 0f;
         private final Eased black = new Eased(last);
@@ -462,6 +495,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Badged extends Art {
         private static float last = 1f;
         private final Eased on = new Eased(last);
@@ -512,7 +548,7 @@ final class SettingsPictures {
             for (int i = 0; i < worn.length; i++) {
                 if (worn[i] == null) continue;
                 float s = size * on.value;
-
+                
                 float wide = pictures[i] != null && pictures[i].getHeight() > 0
                         ? s * pictures[i].getWidth() / pictures[i].getHeight() : s;
                 box.set(x, cy - s / 2f, x + wide, cy + s / 2f);
@@ -532,6 +568,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Copying extends Art {
         private boolean on;
         private final Bitmap avatar;
@@ -570,7 +609,7 @@ final class SettingsPictures {
             words(canvas, first, x, y, 15, skin.text, false, Paint.Align.LEFT);
             words(canvas, picked, x + a, y, 15, skin.text, false, Paint.Align.LEFT);
             words(canvas, rest, x + a + b, y, 15, skin.text, false, Paint.Align.LEFT);
-
+            
             float my = y + 26 * d;
             String[] items = on ? new String[] {Text.COMMENT_SELECT, Local.of("Копировать")} : new String[] {Local.of("Копировать"), Local.of("Ответить")};
             float mx = x;
@@ -589,6 +628,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Notices extends Art {
         private final Eased[] shown = new Eased[3];
         private final boolean[] want = new boolean[3];
@@ -620,7 +662,7 @@ final class SettingsPictures {
         @Override
         protected void onDraw(Canvas canvas) {
             String[][] said = {
-                    {"fasdeq", Local.of("прислал(а) тебе видео")},
+                    {"fasdeq", Local.of("прислал(а) Вам видео")},
                     {"TikTok Shop", Local.of("скидки до 90% только сегодня")},
                     {"TikTok", Local.of("новое видео от тех, на кого ты подписан")}};
             float left = 20 * d, right = getWidth() - 20 * d, top = 14 * d;
@@ -645,6 +687,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Emergency extends Art {
         Emergency(Context context, Skin skin) { super(context, skin, 176); }
 
@@ -668,6 +713,7 @@ final class SettingsPictures {
         }
     }
 
+    
     static final class Fall extends Art {
         Fall(Context context, Skin skin) { super(context, skin, 170); }
 
@@ -693,6 +739,7 @@ final class SettingsPictures {
         }
     }
 
+    
     static final class Scream extends Art {
         private final Bitmap face;
 
@@ -714,6 +761,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Ages extends Art {
         private static float last = 168f;
         private final Eased cut = new Eased(last);
@@ -737,6 +787,7 @@ final class SettingsPictures {
             set(want >= 168f ? 0 : Math.round(want));
         }
 
+        
         private float at(float hours, float left, float right) {
             float along = (float) (Math.log1p(hours) / Math.log1p(168));
             return left + (right - left) * along;
@@ -776,6 +827,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Watermark extends Art {
         private static float last = 0f;
         private final Eased clean = new Eased(last);
@@ -808,7 +862,7 @@ final class SettingsPictures {
             paint.setShader(null);
             float mark = 1f - clean.value;
             if (mark > 0.01f) {
-
+                
                 boolean low = (clock() % 4f) > 2f;
                 float x = low ? left + w - 10 * d : left + 10 * d, y = low ? top + h - 28 * d : top + 22 * d;
                 Paint.Align align = low ? Paint.Align.RIGHT : Paint.Align.LEFT;
@@ -821,6 +875,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Bright extends Art {
         private boolean kept;
 
@@ -840,7 +897,7 @@ final class SettingsPictures {
             float t = (clock() % 3f) / 3f;
             boolean hdr = t > 0.35f && t < 0.85f;
             float level = kept || !hdr ? 0.4f : 1f;
-
+            
             float r = (7 + 6 * level) * d;
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(0xFFFFC83D);
@@ -864,6 +921,9 @@ final class SettingsPictures {
         }
     }
 
+    
+
+    
     static final class Sound extends Art {
         private boolean on;
 
@@ -914,4 +974,5 @@ final class SettingsPictures {
         }
     }
 
+    
 }

@@ -13,13 +13,26 @@ import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class MotionCues {
 
     private MotionCues() {}
 
     static final String KEY = "motion_cues";
     private static final int TAG = 0x7e0c0361;
-
+    
     private static final float PUSH = 0.35f, TURN = 0.06f;
     private static final long FADE_AFTER_MS = 5000;
 
@@ -31,7 +44,7 @@ public final class MotionCues {
         if (known != null) return known;
         Context context = AirTok.context();
         if (context == null) return false;
-        boolean value = context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
+        boolean value = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
         on = value;
         return value;
     }
@@ -39,15 +52,17 @@ public final class MotionCues {
     static void setEnabled(Activity activity, boolean value) {
         on = value;
         Context context = AirTok.context();
-        if (context != null) context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (context != null) context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
         if (value) resumed(activity); else remove(activity);
     }
 
+    
     static boolean available(Context context) {
         SensorManager sensors = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         return sensors != null && sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null;
     }
 
+    
     static void resumed(Activity activity) {
         if (!enabled() || activity == null) return;
         try {
@@ -85,6 +100,7 @@ public final class MotionCues {
         }
     }
 
+    
     static final class Dots extends View implements SensorEventListener {
         private final SensorManager sensors;
         private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG), rim = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -139,17 +155,17 @@ public final class MotionCues {
 
         @Override public void onSensorChanged(SensorEvent event) {
             if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-
+                
                 float g = norm(gravity);
                 if (g > 1) yaw = (event.values[0] * gravity[0] + event.values[1] * gravity[1] + event.values[2] * gravity[2]) / g;
                 return;
             }
             long now = event.timestamp;
             float dt = last == 0 ? 0 : Math.min((now - last) / 1e9f, 0.05f);
-
+            
             if (last == 0) System.arraycopy(event.values, 0, gravity, 0, 3);
             last = now;
-
+            
             for (int i = 0; i < 3; i++) {
                 gravity[i] += (event.values[i] - gravity[i]) * 0.02f;
                 raw[i] = event.values[i] - gravity[i];
@@ -158,7 +174,7 @@ public final class MotionCues {
             float g = norm(gravity);
             if (g < 1) return;
             float ux = gravity[0] / g, uy = gravity[1] / g, uz = gravity[2] / g;
-
+            
             float dot = ux;
             float rx = 1 - dot * ux, ry = -dot * uy, rz = -dot * uz;
             float r = (float) Math.sqrt(rx * rx + ry * ry + rz * rz);
@@ -167,11 +183,11 @@ public final class MotionCues {
             float fx = uy * rz - uz * ry, fy = uz * rx - ux * rz, fz = ux * ry - uy * rx;
             float side = raw[0] * rx + raw[1] * ry + raw[2] * rz;
             float ahead = raw[0] * fx + raw[1] * fy + raw[2] * fz;
-
+            
             float travel = 26 * density;
             float wantX = -side * travel + yaw * travel * 2.2f;
             float wantY = ahead * travel;
-
+            
             float stiff = 26, damp = 9;
             vx += (wantX - x) * stiff * dt - vx * damp * dt;
             vy += (wantY - y) * stiff * dt - vy * damp * dt;
@@ -182,7 +198,7 @@ public final class MotionCues {
             y = Math.max(-limit, Math.min(limit, y));
 
             long clock = android.os.SystemClock.uptimeMillis();
-
+            
             steadySide += (side - steadySide) * 0.08f;
             steadyAhead += (ahead - steadyAhead) * 0.08f;
             steadyYaw += (yaw - steadyYaw) * 0.08f;
@@ -208,7 +224,7 @@ public final class MotionCues {
             float inner = 40 * density, outer = 16 * density;
             for (int i = 0; i < rows; i++) {
                 float py = top + i * gapY + y;
-
+                
                 float stagger = i % 2 == 0 ? outer : inner;
                 dot(canvas, stagger + x, py, radius);
                 dot(canvas, width - stagger + x, py, radius);

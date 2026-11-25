@@ -12,6 +12,11 @@ import android.widget.FrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+
+
 public abstract class TtcuzPlugin {
 
     private final Api api = new Api(this);
@@ -42,7 +47,7 @@ public abstract class TtcuzPlugin {
         private final TtcuzPlugin plugin;
         private SharedPreferences prefs;
         private final Handler main = new Handler(Looper.getMainLooper());
-
+        
         private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
         Api(TtcuzPlugin plugin) {
@@ -52,7 +57,7 @@ public abstract class TtcuzPlugin {
         public SharedPreferences prefs() {
             if (prefs == null) {
                 Context context = com.fasdeq.airtok.AirTok.context();
-                prefs = context.getSharedPreferences("margyt_text_animation", Context.MODE_PRIVATE);
+                prefs = context.getSharedPreferences("airtok_text_animation", Context.MODE_PRIVATE);
                 listener = (p, key) -> main.post(() -> {
                     try { plugin.onPreferenceChanged("plugin", key); } catch (Throwable ignored) {}
                 });
@@ -98,6 +103,7 @@ public abstract class TtcuzPlugin {
             }
         }
 
+        
         public View overlay(Activity host, View root, int gravity) {
             ViewGroup decor = (ViewGroup) host.getWindow().getDecorView();
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(

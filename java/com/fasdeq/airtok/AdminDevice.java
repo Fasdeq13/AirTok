@@ -14,11 +14,22 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.spec.ECGenParameterSpec;
 
+
+
+
+
+
+
+
+
+
+
 final class AdminDevice {
     private AdminDevice() {}
 
-    private static final String ALIAS = "margyt_admin";
+    private static final String ALIAS = "airtok_admin";
 
+    
     static final class Refused extends Exception {
         final String why;
         Refused(String why) { super(why); this.why = why; }
@@ -42,6 +53,7 @@ final class AdminDevice {
         return store().getCertificate(ALIAS).getPublicKey().getEncoded();
     }
 
+    
     static String id() throws Exception {
         byte[] hash = MessageDigest.getInstance("SHA-256").digest(publicKey());
         StringBuilder out = new StringBuilder();
@@ -49,6 +61,7 @@ final class AdminDevice {
         return out.toString();
     }
 
+    
     static String register() throws Exception {
         String uid = Account.id(), token = Mine.token();
         if (uid == null || token.length() == 0) throw new Refused("prove");
@@ -59,6 +72,7 @@ final class AdminDevice {
         return answer(Net.talk(Badges.SERVER + "/mod/device", body.toString())).optString("state", "");
     }
 
+    
     static JSONObject act(String op, JSONObject args) throws Exception {
         String uid = Account.id(), token = Mine.token();
         if (uid == null || token.length() == 0) throw new Refused("prove");

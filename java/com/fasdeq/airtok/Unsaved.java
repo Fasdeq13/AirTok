@@ -9,6 +9,28 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Unsaved {
 
     private Unsaved() {}
@@ -19,6 +41,7 @@ final class Unsaved {
     private static final Map<String, Object> implied = new HashMap<String, Object>();
     private static boolean elsewhere;
 
+    
     static void look(Context context) {
         try {
             Map<String, Object> now = read(context);
@@ -29,11 +52,12 @@ final class Unsaved {
         }
     }
 
+    
     static boolean after(Context context) {
         try {
             Map<String, Object> now = read(context);
             if (start == null || before == null) {
-
+                
                 if (start == null) start = now;
                 before = now;
                 elsewhere = true;
@@ -66,6 +90,7 @@ final class Unsaved {
         }
     }
 
+    
     static void other() {
         elsewhere = true;
     }
@@ -74,16 +99,17 @@ final class Unsaved {
         return one == null ? two == null : one.equals(two);
     }
 
+    
     private static Map<String, Object> read(Context context) {
         Set<String> files = new HashSet<String>();
-        files.add("margyt");
-        files.add("margyt_store");
+        files.add(AirTok.PREFS);
+        files.add("airtok_store");
         try {
             String[] names = new File(context.getApplicationInfo().dataDir,
                     "shared_prefs").list();
             if (names != null) {
                 for (String name : names) {
-                    if (name.startsWith("margyt") && name.endsWith(".xml")) {
+                    if (name.startsWith(AirTok.PREFS) && name.endsWith(".xml")) {
                         files.add(name.substring(0, name.length() - 4));
                     }
                 }
@@ -97,7 +123,8 @@ final class Unsaved {
                 all.put(file + "/" + entry.getKey(), entry.getValue());
             }
         }
-
+        
+        
         try {
             SharedPreferences own = AccountAppearance.prefs(context);
             if (own != null) {

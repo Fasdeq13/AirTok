@@ -7,6 +7,7 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+
 final class NativeRepostVisual {
  private NativeRepostVisual(){}
  private static WeakReference<ImageView> latest=new WeakReference<>(null);

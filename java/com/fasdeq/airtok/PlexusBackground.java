@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+
 final class PlexusBackground extends View {
     private final PlexusField field=new PlexusField();
     private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -55,7 +56,7 @@ final class PlexusBackground extends View {
             paint.setColor(0x60FFFFFF);canvas.drawCircle(field.x[i],field.y[i],1.4f*density,paint);
         }
     }
-
+    
     static final class Host extends FrameLayout {
         PlexusBackground background;
         Host(Context context){super(context);}

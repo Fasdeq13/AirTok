@@ -50,6 +50,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public final class Ghosts {
             int sharp = (int) (fade * alpha);
             if (sharp > 0) {
                 if (config.blur && config.blurErase) {
-
+                    
                     Motion.drawBlurred(canvas, paint, blurPaint, ghost.text, 0, ghost.text.length(),
                         ghost.x, ghost.baseline, Easing.smooth(Motion.clamp(raw)),
                         config.blurDp * density, sharp, config.blurMode);

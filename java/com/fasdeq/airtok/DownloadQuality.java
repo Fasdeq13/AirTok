@@ -42,17 +42,17 @@ public final class DownloadQuality {
   return chosen==null?fallback:chosen;
  }
  static final class Choice {final String label,url;final long bitrate;int height;boolean best,hevc;String key;java.util.List<String> alts;Choice(String l,String u,long b){label=l;url=u;bitrate=b;}
-
+  
   java.util.List<String> candidates(){java.util.ArrayList<String> out=new java.util.ArrayList<>();if(url!=null)out.add(url);if(alts!=null)for(String other:alts)if(other!=null&&!out.contains(other))out.add(other);return out;}
  }
-
+ 
  static java.util.List<String> all(Object url){
   java.util.ArrayList<String> out=new java.util.ArrayList<>();if(url==null)return out;
   Object list=NativeRead.get(url,"getUrlList");if(!(list instanceof List))list=NativeRead.field(url,"urlList");
   if(list instanceof List){int n=0;for(Object value:(List)list){if(n++>=16)break;String address=secureAddress(value);if(address!=null&&!out.contains(address))out.add(address);}}
   return out;
  }
-
+ 
  private static int heightFrom(Object option,Object addr){
   int h=(int)NativeRead.number(NativeRead.get(option,"getHeight"));int w=(int)NativeRead.number(NativeRead.get(option,"getWidth"));
   if(h<=0){h=(int)NativeRead.number(NativeRead.get(addr,"getHeight"));w=(int)NativeRead.number(NativeRead.get(addr,"getWidth"));}
@@ -88,7 +88,7 @@ public final class DownloadQuality {
    if(earlier!=null){if(rate>earlier.bitrate){found.remove(earlier);found.add(quality);}continue;}
    if(seen.add(url))found.add(quality);
   }
-
+  
   java.util.ArrayList<Choice> clean=new java.util.ArrayList<>();
   for(Choice f:found){boolean shadowed=false;if(f.hevc)for(Choice g:found)if(!g.hevc&&g.height==f.height&&f.height>0){shadowed=true;break;}if(!shadowed)clean.add(f);}
   java.util.Collections.sort(clean,(a,b)->a.height!=b.height?Integer.compare(b.height,a.height):Long.compare(b.bitrate,a.bitrate));
@@ -96,6 +96,8 @@ public final class DownloadQuality {
   for(Choice choice:clean){boolean duplicate=false;for(Choice existing:result)if(existing.url.equals(choice.url)){duplicate=true;break;}if(!duplicate)result.add(choice);}
   return result;
  }
+ 
+
 
  static String audio(Object post,Object video){
   String linked=musicAudio(NativeRead.get(post,"getMusic"));
@@ -134,7 +136,7 @@ public final class DownloadQuality {
   int index=0;
   for(Object image:(List)images){
    if(index>=256)break;
-
+   
    Object[] models={noWatermark?NativeRead.field(image,"displayImageNoWatermark"):null,NativeRead.field(image,"ownerWatermarkImage"),NativeRead.field(image,"userWatermarkImage")};
    java.util.ArrayList<String> urls=new java.util.ArrayList<>();
    for(Object model:models)if(model!=null)for(String address:all(model))if(!urls.contains(address))urls.add(address);
@@ -170,3 +172,4 @@ public final class DownloadQuality {
   throw new java.io.IOException("Unsupported audio container");
  }
 }
+

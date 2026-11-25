@@ -12,28 +12,47 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class TabBadges {
 
     private TabBadges() {}
 
     private static final String[] INBOX = {"входящие", "inbox", "вхідні"};
     private static final String[] FRIENDS = {"друзья", "friends", "друзі"};
-
+    
     private static final String KEY = "tab_read_";
-
+    
     private static final long SETTLED = 20000L;
     private static final int TRIES = 20;
     private static final long BETWEEN = 600L;
 
     private static final class Tab {
         final String which;
-
+        
         CharSequence seen;
-
+        
         WeakReference<View> hidden = new WeakReference<View>(null);
-
+        
         long missingSince;
-
+        
         boolean forgotten;
 
         Tab(String which) {
@@ -50,11 +69,12 @@ final class TabBadges {
                 if (tab != null && tab.isAttachedToWindow()) settle((ViewGroup) tab, entry.getValue());
             }
         } catch (Throwable ignored) {
-
+            
         }
         return true;
     };
 
+    
     static void attach(Activity activity) {
         try {
             look(activity.getWindow().getDecorView(), 0);
@@ -73,7 +93,9 @@ final class TabBadges {
                     watched = new WeakReference<ViewTreeObserver>(next);
                 }
             } else if (attempt < TRIES) {
-
+                
+                
+                
                 screen.postDelayed(() -> look(screen, attempt + 1), BETWEEN);
             }
         } catch (Throwable error) {
@@ -81,6 +103,7 @@ final class TabBadges {
         }
     }
 
+    
     private static int find(View view, View screen, int depth) {
         if (view == null || depth > 30 || view.getVisibility() != View.VISIBLE) return 0;
         if (!(view instanceof ViewGroup)) return 0;
@@ -109,6 +132,7 @@ final class TabBadges {
         return null;
     }
 
+    
     private static boolean low(View view, View screen) {
         int[] at = new int[2], origin = new int[2];
         view.getLocationOnScreen(at);
@@ -116,6 +140,7 @@ final class TabBadges {
         return at[1] - origin[1] > screen.getHeight() * 0.8f;
     }
 
+    
     private static TextView number(ViewGroup tab) {
         CharSequence name = tab.getContentDescription();
         for (int i = 0; i < tab.getChildCount(); i++) {
@@ -129,6 +154,7 @@ final class TabBadges {
         return null;
     }
 
+    
     private static void settle(ViewGroup tab, Tab state) {
         TextView number = number(tab);
         View hidden = state.hidden.get();
@@ -137,7 +163,11 @@ final class TabBadges {
                 hidden.setAlpha(1f);
                 state.hidden = new WeakReference<View>(null);
             }
-
+            
+            
+            
+            
+            
             if (state.forgotten) return;
             long now = android.os.SystemClock.uptimeMillis();
             if (state.missingSince == 0) {
@@ -178,13 +208,13 @@ final class TabBadges {
         try {
             final Context context = view.getContext();
             final TextView number = number(view);
-            if (number == null) return false;
+            if (number == null) return false;  
             final boolean back = tab.hidden.get() != null;
             Panel.with(context, Skin.remembered(context), back ? Text.TAB_UNREAD_BACK : Text.TAB_READ_ALL)
                     .text(back ? Text.TAB_UNREAD_BACK_NOTE : Text.TAB_READ_ALL_NOTE)
                     .primary(back ? Text.TAB_UNREAD_BACK_YES : Text.TAB_READ_ALL_YES, () -> {
                         remember(context, tab.which, back ? 0 : TabCount.of(number.getText()));
-                        tab.seen = null;
+                        tab.seen = null;  
                         view.invalidate();
                     })
                     .quiet(Text.CANCEL, null)
@@ -197,13 +227,13 @@ final class TabBadges {
     }
 
     private static int dismissed(Context context, String which) {
-        SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
         return prefs.getInt(KEY + which, 0);
     }
 
     private static void remember(Context context, String which, int number) {
         SharedPreferences.Editor edit =
-                context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit();
+                context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit();
         if (number > 0) edit.putInt(KEY + which, number);
         else edit.remove(KEY + which);
         edit.apply();

@@ -1,8 +1,23 @@
 package com.fasdeq.airtok;
 
+
+
+
+
+
 final class NavPlan {
 
     private NavPlan() {}
+
+    
+
+
+
+
+
+
+
+
 
     static float[] edges(float room, float[] open, float[] extra, float least) {
         int count = open.length;
@@ -22,12 +37,20 @@ final class NavPlan {
         return edges;
     }
 
+    
     interface Pen {
         void move(float x, float y);
         void line(float x, float y);
         void curve(float x1, float y1, float x2, float y2, float x, float y);
         void close();
     }
+
+    
+
+
+
+
+
 
     static void trace(String data, Pen pen) {
         int at = 0, length = data.length();
@@ -80,7 +103,7 @@ final class NavPlan {
             float baseX = relative ? x : 0f, baseY = relative ? y : 0f;
             char kind = relative ? (char) (command - 32) : command;
             if (kind == 'Q' || kind == 'T') {
-
+                
                 float atX = kind == 'Q' ? baseX + given[0] : bowed ? 2 * x - bendX : x;
                 float atY = kind == 'Q' ? baseY + given[1] : bowed ? 2 * y - bendY : y;
                 float toX = baseX + given[kind == 'Q' ? 2 : 0], toY = baseY + given[kind == 'Q' ? 3 : 1];
@@ -102,7 +125,7 @@ final class NavPlan {
                     pen.move(x, y);
                     startX = x;
                     startY = y;
-
+                    
                     command = relative ? 'l' : 'L';
                     bent = false;
                     break;
@@ -131,7 +154,7 @@ final class NavPlan {
                     y = baseY + given[5];
                     bent = true;
                     break;
-                default:
+                default:  
                     float firstX = bent ? 2 * x - bendX : x, firstY = bent ? 2 * y - bendY : y;
                     bendX = baseX + given[0];
                     bendY = baseY + given[1];

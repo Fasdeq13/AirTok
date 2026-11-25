@@ -10,7 +10,7 @@ public final class FeedRail {
     private static final class State {final int kind;int wanted;State(int k,int v){kind=k;wanted=v;}}
     private FeedRail(){}
     public static boolean shown(int kind){
-
+        
         return true;
     }
     public static void setShown(int kind,boolean value){
@@ -39,14 +39,32 @@ public final class FeedRail {
             synchronized(slots){if(!slots.containsKey(v))slots.put(v,new State(kind,v.getVisibility()));}
             v.setTag(KNOWN,Boolean.TRUE);
             apply(v);
+            if(kind==0)attachLikeLongPress(v);
+            if(kind==3)VideoActions.bindNative(component);
             if(kind==2)Repost.anchor(component);
         }catch(Throwable error){Diary.note("feed rail binding: "+error);}
     }
-
+    private static void attachLikeLongPress(View view){
+        if(view==null)return;
+        view.setOnLongClickListener(v->{
+            try{v.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);}catch(Throwable ignored){}
+            Repost.trigger();
+            return true;
+        });
+        if(view instanceof android.view.ViewGroup){
+            android.view.ViewGroup g=(android.view.ViewGroup)view;
+            for(int i=0;i<g.getChildCount();i++)attachLikeLongPress(g.getChildAt(i));
+        }
+    }
+    
+    
     private static final int KNOWN=0x7e0c0399;
     public static void setVisibility(View view,int visibility){
         if(view==null)return;
-
+        
+        
+        
+        
         if(view.getTag(KNOWN)==null&&view.getTag(Repost.TAG)==null){view.setVisibility(visibility);return;}
         long probe=Probe.start();
         boolean taken=Repost.visibility(view,visibility);
@@ -64,12 +82,13 @@ public final class FeedRail {
         if(view.getVisibility()!=next)view.setVisibility(next);
         Md3.rail(view,state.kind);
     }
-
+    
     private static View[] seen=new View[0];private static int[] kinds=new int[0];private static long listed;
     private static long idled;
     static void icons(){
         long now=android.os.SystemClock.uptimeMillis();
-
+        
+        
         if(!Md3.isOn(Md3.KEY_ICONS)){if(now-idled<500L)return;idled=now;}
         if(now-listed>500L){
             listed=now;
@@ -82,9 +101,9 @@ public final class FeedRail {
         View[] views=seen;int[] which=kinds;
         for(int i=0;i<views.length&&i<which.length;i++)Md3.icons(views[i],which[i]);
     }
-
+    
     static java.util.List<View> views(){synchronized(slots){return new java.util.ArrayList<View>(slots.keySet());}}
-
+    
     static View likeOnScreen(){
         View best=null;int bestArea=0;android.graphics.Rect seen=new android.graphics.Rect();
         synchronized(slots){
@@ -97,7 +116,7 @@ public final class FeedRail {
         }
         return best;
     }
-
+    
     static void restyle(){
         java.util.List<View> views;
         synchronized(slots){views=new java.util.ArrayList<View>(slots.keySet());}

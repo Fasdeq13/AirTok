@@ -5,6 +5,16 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.Adler32;
 
+
+
+
+
+
+
+
+
+
+
 public final class PluginAudit {
     private PluginAudit() {}
     public static final int MAX_DEX=16*1024*1024;
@@ -37,6 +47,10 @@ public final class PluginAudit {
         }
         report.digest=hex(hash.digest());return report;
     }
+    
+
+
+
 
     public static Report dex(byte[] data)throws Exception{
         try{return read(data);}
@@ -66,7 +80,7 @@ public final class PluginAudit {
             if((owner.equals("Lcom/fasdeq/airtok/plugin/PluginContext;")&&name.equals("context"))||(owner.equals("Lcom/fasdeq/airtok/AirTok;")&&name.equals("context")))report.add(Local.of("Доступ к контексту TikTok"),false);
             if(owner.equals("Ljava/lang/ClassLoader;")&&name.equals("loadClass"))report.add(Local.of("Загрузка классов по имени"),false);
         }
-
+        
         int count=d.u32(96),off=d.u32(100);d.table(off,count,32);
         for(int i=0;i<count;i++){
             int at=d.u32(off+i*32+24);if(at==0)continue;
@@ -90,7 +104,7 @@ public final class PluginAudit {
             if(checksum.getValue()!=(raw32(8)&0xffffffffL))throw new IOException(Local.of("Повреждён DEX: checksum"));
             stringCount=u32(56);stringOff=u32(60);typeCount=u32(64);typeOff=u32(68);methodCount=u32(88);methodOff=u32(92);
             table(stringOff,stringCount,4);table(typeOff,typeCount,4);table(methodOff,methodCount,8);
-
+            
             for(int i=0;i<stringCount;i++)string(i);
         }
         int raw32(int p)throws IOException{range(p,4);return (b[p]&255)|((b[p+1]&255)<<8)|((b[p+2]&255)<<16)|((b[p+3]&255)<<24);}
@@ -104,7 +118,8 @@ public final class PluginAudit {
             int offset=u32(stringOff+index*4);String ready=decoded.get(offset);if(ready!=null)return ready;
             int[] pos={offset};uleb(pos);int start=pos[0];
             while(true){range(pos[0],1);if(b[pos[0]++]==0)break;
-
+            
+            
             if(++textBytes>MAX_DEX)throw new IOException(Local.of("Слишком большие строки DEX"));}
             ready=new String(b,start,pos[0]-start-1,java.nio.charset.StandardCharsets.UTF_8);decoded.put(offset,ready);return ready;
         }

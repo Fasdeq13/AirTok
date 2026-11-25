@@ -16,12 +16,26 @@ import android.widget.TextView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
+
+
+
+
+
 final class CommentLinks {
 
     private CommentLinks() {}
 
+    
     private static final int BLUE = 0xFF2F9BFF;
     private static final int WATCHED = 0x7e0c0391;
+    private static volatile java.lang.reflect.Method getListenerInfoMethod;
+    private static volatile java.lang.reflect.Field onTouchListenerField;
+
+    
+
+
 
     private static final Pattern ADDRESS = Pattern.compile(
             "(?<![@\\p{L}\\p{N}._-])(?:(?:https?://|www\\.)[^\\s<>\"«»]+"
@@ -30,22 +44,29 @@ final class CommentLinks {
                     + "(?![\\p{L}\\p{N}-])(?::\\d+)?(?:/[^\\s<>\"«»]*)?)",
             Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 
+    
     static void bind(Object cell) {
-
+        
         Object body = NativeRead.field(cell, "LLLF");
         if (!(body instanceof TextView)) return;
         final TextView view = (TextView) body;
         if (view.getTag(WATCHED) == null) {
             view.setTag(WATCHED, Boolean.TRUE);
-
+            
+            
+            
             view.addTextChangedListener(new TextWatcher() {
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 @Override public void afterTextChanged(Editable text) { mark(text); }
             });
-
-            view.setOnTouchListener(CommentLinks::touched);
-
+            
+            final View.OnTouchListener previous = existingTouchListener(view);
+            view.setOnTouchListener((v, event) -> {
+                if (touched(v, event)) return true;
+                return previous != null && previous.onTouch(v, event);
+            });
+            
             CharSequence now = view.getText();
             if (now != null && looksLikeIt(now)) view.setText(now);
         }
@@ -61,12 +82,34 @@ final class CommentLinks {
             while (found.find()) {
                 int start = found.start(), end = trimmed(spans, start, found.end());
                 if (end <= start) continue;
-
+                
                 if (spans.getSpans(start, end, ClickableSpan.class).length > 0) continue;
                 spans.setSpan(new Link(spans.subSequence(start, end).toString()), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } catch (Throwable error) {
             Diary.note("comment links: " + error);
+        }
+    }
+
+    
+    private static View.OnTouchListener existingTouchListener(View view) {
+        try {
+            if (getListenerInfoMethod == null) {
+                java.lang.reflect.Method m = View.class.getDeclaredMethod("getListenerInfo");
+                m.setAccessible(true);
+                getListenerInfoMethod = m;
+            }
+            Object info = getListenerInfoMethod.invoke(view);
+            if (info == null) return null;
+            if (onTouchListenerField == null) {
+                java.lang.reflect.Field f = info.getClass().getDeclaredField("mOnTouchListener");
+                f.setAccessible(true);
+                onTouchListenerField = f;
+            }
+            Object listener = onTouchListenerField.get(info);
+            return listener instanceof View.OnTouchListener ? (View.OnTouchListener) listener : null;
+        } catch (Throwable ignored) {
+            return null;
         }
     }
 
@@ -89,6 +132,7 @@ final class CommentLinks {
         return true;
     }
 
+    
     private static boolean looksLikeIt(CharSequence text) {
         for (int i = 1, n = text.length() - 1; i < n; i++) {
             char c = text.charAt(i);
@@ -97,6 +141,7 @@ final class CommentLinks {
         return false;
     }
 
+    
     private static int trimmed(CharSequence text, int start, int end) {
         while (end > start) {
             char last = text.charAt(end - 1);

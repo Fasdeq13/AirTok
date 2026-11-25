@@ -9,11 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
+
+
+
+
+
+
+
+
+
 public final class Tags {
 
     static final String KEY = "blocked_tags";
     static final String KEY_ON = "blocked_tags_on";
 
+    
     public static final int MOST = 40;
 
     private static volatile List<String> cached;
@@ -22,8 +33,15 @@ public final class Tags {
 
     private static volatile Boolean on;
 
-    public static boolean isEnabled() {
+    
 
+
+
+
+
+
+    public static boolean isEnabled() {
+        
         return false;
     }
 
@@ -75,6 +93,7 @@ public final class Tags {
         prefs.edit().putString(KEY, out.toString()).apply();
     }
 
+    
     static String tidy(String tag) {
         if (tag == null) return "";
         String out = tag.trim().toLowerCase(Locale.ROOT);
@@ -82,6 +101,7 @@ public final class Tags {
         return out.replace(" ", "");
     }
 
+    
     public static boolean blocks(Aweme post) {
         if (!isEnabled()) return false;
         List<String> tags = all();
@@ -98,6 +118,7 @@ public final class Tags {
         return false;
     }
 
+    
     private static boolean carries(String text, String tag) {
         int at = 0;
         while ((at = text.indexOf('#', at)) >= 0) {
@@ -120,7 +141,7 @@ public final class Tags {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }

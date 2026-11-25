@@ -17,9 +17,9 @@ public final class Recalled {
     private Recalled() {}
 
     static final String KEY = "keep_recalled";
-    private static final String STORE = "margyt_recalled";
+    private static final String STORE = "airtok_recalled";
     private static final int MOST = 4000;
-    private static final float FADED = 0.68f;
+    private static final float FADED = 0.45f;
     private static final int FADED_ROW = 0x7e0c0381, WATCHED_ROW = 0x7e0c0383;
 
     private static volatile Boolean on;
@@ -27,15 +27,14 @@ public final class Recalled {
     private static final Map<View, String> rows = new WeakHashMap<>();
     private static Method recall;
 
-    static boolean enabled() {
-
+    public static boolean enabled() {
         return true;
     }
 
     static void setEnabled(boolean value) {
         on = value;
         Context context = AirTok.context();
-        if (context != null) context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (context != null) context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
     }
 
     private static SharedPreferences store() {
@@ -62,16 +61,38 @@ public final class Recalled {
         original(domain, message, recaller, after);
     }
 
-    private static boolean holdBack(Object message, String recaller) {
-
-        String own = Account.id();
-        if (own == null || own.length() == 0 || own.equals(recaller)) return false;
-        if (own.equals(String.valueOf(NativeRead.number(NativeRead.get(message, "getSender"))))) return false;
+    public static boolean holdBack(Object message, String recaller) {
+        if (!enabled()) return false;
+        String own = Account.liveId();
+        if (own == null || own.length() == 0) own = Account.id();
+        if (own != null && own.length() > 0 && own.equals(recaller)) return false;
+        if (message == null) return false;
+        long sender = NativeRead.number(NativeRead.get(message, "getSender"));
+        if (own != null && own.length() > 0 && own.equals(String.valueOf(sender))) return false;
         String uuid = NativeRead.string(NativeRead.get(message, "getUuid"));
-
-        if (uuid.length() == 0 || NativeRead.string(NativeRead.get(message, "getContent")).length() == 0) return false;
+        if (uuid == null || uuid.length() == 0) return false;
         remember(uuid);
         return true;
+    }
+
+    public static boolean isRecalled(Object message) {
+        if (!enabled() || message == null) return false;
+        String own = Account.liveId();
+        if (own == null || own.length() == 0) own = Account.id();
+        long sender = NativeRead.number(NativeRead.get(message, "getSender"));
+        if (own != null && own.length() > 0 && own.equals(String.valueOf(sender))) {
+            try {
+                Method m = message.getClass().getMethod("isRecalled");
+                return Boolean.TRUE.equals(m.invoke(message));
+            } catch (Throwable ignored) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isKept(String uuid) {
+        return uuid != null && kept().containsKey(uuid);
     }
 
     private static void remember(String uuid) {
@@ -134,7 +155,6 @@ public final class Recalled {
             if (kept().containsKey(uuid)) {
                 fade(row);
             } else if (row.getTag(FADED_ROW) != null) {
-
                 row.setTag(FADED_ROW, null);
                 row.setAlpha(1f);
             }

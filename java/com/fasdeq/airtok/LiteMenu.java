@@ -8,14 +8,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
+
+
+
+
+
 public final class LiteMenu {
 
     private LiteMenu() {}
 
     public static String title() {
-        return "MargyT Lite";
+        return "AirTok Lite";
     }
 
+    
     public static Object tapped() {
         try {
             Class<?> kind = Class.forName("kotlin.jvm.functions.Function1");
@@ -30,7 +36,7 @@ public final class LiteMenu {
                     case "equals":
                         return given != null && given.length == 1 && proxy == given[0];
                     case "toString":
-                        return "MargyT Lite";
+                        return "AirTok Lite";
                     default:
                         return null;
                 }
@@ -53,6 +59,7 @@ public final class LiteMenu {
         }
     }
 
+    
     private static Object nothing() {
         try {
             Class<?> unit = Class.forName("kotlin.Unit");
@@ -63,7 +70,7 @@ public final class LiteMenu {
                 }
             }
         } catch (Throwable missing) {
-
+            
         }
         return null;
     }

@@ -9,23 +9,25 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+
 final class BurnEye {
     private BurnEye() {}
-
+    
     static final float MIN_ALPHA = 0.6f;
-
+    
     static final long LEAVE_DELAY_MS = 900L;
     private static final java.util.Map<View,java.lang.ref.WeakReference<Slot>> slots=new java.util.WeakHashMap<View,java.lang.ref.WeakReference<Slot>>();
     private static final java.util.Map<View,java.lang.ref.WeakReference<View>> anchors=new java.util.WeakHashMap<View,java.lang.ref.WeakReference<View>>();
     private static final java.util.Map<View,Boolean> replacedAnchors=new java.util.WeakHashMap<>();
-
+    
     private static final long VERDICT_NS=250000000L;
-
+    
     static final float INBOX_X=0.72f;
-
+    
     static final float VIDEO_X=0.218f,VIDEO_Y=0.0718f;
     private static final java.util.Map<Class<?>,Boolean> transientTypes=new java.util.HashMap<Class<?>,Boolean>();
 
+    
     static View install(View rail) {
         if (!(rail instanceof ViewGroup) || !isFeedRail(rail, 0)) return null;
         return installFeed(rail);
@@ -54,6 +56,7 @@ final class BurnEye {
         return slot;
     }
 
+    
     static View installInbox(View root){
         if(!(root instanceof FrameLayout))return null;
         if(!Dim.isConfigured()){hide(root);return null;}
@@ -77,7 +80,7 @@ final class BurnEye {
         if(!(view instanceof TextView) && view.getContentDescription()==null)return false;
         if(!inboxWord(view instanceof TextView?((TextView)view).getText():view.getContentDescription()))return false;
         int[] at=new int[2],origin=new int[2];view.getLocationOnScreen(at);root.getLocationOnScreen(origin);
-
+        
         return at[1]+view.getHeight()/2f<=origin[1]+root.getHeight()*0.18f;
     }
     private static View findInboxTitle(View view,View root,int depth){
@@ -115,9 +118,10 @@ final class BurnEye {
     }
 
     static boolean owns(View view){return view instanceof Slot || replacedAnchors.containsKey(view);}
-
+    
     static boolean eye(View view){return view instanceof Slot;}
 
+    
     static boolean missing(View root){
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
         return slot==null || !slot.active || slot.getVisibility()!=View.VISIBLE;
@@ -127,6 +131,10 @@ final class BurnEye {
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
         if (slot != null) slot.fadeOut();
     }
+
+    
+
+
 
     static void hideSoon(View root) {
         java.lang.ref.WeakReference<Slot> held=slots.get(root);Slot slot=held==null?null:held.get();
@@ -143,6 +151,7 @@ final class BurnEye {
         }
     }
 
+    
     static boolean isFeedRail(View view, int depth) {
         if (view == null || !view.isShown() || depth > 40) return false;
         CharSequence words = view instanceof TextView ? ((TextView) view).getText()
@@ -162,6 +171,7 @@ final class BurnEye {
         return false;
     }
 
+    
     static boolean hasFeedHeader(View root) {
         int[] origin = new int[2];
         root.getLocationOnScreen(origin);
@@ -184,6 +194,8 @@ final class BurnEye {
         return false;
     }
 
+    
+    
     private static String toolbarTag(View view) {
         Object value=view.getTag(0x7f0a374f);
         if(!(value instanceof String))value=view.getTag();
@@ -228,12 +240,12 @@ final class BurnEye {
         float dp = view.getResources().getDisplayMetrics().density;
         boolean compact = view.getWidth() >= 8 * dp && view.getWidth() <= 96 * dp
                 && view.getHeight() >= 8 * dp && view.getHeight() <= 96 * dp;
-
+        
         boolean left = point[0] >= origin[0] - dp
                 && point[0] + view.getWidth() <= origin[0] + rail.getWidth() * 0.18f;
         boolean upper = point[1] >= origin[1] - dp
                 && point[1] + view.getHeight() / 2f <= origin[1] + rail.getHeight() * 0.18f;
-
+        
         if (rail.getHeight() <= 100 * dp) upper = true;
         boolean live=namedLive(view);
         if (view != rail && compact && left && upper && live) return view;
@@ -247,13 +259,14 @@ final class BurnEye {
         return null;
     }
 
+    
     private static android.graphics.Bitmap openArt,closedArt;
     private static boolean artTried;
     private static synchronized void loadArt(Context context){
         if(artTried)return;
         artTried=true;
-        openArt=readArt(context,"margyt/burn_eye_open.png");
-        closedArt=readArt(context,"margyt/burn_eye_closed.png");
+        openArt=readArt(context,"airtok/burn_eye_open.png");
+        closedArt=readArt(context,"airtok/burn_eye_closed.png");
     }
     private static android.graphics.Bitmap readArt(Context context,String name){
         try(java.io.InputStream in=context.getAssets().open(name)){return android.graphics.BitmapFactory.decodeStream(in);}
@@ -290,14 +303,14 @@ final class BurnEye {
             if(view!=null)replacedAnchors.remove(view);replaced=false;
         }
         private int lastLeft=-1,lastTop=-1;
-
+        
         private java.lang.ref.WeakReference<View> vettedFor=new java.lang.ref.WeakReference<>(null);
         private long vettedAt;private boolean vettedOk;
-
+        
         private final Runnable leave=()->{active=false;restoreAnchor();setVisibility(View.GONE);postDelayed(Dim::retry,50L);};
-        private final Paint ink=new Paint(3);
+        private final Paint ink=new Paint(3); 
         private final android.graphics.Rect dst=new android.graphics.Rect();
-        private android.graphics.drawable.Drawable closedEye,openEye;
+        private android.graphics.drawable.Drawable closedEye,openEye; 
         void stay(){removeCallbacks(leave);if(leaving){leaving=false;if(transition!=null)transition.cancel();transition=null;}setClickable(true);}
         void leaveLater(){removeCallbacks(leave);postDelayed(leave,LEAVE_DELAY_MS);}
         void revet(){vettedFor=new java.lang.ref.WeakReference<>(null);}
@@ -317,13 +330,13 @@ final class BurnEye {
             if(next.isAlive()){next.addOnPreDrawListener(visibility);watched=new java.lang.ref.WeakReference<>(next);}
         }
         private static float dimmed(){return Dim.isEnabled()?Math.max(1f-Dim.strength()/100f,MIN_ALPHA):1f;}
-
+        
         void sync(){
             if(leaving)return;
             View root=getRootView();boolean show=false;float alpha=1f;
             View anchored=anchor.get();
             if(!active || !Dim.isConfigured()){
-
+                
             }else if(inbox){
                 show=anchored!=null && anchored.isAttachedToWindow() && anchored.isShown() && anchored.getRootView()==root
                         && root.getWindowVisibility()==View.VISIBLE;
@@ -355,9 +368,10 @@ final class BurnEye {
                     top=Math.round(at[1]-origin[1]+anchored.getHeight()/2f-size/2f);
                 }else if(videoFallback){
                     View reference=placement.get();
-
+                    
+                    
                     left=Math.round(root.getWidth()*VIDEO_X-size/2f);top=Math.round(root.getHeight()*VIDEO_Y-size/2f);
-
+                    
                     if(!friends && reference!=null && reference.isShown()){reference.getLocationOnScreen(at);top=Math.round(at[1]-origin[1]+reference.getHeight()/2f-size/2f);}
                     if(friends){
                         left=Math.round(4*dp);
@@ -402,9 +416,10 @@ final class BurnEye {
             if(!label.contentEquals(getContentDescription()==null?"":getContentDescription())){
                 setContentDescription(label);
             }
-            invalidate();
+            invalidate(); 
         }
 
+        
         @Override protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             float dp = getResources().getDisplayMetrics().density;

@@ -1,11 +1,16 @@
 package com.fasdeq.airtok;
 
+
+
+
 final class TabCount {
 
     private TabCount() {}
 
+    
     static final int PLENTY = 100;
 
+    
     static int of(CharSequence text) {
         if (text == null) return 0;
         String said = text.toString().trim();
@@ -23,6 +28,13 @@ final class TabCount {
         }
         return true;
     }
+
+    
+
+
+
+
+
 
     static int remembered(int dismissed, int now) {
         if (dismissed <= 0 || now <= 0 || now > dismissed) return 0;

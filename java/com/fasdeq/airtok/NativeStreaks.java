@@ -7,48 +7,15 @@ import com.ss.android.ugc.aweme.im.streak.api.IStreakService;
 final class NativeStreaks {
     private static String account;
     private static long last;
-    private static volatile long lastDiscovered;
-
-    static IStreakService getService() {
-        IStreakService service = null;
-        try {
-            Field f = IStreakService.class.getField("LJJJJIZL");
-            Object comp = f.get(null);
-            if (comp != null) {
-                service = (IStreakService) comp.getClass().getMethod("LIZ").invoke(comp);
-            }
-        } catch (Throwable ignored) {}
-        if (service == null) {
-            try {
-                Object mgr = Class.forName("com.ss.android.ugc.aweme.framework.services.ServiceManager").getMethod("get").invoke(null);
-                if (mgr != null) {
-                    service = (IStreakService) mgr.getClass().getMethod("getService", Class.class).invoke(mgr, IStreakService.class);
-                }
-            } catch (Throwable ignored) {}
-        }
-        return service;
-    }
-
-    static Map<String, ?> getStreakMap(IStreakService service) {
-        if (service == null) return null;
-        try {
-            Method m = service.getClass().getMethod("t0");
-            Object res = m.invoke(service);
-            if (res instanceof Map) return (Map<String, ?>) res;
-        } catch (Throwable ignored) {}
-        return null;
-    }
+    private static volatile String friendsOf;
+    private static volatile long friendsAsked;
 
     static synchronized void prepare() {
         if (Account.liveId() == null) {
             try {
-                Object mgr = Class.forName("com.ss.android.ugc.aweme.framework.services.ServiceManager").getMethod("get").invoke(null);
-                if (mgr != null) {
-                    Class<?> userSvcCls = Class.forName("com.ss.android.ugc.aweme.IAccountUserService");
-                    Object userService = mgr.getClass().getMethod("getService", Class.class).invoke(mgr, userSvcCls);
-                    if (userService instanceof com.ss.android.ugc.aweme.IAccountUserService) {
-                        Account.getCurUserId((com.ss.android.ugc.aweme.IAccountUserService) userService);
-                    }
+                Object userService = Class.forName("X.14EI").getMethod("LJFF").invoke(null);
+                if (userService instanceof com.ss.android.ugc.aweme.IAccountUserService) {
+                    Account.getCurUserId((com.ss.android.ugc.aweme.IAccountUserService) userService);
                 }
             } catch (Throwable ignored) {}
         }
@@ -58,113 +25,64 @@ final class NativeStreaks {
         if (uid.equals(account) && now - last < 5000) return;
         account = uid;
         last = now;
-
         try {
-            IStreakService service = getService();
+            IStreakService service = obtainService();
             if (service == null) return;
-
+            Streaks.discover(service, null);
             final IStreakService finalService = service;
-            Streaks.discover(finalService, null);
-
             android.os.Handler main = new android.os.Handler(android.os.Looper.getMainLooper());
             main.post(() -> {
                 if (!uid.equals(Account.liveId())) return;
                 try {
-                    Method init = finalService.getClass().getMethod("LIZLLL");
-                    init.invoke(finalService);
-                } catch (Throwable ignored) {}
+                    finalService.getClass().getMethod("LIZLLL").invoke(finalService);
+                } catch (Throwable e) {
+                    Diary.note("streak native init: " + e.getClass().getSimpleName());
+                }
             });
 
-            if (now - lastDiscovered >= 15000L) {
-                lastDiscovered = now;
-                Net.away("streak discover", () -> {
-
+            if (now - friendsAsked >= 600000L || !uid.equals(friendsOf)) {
+                friendsAsked = now;
+                friendsOf = uid;
+                Net.away("streak friends", () -> {
                     try {
-                        Class<?> bsy = Class.forName("X.0BSy");
-                        Field lz = bsy.getField("LIZ");
-                        Object lazyObj = lz.get(null);
-                        if (lazyObj != null) {
-                            Method gv = lazyObj.getClass().getMethod("getValue");
-                            Object btt = gv.invoke(lazyObj);
-                            if (btt != null) {
-                                for (Method m : btt.getClass().getMethods()) {
-                                    if (m.getParameterTypes().length == 0 && m.getReturnType().getName().contains("0BTd")) {
-                                        Object btd = m.invoke(btt);
-                                        if (btd != null) {
-                                            for (Method lm : btd.getClass().getMethods()) {
-                                                if (lm.getParameterTypes().length == 0 && List.class.isAssignableFrom(lm.getReturnType())) {
-                                                    try {
-                                                        List<?> convs = (List<?>) lm.invoke(btd);
-                                                        if (convs != null) {
-                                                            for (Object c : convs) {
-                                                                if (c != null) {
-                                                                    Method getCid = c.getClass().getMethod("getConversationId");
-                                                                    String cid = (String) getCid.invoke(c);
-                                                                    if (cid != null && cid.length() > 0) {
-                                                                        Streaks.discover(finalService, cid);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    } catch (Throwable ignored) {}
-                                                }
-                                            }
+                        Object contacts = null;
+                        try {
+                            Class<?> contactApiClass = Class.forName("com.ss.android.ugc.aweme.im.contacts.api.IMContactApi");
+                            Object companion = null;
+                            for (Field f : contactApiClass.getDeclaredFields()) {
+                                if (Modifier.isStatic(f.getModifiers())) {
+                                    f.setAccessible(true);
+                                    companion = f.get(null);
+                                    if (companion != null) break;
+                                }
+                            }
+                            if (companion != null) {
+                                for (Method m : companion.getClass().getMethods()) {
+                                    if (contactApiClass.isAssignableFrom(m.getReturnType()) && m.getParameterCount() == 0) {
+                                        Object api = m.invoke(companion);
+                                        if (api != null) {
+                                            contacts = api.getClass().getMethod("LJ").invoke(api);
+                                            break;
                                         }
                                     }
                                 }
                             }
-                        }
-                    } catch (Throwable ignored) {}
+                        } catch (Throwable ignored) {}
 
-                    try {
-                        Class<?> dh8Cls = Class.forName("X.0Dh8");
-                        Field l1Field = dh8Cls.getField("LIZIZ");
-                        Object dhA = l1Field.get(null);
-                        if (dhA != null) {
-                            Field lj7Field = dhA.getClass().getField("LJII");
-                            Object dhJ = lj7Field.get(dhA);
-                            if (dhJ != null) {
-                                Field lruField = dhJ.getClass().getField("LIZ");
-                                Object lruObj = lruField.get(dhJ);
-                                if (lruObj instanceof android.util.LruCache) {
-                                    Map<?, ?> snap = ((android.util.LruCache<?, ?>) lruObj).snapshot();
-                                    for (Object k : snap.keySet()) {
-                                        if (k instanceof String) {
-                                            Streaks.discover(finalService, (String) k);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Throwable ignored) {}
-
-                    try {
-                        Class<?> ys0 = Class.forName("X.0YS0");
-                        for (String fName : new String[]{"LLJJIJIL", "LLJJJ", "LLJJJIL", "LLJJJJ"}) {
+                        if (contacts == null) {
                             try {
-                                Field mapField = ys0.getField(fName);
-                                Object mapObj = mapField.get(null);
-                                if (mapObj instanceof Map) {
-                                    for (Object key : ((Map<?, ?>) mapObj).keySet()) {
-                                        if (key instanceof String) {
-                                            Streaks.discover(finalService, (String) key);
-                                        }
-                                    }
-                                }
+                                Object api = Class.forName("X.06bA").getMethod("LIZ").invoke(null);
+                                if (api != null) contacts = api.getClass().getMethod("LJ").invoke(api);
                             } catch (Throwable ignored) {}
                         }
-                    } catch (Throwable ignored) {}
 
-                    try {
-                        Map<String, ?> streakMap = getStreakMap(finalService);
-                        if (streakMap != null && !streakMap.isEmpty()) {
-                            for (String convId : streakMap.keySet()) {
-                                if (convId != null && convId.length() > 0) {
-                                    Streaks.discover(finalService, convId);
-                                }
-                            }
+                        if (contacts != null) {
+                            Object list = contacts.getClass().getMethod("getAllFriends").invoke(contacts);
+                            if (list instanceof List) friends((List<?>) list, uid);
                         }
-                    } catch (Throwable ignored) {}
+                    } catch (Throwable e) {
+                        Diary.note("streak friend list: " + e.getClass().getSimpleName());
+                    }
                 });
             }
         } catch (Throwable e) {
@@ -172,17 +90,70 @@ final class NativeStreaks {
         }
     }
 
-    static void friends(List<?> users, String uid) {
-        if (users == null || uid == null || !uid.equals(Account.liveId())) return;
+    private static IStreakService obtainService() {
         try {
-            IStreakService service = getService();
-            if (service == null) return;
-            for (Object user : users) {
-                String friend = NativeRead.uid(user);
-                if (friend != null && !friend.isEmpty() && !friend.equals(uid)) {
-
+            Field compField = IStreakService.class.getField("LJJJJIZL");
+            Object comp = compField.get(null);
+            if (comp != null) {
+                for (Method m : comp.getClass().getMethods()) {
+                    if (IStreakService.class.isAssignableFrom(m.getReturnType()) && m.getParameterCount() == 0) {
+                        Object res = m.invoke(comp);
+                        if (res instanceof IStreakService) return (IStreakService) res;
+                    }
                 }
             }
         } catch (Throwable ignored) {}
+        for (String cls : new String[]{"X.0CaE", "X.06p9"}) {
+            try {
+                Object res = Class.forName(cls).getMethod("LIZ").invoke(null);
+                if (res instanceof IStreakService) return (IStreakService) res;
+            } catch (Throwable ignored) {}
+        }
+        return null;
+    }
+
+    private static boolean digits(String s) {
+        if (s == null || s.isEmpty() || s.length() > 24) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c < '0' || c > '9') return false;
+        }
+        return true;
+    }
+
+    static void friends(List<?> users, String uid) {
+        if (!uid.equals(Account.liveId())) return;
+        try {
+            IStreakService service = obtainService();
+            if (service == null) return;
+            Method convert = null;
+            for (String cls : new String[]{"X.06WN", "X.06p9"}) {
+                try {
+                    convert = Class.forName(cls).getMethod("LJ", String.class);
+                    if (convert != null) break;
+                } catch (Throwable ignored) {}
+            }
+            List<String> found = new ArrayList<>();
+            for (Object user : users) {
+                if (!uid.equals(Account.liveId())) return;
+                String friend = NativeRead.uid(user);
+                if (!digits(friend) || friend.equals(uid)) continue;
+                if (convert != null) {
+                    Object id = convert.invoke(null, friend);
+                    if (id instanceof String && !((String) id).isEmpty()) {
+                        found.add((String) id);
+                        continue;
+                    }
+                }
+            }
+            if (!found.isEmpty()) {
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                    if (!uid.equals(Account.liveId())) return;
+                    for (String id : found) Streaks.discover(service, id);
+                });
+            }
+        } catch (Throwable e) {
+            Diary.note("streak friend discovery: " + e.getClass().getSimpleName());
+        }
     }
 }

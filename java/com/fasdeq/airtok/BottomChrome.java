@@ -7,6 +7,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import java.lang.ref.WeakReference;
 
+
 final class BottomChrome {
     private BottomChrome() {}
     private static WeakReference<View> rail = new WeakReference<View>(null);
@@ -23,11 +24,11 @@ final class BottomChrome {
 
     static void protect(View view) {
         if (view == null) return;
-
+        
         if (NavBar.wears(view)) return;
         if (rail.get() != view) { restore(); rail = new WeakReference<View>(view); }
         if (backing != null && view.getBackground() == backing) {if(shield!=null){if(shield.getAlpha()!=255)shield.setAlpha(255);if(shield.getColor()!=Color.BLACK)shield.setColor(Color.BLACK);if(shield.getColorFilter()!=null)shield.clearColorFilter();}return;}
-
+        
         original = view.getBackground();
         shield=new ColorDrawable(Color.BLACK);
         backing = original == null ? shield

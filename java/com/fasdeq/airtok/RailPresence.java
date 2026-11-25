@@ -3,6 +3,15 @@ import android.view.View;
 
 final class RailPresence {
     private RailPresence(){}
+    
+
+
+
+
+
+
+
+
 
     static boolean onScreen(View root){
         if(root==null)return false;
@@ -15,7 +24,7 @@ final class RailPresence {
             if(v.getVisibility()!=View.VISIBLE&&v.getParent() instanceof View)probe=(View)v.getParent();
             if(!probe.isShown()||probe.getAlpha()<=0.05f)continue;
             if(!probe.getGlobalVisibleRect(seen)||seen.width()<=0||seen.height()<=0)continue;
-
+            
             if(seen.centerX()<width*.5f||seen.right>width+2||seen.left<0||seen.bottom>height+2||seen.top<0)continue;
             return true;
         }

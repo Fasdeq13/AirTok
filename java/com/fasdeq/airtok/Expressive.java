@@ -26,16 +26,37 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Expressive {
 
     private Expressive() {}
+
+    
 
     static final int COOKIE9 = 0, CLOVER4 = 1, SUNNY = 2, FLOWER6 = 3,
             BURST12 = 4, PENTAGON = 5, ARCH3 = 6, COOKIE7 = 7;
     static final int KINDS = 8;
 
+    
     private static final int[] LOBES = {9, 4, 8, 6, 12, 5, 3, 7};
-
+    
     private static final float[] DEPTH = {0.050f, 0.160f, 0.110f, 0.140f, 0.040f, 0.075f, 0.100f, 0.065f};
 
     static int lobes(int kind) {
@@ -45,6 +66,13 @@ final class Expressive {
     private static int wrap(int kind) {
         return ((kind % KINDS) + KINDS) % KINDS;
     }
+
+    
+
+
+
+
+
 
     static void shape(Path out, int kind, float cx, float cy, float radius, float amount, float turn) {
         int k = wrap(kind);
@@ -56,7 +84,7 @@ final class Expressive {
         for (int i = 0; i < steps; i++) {
             double t = Math.PI * 2.0 * i / steps;
             double wave = Math.cos(n * (t - start));
-
+            
             double r = radius * (1.0 - depth * (1.0 - wave));
             float x = (float) (cx + r * Math.cos(t));
             float y = (float) (cy + r * Math.sin(t));
@@ -66,6 +94,7 @@ final class Expressive {
         out.close();
     }
 
+    
     static float reach(int kind, float amount, float turn, double angle) {
         int k = wrap(kind);
         int n = LOBES[k];
@@ -87,6 +116,16 @@ final class Expressive {
     private static float dp(Context context, float value) {
         return value * context.getResources().getDisplayMetrics().density;
     }
+
+    
+
+    
+
+
+
+
+
+
 
     static final class Tile extends Drawable {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -143,6 +182,7 @@ final class Expressive {
             motion.start();
         }
 
+        
         float[] corners(float height) {
             float limit = height / 2f;
             float t = Math.min(top, limit), b = Math.min(bottom, limit);
@@ -168,7 +208,7 @@ final class Expressive {
             radii[4] = radii[5] = radii[6] = radii[7] = c[1];
             path.reset();
             path.addRoundRect(box, radii, Path.Direction.CW);
-
+            
             if (!mask) {
                 android.graphics.Shader sky = ViceGradient.cardShader(Design.owner(this));
                 paint.setShader(sky);
@@ -182,12 +222,24 @@ final class Expressive {
         @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     }
 
+    
     static Drawable tile(Context context, int fill, int ripple, float top, float bottom, float pressed) {
         boolean animate = Motion.enabled(context);
         return new RippleDrawable(ColorStateList.valueOf(ripple),
                 new Tile(fill, top, bottom, pressed, false, animate),
                 new Tile(0xFFFFFFFF, top, bottom, pressed, true, false));
     }
+
+    
+
+    
+
+
+
+
+
+
+
 
     static final class Group extends LinearLayout {
         private final int fill, ripple;
@@ -198,13 +250,15 @@ final class Expressive {
             setOrientation(VERTICAL);
             this.fill = fill;
             this.ripple = ripple;
-
+            
+            
+            
             boolean m3 = !Design.frosted();
-
+            
             this.outer = dp(context, Design.style().card);
             this.inner = dp(context, Design.style().inner);
-            this.gap = Themes.isAmoled() || fill == 0xFF000000 ? 0 : dp(context, Design.style().gap);
-
+            this.gap = dp(context, Design.style().gap);
+            
             this.pressed = m3 && Design.style().gap == 0 ? -1 : dp(context, m3?16:28);
             if (Design.glass()) {
                 GradientDrawable surface = new GradientDrawable();
@@ -262,6 +316,14 @@ final class Expressive {
         }
     }
 
+    
+
+    
+
+
+
+
+
     static final class Badge extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Path path = new Path();
@@ -287,6 +349,7 @@ final class Expressive {
             setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
 
+        
         void set(boolean on, boolean animated) {
             float target = on ? 1f : 0f;
             if (motion != null) motion.cancel();
@@ -341,18 +404,28 @@ final class Expressive {
         }
     }
 
+    
+
+    
     static View roundButton(Context context, Drawable glyph, int fill, int ripple, int ink, int sizeDp) {
         final int size = Math.round(dp(context, sizeDp));
         final int pad = Math.round(dp(context, sizeDp * 0.27f));
         FrameLayout box = new FrameLayout(context);
         box.setBackground(tile(context, fill, ripple, size / 2f, size / 2f, dp(context, sizeDp * 0.30f)));
         android.widget.ImageView picture = new android.widget.ImageView(context);
-        if (glyph != null) glyph.setColorFilter(ink, PorterDuff.Mode.SRC_IN);
+        glyph.setColorFilter(ink, PorterDuff.Mode.SRC_IN);
         picture.setImageDrawable(glyph);
         box.addView(picture, new FrameLayout.LayoutParams(size - pad * 2, size - pad * 2, Gravity.CENTER));
         box.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         return box;
     }
+
+    
+
+    
+
+
+
 
     static void slider(SeekBar bar, int accent, int quiet) {
         Context context = bar.getContext();
@@ -393,6 +466,9 @@ final class Expressive {
         bar.setSplitTrack(false);
     }
 
+    
+
+    
     static final class Magnifier extends Drawable {
         private final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
 

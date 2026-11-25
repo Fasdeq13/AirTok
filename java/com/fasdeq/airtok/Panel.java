@@ -16,6 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Panel {
 
     interface Click { void on(); }
@@ -30,7 +48,7 @@ final class Panel {
     private Expressive.Group group;
     private boolean stayOpen;
     private boolean compact;
-
+    
     private final boolean m3 = !Design.frosted();
 
     private Panel(Context context, Skin skin, String title) {
@@ -57,7 +75,7 @@ final class Panel {
         GradientDrawable background = new GradientDrawable();
         background.setColor(skin.card);
         if (m3) {
-
+            
             background.setCornerRadius(dp(28));
         } else {
             background.setCornerRadii(new float[]{dp(32),dp(32),dp(32),dp(32),dp(28),dp(28),dp(28),dp(28)});
@@ -90,6 +108,7 @@ final class Panel {
         return new Panel(context, skin, title);
     }
 
+    
     Panel compact() {
         compact = true;
         card.setPadding(dp(14), dp(8), dp(14), dp(10));
@@ -103,11 +122,12 @@ final class Panel {
         return this;
     }
 
+    
     Panel text(String words) {
         TextView body = new TextView(context);
         body.setText(words);
         if (m3) {
-
+            
             body.setTextColor(skin.muted());
             M3Type.bodyMedium(body);
             body.setPadding(dp(8), 0, dp(8), 0);
@@ -126,6 +146,7 @@ final class Panel {
         return this;
     }
 
+    
     Panel view(View content) {
         LinearLayout.LayoutParams where = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -136,6 +157,9 @@ final class Panel {
         return this;
     }
 
+    
+
+    
     Panel subtitle(String words) {
         if (head == null || words == null || words.length() == 0) return this;
         head.setPadding(head.getPaddingLeft(), dp(4), head.getPaddingRight(), dp(2));
@@ -153,6 +177,7 @@ final class Panel {
         return this;
     }
 
+    
     Panel section(String heading) {
         group = null;
         if (heading != null && heading.length() > 0) {
@@ -164,7 +189,7 @@ final class Panel {
                 label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
                 label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
             }
-
+            
             label.setIncludeFontPadding(true);
             label.setGravity(Gravity.BOTTOM);
             label.setMinHeight(dp(compact ? 28 : 34));
@@ -184,18 +209,25 @@ final class Panel {
         return group;
     }
 
+    
     Panel item(String icon, String title, String detail, Click then) {
         return row(icon, title, detail, "chevron_right", false, false, then);
     }
 
+    
     Panel item(String icon, String title, String detail, String trailing, Click then) {
         return row(icon, title, detail, trailing, false, false, then);
     }
 
+    
     Panel hero(String icon, String title, String detail, String trailing, Click then) {
         group = null;
         return row(icon, title, detail, trailing, true, false, then);
     }
+
+    
+
+
 
     Panel info(String icon, String value, String label, Click then) {
         stayOpen = true;
@@ -206,10 +238,12 @@ final class Panel {
         }
     }
 
+    
     Panel danger(String icon, String title, String detail, Click then) {
         return row(icon, title, detail, null, false, true, then);
     }
 
+    
     Panel option(String title, boolean chosen, boolean stay, Click then) {
         LinearLayout row = new LinearLayout(context);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -278,7 +312,7 @@ final class Panel {
         int padY = compact ? (hero ? 8 : 6) : (hero ? 12 : 10);
         boolean two = detail != null && detail.length() > 0;
         if (m3 && !compact) {
-
+            
             row.setPadding(dp(16), dp(10), dp(16), dp(10));
             row.setMinimumHeight(dp(two ? 72 : 56));
         } else {
@@ -306,7 +340,7 @@ final class Panel {
         name.setText(title);
         name.setTextColor(ink);
         name.setTextSize(TypedValue.COMPLEX_UNIT_SP, compact ? (hero ? 17 : 15) : (hero ? 20 : 16));
-
+        
         if (m3 && !compact && !hero) M3Type.line(name, 16, 0.5f);
         name.setTypeface(Typeface.create(m3 && !hero ? "sans-serif" : "sans-serif-medium", Typeface.NORMAL));
         name.setSingleLine(true);
@@ -357,11 +391,13 @@ final class Panel {
         return this;
     }
 
+    
     private static int shapeFor(String icon) {
         int[] kinds = {Expressive.COOKIE9, Expressive.CLOVER4, Expressive.SUNNY, Expressive.FLOWER6, Expressive.COOKIE7};
         return kinds[Math.abs(icon == null ? 0 : icon.hashCode()) % kinds.length];
     }
 
+    
     android.widget.EditText field(String hint) {
         android.widget.EditText field = new android.widget.EditText(context);
         field.setHint(hint);
@@ -374,7 +410,7 @@ final class Panel {
                 | android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         GradientDrawable box = new GradientDrawable();
         if (m3) {
-
+            
             field.setPadding(dp(16), dp(8), dp(16), dp(8));
             field.setMinHeight(dp(56));
             box.setColor(0);
@@ -390,14 +426,19 @@ final class Panel {
         return field;
     }
 
+    
     Panel primary(String label, Click then) { return button(label, then, true, false); }
 
+    
     Panel primaryKeepOpen(String label, Click then) { return button(label, then, true, true); }
 
+    
     Panel quiet(String label, Click then) { return button(label, then, false, false); }
 
+    
     Panel keepOpen(String label, Click then) { return button(label, then, false, true); }
 
+    
     TextView action(String label, boolean main) {
         button(label,null,main,true);
         return (TextView)buttons.getChildAt(buttons.getChildCount()-1);
@@ -409,7 +450,7 @@ final class Panel {
         b.setGravity(Gravity.CENTER);
         b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         b.setPadding(dp(12), dp(compact ? 8 : 10), dp(12), dp(compact ? 8 : 10));
-
+        
         float round = dp(m3 ? 20 : 24), held = dp(m3 ? 8 : 12);
         if (m3) {
             M3Type.line(b, 14, 0.1f);
@@ -419,10 +460,10 @@ final class Panel {
             int accent = Accent.colour();
             b.setTextColor(onAccent(accent));
             b.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-
+            
             b.setBackground(Expressive.tile(context, accent, 0x33FFFFFF, round, round, held));
         } else {
-
+            
             b.setTextColor(skin.text);
             b.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
             b.setBackground(Expressive.tile(context, (skin.text & 0xFFFFFF) | 0x14000000,
@@ -476,7 +517,7 @@ final class Panel {
 
     void show() {
         try {
-
+            
             LinearLayout body=new LinearLayout(context);body.setOrientation(LinearLayout.VERTICAL);
             while(card.getChildCount()>0){View child=card.getChildAt(0);card.removeViewAt(0);body.addView(child);}
             ScrollView scroll=new ScrollView(context);scroll.setFillViewport(false);scroll.setVerticalScrollBarEnabled(false);scroll.addView(body);
@@ -502,6 +543,12 @@ final class Panel {
             Diary.note("panel: " + error);
         }
     }
+
+    
+
+    
+
+
 
     static LinearLayout tile(Context context, Skin skin, android.graphics.Bitmap picture,
                              int colour, String name, boolean selected) {

@@ -5,6 +5,14 @@ import android.content.SharedPreferences;
 
 import java.io.File;
 
+
+
+
+
+
+
+
+
 public final class PluginContext {
 
     private final Context context;
@@ -13,6 +21,7 @@ public final class PluginContext {
     private final Diarist diarist;
     private final java.util.Set<String> downloads=new java.util.HashSet<>();
 
+    
     public interface Diarist {
         void note(String line);
     }
@@ -24,33 +33,37 @@ public final class PluginContext {
         this.diarist = diarist;
     }
 
+    
     public Context context() {
         return context;
     }
 
+    
     public String id() {
         return id;
     }
 
+    
     public File folder() {
         return folder;
     }
 
+    
     public SharedPreferences prefs() {
-        return context.getSharedPreferences("margyt_plugin_" + id, Context.MODE_PRIVATE);
+        return context.getSharedPreferences("airtok_plugin_" + id, Context.MODE_PRIVATE);
     }
-
+    
     public SharedPreferences accountPrefs() {
         String uid=com.fasdeq.airtok.Account.liveId();
-        return context.getSharedPreferences("margyt_plugin_"+id+"_"+(uid==null?"guest":uid),Context.MODE_PRIVATE);
+        return context.getSharedPreferences("airtok_plugin_"+id+"_"+(uid==null?"guest":uid),Context.MODE_PRIVATE);
     }
-
+    
     public String currentVideoId(){return com.fasdeq.airtok.VideoActions.currentId();}
     public long currentVideoPublishedTime(){return com.fasdeq.airtok.VideoActions.currentPublishedTime();}
     public String getString(String key,String fallback){return prefs().getString(key,fallback);}
     public void putString(String key,String value){if(key==null||key.length()>80||value==null||value.length()>8192)throw new IllegalArgumentException("setting size");prefs().edit().putString(key,value).apply();}
     public interface Selected {void selected(int index);}
-
+    
     public void choose(String title,String[] options,Selected callback){
         if(options==null||options.length==0||options.length>32)throw new IllegalArgumentException("options");
         final String[] copy=options.clone();for(String item:copy)if(item==null||item.length()>160)throw new IllegalArgumentException("option length");
@@ -67,7 +80,7 @@ public final class PluginContext {
     public interface Downloaded {void finished(File file,boolean success);}
     public void download(final String url,final String name,final Downloaded callback) {
         if(name==null || !name.matches("[A-Za-z0-9._-]{1,80}") || name.equals(".") || name.equals(".."))throw new IllegalArgumentException("file name");
-        final File file=new File(context.getFilesDir(),"margyt/plugin-downloads/"+id+"/"+name);
+        final File file=new File(context.getFilesDir(),"airtok/plugin-downloads/"+id+"/"+name);
         final String job="plugin-api:"+id+":"+name;
         synchronized(downloads){if(!downloads.add(job))throw new IllegalStateException("download already running");}
         final com.fasdeq.airtok.DownloadTasks.Control control=com.fasdeq.airtok.DownloadTasks.begin(job,name,id,()->download(url,name,callback));
@@ -81,27 +94,56 @@ public final class PluginContext {
         });
     }
 
+    
+
+
+
+
+    
+
+    
+
+
+
+
+
+
+
+
+
     public interface Tapped {
         void tapped();
     }
 
+    
     public void addSettingsRow(String title, String detail, Tapped action) {
         com.fasdeq.airtok.Plugins.addRow(id, title, detail, action);
     }
 
+    
+    
+    
+    
+    
+    
+
+    
     public void addSettingsSection(String title) {
         com.fasdeq.airtok.Plugins.addSection(id, title);
     }
 
+    
     public void addSettingsToggle(String title, String detail, String key, boolean def) {
         com.fasdeq.airtok.Plugins.addToggle(id, title, detail, key, def);
     }
 
+    
     public void addSettingsChoice(String title, String detail, String key,
                                   String[] options, int def) {
         com.fasdeq.airtok.Plugins.addChoice(id, title, detail, key, options, def);
     }
 
+    
     public void addSettingsSlider(String title, String detail, String key,
                                   int min, int max, int def) {
         com.fasdeq.airtok.Plugins.addSlider(id, title, detail, key, min, max, def);
@@ -115,10 +157,12 @@ public final class PluginContext {
         return prefs().getInt(key, def);
     }
 
+    
     public void showWindow(String title, String message) {
         onUiThread(()->{android.app.Activity activity=activity();if(activity!=null && !activity.isFinishing())com.fasdeq.airtok.Popup.show(activity,title,message);});
     }
 
+    
     public void offer(String label, final Tapped action) {
         com.fasdeq.airtok.Screen.offer(label, new Runnable() {
             @Override
@@ -128,10 +172,12 @@ public final class PluginContext {
         });
     }
 
+    
     public void progress(String what, int percent) {
         com.fasdeq.airtok.Screen.progress("plugin-api:"+id,what,percent);
     }
 
+    
     public void progressDone() {
         com.fasdeq.airtok.Screen.progressDone("plugin-api:"+id);
     }
@@ -140,14 +186,17 @@ public final class PluginContext {
         com.fasdeq.airtok.Screen.progressGone("plugin-api:"+id);
     }
 
+    
     public android.app.Activity screen() {
         return com.fasdeq.airtok.Screen.now();
     }
 
+    
     public byte[] fetch(String url) {
         return com.fasdeq.airtok.Net.bytes(url);
     }
 
+    
     public void away(String what, Runnable work) {
         com.fasdeq.airtok.Net.away(id + ": " + what, work);
     }

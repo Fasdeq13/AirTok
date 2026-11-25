@@ -5,9 +5,10 @@ import android.widget.EditText;
 import org.json.*;
 import java.util.*;
 
+
 public final class ScriptPlugins {
  private ScriptPlugins(){}
- static final String STORE="margyt_scripts";
+ static final String STORE="airtok_scripts";
  static volatile Program[] active=new Program[0];
  static final class Program {
   final JSONObject source;final String id,name;final Map<String,String> names=new HashMap<>();final int[] colourFrom,colourTo;
@@ -49,7 +50,7 @@ public final class ScriptPlugins {
   p.quiet(Local.of("Ещё"),()->manage(c,program,changed));p.quiet(Text.CLOSE,null);p.show();
  }
  static void manage(Context c,Program program,Runnable changed){Panel p=Panel.with(c,Skin.remembered(c),program.name);p.primary(Local.of("Отправить на проверку"),()->submit(c,program));p.quiet(Local.of("Копировать исходник"),()->copy(c,program.source.toString()));p.quiet(Local.of("Удалить"),()->{c.getSharedPreferences(STORE,0).edit().remove("source:"+program.id).remove("on:"+program.id).apply();reload(c);if(changed!=null)changed.run();});p.quiet(Text.CLOSE,null);p.show();}
- static void edit(Context c,String raw,Runnable changed){PluginEditorActivity.script(c,raw);}
+ static void edit(Context c,String raw,Runnable changed){}
  static void copy(Context c,String value){android.content.ClipboardManager m=(android.content.ClipboardManager)c.getSystemService(Context.CLIPBOARD_SERVICE);if(m!=null)m.setPrimaryClip(android.content.ClipData.newPlainText("plugin",value));}
  static void rows(Context c,android.widget.LinearLayout parent,Program p){JSONArray rows=p.source.optJSONArray("rows");if(rows==null)return;for(int i=0;i<rows.length();i++)try{JSONObject row=rows.getJSONObject(i);android.widget.TextView v=new android.widget.TextView(c);v.setText(row.getString("title"));v.setTextColor(Skin.remembered(c).text);v.setTextSize(16);Fonts.apply(v);int pad=(int)(16*c.getResources().getDisplayMetrics().density);v.setPadding(pad,pad,pad,pad);v.setOnClickListener(view->{try{String action=row.getString("action"),value=row.getString("value");if(action.equals("copy")){copy(c,value);Screen.say(Local.of("Скопировано"));}else if(action.equals("window"))Popup.show(c,p.name,value);else Screen.say(value);}catch(Exception e){Diary.note("script action: "+e);}});parent.addView(v);}catch(Exception ignored){}}
  static void submit(Context c,Program p){Popup.show(c,p.name,Text.PLUGIN_PUBLISH_PANEL);}

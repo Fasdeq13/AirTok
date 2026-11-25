@@ -3,10 +3,22 @@ package com.fasdeq.airtok;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
+
+
+
+
+
+
+
+
 final class Local {
 
     private Local() {}
 
+    
     private static final Map<String, String[]> BOOK = new HashMap<String, String[]>();
 
     static String of(String russian) {
@@ -30,42 +42,42 @@ final class Local {
         add("Откройте входящие ещё раз", "Відкрийте вхідні ще раз", "Reopen your inbox");
         add("Изменить", "Редагувати", "Edit");
         add("Поделиться", "Поділитися", "Share");
-        add("нажми на имя · зажми, чтобы открыть ссылку", "натисни на ім’я · утримуй, щоб відкрити посилання", "tap a name · hold to open the link");
+        add("нажмите на имя · зажмите, чтобы открыть ссылку", "натисни на ім’я · утримуй, щоб відкрити посилання", "tap a name · hold to open the link");
         add("Мои значки", "Мої значки", "My badges");
         add("Получить", "Отримати", "Get");
-        add("Уже у тебя", "Вже в тебе", "Already yours");
-        add("Поддержать разработку MargyT. Вместе со значком даётся золотая рамка на аватарку и градиент ника.", "Підтримати розробку MargyT. Разом зі значком дається золота рамка на аватарку й градієнт ніка.", "Support the making of MargyT. The badge comes with a golden frame for your avatar and a gradient nick.");
+        add("Уже у Вас", "Вже в тебе", "Already yours");
+        add("Поддержать разработку AirTok. Вместе со значком даётся золотая рамка на аватарку и градиент ника.", "Підтримати розробку AirTok. Разом зі значком дається золота рамка на аватарку й градієнт ніка.", "Support the making of AirTok. The badge comes with a golden frame for your avatar and a gradient nick.");
         add("Поддержать", "Підтримати", "Support");
-        add("Сейчас у тебя монет: ", "Зараз у тебе монет: ", "Your coins now: ");
+        add("Сейчас у Вас монет: ", "Зараз у Вас монет: ", "Your coins now: ");
         add("Накопить 75 000 монет в Деп калькуляторе и купить на них значок.", "Накопичити 75 000 монет у Деп калькуляторі й купити за них значок.", "Save up 75,000 coins in the Dep Calculator and buy the badge with them.");
         add("Открыть калькулятор", "Відкрити калькулятор", "Open the calculator");
         add("Зарегистрироваться в AirTok Chat, худшей соцсети на свете, и заработать там 30 💎 за посты. Потом взять код в настройках аккаунта AirTok Chat и ввести его здесь. Только для личных аккаунтов, не каналов и не ботов.", "Зареєструватися в AirTok Chat, найгіршій соцмережі на світі, і заробити там 30 💎 за пости. Потім узяти код у налаштуваннях акаунта AirTok Chat і ввести його тут. Лише для особистих акаунтів, не каналів і не ботів.", "Sign up to AirTok Chat, the worst social network in the world, and earn 30 💎 there with your posts. Then take the code from your AirTok Chat account settings and type it in here. Personal accounts only, not channels or bots.");
         add("Ввести код", "Ввести код", "Enter the code");
         add("Открыть AirTok Chat", "Відкрити AirTok Chat", "Open AirTok Chat");
         add("Код из AirTok Chat", "Код із AirTok Chat", "The code from AirTok Chat");
-        add("Его показывает AirTok Chat в настройках, в разделе «Аккаунт»: «Привязать MargyT». Код живёт 15 минут.", "Його показує AirTok Chat у налаштуваннях, у розділі «Акаунт»: «Прив'язати MargyT». Код живе 15 хвилин.", "AirTok Chat shows it in its settings, under Account: Link MargyT. A code lasts 15 minutes.");
+        add("Его показывает AirTok Chat в настройках, в разделе «Аккаунт»: «Привязать AirTok». Код живёт 15 минут.", "Його показує AirTok Chat у налаштуваннях, у розділі «Акаунт»: «Прив'язати AirTok». Код живе 15 хвилин.", "AirTok Chat shows it in its settings, under Account: Link AirTok. A code lasts 15 minutes.");
         add("Получить значок", "Отримати значок", "Get the badge");
         add("В коде 6 букв и цифр", "У коді 6 літер і цифр", "The code is 6 letters and digits");
-        add("Значок «Выжил в AirTok Chat» твой", "Значок «Вижив у AirTok Chat» твій", "The Survived AirTok Chat badge is yours");
-        add("Не получилось, попробуй ещё раз", "Не вийшло, спробуй ще раз", "That didn't work, try again");
+        add("Значок «Выжил в AirTok Chat» Ваш", "Значок «Вижив у AirTok Chat» твій", "The Survived AirTok Chat badge is yours");
+        add("Не получилось, попробуйте ещё раз", "Не вийшло, спробуй ще раз", "That didn't work, try again");
         add("Ссылки в комментариях", "Посилання в коментарях", "Links in comments");
         add("Адреса в комментариях становятся голубыми, и по ним можно нажать.", "Адреси в коментарях стають блакитними, і на них можна натиснути.", "Addresses in comments turn blue, and you can tap them.");
         add("Нечем открыть ссылку", "Немає чим відкрити посилання", "Nothing can open this link");
-        add("Подключить MargyCode?", "Підключити MargyCode?", "Connect MargyCode?");
-        add("Агент MargyCode сможет ставить плагины в TikTok, смотреть экраны, нажимать и читать журнал, чтобы писать плагины за тебя.\n\nПлагин работает внутри TikTok со всеми его правами, в том числе с твоим аккаунтом, поэтому подключай, только если доверяешь модели, с которой работаешь. Отключить можно в настройках мода, в разделе «Плагины».", "Агент MargyCode зможе ставити плагіни в TikTok, дивитися екрани, натискати й читати журнал, щоб писати плагіни за тебе.\n\nПлагін працює всередині TikTok з усіма його правами, зокрема з твоїм акаунтом, тому підключай, лише якщо довіряєш моделі, з якою працюєш. Вимкнути можна в налаштуваннях мода, у розділі «Плагіни».", "MargyCode's agent will be able to install plugins in TikTok, look at screens, tap and read the log, to write plugins for you.\n\nA plugin runs inside TikTok with all its rights, your account included, so connect only if you trust the model you work with. You can disconnect in the mod's settings, under Plugins.");
+        add("Подключить AirTokCode?", "Підключити AirTokCode?", "Connect AirTokCode?");
+        add("Агент AirTokCode сможет ставить плагины в TikTok, смотреть экраны, нажимать и читать журнал, чтобы писать плагины за тебя.\n\nПлагин работает внутри TikTok со всеми его правами, в том числе с твоим аккаунтом, поэтому подключай, только если доверяешь модели, с которой работаешь. Отключить можно в настройках мода, в разделе «Плагины».", "Агент AirTokCode зможе ставити плагіни в TikTok, дивитися екрани, натискати й читати журнал, щоб писати плагіни за тебе.\n\nПлагін працює всередині TikTok з усіма його правами, зокрема з твоїм акаунтом, тому підключай, лише якщо довіряєш моделі, з якою працюєш. Вимкнути можна в налаштуваннях мода, у розділі «Плагіни».", "AirTokCode's agent will be able to install plugins in TikTok, look at screens, tap and read the log, to write plugins for you.\n\nA plugin runs inside TikTok with all its rights, your account included, so connect only if you trust the model you work with. You can disconnect in the mod's settings, under Plugins.");
         add("Подключить", "Підключити", "Connect");
-        add("MargyCode подключён", "MargyCode підключено", "MargyCode is connected");
+        add("AirTokCode подключён", "AirTokCode підключено", "AirTokCode is connected");
         add("Его агент пишет и ставит плагины. Нажми, чтобы отключить", "Його агент пише й ставить плагіни. Натисни, щоб вимкнути", "Its agent writes and installs plugins. Tap to disconnect");
         add("Писать плагины через ИИ", "Писати плагіни через ШІ", "Write plugins with AI");
-        add("Установи MargyCode и подключи MargyT в его настройках. Агент сам напишет плагин и проверит его прямо на телефоне", "Встанови MargyCode і підключи MargyT у його налаштуваннях. Агент сам напише плагін і перевірить його прямо на телефоні", "Install MargyCode and connect MargyT in its settings. The agent writes the plugin and tests it right on the phone");
-        add("MargyCode не установлен, он есть в AirTok Store", "MargyCode не встановлено, він є в AirTok Store", "MargyCode isn't installed. It's in AirTok Store");
+        add("Установи AirTokCode и подключи AirTok в его настройках. Агент сам напишет плагин и проверит его прямо на телефоне", "Встанови AirTokCode і підключи AirTok у його налаштуваннях. Агент сам напише плагін і перевірить його прямо на телефоні", "Install AirTokCode and connect AirTok in its settings. The agent writes the plugin and tests it right on the phone");
+        add("AirTokCode не установлен, он есть в AirTok Store", "AirTokCode не встановлено, він є в AirTok Store", "AirTokCode isn't installed. It's in AirTok Store");
         add("Рамки аватарки", "Рамки аватарки", "Avatar frames");
         add("Рамка вокруг аватарки, её видят все с модом", "Рамка навколо аватарки, її бачать усі з модом", "A frame round your avatar, for everyone with the mod");
         add("Точки на экране, чтобы не тошнило в дороге", "Крапки на екрані, щоб не нудило в дорозі", "Dots on the screen so you don't get sick on the road");
         add("Пока рамок нет. Рамка приходит вместе со значком: золотая за значок поддержавшего.", "Поки рамок немає. Рамка приходить разом зі значком: золота за значок того, хто підтримав.", "No frames yet. A frame comes with a badge: the golden one with the supporter badge.");
-        add("Рамка одна: включишь другую, эта снимется. Её видят все, у кого MargyT 2.2.1 или новее.", "Рамка одна: увімкнеш іншу, ця зніметься. Її бачать усі, у кого MargyT 2.2.1 або новіший.", "One frame at a time: turn on another and this one comes off. Everyone with MargyT 2.2.1 or later sees it.");
+        add("Рамка одна: включишь другую, эта снимется. Её видят все, у кого AirTok 2.2.1 или новее.", "Рамка одна: увімкнеш іншу, ця зніметься. Її бачать усі, у кого AirTok 2.2.1 або новіший.", "One frame at a time: turn on another and this one comes off. Everyone with AirTok 2.2.1 or later sees it.");
         add("Сохранять удалённые сообщения", "Зберігати видалені повідомлення", "Keep deleted messages");
-        add("Если собеседник удалит сообщение, у тебя оно останется, только станет полупрозрачным. Только те, что успели дойти до телефона.", "Якщо співрозмовник видалить повідомлення, у тебе воно залишиться, тільки стане напівпрозорим. Лише ті, що встигли дійти до телефона.", "If someone deletes a message, you keep it, just see-through. Only those that reached the phone first.");
+        add("Если собеседник удалит сообщение, у Вас оно останется, только станет полупрозрачным. Только те, что успели дойти до телефона.", "Якщо співрозмовник видалить повідомлення, у Вас воно залишиться, тільки стане напівпрозорим. Лише ті, що встигли дійти до телефона.", "If someone deletes a message, you keep it, just see-through. Only those that reached the phone first.");
         add("Защита от укачивания", "Захист від заколисування", "Motion sickness protection");
         add("Точки по краям экрана двигаются вместе с машиной, как на iPhone. Глазам становится понятно, что ты едешь, и меньше укачивает. Когда телефон не двигается, точки исчезают.", "Крапки по краях екрана рухаються разом з машиною, як на iPhone. Очам стає зрозуміло, що ти їдеш, і менше заколисує. Коли телефон не рухається, крапки зникають.", "Dots on the screen's edges move with the car, as on an iPhone. Your eyes can tell you're moving, and it makes you less sick. When the phone is still, they go.");
         add("Записывать подвисания", "Записувати підвисання", "Record stutters");
@@ -74,14 +86,14 @@ final class Local {
         add("мягко", "м'яко", "soft");
         add("резко", "різко", "sharp");
         add("Спонсор-блок", "Спонсор-блок", "Sponsor block");
-        add("Куски, где автор что-то рекламирует, пропускаются сами, а вернуться можно кнопкой «Вернуть». Отметить рекламу: зажми «Поделиться» и выбери «Отметить рекламу». Нужен подтверждённый аккаунт.", "Шматки, де автор щось рекламує, пропускаються самі, а повернутися можна кнопкою «Повернути». Позначити рекламу: затисни «Поділитися» й вибери «Позначити рекламу». Потрібен підтверджений акаунт.", "Parts where the author advertises something are skipped, and “Back” takes you back. To mark one, hold Share and choose “Mark an advert”. A confirmed account is needed.");
+        add("Куски, где автор что-то рекламирует, пропускаются сами, а вернуться можно кнопкой «Вернуть». Отметить рекламу: зажмите «Поделиться» и выберите «Отметить рекламу». Нужен подтверждённый аккаунт.", "Шматки, де автор щось рекламує, пропускаються самі, а повернутися можна кнопкою «Повернути». Позначити рекламу: затисни «Поділитися» й вибери «Позначити рекламу». Потрібен підтверджений акаунт.", "Parts where the author advertises something are skipped, and “Back” takes you back. To mark one, hold Share and choose “Mark an advert”. A confirmed account is needed.");
         add("Выключи, если хочешь только видеть рекламу на шкале.", "Вимкни, якщо хочеш лише бачити рекламу на шкалі.", "Turn it off to only see adverts on the bar.");
         add("Одну и ту же рекламу вставляют во много роликов. Мод узнаёт её по звуку, даже если в этом ролике её никто не отмечал. Для этого он ещё раз скачивает лёгкую версию ролика.", "Одну й ту саму рекламу вставляють у багато роликів. Мод упізнає її за звуком, навіть якщо в цьому ролику її ніхто не позначав. Для цього він ще раз завантажує легку версію ролика.", "The same advert is put into many videos. The mod knows it by its sound even where nobody marked it. For that it fetches a light copy of the video once more.");
         add("По звуку и на мобильном интернете", "За звуком і на мобільному інтернеті", "By sound on mobile data too");
         add("Без этого по звуку ищется только на Wi-Fi. Лёгкая версия ролика весит обычно от 1 до 3 МБ.", "Без цього за звуком шукається лише на Wi-Fi. Легка версія ролика важить зазвичай від 1 до 3 МБ.", "Without it, sound is listened to on Wi-Fi only. A light copy of a video is usually 1 to 3 MB.");
         add("Искать рекламу по звуку", "Шукати рекламу за звуком", "Find adverts by their sound");
         add("Одну и ту же рекламу вставляют во много роликов. Мод узнаёт её по звуку, даже если в этом ролике её никто не отмечал. Работает только по Wi-Fi: мод ещё раз скачивает лёгкую версию ролика.", "Одну й ту саму рекламу вставляють у багато роликів. Мод упізнає її за звуком, навіть якщо в цьому ролику її ніхто не позначав. Працює лише через Wi-Fi: мод ще раз завантажує легку версію ролика.", "The same advert is put into many videos. The mod knows it by its sound even where nobody marked it. Only on Wi-Fi: the mod fetches a light copy of the video once more.");
-        add("Потяни красные края к началу и концу рекламы и нажми ▶, чтобы послушать кусок.", "Потягни червоні краї до початку й кінця реклами й натисни ▶, щоб послухати шматок.", "Drag the red edges to where the advert starts and ends, and press ▶ to hear that part.");
+        add("Потяни красные края к началу и концу рекламы и нажмите ▶, чтобы послушать кусок.", "Потягни червоні краї до початку й кінця реклами й натисни ▶, щоб послухати шматок.", "Drag the red edges to where the advert starts and ends, and press ▶ to hear that part.");
         add("Играет", "Грає", "Playing");
         add("Секунду, видео ещё загружается", "Секунду, відео ще завантажується", "One moment, the video is still loading");
         add("Потяни красные края к началу и концу рекламы.", "Потягни червоні краї до початку й кінця реклами.", "Drag the red edges to where the advert starts and ends.");
@@ -95,11 +107,11 @@ final class Local {
         add("Реклама в видео", "Реклама у відео", "Adverts in videos");
         add("Пропуск рекламы, которую читают авторы", "Пропуск реклами, яку читають автори", "Skipping adverts authors read out");
         add("Пропускать рекламу", "Пропускати рекламу", "Skip adverts");
-        add("Куски, где автор рекламирует что-то, пропускаются сами, а вернуться можно кнопкой «Вернуть». Отметить рекламу: зажми «Поделиться» и выбери «Отметить рекламу». Нужен подтверждённый аккаунт.", "Шматки, де автор щось рекламує, пропускаються самі, а повернутися можна кнопкою «Повернути». Позначити рекламу: затисни «Поділитися» й вибери «Позначити рекламу». Потрібен підтверджений акаунт.", "Parts where the author advertises something are skipped, and “Back” takes you back. To mark one, hold Share and choose “Mark an advert”. A confirmed account is needed.");
+        add("Куски, где автор рекламирует что-то, пропускаются сами, а вернуться можно кнопкой «Вернуть». Отметить рекламу: зажмите «Поделиться» и выберите «Отметить рекламу». Нужен подтверждённый аккаунт.", "Шматки, де автор щось рекламує, пропускаються самі, а повернутися можна кнопкою «Повернути». Позначити рекламу: затисни «Поділитися» й вибери «Позначити рекламу». Потрібен підтверджений акаунт.", "Parts where the author advertises something are skipped, and “Back” takes you back. To mark one, hold Share and choose “Mark an advert”. A confirmed account is needed.");
         add("Показывать рекламу красным на шкале", "Показувати рекламу червоним на шкалі", "Show adverts red on the bar");
         add("Реклама пропущена", "Рекламу пропущено", "Advert skipped");
         add("Вернуть", "Повернути", "Back");
-        add("Включи это видео и попробуй ещё раз", "Увімкни це відео й спробуй ще раз", "Play this video and try again");
+        add("Включи это видео и попробуйте ещё раз", "Увімкни це відео й спробуй ще раз", "Play this video and try again");
         add("Нужен подтверждённый аккаунт", "Потрібен підтверджений акаунт", "A confirmed account is needed");
         add("Отмечать рекламу могут только подтверждённые аккаунты. Подтвердить можно в настройках мода, в разделе «Значки».", "Позначати рекламу можуть лише підтверджені акаунти. Підтвердити можна в налаштуваннях мода, у розділі «Значки».", "Only confirmed accounts can mark adverts. Confirm yours in the mod’s settings, under Badges.");
         add("Где реклама", "Де реклама", "Where the advert is");
@@ -110,8 +122,8 @@ final class Local {
         add("Готово, реклама будет пропускаться", "Готово, реклама пропускатиметься", "Done, the advert will be skipped");
         add("Спасибо! Реклама начнёт пропускаться, когда её отметят ещё несколько человек", "Дякуємо! Реклама почне пропускатися, коли її позначать ще кілька людей", "Thanks! It will be skipped once a few more people mark it");
         add("Сначала подтверди аккаунт в разделе «Значки»", "Спершу підтверди акаунт у розділі «Значки»", "Confirm your account under Badges first");
-        add("Слишком много отметок, попробуй позже", "Забагато позначок, спробуй пізніше", "Too many marks, try later");
-        add("Не получилось отправить, попробуй позже", "Не вдалося надіслати, спробуй пізніше", "Could not send, try later");
+        add("Слишком много отметок, попробуйте позже", "Забагато позначок, спробуй пізніше", "Too many marks, try later");
+        add("Не получилось отправить, попробуйте позже", "Не вдалося надіслати, спробуй пізніше", "Could not send, try later");
         add("с", "з", "from");
         add("до", "до", "to");
         add("пропущено", "пропущено", "skipped");
@@ -132,7 +144,7 @@ final class Local {
         add("Нажми на что угодно в TikTok, чтобы спрятать, сдвинуть или перекрасить", "Натисни на що завгодно в TikTok, щоб сховати, зсунути чи перефарбувати", "Tap anything in TikTok to hide, move or recolour it");
         add("Работает в комментариях и сообщениях.", "Працює в коментарях і повідомленнях.", "Works in comments and messages.");
         add("Все репосты пропадут из профиля", "Усі репости зникнуть із профілю", "Every repost leaves your profile");
-        add("Чтобы добавить чат в папку, зажми его и выбери «Добавить в папку».", "Щоб додати чат до папки, затисни його й вибери «Додати до папки».", "To put a chat in a folder, hold it and choose “Add to folder”.");
+        add("Чтобы добавить чат в папку, зажмите его и выберите «Добавить в папку».", "Щоб додати чат до папки, затисни його й вибери «Додати до папки».", "To put a chat in a folder, hold it and choose “Add to folder”.");
         add("Никто не увидит, что ты в сети, читаешь или печатаешь, смотрел историю или профиль. «В сети» спрячется после перезапуска TikTok.", "Ніхто не побачить, що ти в мережі, читаєш чи друкуєш, дивився історію чи профіль. «В мережі» сховається після перезапуску TikTok.", "Nobody will see that you are online, reading or typing, or that you looked at their story or profile. Being online hides after TikTok restarts.");
         add("Все", "Усі", "All");
         add("ПОЗИЦИЯ", "ПОЗИЦІЯ", "POSITION");
@@ -142,6 +154,11 @@ final class Local {
         add("Длинные комментарии", "Довгі коментарі", "Long comments");
         add("Призрак", "Привид", "Ghost");
         add("Режим призрака", "Режим привида", "Ghost mode");
+        add("Скрыть «печатает»", "Приховати «друкує»", "Hide typing");
+        add("Собеседник не увидит статус набора сообщения в диалогах.", "Співрозмовник не побачить статус набору повідомлення в діалогах.", "The other person will not see your typing indicator in chats.");
+        add("Собеседник не увидит статус набора сообщения", "Співрозмовник не побачить статус набору повідомлення", "The other person will not see your typing indicator");
+        add("Защита входа и скрыть «печатает».", "Захист входу та приховати «друкує».", "App lock and hide typing.");
+        add("Защита входа и скрыть «печатает»", "Захист входу та приховати «друкує»", "App lock and hide typing");
         add("TikTok не узнает, что ты в сети, прочитал чат, печатаешь или смотрел историю и профиль. Чтобы скрыть «в сети», после включения перезапусти приложение.",
                 "TikTok не дізнається, що ти в мережі, прочитав чат, друкуєш чи дивився історію та профіль. Щоб приховати «в мережі», після ввімкнення перезапусти застосунок.",
                 "TikTok will not learn that you are online, have read a chat, are typing, or have seen a story or a profile. To hide being online, restart the app after switching it on.");
@@ -186,7 +203,7 @@ final class Local {
         add("Поделиться статистикой", "Поділитися статистикою", "Share the stats");
         add("Загружаю…", "Завантажую…", "Loading…");
         add("Истории пока мало: точки добавляются,", "Історії поки мало: точки додаються,", "Not much history yet: points are added");
-        add("когда ролик смотрят люди с MargyT.", "коли ролик дивляться люди з MargyT.", "when people with MargyT watch it.");
+        add("когда ролик смотрят люди с AirTok.", "коли ролик дивляться люди з AirTok.", "when people with AirTok watch it.");
         add("назад", "тому", "ago");
         add("в час", "на годину", "an hour");
         add("Динамика", "Динаміка", "Over time");
@@ -286,8 +303,8 @@ final class Local {
         add("Папки в личных сообщениях", "Папки в особистих повідомленнях", "Folders in direct messages");
         add("Добавить чат в папку: долгое нажатие на чат, «Добавить в папку».", "Додати чат до папки: довге натискання на чат, «Додати до папки».", "To put a chat in a folder: long-press it, then “Add to folder”.");
         add("Автор LotusTok: призрак, папки, редактор интерфейса, анимация набора и другое", "Автор LotusTok: привид, папки, редактор інтерфейсу, анімація набору та інше", "Made LotusTok: the ghost, folders, the interface editor, the typing animation and more");
-        add("Плагин для MargyT: из него призрак и длинные комментарии", "Плагін для MargyT: з нього привид і довгі коментарі", "A MargyT plugin: the ghost and long comments come from it");
-        add("Часть дизайна MargyT", "Частина дизайну MargyT", "Some of the MargyT design");
+        add("Плагин для AirTok: из него призрак и длинные комментарии", "Плагін для AirTok: з нього привид і довгі коментарі", "A AirTok plugin: the ghost and long comments come from it");
+        add("Часть дизайна AirTok", "Частина дизайну AirTok", "Some of the AirTok design");
         add("Код плагина не удалось разобрать: ",
                 "Код плагіна не вдалося розібрати: ",
                 "The plugin's code could not be read: ");
@@ -543,7 +560,7 @@ final class Local {
         add("Плагин не установлен",
                 "Плагін не встановлено",
                 "The plugin is not installed");
-        add("Пока пусто — нажмите +",
+        add("Пока пусто — нажмитете +",
                 "Поки порожньо — натисніть +",
                 "Nothing yet — tap +");
         add("Добавить в магазин",
@@ -1042,9 +1059,9 @@ final class Local {
         add("Каталог плагинов",
                 "Каталог плагінів",
                 "Plugin catalog");
-        add("Каталог MargyT подключён по умолчанию. Можно указать другой HTTPS JSON-каталог; пустой адрес отключает магазин.",
-                "Каталог MargyT підключено за замовчуванням. Можна вказати інший HTTPS JSON-каталог; порожня адреса вимикає магазин.",
-                "MargyT's catalog is connected by default. You can give another HTTPS JSON catalog; an empty address switches the store off.");
+        add("Каталог AirTok подключён по умолчанию. Можно указать другой HTTPS JSON-каталог; пустой адрес отключает магазин.",
+                "Каталог AirTok підключено за замовчуванням. Можна вказати інший HTTPS JSON-каталог; порожня адреса вимикає магазин.",
+                "AirTok's catalog is connected by default. You can give another HTTPS JSON catalog; an empty address switches the store off.");
         add("Серии",
                 "Серії",
                 "Streaks");
@@ -1093,9 +1110,9 @@ final class Local {
         add("Без расписания",
                 "Без розкладу",
                 "No schedule");
-        add("Обновление MargyT",
-                "Оновлення MargyT",
-                "MargyT update");
+        add("Обновление AirTok",
+                "Оновлення AirTok",
+                "AirTok update");
         add(" с",
                 " с",
                 " s");

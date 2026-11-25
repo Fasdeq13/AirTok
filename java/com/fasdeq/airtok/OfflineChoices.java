@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public final class OfflineChoices {
  private OfflineChoices() {}
  public static List<?> counts(List<?> original) {
@@ -67,15 +68,15 @@ public final class OfflineChoices {
   try{Object[] values=(Object[])Class.forName("X.0wiM").getMethod("values").invoke(null);for(Object item:values)if(((Integer)item.getClass().getMethod("getCount").invoke(item))==value)return true;}catch(Exception ignored){}
   return false;
  }
-
+ 
  public static void legacy(Object owner){
   try{
    Object rootValue=NativeRead.get(owner,"LJJIZ");if(!(rootValue instanceof View))return;View root=(View)rootValue;
    View recycler=root.findViewById(0x7f0a57b4);if(recycler!=null&&recycler.getVisibility()==View.VISIBLE)return;
    Object container=field(owner,"LLJJJJ");if(!(container instanceof LinearLayout))return;LinearLayout list=(LinearLayout)container;
-   if(list.findViewWithTag("margyt-offline-extra")!=null)return;
+   if(list.findViewWithTag("airtok-offline-extra")!=null)return;
    Object vm=NativeRead.get(owner,"Jp");Object host=Class.forName("X.0dx4").getMethod("LIZ",Class.forName("androidx.lifecycle.LifecycleOwner")).invoke(null,owner);if(!(host instanceof Activity))return;Activity activity=(Activity)host;
-   LinearLayout extra=new LinearLayout(activity);extra.setTag("margyt-offline-extra");extra.setOrientation(1);
+   LinearLayout extra=new LinearLayout(activity);extra.setTag("airtok-offline-extra");extra.setOrientation(1);
    for(String label:new String[]{Local.of("500 видео"),Local.of("1000 видео"),Local.of("Своё значение"),Local.of("Сохранять комментарии"),Local.of("Сохранённые комментарии")}){
     TextView button=new TextView(activity);button.setText(label);button.setTextColor(Skin.of(root).text);button.setTextSize(15);int pad=(int)(16*activity.getResources().getDisplayMetrics().density);button.setPadding(pad,pad/2,pad,pad/2);
     button.setOnClickListener(v->{try{

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
+
 final class Motion {
     private Motion() {}
 
+    
     static void press(android.view.View view) {
         view.setFocusable(true);
         touch(view);
@@ -19,6 +21,7 @@ final class Motion {
                 base, new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE)));
     }
 
+    
     static void touch(android.view.View view) {
         view.setOnTouchListener((target,event) -> {
             if (Design.glass()) {
@@ -42,7 +45,7 @@ final class Motion {
         if(!enabled(view.getContext()))return;
         view.setAlpha(0.65f);view.animate().alpha(1f).setDuration(140L).start();
     }
-
+    
     static void navigate(android.view.View view,float direction,Runnable replace) {
         view.animate().withEndAction(null).cancel();
         if(!enabled(view.getContext())){replace.run();return;}
@@ -50,6 +53,7 @@ final class Motion {
                 .setDuration(90L).withEndAction(() -> {replace.run();enter(view,direction);}).start();
     }
 
+    
     static void enter(android.view.View view, float direction) {
         view.animate().withEndAction(null).cancel();
         if (!enabled(view.getContext())) { view.setAlpha(1f); view.setTranslationX(0f); return; }
@@ -59,6 +63,7 @@ final class Motion {
                 .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
     }
 
+    
     static Runnable rise(android.view.View view) {
         view.animate().withEndAction(null).cancel();
         if (!enabled(view.getContext())) {

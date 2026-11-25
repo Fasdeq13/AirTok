@@ -1,6 +1,13 @@
 package com.ss.android.ugc.aweme.im.streak.api;
 
 
+
+
+
+
+
+
+
 public class StreakData {
 
     public String convId;
@@ -8,6 +15,6 @@ public class StreakData {
     public long endAt;
     public Integer level;
 
-
+    
     public int streak;
 }

@@ -12,6 +12,18 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class MotionBlur {
 
     private MotionBlur() {}
@@ -26,7 +38,7 @@ public final class MotionBlur {
         if (on == null) {
             Context c = AirTok.context();
             if (c == null) return false;
-            on = c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, false);
+            on = c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, false);
         }
         return on && android.os.Build.VERSION.SDK_INT >= 31;
     }
@@ -34,13 +46,14 @@ public final class MotionBlur {
     static void set(boolean value) {
         on = value;
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
+        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, value).apply();
     }
 
+    
     static int strength() {
         if (strength < 0) {
             Context c = AirTok.context();
-            strength = c == null ? 50 : c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getInt(STRENGTH, 50);
+            strength = c == null ? 50 : c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getInt(STRENGTH, 50);
         }
         return strength;
     }
@@ -48,8 +61,12 @@ public final class MotionBlur {
     static void setStrength(int value) {
         strength = Math.max(0, Math.min(100, value));
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putInt(STRENGTH, strength).apply();
+        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putInt(STRENGTH, strength).apply();
     }
+
+    
+
+
 
     public static boolean textureVideo() {
         try {
@@ -58,6 +75,8 @@ public final class MotionBlur {
             return false;
         }
     }
+
+    
 
     static void attach(Activity activity) {
         if (!on()) return;
@@ -90,6 +109,7 @@ public final class MotionBlur {
         }
     }
 
+    
     private static final class Mover {
         int x, y;
         float blurX, blurY, shownX = -1, shownY = -1;
@@ -144,7 +164,7 @@ public final class MotionBlur {
             float density = 1f;
             View top = root.get();
             if (top != null) density = top.getResources().getDisplayMetrics().density;
-
+            
             float gain = 0.15f + 0.45f * strength() / 100f, most = 28f * density;
             for (java.util.Map.Entry<View, Mover> entry : new ArrayList<>(movers.entrySet())) {
                 View view = entry.getKey();
@@ -155,7 +175,7 @@ public final class MotionBlur {
                 if (!m.known) { m.x = x; m.y = y; m.known = true; continue; }
                 float dx = Math.abs(x - m.x), dy = Math.abs(y - m.y);
                 m.x = x; m.y = y;
-
+                
                 m.blurX = Math.max(Math.min(most, dx * gain), m.blurX * 0.72f);
                 m.blurY = Math.max(Math.min(most, dy * gain), m.blurY * 0.72f);
                 if (m.blurX < 0.6f) m.blurX = 0;
@@ -165,7 +185,7 @@ public final class MotionBlur {
                 m.shownY = m.blurY;
                 if (m.blurX == 0 && m.blurY == 0) view.setRenderEffect(null);
                 else view.setRenderEffect(RenderEffect.createBlurEffect(Math.max(0.01f, m.blurX), Math.max(0.01f, m.blurY), Shader.TileMode.CLAMP));
-
+                
                 if (m.blurX > 0 || m.blurY > 0) view.postInvalidateOnAnimation();
             }
             return true;

@@ -8,6 +8,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+
+
+
+
+
+
+
 public final class Net {
 
     private Net() {}
@@ -28,6 +36,7 @@ public final class Net {
         }
     }
 
+    
     public static void away(final String what, final Runnable work) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -38,12 +47,14 @@ public final class Net {
                     Diary.note(what + ": " + error);
                 }
             }
-        }, "margyt-" + what);
+        }, "airtok-" + what);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.setDaemon(true);
         thread.start();
     }
 
+    
+    
     public static final class Answer {
         public final byte[] body;
         public final String tag;
@@ -56,6 +67,14 @@ public final class Net {
         }
     }
 
+    
+
+
+
+
+
+
+
     public static Answer fetch(String url, String tag) {
         java.net.HttpURLConnection link = null;
         try {
@@ -64,7 +83,7 @@ public final class Net {
             link.setInstanceFollowRedirects(false);
             link.setConnectTimeout(15000);
             link.setReadTimeout(20000);
-            link.setRequestProperty("User-Agent", "MargyT");
+            link.setRequestProperty("User-Agent", "AirTok");
             if (tag != null && tag.length() > 0) {
                 link.setRequestProperty("If-None-Match", tag);
             }
@@ -91,10 +110,17 @@ public final class Net {
         }
     }
 
+    
+
+
+
+
+
     public static String post(String url, String json) {
         return postWire(url, json, false);
     }
 
+    
     public static String postResult(String url, String json) {
         return postWire(url, json, true);
     }
@@ -113,7 +139,7 @@ public final class Net {
             link.setRequestMethod("POST");
             link.setDoOutput(true);
             link.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            link.setRequestProperty("User-Agent", "MargyT");
+            link.setRequestProperty("User-Agent", "AirTok");
 
             byte[] body = json.getBytes("UTF-8");
             link.setFixedLengthStreamingMode(body.length);
@@ -144,6 +170,7 @@ public final class Net {
         }
     }
 
+    
     public static final class Said {
         public final int code;
         public final String body;
@@ -158,6 +185,13 @@ public final class Net {
         }
     }
 
+    
+
+
+
+
+
+
     public static Said talk(String url, String json) {
         java.net.HttpURLConnection link = null;
         try {
@@ -167,7 +201,7 @@ public final class Net {
             link.setRequestMethod("POST");
             link.setDoOutput(true);
             link.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            link.setRequestProperty("User-Agent", "MargyT");
+            link.setRequestProperty("User-Agent", "AirTok");
 
             byte[] body = json.getBytes("UTF-8");
             link.setFixedLengthStreamingMode(body.length);
@@ -196,11 +230,13 @@ public final class Net {
         }
     }
 
+    
     public static String send(String url, String kind, byte[] body) {
         Said said = deliver(url, kind, body);
         return said.ok() ? said.body : null;
     }
 
+    
     public static Said deliver(String url, String kind, byte[] body) {
         java.net.HttpURLConnection link = null;
         try {
@@ -210,7 +246,7 @@ public final class Net {
             link.setRequestMethod("POST");
             link.setDoOutput(true);
             link.setRequestProperty("Content-Type", kind);
-            link.setRequestProperty("User-Agent", "MargyT");
+            link.setRequestProperty("User-Agent", "AirTok");
             link.setFixedLengthStreamingMode(body.length);
             java.io.OutputStream out = link.getOutputStream();
             out.write(body);
@@ -242,7 +278,7 @@ public final class Net {
             connection.setConnectTimeout(TIMEOUT);
             connection.setReadTimeout(TIMEOUT);
             connection.setInstanceFollowRedirects(false);
-            connection.setRequestProperty("User-Agent", "MargyT");
+            connection.setRequestProperty("User-Agent", "AirTok");
             if (connection.getResponseCode() / 100 != 2) return null;
 
             InputStream in = connection.getInputStream();
@@ -252,7 +288,7 @@ public final class Net {
                 int read, total = 0;
                 while ((read = in.read(buffer)) != -1) {
                     total += read;
-                    if (total > LIMIT) return null;
+                    if (total > LIMIT) return null;  
                     out.write(buffer, 0, read);
                 }
                 return out.toByteArray();
@@ -276,9 +312,16 @@ public final class Net {
         }
     }
 
+    
     public interface Along {
         void at(int percent, long got, long total);
     }
+
+    
+
+
+
+
 
     public static boolean download(String url, File into, Along along) {return download(url,into,along,null);}
     public static boolean download(String url,File into,Along along,DownloadTasks.Control control) {
@@ -294,7 +337,7 @@ public final class Net {
                 connection.setConnectTimeout(TIMEOUT);
                 connection.setReadTimeout(TIMEOUT);
                 connection.setInstanceFollowRedirects(false);
-                connection.setRequestProperty("User-Agent", "MargyT");
+                connection.setRequestProperty("User-Agent", "AirTok");
                 int code = connection.getResponseCode();
                 if (code / 100 == 2) break;
                 if (!(code == 301 || code == 302 || code == 303
@@ -343,6 +386,7 @@ public final class Net {
         }
     }
 
+    
     public static boolean save(File file, byte[] data) {
         if (data == null) return false;
         try {

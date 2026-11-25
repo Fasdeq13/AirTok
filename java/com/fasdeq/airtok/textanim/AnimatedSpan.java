@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class AnimatedSpan extends ReplacementSpan {
     public final String text;
@@ -102,6 +106,7 @@ public final class AnimatedSpan extends ReplacementSpan {
     static long lastInvalidate;
     static int lastInvalidateView;
 
+    
     public final long delayMs;
     final long entranceMs;
     final int slideDir;
@@ -141,10 +146,13 @@ public final class AnimatedSpan extends ReplacementSpan {
         this.tiltSign = sign;
     }
 
+    
     public long lifeMs() {
         return delayMs + entranceMs + (config.glow ? config.glowMs : 0L) + 4000L;
     }
 
+    
+    
     static void detach(Editable text, AnimatedSpan span) {
         if (text.getSpanStart(span) < 0) return;
         try {
@@ -171,7 +179,7 @@ public final class AnimatedSpan extends ReplacementSpan {
             fm.bottom = metrics.bottom;
             fm.leading = metrics.leading;
         }
-
+        
         float textSize = paint.getTextSize();
         float scaleX = paint.getTextScaleX();
         float spacing = paint.getLetterSpacing();
@@ -190,7 +198,8 @@ public final class AnimatedSpan extends ReplacementSpan {
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         long now = AnimationUtils.currentAnimationTimeMillis();
-
+        
+        
         if (lastDraw == 0L) {
             virtualElapsed = 0L;
         } else {
@@ -204,7 +213,7 @@ public final class AnimatedSpan extends ReplacementSpan {
         long totalMs = entranceMs + glowMs;
 
         if (elapsed < 0L) {
-
+            
             requestFrame(now);
             return;
         }
@@ -220,7 +229,7 @@ public final class AnimatedSpan extends ReplacementSpan {
         float w = width > 0 ? width : paint.measureText(text, start, end);
 
         if (elapsed < entranceMs) {
-
+            
             float progress = elapsed / (float) entranceMs;
             float t = Easing.apply(config.easing, progress);
             float shown = Motion.clamp(t);
@@ -230,7 +239,7 @@ public final class AnimatedSpan extends ReplacementSpan {
                 float slide = config.slide ? config.slideDp * density : 0.0f;
                 float lift = paint.getTextSize() / 3.0f;
                 float cx = x + w * 0.5f;
-
+                
                 float cy;
                 if (config.pivot == 1) {
                     cy = y;
@@ -244,15 +253,15 @@ public final class AnimatedSpan extends ReplacementSpan {
                     Motion.slide(canvas, slideDir, slide * (1.0f - t));
                 }
                 if (config.tilt > 0) {
-
+                    
                     canvas.rotate(tiltSign * config.tilt * (1.0f - t), cx, cy);
                 }
                 if (config.shake > 0) {
-
+                    
                     canvas.translate((float) Math.sin(progress * Math.PI * 7.0) * config.shake * density * (1.0f - progress), 0.0f);
                 }
                 if (config.squash > 0) {
-
+                    
                     float sq = config.squash / 100.0f * (1.0f - t);
                     canvas.scale(1.0f - sq * 0.45f, 1.0f + sq, cx, y);
                 }
@@ -267,7 +276,7 @@ public final class AnimatedSpan extends ReplacementSpan {
                 }
 
                 if (config.blur) {
-
+                    
                     float sharpT = Motion.clamp(progress / (config.blurEnd / 100.0f));
                     Motion.drawBlurred(canvas, paint, glowPaint, text, start, end, x, y,
                         1.0f - Easing.smooth(sharpT), config.blurDp * density, currentAlpha, config.blurMode);
@@ -280,11 +289,13 @@ public final class AnimatedSpan extends ReplacementSpan {
                 canvas.restoreToCount(save);
             }
         } else {
-
+            
             float glowProgress = (elapsed - entranceMs) / (float) glowMs;
             float glowFade = 1.0f - Motion.clamp(glowProgress);
             int glowColor = config.getGlowColor(now, charOffset, accent, origColor);
 
+            
+            
             if (config.aura && glowFade > 0.12f) {
                 glowPaint.set(paint);
                 glowPaint.setColor(glowColor);
@@ -299,6 +310,7 @@ public final class AnimatedSpan extends ReplacementSpan {
                 canvas.drawText(text, start, end, x, y, glowPaint);
             }
 
+            
             int textColor = Motion.mixColors(origColor, glowColor, glowFade);
             paint.setColor(textColor);
             paint.setAlpha(origAlpha);
@@ -317,6 +329,7 @@ public final class AnimatedSpan extends ReplacementSpan {
         requestFrame(now);
     }
 
+    
     void requestFrame(long now) {
         int viewId = System.identityHashCode(view);
         if (now != lastInvalidate || viewId != lastInvalidateView) {

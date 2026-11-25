@@ -4,12 +4,36 @@ import android.content.SharedPreferences;
 
 import com.ss.android.ugc.aweme.music.model.Music;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Sound {
 
     private Sound() {}
 
     static void reloadSettings(){cached=null;}
     public static final String KEY = "sound_available";
+
+    
+
+
+
+
+
+
 
     private static int spoke;
     private static boolean told;
@@ -20,13 +44,14 @@ public final class Sound {
         Diary.note("sound: told the app " + spoke + " muted tracks are fine");
     }
 
+    
     private static final int AVAILABLE = 1;
     private static final int NOT_MUTED = 0;
 
     private static volatile Boolean cached;
 
     public static boolean isEnabled() {
-
+        
         return true;
     }
 
@@ -39,8 +64,10 @@ public final class Sound {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
     }
+
+    
 
     public static boolean available(Music music) {
         if (music == null) return false;

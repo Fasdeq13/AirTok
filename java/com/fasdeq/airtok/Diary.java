@@ -10,37 +10,67 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Diary {
 
     private Diary() {}
 
     private static final String KEY = "diary";
+    
 
-    private static final String FILE = "diary_margyt";
+
+
+
+
+
+
+
+
+
+
+    private static final String FILE = "diary_airtok";
     private static final int KEEP = 40;
     private static final int KEEP_DEV = 400;
 
     private static final List<String> LINES = new ArrayList<String>();
     private static boolean loaded;
 
+    
+
+
+
+
+
+
     private static boolean dirty;
     private static long savedAt;
     private static final long REST = 3000;
 
+    
     private static final SimpleDateFormat CLOCK =
             new SimpleDateFormat("HH:mm:ss", Locale.US);
 
     public static void note(String line) {
-        DevLink.heard(line);
         if (flooding(line)) return;
-        if (Version.TEST || Version.LITE) android.util.Log.i("MargyT", "diary: " + line);
+        if (Version.TEST || Version.LITE) android.util.Log.i("AirTok", "diary: " + line);
         String stamped = stamp() + "  " + line;
         synchronized (LINES) {
             load();
             String last = LINES.isEmpty() ? "" : LINES.get(LINES.size() - 1);
             if (last.length() > 10 && last.substring(10).equals(stamped.substring(10))) return;
             LINES.add(stamped);
-            int keep = DevMode.isOn() ? KEEP_DEV : KEEP;
+            int keep = KEEP;
             while (LINES.size() > keep) LINES.remove(0);
             dirty = true;
             long now = android.os.SystemClock.uptimeMillis();
@@ -52,6 +82,14 @@ public final class Diary {
     }
 
     private static final java.util.HashMap<String, long[]> SAID = new java.util.HashMap<String, long[]>();
+
+    
+
+
+
+
+
+
 
     private static boolean flooding(String line) {
         if (line == null) return true;
@@ -74,8 +112,9 @@ public final class Diary {
         }
     }
 
+    
     public static void detail(String line) {
-        if (DevMode.isOn()) note("· " + line);
+
     }
 
     public static List<String> lines() {
@@ -94,17 +133,20 @@ public final class Diary {
         }
     }
 
+    
+
     private static void load() {
         if (loaded) return;
         SharedPreferences prefs = prefs();
-        if (prefs == null) return;
+        if (prefs == null) return;  
         loaded = true;
         String stored = prefs.getString(KEY, "");
         if (stored.length() == 0) {
-
+            
+            
             try {
                 SharedPreferences settings = AirTok.context()
-                        .getSharedPreferences("margyt", Context.MODE_PRIVATE);
+                        .getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
                 if (settings.contains(KEY)) {
                     stored = settings.getString(KEY, "");
                     settings.edit().remove(KEY).apply();

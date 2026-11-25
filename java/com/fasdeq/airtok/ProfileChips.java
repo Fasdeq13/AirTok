@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+
 final class ProfileChips {
     private ProfileChips() {}
 

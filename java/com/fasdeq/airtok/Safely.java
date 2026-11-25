@@ -3,12 +3,24 @@ package com.fasdeq.airtok;
 import android.content.Context;
 import android.content.res.Resources;
 
+
+
+
+
+
+
+
+
+
+
+
 public final class Safely {
 
     private Safely() {}
 
     private static volatile boolean told;
 
+    
     public static String getString(Context context, int id) {
         try {
             return context.getString(id);

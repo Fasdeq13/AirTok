@@ -11,17 +11,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+
+
+
 final class Hear {
 
     private Hear() {}
 
+    
     static final int RATE = 11025;
     private static final int WINDOW = 1024, HOP = 512;
-
+    
     static final float STEP_MS = HOP * 1000f / RATE;
     private static final int[] BANDS = {10, 20, 40, 80, 160, 300};
     private static final int FAN = 3, REACH = 30;
 
+    
+
+    
     static short[] sound(String path, long longest) throws Exception {
         MediaExtractor extractor = new MediaExtractor();
         MediaCodec codec = null;
@@ -98,6 +109,7 @@ final class Hear {
         }
     }
 
+    
     private static final class Resampler {
         private float step;
         private float carried, sum;
@@ -137,6 +149,9 @@ final class Hear {
         }
     }
 
+    
+
+    
     private static List<int[]> points(short[] sound) {
         List<int[]> out = new ArrayList<int[]>();
         if (sound.length < WINDOW) return out;
@@ -167,13 +182,14 @@ final class Hear {
             }
             mean /= best.length;
             for (int b = 0; b < best.length; b++) {
-
+                
                 if (best[b] >= 1.5f * mean && best[b] > 1e7f) out.add(new int[] {step, at[b]});
             }
         }
         return out;
     }
 
+    
     private static int[] pairs(List<int[]> points, int fromStep, int toStep) {
         ArrayList<Integer> out = new ArrayList<Integer>();
         for (int i = 0; i < points.size(); i++) {
@@ -196,15 +212,20 @@ final class Hear {
         return flat;
     }
 
+    
     static int[] print(short[] sound, long from, long to) {
         int a = (int) (from / STEP_MS), b = (int) Math.ceil(to / STEP_MS);
         return pairs(points(sound), a, b);
     }
 
+    
     static int[] whole(short[] sound) {
         return pairs(points(sound), 0, Integer.MAX_VALUE);
     }
 
+    
+
+    
     static final class Index {
         final Map<Integer, long[]> byHash = new HashMap<Integer, long[]>();
         final Map<Long, Integer> sizes = new HashMap<Long, Integer>();
@@ -232,6 +253,10 @@ final class Hear {
             return sizes.isEmpty();
         }
     }
+
+    
+
+
 
     static List<long[]> find(int[] video, Index index) {
         Map<Long, Integer> votes = new HashMap<Long, Integer>();
@@ -263,6 +288,8 @@ final class Hear {
         }
         return out;
     }
+
+    
 
     private static void fft(float[] re, float[] im) {
         int n = re.length;

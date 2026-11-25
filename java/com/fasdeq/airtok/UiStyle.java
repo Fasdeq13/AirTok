@@ -9,6 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class UiStyle {
 
     static final int MD3 = 0, GLASS = 1, FLUENT = 2;
@@ -17,18 +31,19 @@ final class UiStyle {
     private static final String[] BASES = {"md3", "glass", "fluent"};
     private static final int MOST_BYTES = 32 * 1024;
 
+    
     final String key, name, author, description;
     final int base, controls;
-
+    
     final float card, inner, sheet, small, bar;
-
+    
     final float gap;
-
+    
     final float blur, tint, refraction, dispersion, grain, windowBlur;
-
+    
     final int duration;
     final float bounce, press;
-
+    
     final boolean neutral;
     final float cardLift;
 
@@ -45,7 +60,9 @@ final class UiStyle {
         this.neutral = neutral; this.cardLift = cardLift;
     }
 
-    static final UiStyle MATERIAL = new UiStyle("md3", "Material 3", "", "", MD3, MD3,
+    
+    
+    static final UiStyle MATERIAL = new UiStyle("md3", "Обычный", "", "", MD3, MD3,
             24, 4, 28, 24, -1, 2, 1.45f, .24f, 1f, .065f, .003f, 0, 300, 1.6f, .985f, false, .045f);
     static final UiStyle LIQUID = new UiStyle("glass", "Liquid Glass", "", "", GLASS, GLASS,
             26, 6, 28, 24, -1, 0, 1.45f, .24f, 1f, .065f, .003f, 26, 300, 1.6f, 1.025f, false, .045f);
@@ -58,6 +75,9 @@ final class UiStyle {
 
     static boolean custom(String key) { return key != null && key.startsWith("custom:"); }
 
+    
+
+    
     static final class Refused extends Exception {
         Refused(String why) { super(why); }
     }
@@ -109,6 +129,7 @@ final class UiStyle {
         return part;
     }
 
+    
     private static float number(JSONObject json, String key, float fallback, float least, float most) throws Refused {
         if (json == null || !json.has(key)) return fallback;
         Object value = json.opt(key);
@@ -127,12 +148,16 @@ final class UiStyle {
         return text.length() <= most ? text : text.substring(0, most);
     }
 
+    
     static String id(String name) {
         String id = name.toLowerCase(Locale.ROOT).replaceAll("[^\\p{L}\\p{N}]+", "-").replaceAll("^-+|-+$", "");
         if (id.isEmpty()) id = "style";
         return id.length() > 40 ? id.substring(0, 40) : id;
     }
 
+    
+
+    
     String json() {
         try {
             JSONObject json = new JSONObject();
@@ -155,12 +180,15 @@ final class UiStyle {
         }
     }
 
+    
+
     private static File folder(Context context) {
-        File dir = new File(context.getFilesDir(), "margyt/ui");
+        File dir = new File(context.getFilesDir(), "airtok/ui");
         if (!dir.isDirectory()) dir.mkdirs();
         return dir;
     }
 
+    
     static UiStyle install(Context context, byte[] raw) throws Refused {
         UiStyle style = read(raw, null);
         String id = style.key.substring("custom:".length());

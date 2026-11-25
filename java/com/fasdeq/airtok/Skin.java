@@ -8,13 +8,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Skin {
 
     final int page;
     final int card;
     final int text;
-    final int margin;
-    final int radius;
+    final int margin;   
+    final int radius;   
     final boolean measured;
 
     private Skin(int page, int card, int text, int margin, int radius, boolean measured) {
@@ -26,6 +40,7 @@ final class Skin {
         this.measured = measured;
     }
 
+    
     int muted() {
         return (text & 0x00FFFFFF) | 0x99000000;
     }
@@ -36,10 +51,17 @@ final class Skin {
                 + 0.114f * android.graphics.Color.blue(page)) / 255f < 0.5f;
     }
 
+    
+
+
+
+
+
+
     static Skin remembered(Context context) {
         try {
             SharedPreferences prefs =
-                    context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+                    context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
             if (prefs.contains("skin_card")) {
                 Skin kept = new Skin(
                         prefs.getInt("skin_page", 0xFF000000),
@@ -50,13 +72,20 @@ final class Skin {
                         prefs.getInt("skin_radius", Math.round(
                                 12 * context.getResources().getDisplayMetrics().density)),
                         true);
-
+                
+                
+                
                 if (kept.dark() == dark(context)) return kept;
             }
         } catch (Throwable ignored) {
         }
         return fallback(context);
     }
+
+    
+
+
+
 
     static Skin forSettings(Context context) {
         Skin kept = remembered(context);
@@ -66,6 +95,7 @@ final class Skin {
         return new Skin(page, card, kept.text, kept.margin, kept.radius, false);
     }
 
+    
     static Skin onPage(Context context, int page) {
         Skin kept = remembered(context);
         boolean dark = NavBar.bright(page) < .5f;
@@ -78,7 +108,7 @@ final class Skin {
     void remember(Context context) {
         if (!measured) return;
         try {
-            context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit()
+            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit()
                     .putInt("skin_page", page)
                     .putInt("skin_card", card)
                     .putInt("skin_text", text)
@@ -106,6 +136,7 @@ final class Skin {
         return fallback(screen.getContext());
     }
 
+    
     private static boolean dark(Context context) {
         try { return Themes.isDark(); } catch (Throwable ignored) {}
         return (context.getResources().getConfiguration().uiMode
@@ -123,6 +154,8 @@ final class Skin {
                 Math.round(12 * density),
                 false);
     }
+
+    
 
     private static Skin measure(View screen) {
         int width = screen.getWidth();
@@ -144,6 +177,8 @@ final class Skin {
         int page = commonest(bitmap, 1, height / 3, height - 1);
         if (Color.alpha(page) < 255) return null;
 
+        
+        
         int cardTop = -1, card = 0;
         int run = 0, minimum = Math.round(24 * density);
         for (int y = 0; y < height; y++) {
@@ -168,6 +203,8 @@ final class Skin {
         int margin = edge(bitmap, inside, width, card);
         if (margin < 0) return null;
 
+        
+        
         int radius = 0;
         for (int k = 0; k < Math.round(28 * density) && cardTop + k < height; k++) {
             int here = edge(bitmap, cardTop + k, width, card);
@@ -182,6 +219,7 @@ final class Skin {
         return new Skin(page, card, text, margin, radius, true);
     }
 
+    
     private static int edge(Bitmap bitmap, int y, int width, int colour) {
         for (int x = 0; x < width / 2; x++) {
             if (bitmap.getPixel(x, y) == colour) return x;
@@ -189,6 +227,7 @@ final class Skin {
         return -1;
     }
 
+    
     private static int contrast(Bitmap bitmap, int top, int bottom, int left, int right, int card) {
         float base = luminance(card);
         int best = card;
@@ -207,6 +246,7 @@ final class Skin {
         return found > 0.25f ? best : (base < 0.5f ? 0xFFFFFFFF : 0xFF161823);
     }
 
+    
     private static int commonest(Bitmap bitmap, int x, int from, int to) {
         int best = bitmap.getPixel(x, from), bestCount = 0;
         for (int y = from; y < to; y += 3) {
@@ -219,7 +259,7 @@ final class Skin {
                 bestCount = count;
                 best = colour;
             }
-            if (bestCount > (to - from) / 6) break;
+            if (bestCount > (to - from) / 6) break;  
         }
         return best;
     }

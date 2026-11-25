@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Locale;
 import java.util.WeakHashMap;
 
+
 public final class AppearanceColors {
     private AppearanceColors() {}
 
@@ -90,7 +91,7 @@ public final class AppearanceColors {
     public static void set(String role, int colour) {
         int at = index(role);
         if (at < 0) return;
-
+        
         Themes.forgetPreset();
         if (LIKE.equals(role)) {
             LikeColors.set(colour);
@@ -132,8 +133,10 @@ public final class AppearanceColors {
         Themes.repaintVisible();
     }
 
+    
     public static int forView(View view, int fallback) {
         if (view == null) return fallback;
+        if (isStreak100(view)) return fallback;
         String name = Names.of(view);
         if (name.length() == 0 || mediaName(name)) return fallback;
 
@@ -173,14 +176,19 @@ public final class AppearanceColors {
         }
     }
 
+    
     static void repaint(View root) {
         int[] visited = {0};
         repaintText(root, 0, visited);
     }
 
+    
+    
+    
     private static final int LOOKED = 0x4D617273;
 
-    private static final int RECOLOURED = 0x4D417443;
+    
+    private static final int RECOLOURED = 0x4D417443;  
 
     private static int wearing(View view) {
         int all = Accent.epoch * 31 + (view.isSelected() ? 1 : 0);
@@ -196,6 +204,7 @@ public final class AppearanceColors {
         return all;
     }
 
+    
     static void look(View view) {
         Object last = view.getTag(LOOKED);
         if (!(last instanceof Integer) || ((Integer) last).intValue() != wearing(view)) {
@@ -215,14 +224,13 @@ public final class AppearanceColors {
     }
 
     private static void repaintOne(View view) {
-        if (view instanceof ImageView && isStreak(view)) {
-            ((ImageView) view).clearColorFilter();
-            return;
-        }
+        if (isStreak100(view)) return;
         boolean animatedDots = loadingDots(view);
-
+        
+        
         if (view instanceof android.widget.EditText) Accent.tintTextCursor((TextView) view);
         if (view instanceof TextView) {
+            Badge.fixMarks((TextView) view);
             if (!animatedDots) accentCreatorLabel((TextView) view);
             String textName = resourceName(view);
             if (!animatedDots && textName != null && !mediaName(textName)) {
@@ -235,7 +243,12 @@ public final class AppearanceColors {
                     if (COMMENT_LIKE.equals(role)
                             && !activeLikeColour(text.getCurrentTextColor())) chosen = 0;
                     if (chosen == 0 && accentElement(textName, role)) chosen = Accent.colour();
-
+                    
+                    
+                    
+                    
+                    
+                    
                     boolean ours = view.getTag(RECOLOURED) != null;
                     int now = text.getCurrentTextColor();
                     if (chosen != 0) {
@@ -258,7 +271,7 @@ public final class AppearanceColors {
                             ColorStateList[] saved = originalText.get(view);
                             original = saved == null ? null : saved[mode];
                         }
-
+                        
                         if (!COMMENT_LIKE.equals(role) && original != null) text.setTextColor(original);
                     }
                 }
@@ -335,6 +348,7 @@ public final class AppearanceColors {
         return name.length() == 0 ? null : name;
     }
 
+    
     static boolean loadingDots(View view) {
         if (view == null) return false;
         try {
@@ -346,10 +360,95 @@ public final class AppearanceColors {
         } catch (Throwable ignored) { return false; }
     }
 
+    
     private static boolean activeLikeColour(int colour) {
         return Palette.captures(colour, Accent.TIKTOK)
                 || (Accent.colour() != Accent.TIKTOK
                 && Palette.captures(colour, Accent.colour()));
+    }
+
+    private static final java.util.Map<Class<?>, Boolean> streakClassCache =
+            new java.util.concurrent.ConcurrentHashMap<Class<?>, Boolean>();
+
+    public static boolean isStreak100(View view) {
+        if (view == null) return false;
+        try {
+            if (isStreakClassOrName(view)) {
+                if (view instanceof TextView) {
+                    CharSequence cs = ((TextView) view).getText();
+                    if (cs != null && isNum100Plus(cs.toString().trim())) return true;
+                } else {
+                    return hasStreak100Fast(view);
+                }
+            }
+            if (view instanceof TextView) {
+                CharSequence cs = ((TextView) view).getText();
+                if (cs != null && cs.length() >= 3 && cs.length() <= 5 && isNum100Plus(cs.toString().trim())) {
+                    android.view.ViewParent p = view.getParent();
+                    if (p instanceof View && isStreakClassOrName((View) p)) return true;
+                }
+            }
+            if (view instanceof ImageView || view instanceof com.bytedance.tux.icon.TuxIconView) {
+                android.view.ViewParent p = view.getParent();
+                if (p instanceof ViewGroup) {
+                    ViewGroup vg = (ViewGroup) p;
+                    if (vg.getChildCount() <= 5 && hasStreak100InChildren(vg, isStreakClassOrName(vg))) {
+                        return !LikeColors.isLikeView(view);
+                    }
+                }
+            }
+        } catch (Throwable ignored) {}
+        return false;
+    }
+
+    private static boolean isStreakClassOrName(View view) {
+        if (view == null) return false;
+        Class<?> cls = view.getClass();
+        Boolean cached = streakClassCache.get(cls);
+        if (cached == null) {
+            String clsName = cls.getName().toLowerCase(Locale.ROOT);
+            cached = Boolean.valueOf(clsName.contains("streak") || clsName.contains("flame"));
+            streakClassCache.put(cls, cached);
+        }
+        if (cached.booleanValue()) return true;
+        String name = resourceName(view);
+        if (name != null) {
+            String lower = name.toLowerCase(Locale.ROOT);
+            if (lower.contains("streak") || lower.contains("flame") || lower.contains("fire")) return true;
+        }
+        return false;
+    }
+
+    private static boolean isNum100Plus(String text) {
+        if (text == null || text.length() < 3 || text.length() > 5) return false;
+        int val = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '+') continue;
+            if (ch < '0' || ch > '9') return false;
+            val = val * 10 + (ch - '0');
+        }
+        return val >= 100;
+    }
+
+    private static boolean hasStreak100Fast(View view) {
+        android.view.ViewParent p = view.getParent();
+        if (p instanceof ViewGroup && hasStreak100InChildren((ViewGroup) p, true)) return true;
+        return view instanceof ViewGroup && hasStreak100InChildren((ViewGroup) view, true);
+    }
+
+    private static boolean hasStreak100InChildren(ViewGroup vg, boolean parentIsStreak) {
+        int count = vg.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = vg.getChildAt(i);
+            if (child instanceof TextView) {
+                CharSequence cs = ((TextView) child).getText();
+                if (cs != null && cs.length() >= 3 && cs.length() <= 5 && isNum100Plus(cs.toString().trim())) {
+                    if (parentIsStreak || isStreakClassOrName(child) || count <= 4) return true;
+                }
+            }
+        }
+        return false;
     }
 
     static void accentCreatorLabel(TextView view) {
@@ -412,39 +511,10 @@ public final class AppearanceColors {
         } catch (Throwable ignored) { return null; }
     }
 
-    public static boolean isStreak(View view) {
-        if (view == null) return false;
-        try {
-            String name = resourceName(view);
-            if (isStreakName(name)) return true;
-            String cls = view.getClass().getName();
-            if (isStreakName(cls)) return true;
-            Object tag = view.getTag();
-            if (tag instanceof String && isStreakName((String) tag)) return true;
-            CharSequence desc = view.getContentDescription();
-            if (desc != null && isStreakName(desc.toString())) return true;
-            View parent = (View) view.getParent();
-            if (parent != null) {
-                String pName = resourceName(parent);
-                if (isStreakName(pName)) return true;
-                String pCls = parent.getClass().getName();
-                if (isStreakName(pCls)) return true;
-            }
-        } catch (Throwable ignored) {}
-        return false;
-    }
-
-    public static boolean isStreakName(String name) {
-        if (name == null) return false;
-        String lower = name.toLowerCase(java.util.Locale.ROOT);
-        return lower.contains("streak") || lower.contains("flame") || lower.contains("fire")
-                || lower.contains("im_streak") || lower.contains("огон") || lower.contains("spark")
-                || lower.contains("streak_badge") || lower.contains("streak_icon");
-    }
-
     private static boolean mediaName(String name) {
-        if (isStreakName(name)) return true;
-
+        
+        
+        
         if (interactiveAccentName(name)) return false;
         return has(name, "video", "photo", "avatar", "thumbnail", "cover",
                 "live_photo", "livephoto", "sticker", "emoji", "player");
@@ -477,7 +547,6 @@ public final class AppearanceColors {
     }
 
     private static String role(String name, View view) {
-        if (isStreakName(name) || isStreak(view)) return null;
         if (has(name, "comment") && has(name, "like", "heart", "digg"))
             return COMMENT_LIKE;
         if (has(name, "like", "heart", "digg")) return LIKE;

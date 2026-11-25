@@ -13,34 +13,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Flags {
 
     private Flags() {}
 
+    
     public static final int ADS = 0;
     public static final int VOICE = 1;
     public static final int BANNER = 2;
-
+    
     public static final int ALWAYS = 3;
 
     public static final String KEY_VOICE = "flag_voice";
     public static final String KEY_BANNER = "flag_profile_banner";
     public static final String KEY_SPEED_LOCK = "flag_speed_lock";
 
+    
     public static final String KEY_COMMENT_REPOST = "flag_comment_repost";
     public static final String KEY_SELF_REPOST = "flag_self_repost";
     public static final String KEY_COMMENT_PHOTOS = "flag_comment_photos";
     public static final String KEY_HASHTAGS = "flag_hashtags_unlimited";
     public static final String KEY_TRANSLATE_COMMENTS = "flag_translate_comments";
 
+    
+    
     public static final String KEY_NEW_PROFILE = "flag_new_profile";
 
     private static final Set<String> ON_BY_DEFAULT = new HashSet<String>(Arrays.asList(
-            KEY_VOICE, KEY_BANNER, KEY_NEW_PROFILE, KEY_TRANSLATE_COMMENTS, KEY_COMMENT_REPOST,
+            KEY_VOICE, KEY_BANNER, KEY_SPEED_LOCK, KEY_NEW_PROFILE, KEY_TRANSLATE_COMMENTS, KEY_COMMENT_REPOST,
             KEY_COMMENT_PHOTOS, KEY_HASHTAGS));
 
-    static final String OVERRIDES = "margyt" + "_flags";
+    
+    static final String OVERRIDES = AirTok.PREFS + "_flags";
 
+    
     private static final String SPEED_LOCK = "long_press_speed_up_lock";
 
     private static final class Override {
@@ -60,7 +94,8 @@ public final class Flags {
     }
 
     static {
-
+        
+        
         put(ADS, Boolean.FALSE,
                 "enable_normal_splash_ad", "enable_normal_splash_ad_ab", "splash_ad_enable",
                 "enable_live_splash", "search_ad_refactor_enable", "search_enable_mix_adgap",
@@ -69,6 +104,8 @@ public final class Flags {
         put(VOICE, Integer.valueOf(1), "audio_comment_publish");
         put(BANNER,Integer.valueOf(1),"profile_bg_in_allow_list","profile_bg_enable_consumption_group");
     }
+
+    
 
     public static boolean isOn(int group) {
         if (group == ADS) return Feed.isEnabled();
@@ -93,8 +130,13 @@ public final class Flags {
         forget();
     }
 
-    private static boolean chosen(String key) {
+    
 
+
+
+    private static boolean chosen(String key) {
+        
+        
         return KEY_NEW_PROFILE.equals(key) || KEY_SPEED_LOCK.equals(key);
     }
 
@@ -111,9 +153,10 @@ public final class Flags {
     private static SharedPreferences prefs() {
         android.content.Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE);
     }
 
+    
     private static Object of(String key) {
         Object forced = forced(key);
         if (forced != null) return forced;
@@ -122,10 +165,20 @@ public final class Flags {
         return isOn(override.group) ? override.value : null;
     }
 
+    
+
+    
+
+
+
+
+
+
+
     private static volatile Map<String, Object> table;
-
+    
     private static volatile Thread building;
-
+    
     private static volatile Thread asking;
 
     private static final Set<String> ANSWERED =
@@ -142,15 +195,81 @@ public final class Flags {
         building = me;
         try {
             SharedPreferences prefs = prefs();
-            if (prefs == null) return null;
+            if (prefs == null) return null;  
             Map<String, Object> made = new HashMap<String, Object>();
             Integer one = Integer.valueOf(1), none = Integer.valueOf(0);
 
+            
+            
+            
+            
+            
+            made.put("long_press_speed_up_enable", one);
+            made.put("long_press_speed_play_component", one);
+            made.put("long_press_speed_up_and_clear_mode", one);
             made.put(SPEED_LOCK, on(prefs, KEY_SPEED_LOCK) ? one : none);
             if (on(prefs, KEY_VOICE)) made.put("audio_comment_publish", one);
             if (on(prefs, KEY_BANNER)) {
+                made.put("profile_banner", one);
+                made.put("profile_banner_switch", one);
+                made.put("profile_banner_bypass_check", one);
+                made.put("profile_banner_platform", one);
+                made.put("profile_banner_close", none);
+                made.put("enable_profile_banner_force_update_for_cold_start", one);
+                made.put("enable_profile_banner_refresh_bypass_session_block", one);
+                made.put("enable_profile_banner_check_show_empty_post", one);
+                made.put("profile_banner_force_update_for_cold_start", one);
+                made.put("profile_banner_refresh_bypass_session_block", one);
+                made.put("profile_banner_action_param_enable", one);
+                made.put("close_friend_profile_banner_switch", one);
+                made.put("close_friend_debug_profile_banner_bypass_check", one);
                 made.put("profile_bg_in_allow_list", one);
                 made.put("profile_bg_enable_consumption_group", one);
+                made.put("profile_bg_delete_enable", one);
+                made.put("profile_bg_image_preview", one);
+                made.put("profile_bg_status_bar_immersive_fix", one);
+                made.put("profile_bg_translation_range_fix", one);
+                made.put("show_studio_profile_banner", one);
+                made.put("profile_top_banner", one);
+                made.put("profile_bottom_banner", one);
+                made.put("profile_page_banner_status", one);
+                made.put("profile_banner_promote_keva_repo_", one);
+                made.put("profile_banner_with_same_poi", one);
+                made.put("profile_banner_check_show_empty_post", one);
+                made.put("profile_banner_freq_control", none);
+                made.put("profile_banner_mobile_block_funnel", none);
+                made.put("banner_unified_render_enable", one);
+                made.put("im_message_bubble_layout_setting", one);
+                made.put("enable_thought_bubble_avatar_cover", one);
+                made.put("enable_thought_aggregated_bubble_floating", one);
+                made.put("enable_timer_bubble_show_immediate", one);
+                made.put("following_inbox_bubble_enable", one);
+                made.put("im_typing_indicator_bubble_group_chat", one);
+                made.put("friends_thoughts_panel_bubble", one);
+            }
+
+            if (Ghost.isEnabled()) {
+                made.put("im_active_status_enabled", Boolean.FALSE);
+                made.put("im_active_status_switch_enabled", Boolean.FALSE);
+                made.put("im_active_status_badge_enabled", Boolean.FALSE);
+                made.put("friend_active_status", none);
+                made.put("im_active_status_ab", none);
+                made.put("im_show_active_status", Boolean.FALSE);
+                made.put("enable_active_status", Boolean.FALSE);
+                made.put("active_status_enabled", Boolean.FALSE);
+                made.put("im_online_status_enabled", Boolean.FALSE);
+                made.put("im_read_state_enabled", Boolean.FALSE);
+                made.put("im_send_read_ack_enabled", Boolean.FALSE);
+                made.put("im_msg_read_receipt_enabled", Boolean.FALSE);
+                made.put("enable_msg_read_status", Boolean.FALSE);
+                made.put("im_read_receipt", Boolean.FALSE);
+                made.put("im_read_receipt_v2", Boolean.FALSE);
+                made.put("im_read_receipt_switch", Boolean.FALSE);
+                made.put("im_msg_read_switch", Boolean.FALSE);
+                made.put("im_story_view_enabled", Boolean.FALSE);
+                made.put("story_view_report_enabled", Boolean.FALSE);
+                made.put("profile_visit_report_enabled", Boolean.FALSE);
+                made.put("profile_view_history_enabled", Boolean.FALSE);
             }
 
             if (on(prefs, KEY_COMMENT_REPOST)) {
@@ -159,17 +278,29 @@ public final class Flags {
                 made.put("tt_audio_comment_repost", one);
             }
             if (on(prefs, KEY_SELF_REPOST)) made.put("enable_self_repost", one);
-
+            
+            
             if (on(prefs, KEY_COMMENT_PHOTOS)) made.put("comment_multi_photo_group", Integer.valueOf(2));
-
+            
+            
             if (on(prefs, KEY_HASHTAGS)) made.put("studio_publish_limit_hashtag_switch", none);
-
+            
             made.put("camera_teleprompter_mode", one);
-
+            
+            
             made.put("studio_selfie_fill_light_config", "{\"support_selfie_light_adjust\":true,\"selfie_fill_light_persist_memory\":true,"
                     + "\"selfie_fill_light_tab_memory\":true,\"selfie_fill_light_shutter_ring_shadow_order_fix\":true,\"lazy_load_flash_front_scene\":true,"
                     + "\"auto_adjust_full_brightness\":true}");
-
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             if (on(prefs, KEY_TRANSLATE_COMMENTS)) {
                 made.put("comment_auto_translation_enabled", one);
                 made.put("comment_auto_translation_consumer_style", Integer.valueOf(2));
@@ -178,23 +309,20 @@ public final class Flags {
                 made.put("tt_comment_auto_translation_v2", none);
             }
 
+            
+            
+            
+            
+            
             made.put("circle_search_block", none);
-            if (Comments.isDoubleTapLikeEnabled()) {
-                made.put("tt_comment_double_tap_to_like", "{\"enable\":1,\"interval_time\":300,\"expired_version\":-1}");
-            } else {
-                made.put("tt_comment_double_tap_to_like", "{\"enable\":0,\"interval_time\":300,\"expired_version\":-1}");
-            }
-            made.put("long_press_speed_up_enable", none);
-            made.put("tablet_override_long_press_speed_up_enable", none);
-            made.put("long_press_redesign", none);
-            made.put("short_drama_default_long_press_panel", none);
 
+            
+            
+            
+            
+            
             made.put("profile_left_align", on(prefs, KEY_NEW_PROFILE) ? one : none);
 
-            if (DevMode.isOn()) {
-                Map<String, Object> mine = overrides();
-                if (!mine.isEmpty() && FlagGuard.allows()) made.putAll(mine);
-            }
             table = made;
             return made;
         } catch (Throwable error) {
@@ -204,6 +332,10 @@ public final class Flags {
         }
     }
 
+    
+
+
+    
     public static boolean newProfile() {
         try {
             SharedPreferences prefs = prefs();
@@ -227,13 +359,27 @@ public final class Flags {
             }
             Object value = known.get(key);
             if (value == null || asking == Thread.currentThread()) return null;
-
+            
+            
             if (ANSWERED.add(key)) Diary.detail("flag " + key + " = " + value);
             return value;
         } catch (Throwable error) {
             return null;
         }
     }
+
+    
+    
+    
+    
+    
+
+    
+
+
+
+
+
 
     public static Object playerFlag(String key, java.lang.reflect.Type type) {
         try {
@@ -284,6 +430,10 @@ public final class Flags {
 
     private static final Map<String, Object> BUILT = new java.util.concurrent.ConcurrentHashMap<String, Object>();
 
+    
+
+
+
     public static Object forcedObject(Class<?> type, String key) {
         if (type == null || key == null) return null;
         Object value = forced(key);
@@ -300,9 +450,12 @@ public final class Flags {
         return null;
     }
 
+    
+
+    
     static final class Known {
         final String key;
-
+        
         final String type;
         final Object fallback;
 
@@ -318,12 +471,16 @@ public final class Flags {
         }
     }
 
-    private static final String REGISTRY = "X.06y1";
-    private static final String READER = "X.09tK";
+    
+    
+    
+    private static final String REGISTRY = "X.08Js";
+    private static final String READER = "vq4.m";
     private static final int EVERYWHERE = 0x7c00;
 
     private static List<Known> catalogue;
 
+    
     static synchronized List<Known> catalogue() {
         if (catalogue != null) return catalogue;
         List<Known> out = new ArrayList<Known>();
@@ -352,6 +509,7 @@ public final class Flags {
         return out;
     }
 
+    
     static Object own(Known flag) {
         Thread before = asking;
         asking = Thread.currentThread();
@@ -410,6 +568,7 @@ public final class Flags {
         return context.getSharedPreferences(OVERRIDES, android.content.Context.MODE_PRIVATE);
     }
 
+    
     static Map<String, Object> overrides() {
         Map<String, Object> out = new HashMap<String, Object>();
         try {
@@ -430,6 +589,7 @@ public final class Flags {
 
     private static final String DOUBLE = "double:";
 
+    
     static void override(Known flag, Object value) {
         SharedPreferences prefs = overridePrefs();
         if (prefs == null) return;
@@ -451,6 +611,9 @@ public final class Flags {
         forget();
     }
 
+    
+
+
     static Object parse(Known flag, String typed) {
         String text = typed == null ? "" : typed.trim();
         try {
@@ -470,6 +633,7 @@ public final class Flags {
             return null;
         }
     }
+    
 
     public static boolean flag(String key, boolean fallback) {
         Object value = of(key);

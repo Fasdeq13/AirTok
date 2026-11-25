@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class Motion {
     public static final float SLIDE_DP = 8.0f;
@@ -76,12 +80,13 @@ public final class Motion {
         canvas.translate(cx, cy);
         float from = config.scaleStart / 100.0f;
         float scale = Math.max(0.05f, from + (1.0f - from) * progress);
-
+        
         scale = Math.round(scale * 32.0f) / 32.0f;
         canvas.scale(scale, scale);
         canvas.translate(-cx, -cy);
     }
 
+    
     public static void slide(Canvas canvas, int dir, float dist) {
         switch (dir) {
             case 1:
@@ -99,6 +104,7 @@ public final class Motion {
         }
     }
 
+    
     public static float scaleFrom(int easing) {
         return easing >= 3 ? SPRING_SCALE_FROM : SCALE_FROM;
     }
@@ -113,8 +119,11 @@ public final class Motion {
         return filter;
     }
 
+    
     static final int BLUR_STEPS = 8;
 
+    
+    
     public static void drawBlurred(Canvas canvas, Paint base, Paint tmp, CharSequence text,
                                    int start, int end, float x, float y,
                                    float amount, float maxRadius, int alpha, int mode) {
@@ -128,7 +137,7 @@ public final class Motion {
         float radius = Math.max(0.5f, maxRadius * level);
         tmp.set(base);
         if (mode == Config.BLUR_LIGHT) {
-
+            
             tmp.setMaskFilter(null);
             tmp.setStyle(Paint.Style.FILL_AND_STROKE);
             tmp.setStrokeJoin(Paint.Join.ROUND);
@@ -143,7 +152,7 @@ public final class Motion {
             tmp.setAlpha(alpha);
             canvas.drawText(text, start, end, x, y, tmp);
         }
-
+        
         float sharp = (1.0f - level) * (1.0f - level);
         int sharpAlpha = (int) (alpha * sharp);
         if (sharpAlpha > 0) {

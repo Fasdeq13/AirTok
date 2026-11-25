@@ -39,6 +39,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class ViewEditor {
 
     private ViewEditor() {}
@@ -47,6 +63,9 @@ public final class ViewEditor {
     private static final int BASE = 0x7e0c03B0, PRIOR = 0x7e0c03B1, ONCE = 0x7e0c03B2,
             TEXT_WAS = 0x7e0c03B3, FILL_DONE = 0x7e0c03B4, ICON_DONE = 0x7e0c03B5, CLIPPED = 0x7e0c03B6;
 
+    
+
+    
     static final class Rule {
         final String key, lead;
         String label = "";
@@ -72,7 +91,7 @@ public final class ViewEditor {
 
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
-        return context == null ? null : context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return context == null ? null : context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 
     private static synchronized void load() {
@@ -84,6 +103,7 @@ public final class ViewEditor {
         if (saved != null) parse(saved);
     }
 
+    
     private static String serialise() {
         try {
             org.json.JSONObject all = new org.json.JSONObject();
@@ -108,6 +128,7 @@ public final class ViewEditor {
         }
     }
 
+    
     private static void parse(String saved) {
         try {
             rules.clear();
@@ -138,8 +159,11 @@ public final class ViewEditor {
         if (prefs != null) prefs.edit().putString(PREF, serialise()).apply();
     }
 
+    
+
     private static final ArrayList<String> past = new ArrayList<String>(), future = new ArrayList<String>();
 
+    
     static void remember() {
         past.add(serialise());
         if (past.size() > 80) past.remove(0);
@@ -166,6 +190,7 @@ public final class ViewEditor {
         restore(future.remove(future.size() - 1));
     }
 
+    
     private static void restore(String copy) {
         parse(copy);
         for (View v : new ArrayList<View>(tracked.keySet())) {
@@ -187,9 +212,12 @@ public final class ViewEditor {
         for (Rule rule : rules.values()) leads.add(rule.lead);
     }
 
+    
+
     private static final SparseArray<String> idNames = new SparseArray<String>();
     private static final Map<Class<?>, String> classNames = new HashMap<Class<?>, String>();
 
+    
     private static String lead(View v) {
         int id = v.getId();
         if (id != View.NO_ID && id != 0) {
@@ -264,6 +292,7 @@ public final class ViewEditor {
         return key.toString();
     }
 
+    
     static String title(View v) {
         String lead = lead(v);
         if (lead.charAt(0) == '#') return lead;
@@ -271,6 +300,9 @@ public final class ViewEditor {
         return name.substring(name.lastIndexOf('.') + 1);
     }
 
+    
+
+    
     static void frame() {
         if (tracked.isEmpty()) return;
         try {
@@ -280,7 +312,7 @@ public final class ViewEditor {
                 if (v != null && rule != null) enforce(v, rule);
             }
         } catch (Throwable ignored) {
-
+            
         }
     }
 
@@ -296,7 +328,7 @@ public final class ViewEditor {
         if (v.getTranslationY() != ty) v.setTranslationY(ty);
         if (v.getScaleX() != sx) v.setScaleX(sx);
         if (v.getScaleY() != sy) v.setScaleY(sy);
-
+        
         if (rule.dx != 0f || rule.dy != 0f || rule.scale > 1f) unclip(v);
         if (rule.text != null && v instanceof TextView) {
             TextView t = (TextView) v;
@@ -322,6 +354,7 @@ public final class ViewEditor {
         }
     }
 
+    
     private static void unclip(View v) {
         Object up = v.getParent();
         for (int i = 0; i < 40 && up instanceof ViewGroup; i++) {
@@ -361,6 +394,7 @@ public final class ViewEditor {
         }
     }
 
+    
     private static void release(View v) {
         hide(v, false);
         reclip(v);
@@ -382,6 +416,7 @@ public final class ViewEditor {
         v.setTag(ICON_DONE, null);
     }
 
+    
     private static void refresh(Rule rule) {
         List<View> views = new ArrayList<View>(tracked.keySet());
         for (View v : views) {
@@ -395,6 +430,7 @@ public final class ViewEditor {
         }
     }
 
+    
     private static void walk(View v, int depth) {
         if (depth > 60) return;
         if (leads.contains(lead(v)) && !tracked.containsKey(v)) {
@@ -410,10 +446,13 @@ public final class ViewEditor {
         }
     }
 
+    
+
     public static boolean isEditing() {
         return editing;
     }
 
+    
     public static void begin() {
         load();
         editing = true;
@@ -441,6 +480,8 @@ public final class ViewEditor {
         for (Rule rule : all) refresh(rule);
         save();
     }
+
+    
 
     private static final class Watching implements ViewTreeObserver.OnGlobalLayoutListener, ViewTreeObserver.OnPreDrawListener {
         final WeakReference<View> decor;
@@ -491,9 +532,10 @@ public final class ViewEditor {
         }
     }
 
+    
     static void attach(Activity activity) {
         try {
-            if (activity == null || activity.getClass().getName().startsWith("cat.narezany")) return;
+            if (activity == null || activity.getClass().getName().startsWith("com.fasdeq.airtok")) return;
             load();
             View decor = activity.getWindow().getDecorView();
             if (decor.getTag(ONCE) == null) {
@@ -526,7 +568,11 @@ public final class ViewEditor {
         return null;
     }
 
+    
+
     private static final int PICK = 0, MOVE = 1, USE = 2;
+
+    
 
     private static final String UNDO = "M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z";
     private static final String REDO = "M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z";
@@ -568,6 +614,7 @@ public final class ViewEditor {
         return path;
     }
 
+    
     private static final class Icon extends View {
         private final Path path;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -590,6 +637,7 @@ public final class ViewEditor {
         }
     }
 
+    
     private static final class Capped extends android.widget.ScrollView {
         private final int most;
 
@@ -605,14 +653,15 @@ public final class ViewEditor {
         }
     }
 
+    
     private static int cardX = -1, cardY = -1;
     private static boolean collapsed;
-
+    
     private static final int[] GRIDS = {0, 4, 8, 12, 16, 24};
     private static int grid;
-
+    
     private static boolean guides;
-
+    
     private static final int[] STEPS = {1, 5, 20};
     private static int stepAt;
     private static int remembered = PICK;
@@ -694,6 +743,7 @@ public final class ViewEditor {
             return hits.get(cursor).get();
         }
 
+        
         @Override
         protected void onDraw(Canvas canvas) {
             drawGrid(canvas);
@@ -713,6 +763,7 @@ public final class ViewEditor {
 
         private final Paint thin = new Paint(Paint.ANTI_ALIAS_FLAG), mark = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+        
         private void drawGrid(Canvas canvas) {
             int across = GRIDS[grid];
             if (across == 0 || getWidth() == 0) return;
@@ -720,7 +771,7 @@ public final class ViewEditor {
             thin.setStyle(Paint.Style.STROKE);
             thin.setStrokeWidth(Math.max(1f, unit * 0.6f));
             for (int i = 1; i < across; i++) {
-
+                
                 thin.setColor(across % 2 == 0 && i == across / 2 ? 0x99FFFFFF : 0x40FFFFFF);
                 canvas.drawLine(i * cell, 0, i * cell, getHeight(), thin);
             }
@@ -733,19 +784,20 @@ public final class ViewEditor {
             canvas.drawLine(0, getHeight() / 2f, getWidth(), getHeight() / 2f, thin);
         }
 
+        
         private void drawGuides(Canvas canvas) {
             int colour = accent();
             thin.setStyle(Paint.Style.STROKE);
             thin.setStrokeWidth(Math.max(1f, unit * 0.8f));
             thin.setColor((colour & 0x00FFFFFF) | 0xAA000000);
             thin.setPathEffect(new android.graphics.DashPathEffect(new float[]{6f * unit, 4f * unit}, 0f));
-
+            
             canvas.drawLine(box.left, 0, box.left, getHeight(), thin);
             canvas.drawLine(box.right, 0, box.right, getHeight(), thin);
             canvas.drawLine(0, box.top, getWidth(), box.top, thin);
             canvas.drawLine(0, box.bottom, getWidth(), box.bottom, thin);
             thin.setPathEffect(null);
-
+            
             float cx = box.exactCenterX(), cy = box.exactCenterY();
             thin.setColor(colour);
             thin.setStrokeWidth(Math.max(1f, unit));
@@ -756,7 +808,7 @@ public final class ViewEditor {
             canvas.drawCircle(cx, cy, 4.5f * unit, mark);
             mark.setColor(colour);
             canvas.drawCircle(cx, cy, 3f * unit, mark);
-
+            
             mark.setTextSize(10f * unit);
             mark.setFakeBoldText(true);
             label(canvas, Math.round(box.left / unit) + "", box.left + 3 * unit, 14 * unit);
@@ -774,6 +826,7 @@ public final class ViewEditor {
             canvas.drawText(words, x, y, mark);
         }
 
+        
         @Override
         public boolean onTouchEvent(MotionEvent e) {
             if (mode == USE) return false;
@@ -805,7 +858,7 @@ public final class ViewEditor {
                         View v = selected();
                         if (v != null) {
                             Rule rule = ruleFor(v);
-
+                            
                             if (!was) {
                                 remember();
                                 dragDx = rule.dx;
@@ -817,7 +870,7 @@ public final class ViewEditor {
                             float wantX = e.getRawX() - downX, wantY = e.getRawY() - downY;
                             float cell = cell();
                             if (cell > 0f) {
-
+                                
                                 wantX = nearestLine(dragLeft + wantX, cell) - dragLeft;
                                 wantY = nearestLine(dragTop + wantY, cell) - dragTop;
                             }
@@ -842,6 +895,7 @@ public final class ViewEditor {
             }
         }
 
+        
         private void pick(float x, float y) {
             hits.clear();
             cursor = 0;
@@ -853,7 +907,7 @@ public final class ViewEditor {
                     if (child != this) collect(child, (int) x, (int) y, 0);
                 }
             }
-
+            
             final Rect size = new Rect();
             final Map<View, Long> area = new HashMap<View, Long>();
             for (WeakReference<View> hit : hits) {
@@ -872,7 +926,7 @@ public final class ViewEditor {
                 ViewGroup group = (ViewGroup) v;
                 for (int i = group.getChildCount() - 1; i >= 0; i--) collect(group.getChildAt(i), x, y, depth + 1);
             }
-
+            
             int w = getWidth(), h = getHeight();
             if (v.getWidth() >= w * 0.98f && v.getHeight() >= h * 0.98f) return;
             hits.add(new WeakReference<View>(v));
@@ -891,6 +945,7 @@ public final class ViewEditor {
             return rule;
         }
 
+        
         private void place() {
             FrameLayout.LayoutParams at = (FrameLayout.LayoutParams) card.getLayoutParams();
             int wide = getWidth() > 0 ? getWidth() : activity.getResources().getDisplayMetrics().widthPixels;
@@ -911,6 +966,7 @@ public final class ViewEditor {
             card.post(this::clampCard);
         }
 
+        
         private void clampCard() {
             if (cardX < 0 || card.getWidth() == 0 || getWidth() == 0) return;
             int x = Math.max(0, Math.min(cardX, getWidth() - card.getWidth()));
@@ -925,6 +981,7 @@ public final class ViewEditor {
             }
         }
 
+        
         private final View.OnTouchListener dragging = new View.OnTouchListener() {
             float lx, ly;
             boolean dragged;
@@ -963,6 +1020,7 @@ public final class ViewEditor {
             }
         };
 
+        
         private void rebuild() {
             card.removeAllViews();
             card.addView(header());
@@ -978,11 +1036,10 @@ public final class ViewEditor {
             Icon grip = new Icon(activity, gripPath(), MUTED);
             head.addView(grip, new LinearLayout.LayoutParams(dp(22), dp(32)));
             if (collapsed) {
-
-                TextView which = button(modeName(mode), true, () -> mode(mode == PICK ? USE : PICK));
-                LinearLayout.LayoutParams p = (LinearLayout.LayoutParams) which.getLayoutParams();
-                p.setMargins(dp(4), 0, dp(6), 0);
-                head.addView(which);
+                TextView which = button(modeName(mode), false, () -> mode(mode == PICK ? USE : PICK));
+                LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+                p.setMargins(dp(4), 0, dp(4), 0);
+                head.addView(which, p);
             } else {
                 TextView title = text(Local.of("Редактор"), 16, INK, true);
                 LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
@@ -1005,7 +1062,11 @@ public final class ViewEditor {
                 collapsed = !collapsed;
                 rebuild();
             }));
-            if (collapsed) head.addView(iconButton(pathOf(CHECK), true, this::finish));
+            TextView exit = button(Local.of("Выйти"), true, this::finish);
+            exit.setPadding(dp(10), dp(6), dp(10), dp(6));
+            LinearLayout.LayoutParams ep = (LinearLayout.LayoutParams) exit.getLayoutParams();
+            ep.setMargins(dp(4), 0, 0, 0);
+            head.addView(exit);
             return head;
         }
 
@@ -1020,6 +1081,7 @@ public final class ViewEditor {
             body.setOrientation(LinearLayout.VERTICAL);
             View v = selected();
 
+            
             body.addView(label(Local.of("РЕЖИМ")));
             body.addView(segments());
             body.addView(text(hint(), 12, MUTED, false, 2), spaced(0, 4));
@@ -1098,6 +1160,7 @@ public final class ViewEditor {
             return Local.of("Касания идут в TikTok: листайте и переходите на другие экраны. Правки остаются.");
         }
 
+        
         private View segments() {
             LinearLayout track = new LinearLayout(activity);
             track.setOrientation(LinearLayout.HORIZONTAL);
@@ -1131,6 +1194,7 @@ public final class ViewEditor {
             return track;
         }
 
+        
         private View tile(View v) {
             LinearLayout tile = new LinearLayout(activity);
             tile.setOrientation(LinearLayout.HORIZONTAL);
@@ -1166,6 +1230,7 @@ public final class ViewEditor {
             return tile;
         }
 
+        
         private View position(View v) {
             LinearLayout box = new LinearLayout(activity);
             box.setOrientation(LinearLayout.HORIZONTAL);
@@ -1182,6 +1247,7 @@ public final class ViewEditor {
             words.addView(text(Local.of("сдвиг") + "  " + Math.round(dx / unit) + ", " + Math.round(dy / unit) + " dp", 12, MUTED, false), spaced(0, 2));
             box.addView(words, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
+            
             LinearLayout pad = new LinearLayout(activity);
             pad.setOrientation(LinearLayout.VERTICAL);
             pad.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -1216,6 +1282,7 @@ public final class ViewEditor {
             return all;
         }
 
+        
         private View figures(String a, int x, String b, int y) {
             LinearLayout line = new LinearLayout(activity);
             line.setGravity(Gravity.BOTTOM);
@@ -1229,6 +1296,7 @@ public final class ViewEditor {
             return line;
         }
 
+        
         private Rect boxOf(View v) {
             int[] at = new int[2];
             v.getLocationOnScreen(at);
@@ -1242,6 +1310,7 @@ public final class ViewEditor {
             return across == 0 || getWidth() == 0 ? 0f : getWidth() / (float) across;
         }
 
+        
         private void nudge(int sx, int sy) {
             View v = selected();
             if (v == null) return;
@@ -1261,16 +1330,19 @@ public final class ViewEditor {
             });
         }
 
+        
         private float nextLine(float from, int way, float cell) {
             double lines = from / cell;
             double next = way > 0 ? Math.floor(lines + 0.01) + 1 : Math.ceil(lines - 0.01) - 1;
             return (float) (next * cell);
         }
 
+        
         private float nearestLine(float from, float cell) {
             return Math.round(from / cell) * cell;
         }
 
+        
         private View choice(Path icon, String[] names, int chosen, final java.util.function.IntConsumer pick) {
             LinearLayout line = new LinearLayout(activity);
             line.setGravity(Gravity.CENTER_VERTICAL);
@@ -1308,6 +1380,7 @@ public final class ViewEditor {
             return line;
         }
 
+        
         private View toggle(Path icon, String words, boolean on, final Runnable flip) {
             LinearLayout line = new LinearLayout(activity);
             line.setGravity(Gravity.CENTER_VERTICAL);
@@ -1329,6 +1402,7 @@ public final class ViewEditor {
             return line;
         }
 
+        
         private View round(Path icon, boolean strong, final Runnable action) {
             FrameLayout b = new FrameLayout(activity);
             GradientDrawable back = new GradientDrawable();
@@ -1343,6 +1417,7 @@ public final class ViewEditor {
             return b;
         }
 
+        
         private View sizeControl() {
             View v = selected();
             Rule rule = v == null ? null : ruleOf(v);
@@ -1396,7 +1471,7 @@ public final class ViewEditor {
             if (rule != null) {
                 reindex();
                 refresh(rule);
-
+                
                 release(v);
                 tracked.remove(v);
                 save();
@@ -1446,6 +1521,7 @@ public final class ViewEditor {
                     }).setNegativeButton(Local.of("Отмена"), null).show();
         }
 
+        
         private static final int[] SWATCHES = {0xFFFFFFFF, 0xFF000000, 0xFFE53935, 0xFFFB8C00, 0xFFFDD835, 0xFF43A047,
                 0xFF1E88E5, 0xFF8E24AA, 0xFFEC407A, 0xFF9E9E9E};
 
@@ -1495,7 +1571,7 @@ public final class ViewEditor {
                             else if (which == 1) r.fill = null;
                             else r.icon = null;
                         });
-
+                        
                         release(v);
                         View again = selected();
                         Rule rule = again == null ? null : ruleOf(again);
@@ -1504,6 +1580,7 @@ public final class ViewEditor {
                     .setNegativeButton(Local.of("Отмена"), null).show();
         }
 
+        
         private LinearLayout row() {
             LinearLayout row = new LinearLayout(activity);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -1524,6 +1601,7 @@ public final class ViewEditor {
             return p;
         }
 
+        
         private TextView label(String words) {
             TextView t = text(words, 11, MUTED, true);
             t.setLetterSpacing(0.08f);
@@ -1549,10 +1627,10 @@ public final class ViewEditor {
 
         private View iconButton(Path path, boolean live, final Runnable action) {
             FrameLayout box = new FrameLayout(activity);
-            box.addView(new Icon(activity, path, INK), new FrameLayout.LayoutParams(dp(22), dp(22), Gravity.CENTER));
+            box.addView(new Icon(activity, path, INK), new FrameLayout.LayoutParams(dp(20), dp(20), Gravity.CENTER));
             box.setAlpha(live ? 1f : 0.3f);
             if (live) box.setOnClickListener(x -> action.run());
-            box.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
+            box.setLayoutParams(new LinearLayout.LayoutParams(dp(34), dp(36)));
             return box;
         }
 

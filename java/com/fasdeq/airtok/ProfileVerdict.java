@@ -14,6 +14,17 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
 final class ProfileVerdict {
 
     private ProfileVerdict() {}
@@ -23,7 +34,9 @@ final class ProfileVerdict {
     private static final Map<Class<?>, Method[]> roads = new java.util.HashMap<>();
 
     static void bind(Object component, View view) {
-
+        
+        
+        
         View block = column(component, view);
         if (block == null) return;
         synchronized (owners) { owners.put(block, new WeakReference<>(component)); }
@@ -39,7 +52,8 @@ final class ProfileVerdict {
     }
 
     private static View column(Object component, View view) {
-
+        
+        
         View header = named(view, "t7l", 0);
         if (vertical(header)) return header;
         for (Class<?> step = component.getClass(); step != null && step != Object.class; step = step.getSuperclass()) {
@@ -61,6 +75,7 @@ final class ProfileVerdict {
         return null;
     }
 
+    
     static boolean plate(View view) { return view != null && (view.getTag(PLATE) != null || Frames.isPlate(view)); }
 
     static void apply(View view) {
@@ -94,10 +109,13 @@ final class ProfileVerdict {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             int side = dp(block.getContext(), 16);
             where.setMargins(side, dp(block.getContext(), 10), side, dp(block.getContext(), 4));
-
+            
+            
+            
             final View made = plate;
             block.setTag(PENDING, made);
-
+            
+            
             block.post(() -> {
                 if (block.getTag(PENDING) == made) block.setTag(PENDING, null);
                 if (made.getParent() == null && find(block) == null) block.addView(made, Math.min(1, block.getChildCount()), where);
@@ -128,11 +146,12 @@ final class ProfileVerdict {
     private static View find(ViewGroup block) {
         Object pending = block.getTag(PENDING);
         if (pending instanceof View) return (View) pending;
-
+        
         for (int i = 0; i < block.getChildCount(); i++) if (block.getChildAt(i).getTag(PLATE) != null) return block.getChildAt(i);
         return null;
     }
 
+    
     private static String uid(Object component) {
         Method[] road;
         synchronized (roads) { road = roads.get(component.getClass()); }
@@ -165,6 +184,7 @@ final class ProfileVerdict {
         return null;
     }
 
+    
     private static View chip(Context c) {
         TextView chip = new TextView(c);
         chip.setText(Text.ADMIN);
@@ -180,12 +200,15 @@ final class ProfileVerdict {
         return chip;
     }
 
+    
     private static int ground = 0xFF121212;
 
+    
     private static int ink() {
         return Md3.ink(ground);
     }
 
+    
     private static void recolour(View plate) {
         int ink = ink();
         if (plate instanceof TextView) ((TextView) plate).setTextColor(ink);

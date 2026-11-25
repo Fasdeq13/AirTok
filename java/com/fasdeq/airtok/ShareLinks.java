@@ -9,6 +9,18 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class ShareLinks {
 
     private ShareLinks() {}
@@ -17,12 +29,12 @@ public final class ShareLinks {
 
     static boolean enabled() {
         Context c = AirTok.context();
-        return c == null || c.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEY, true);
+        return c == null || c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, true);
     }
 
     static void setEnabled(boolean on) {
         Context c = AirTok.context();
-        if (c != null) c.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+        if (c != null) c.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
     }
 
     private static final Pattern URL_IN_TEXT = Pattern.compile("https?://[^\\s]+");
@@ -42,7 +54,8 @@ public final class ShareLinks {
                 manager.setPrimaryClip(clean.equals(text) ? clip : ClipData.newPlainText(label, clean));
                 return;
             }
-
+            
+            
             final String original = text;
             Net.away("clean-link", () -> {
                 String clean = original;
@@ -74,11 +87,13 @@ public final class ShareLinks {
         return text == null ? null : text.toString();
     }
 
+    
     private static String trim(String url) {
         while (url.length() > 0 && ".,!?)]}»\"'".indexOf(url.charAt(url.length() - 1)) >= 0) url = url.substring(0, url.length() - 1);
         return url;
     }
 
+    
     static String cleanLong(String text) {
         Matcher m = URL_IN_TEXT.matcher(text);
         StringBuffer out = new StringBuffer();
@@ -102,13 +117,14 @@ public final class ShareLinks {
         }
     }
 
+    
     static String strip(String url) {
         try {
             URL parsed = new URL(url);
             String host = parsed.getHost().toLowerCase(java.util.Locale.ROOT);
             if (host.equals("m.tiktok.com") || host.equals("tiktok.com")) host = "www.tiktok.com";
             String path = parsed.getPath();
-
+            
             Matcher old = Pattern.compile("^/v/(\\d+)\\.html$").matcher(path);
             if (old.find()) path = "/@_/video/" + old.group(1);
             return "https://" + host + path;
@@ -117,6 +133,7 @@ public final class ShareLinks {
         }
     }
 
+    
     private static String follow(String url) {
         String at = url;
         for (int hop = 0; hop < 5; hop++) {

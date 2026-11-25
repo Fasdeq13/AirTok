@@ -1,9 +1,10 @@
 package com.fasdeq.airtok;
 import android.view.View;import java.util.*;import java.lang.ref.WeakReference;
+
 public final class ProfileLayout {
  static final String KEY="profile_layout";private static final int WATCHED=0x7e0c0336;private static final Map<View,int[]> originals=new WeakHashMap<>();private static final Map<View,int[]> margins=new WeakHashMap<>();
  static int mode(){try{return Math.max(0,Math.min(2,AccountAppearance.prefs(AirTok.context()).getInt(KEY,0)));}catch(Throwable ignored){return 0;}}
- public static void bind(Object component,View view){if(component==null||view==null)return;String name=component.getClass().getName();if(!name.contains("ProfileHeaderAvatar")&&!name.contains("ProfileHeaderInfo")&&!name.contains("ProfileHeaderUserBasicInfo"))return;synchronized(originals){if(!originals.containsKey(view))originals.put(view,new int[]{view.getPaddingLeft(),view.getPaddingTop(),view.getPaddingRight(),view.getPaddingBottom()});}if(!Boolean.TRUE.equals(view.getTag(WATCHED))){view.setTag(WATCHED,true);view.addOnLayoutChangeListener((v,l,t,rr,b,ol,ot,or,ob)->{if(l==ol&&t==ot&&rr==or&&b==ob)return;apply(v);ProfileVerdict.apply(v);applyAvatarAlignment(v);Badge.rewrite(v);});}apply(view);applyAvatarAlignment(view);Badge.rewrite(view);if(!name.endsWith("ProfileHeaderUserBasicInfoComponent"))ProfileVerdict.bind(component,view);}
+ public static void bind(Object component,View view){if(component==null||view==null)return;String name=component.getClass().getName();if(!name.equals("com.ss.android.ugc.profile.platform.business.header.business.info.assemble.ProfileHeaderInfoComponent")&&!name.equals("com.ss.android.ugc.profile.platform.business.header.business.info.assemble.ProfileHeaderInfoComponentV2")&&!name.equals("com.ss.android.ugc.profile.platform.business.header.business.info.business.basicinfo.container.ProfileHeaderUserBasicInfoComponent"))return;synchronized(originals){if(!originals.containsKey(view))originals.put(view,new int[]{view.getPaddingLeft(),view.getPaddingTop(),view.getPaddingRight(),view.getPaddingBottom()});}if(!Boolean.TRUE.equals(view.getTag(WATCHED))){view.setTag(WATCHED,true);view.addOnLayoutChangeListener((v,l,t,rr,b,ol,ot,or,ob)->{apply(v);ProfileVerdict.apply(v);});}apply(view);if(!name.endsWith("ProfileHeaderUserBasicInfoComponent"))ProfileVerdict.bind(component,view);}
  static boolean onScreen(View view,View root){
   if(view==null||!view.isShown()||!view.isAttachedToWindow()||view.getRootView()!=root)return false;
   View parent=view;for(int i=0;i<40&&parent!=null;i++){if(parent.getAlpha()<=0.01f)return false;Object next=parent.getParent();parent=next instanceof View?(View)next:null;}
@@ -15,10 +16,4 @@ public final class ProfileLayout {
   if(view instanceof android.view.ViewGroup){android.view.ViewGroup group=(android.view.ViewGroup)view;for(int i=0;i<Math.min(16,group.getChildCount());i++){View child=group.getChildAt(i);if(ProfileVerdict.plate(child))continue;android.view.ViewGroup.LayoutParams params=child.getLayoutParams();if(!(params instanceof android.view.ViewGroup.MarginLayoutParams))continue;android.view.ViewGroup.MarginLayoutParams layout=(android.view.ViewGroup.MarginLayoutParams)params;int[] base;synchronized(margins){base=margins.get(child);if(base==null){base=new int[]{layout.topMargin,layout.bottomMargin};margins.put(child,base);}}int gap=(int)(child.getResources().getDisplayMetrics().density*(mode==1?2:12)+.5f);int t=mode==0?base[0]:mode==1?gap:Math.max(base[0],gap),b=mode==0?base[1]:mode==1?gap:Math.max(base[1],gap);if(layout.topMargin!=t||layout.bottomMargin!=b){layout.topMargin=t;layout.bottomMargin=b;child.setLayoutParams(layout);}}}}
  static void setMode(int mode){AccountAppearance.prefs(AirTok.context()).edit().putInt(KEY,Math.max(0,Math.min(2,mode))).apply();reload();}
  static void reload(){List<View> values;synchronized(originals){values=new ArrayList<>(originals.keySet());}for(View view:values)if(view!=null)view.post(()->apply(view));}
-
- public static final String KEY_AVATAR_ALIGN = "profile_avatar_align";
- public static int avatarAlign() { return 0; }
- public static void setAvatarAlign(int align) {}
- public static void applyAvatarAlignment(View view) {}
-
 }

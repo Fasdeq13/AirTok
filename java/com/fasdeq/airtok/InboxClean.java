@@ -27,11 +27,11 @@ final class InboxClean {
 
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
-        return context == null ? null : context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return context == null ? null : context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 
     static boolean on(String key) {
-
+        
         return false;
     }
 

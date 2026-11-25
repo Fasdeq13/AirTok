@@ -1,6 +1,13 @@
 package com.fasdeq.airtok;
 import android.content.Context;import android.graphics.Typeface;import android.util.TypedValue;import android.view.Gravity;import android.view.View;import android.widget.LinearLayout;import android.widget.TextView;import java.util.List;
 
+
+
+
+
+
+
+
 final class DownloadSheet {
  interface Pick {void on(DownloadQuality.Choice choice);}
  interface Picks {void on(List<DownloadQuality.Choice> choices);}
@@ -11,7 +18,7 @@ final class DownloadSheet {
   final Panel panel=Panel.with(c,skin,photoPost?Text.SHEET_POST_TITLE:Text.SHEET_PICK_QUALITY).compact();
   DownloadQuality.Choice best=null;java.util.ArrayList<DownloadQuality.Choice> rest=new java.util.ArrayList<>();
   if(videos!=null)for(DownloadQuality.Choice v:videos){if(v.best&&best==null)best=v;else rest.add(v);}
-
+  
   java.util.ArrayList<DownloadQuality.Choice> list=new java.util.ArrayList<>();
   if(best!=null)list.add(best);
   for(DownloadQuality.Choice v:rest){boolean same=best!=null&&best.height>0&&v.height==best.height;if(!same)list.add(v);}
@@ -31,11 +38,11 @@ final class DownloadSheet {
   }else if(nativeOnly){
    panel.hero("hd",Text.DL_NATIVE,null,"download",()->nativeSave.on());
   }
-
+  
   panel.section(null);
   panel.item("music_note",Text.DL_AUDIO,null,"download",()->audio.on());
   if(photoPost&&photos.size()>1){
-
+   
    save[0]=panel.action(Text.allPhotos(photos.size()),true);
    save[0].setOnClickListener(v->{
     java.util.ArrayList<DownloadQuality.Choice> chosen=new java.util.ArrayList<>();

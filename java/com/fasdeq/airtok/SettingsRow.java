@@ -18,13 +18,33 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class SettingsRow implements Application.ActivityLifecycleCallbacks {
 
+    
     public static final String SETTINGS_ACTIVITY =
             "com.ss.android.ugc.aweme.setting.ui.SettingContainerActivity";
 
+    
+    
     private static final int TAG = 0x4D617267;
 
+    
+
+    
     private static final String[] AVATAR_SCREENS = {
             "com.ss.android.ugc.profile.business.ur.enlarge.EnlargeAvatarActivity",
             "com.ss.android.ugc.profile.business.ur.enlarge.EnlargeAvatarOptActivity",
@@ -32,18 +52,17 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityResumed(Activity activity) {
-        AirTok.attach(activity);
         long probe = Probe.start();
         Plugins.onActivityResumed(activity);
         Plugins.screen(activity);
         FlagGuard.shown();
         Rubble.resumed(activity);
-        TilcayoRun.resumed(activity);
         MotionCues.resumed(activity);
         SimpleFeed.attach(activity);
         WavySeek.attach(activity);
-        Avariyka.resumed(activity);
-        AirTok.ensureDarkMode(activity);
+        
+        
+        
         if (!activity.getClass().getName().startsWith("com.fasdeq.airtok.")) {
             View decor = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
             if (decor != null) decor.post(() -> { try { Themes.relook(); } catch (Throwable ignored) {} });
@@ -58,7 +77,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         PinkButtons.watch(activity);
         if (!Version.LITE) {
             SocialLibrary.refresh(null);
-            Updater.resumed(activity);
         }
         Probe.stop(Probe.SHOWN, probe);
 
@@ -71,7 +89,8 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
             }
         }
         if (!SETTINGS_ACTIVITY.equals(name)) {
-
+            
+            
             if (name.toLowerCase(Locale.US).contains("setting")) Diary.note("saw " + name);
             return;
         }
@@ -83,6 +102,13 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
         decor.getViewTreeObserver().addOnGlobalLayoutListener(new Injector(activity));
     }
+
+    
+
+
+
+
+
 
     private static void addSaveAvatar(final Activity activity) {
         try {
@@ -115,7 +141,8 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
                     new android.widget.FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
-
+            
+            
             params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
             params.topMargin = (int) (activity.getResources()
                     .getDisplayMetrics().heightPixels * 0.74f);
@@ -126,7 +153,7 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
     }
 
-    private static final int SAVE_TAG = 0x4D617269;
+    private static final int SAVE_TAG = 0x4D617269;  
 
     @Override
     public void onActivityCreated(Activity activity, Bundle state) {
@@ -140,7 +167,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
     public void onActivityPaused(Activity activity) {
         Plugins.onActivityPaused(activity);
         MotionCues.paused(activity);
-        Tutorial.paused(activity);
         Screen.gone(activity);
     }
 
@@ -152,6 +178,14 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityDestroyed(Activity activity) {}
+
+    
+
+
+
+
+
+
 
     private final class Injector implements ViewTreeObserver.OnGlobalLayoutListener {
 
@@ -168,15 +202,6 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
             try {
                 if (box == null) inject(this);
                 if (box == null || container == null) return;
-                try {
-                    Skin s = Skin.of(container);
-                    if (s != null) {
-                        box.setBackgroundColor(s.page);
-                        if (box.getParent() instanceof View) {
-                            ((View) box.getParent()).setBackgroundColor(s.page);
-                        }
-                    }
-                } catch (Throwable ignored) {}
                 if (SettingsCell.drawn()) fold(box, true);
                 int pages = 0;
                 for (int i = 0; i < container.getChildCount(); i++) {
@@ -194,13 +219,18 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
     }
 
+    
     private static final int FOLDED = 0x4D617253;
+
+    
+
+
+
 
     private static void fold(View box, boolean away) {
         try {
             if ((box.getTag(FOLDED) != null) == away) return;
             box.setTag(FOLDED, away ? Boolean.TRUE : null);
-            box.setVisibility(away ? View.GONE : View.VISIBLE);
             if (box instanceof ViewGroup) {
                 ViewGroup group = (ViewGroup) box;
                 for (int i = 0; i < group.getChildCount(); i++) {
@@ -208,12 +238,14 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
                 }
             }
             int gap = dp(box.getContext(), 8);
-            box.setPadding(box.getPaddingLeft(), away ? 0 : Math.max(0, box.getPaddingTop()),
+            box.setPadding(box.getPaddingLeft(), Math.max(0, box.getPaddingTop() + (away ? -gap : gap)),
                     box.getPaddingRight(), away ? 0 : gap);
         } catch (Throwable error) {
             Diary.note("row could not be put away: " + error);
         }
     }
+
+    
 
     private void inject(Injector injector) {
         Activity activity = injector.activity;
@@ -222,7 +254,7 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         ViewGroup parent = container.getParent() instanceof ViewGroup
                 ? (ViewGroup) container.getParent() : null;
         if (parent == null || parent.getTag(TAG) != null) return;
-        if (container.getWidth() == 0) return;
+        if (container.getWidth() == 0) return;  
 
         Skin skin = Skin.of(container);
 
@@ -232,8 +264,10 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         LinearLayout column = new LinearLayout(activity);
         column.setOrientation(LinearLayout.VERTICAL);
         column.setTag(TAG, Boolean.TRUE);
-        column.setBackgroundColor(skin.page);
 
+        
+        
+        
         parent.removeViewAt(index);
         final View box = row(activity, skin);
         column.addView(box, new LinearLayout.LayoutParams(
@@ -244,7 +278,8 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         keepClearOfTheStatusBar(column, box, container, skin);
         injector.box = box;
         injector.container = container;
-
+        
+        
         if (SettingsCell.likely()) {
             fold(box, true);
             box.postDelayed(() -> {
@@ -253,6 +288,14 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
         Diary.note("row added above " + container.getClass().getName());
     }
+
+    
+
+
+
+
+
+
 
     private ViewGroup fragmentContainer(Activity activity) {
         try {
@@ -264,7 +307,7 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         } catch (Throwable error) {
             Diary.note("no container: " + error);
         }
-
+        
         View content = activity.findViewById(android.R.id.content);
         if (content instanceof ViewGroup && ((ViewGroup) content).getChildCount() > 0) {
             View first = ((ViewGroup) content).getChildAt(0);
@@ -275,6 +318,8 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         }
         return null;
     }
+
+    
 
     private View row(final Activity activity, Skin skin) {
         LinearLayout row = new LinearLayout(activity);
@@ -288,23 +333,28 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
         row.setBackground(background);
 
         ImageView glyph = new ImageView(activity);
+        Bitmap emblem = null;
         try {
-            byte[] png = android.util.Base64.decode(Emblem.PNG, android.util.Base64.DEFAULT);
-            android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.length);
-            glyph.setImageBitmap(bmp);
-        } catch (Throwable t) {
-            glyph.setImageDrawable(SettingsGlyph.make("settings", Accent.colour()));
-        }
+            byte[] rawBytes = android.util.Base64.decode(Emblem.PNG, android.util.Base64.DEFAULT);
+            Bitmap raw = android.graphics.BitmapFactory.decodeByteArray(rawBytes, 0, rawBytes.length);
+            if (raw != null) emblem = Badge.round(raw, 0.28f);
+        } catch (Throwable ignored) {}
+        if (emblem == null) emblem = Launcher.preview(Launcher.DEFAULT);
+        if (emblem != null) glyph.setImageBitmap(emblem);
         glyph.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        GradientDrawable circle = new GradientDrawable();
+        circle.setShape(GradientDrawable.OVAL);
+        circle.setColor(0xFF000000);
+        glyph.setBackground(circle);
+        glyph.setClipToOutline(true);
         glyph.setContentDescription("AirTok");
-        row.addView(glyph, new LinearLayout.LayoutParams(dp(activity, 26), dp(activity, 26)));
+        row.addView(glyph, new LinearLayout.LayoutParams(dp(activity, 24), dp(activity, 24)));
 
         TextView title = new TextView(activity);
         title.setText(Text.ROW);
         title.setTextColor(skin.text);
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-        Looks.clear(title);
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         titleParams.leftMargin = dp(activity, 16);
@@ -328,13 +378,19 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
 
         LinearLayout box = new LinearLayout(activity);
         box.setOrientation(LinearLayout.VERTICAL);
-        box.setBackgroundColor(skin.page);
         box.setPadding(skin.margin, statusBar(activity) + dp(activity, 8),
                 skin.margin, dp(activity, 8));
         box.addView(row, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 56)));
         return box;
     }
+
+    
+
+
+
+
+
 
     private void keepClearOfTheStatusBar(final LinearLayout column, final View box,
                                          final ViewGroup screen, final Skin skin) {
@@ -361,25 +417,21 @@ public final class SettingsRow implements Application.ActivityLifecycleCallbacks
     }
 
     private static int statusBar(Activity activity) {
-        int bar = dp(activity, 44);
         try {
             android.view.WindowInsets insets =
                     activity.getWindow().getDecorView().getRootWindowInsets();
             if (insets != null && insets.getSystemWindowInsetTop() > 0) {
-                return Math.max(insets.getSystemWindowInsetTop(), bar);
+                return insets.getSystemWindowInsetTop();
             }
         } catch (Throwable ignored) {
         }
         try {
             int id = activity.getResources()
                     .getIdentifier("status_bar_height", "dimen", "android");
-            if (id > 0) {
-                int res = activity.getResources().getDimensionPixelSize(id);
-                if (res > 0) return Math.max(res, bar);
-            }
+            if (id > 0) return activity.getResources().getDimensionPixelSize(id);
         } catch (Throwable ignored) {
         }
-        return bar;
+        return 0;
     }
 
     private static int dp(android.content.Context context, int value) {

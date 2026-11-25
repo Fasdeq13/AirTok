@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+
 final class Design {
     static final String KEY = "ui_design";
     private static volatile String chosen;
@@ -22,12 +23,16 @@ final class Design {
     private static final java.util.WeakHashMap<Drawable, GlassOptics> OPTICS = new java.util.WeakHashMap<>();
     private Design() {}
 
+    
+
+
+
     static UiStyle style() {
         UiStyle known=style;
         if(known!=null)return known;
         String key=key();
         UiStyle found=UiStyle.custom(key)?UiStyle.load(AirTok.context(),key):builtIn(key);
-        if(found==null)found=UiStyle.LIQUID;
+        if(found==null)found=UiStyle.MATERIAL;
         if(AirTok.context()!=null)style=found;
         return found;
     }
@@ -36,16 +41,18 @@ final class Design {
         return "glass".equals(key)?UiStyle.LIQUID:"fluent".equals(key)?UiStyle.ACRYLIC:UiStyle.MATERIAL;
     }
 
+    
     static String key() {
         String known=chosen;
         if(known!=null)return known;
         Context context=AirTok.context();
-        if(context==null)return "glass";
-        String saved=context.getSharedPreferences("margyt",0).getString(KEY,"glass");
-        chosen=valid(saved)?saved:"glass";
+        if(context==null)return "md3";
+        String saved=context.getSharedPreferences(AirTok.PREFS,0).getString(KEY,"md3");
+        chosen=valid(saved)?saved:"md3";
         return chosen;
     }
 
+    
     static String mode() {
         int base=style().base;
         return base==UiStyle.GLASS?"glass":base==UiStyle.FLUENT?"fluent":"md3";
@@ -58,14 +65,14 @@ final class Design {
     static boolean glass() { return style().base==UiStyle.GLASS; }
     static boolean fluent() { return style().base==UiStyle.FLUENT; }
     static boolean frosted() { return glass() || fluent(); }
-
+    
     static boolean controlsGlass() { return style().controls==UiStyle.GLASS; }
     static boolean controlsFluent() { return style().controls==UiStyle.FLUENT; }
     static boolean controlsFrosted() { return controlsGlass() || controlsFluent(); }
 
     static void choose(Context context,String key) {
         if(!valid(key))throw new IllegalArgumentException("Unknown interface style");
-        context.getSharedPreferences("margyt",0).edit().putString(KEY,key).apply();
+        context.getSharedPreferences(AirTok.PREFS,0).edit().putString(KEY,key).apply();
         chosen=key;style=null;
         OPTICS.clear();GlassBackdrop.changed();
     }
@@ -116,6 +123,7 @@ final class Design {
         return true;
     }
 
+    
     static void own(View root) {
         if (root.getTag(OWNED) != null) { decorate(root); return; }
         root.setTag(OWNED, Boolean.TRUE);
@@ -155,7 +163,7 @@ final class Design {
 
     static void page(Activity activity, View root, int colour) {
         colour=pageColour(activity);
-
+        
         root.setBackground(frosted() ? GlassBackdrop.page(colour)
                 : ViceGradient.wanted(colour) ? new ViceGradient(root, colour, null) : new ColorDrawable(colour));
         window(activity.getWindow(), colour);
@@ -173,8 +181,26 @@ final class Design {
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
+        View decor = window.getDecorView();
+        if (decor != null) {
+            int flags = decor.getSystemUiVisibility();
+            boolean dark = NavBar.bright(colour) < 0.5f;
+            if (dark) {
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= 26) {
+                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            } else {
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= 26) {
+                    flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            }
+            decor.setSystemUiVisibility(flags);
+        }
     }
 
+    
     static final class ColourSample extends GradientDrawable {
         ColourSample() { super(); }
         ColourSample(Orientation orientation, int[] colours) { super(orientation, colours); }
@@ -188,6 +214,7 @@ final class Design {
         if (frosted()) window.setDimAmount(.24f);
     }
 
+    
     static final class Surface extends Drawable implements Drawable.Callback {
         private final java.lang.ref.WeakReference<View> view;
         private final Drawable original;

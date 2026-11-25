@@ -1,5 +1,6 @@
 package com.fasdeq.airtok;
 
+
 final class PlexusField {
     static final int COUNT=28;
     final float[] x=new float[COUNT],y=new float[COUNT],vx=new float[COUNT],vy=new float[COUNT];

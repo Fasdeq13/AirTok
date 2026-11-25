@@ -11,29 +11,50 @@ import android.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Launcher {
 
     private Launcher() {}
 
     public static final String KEY = "icon";
 
+    
     public static final String DEFAULT = "";
 
+    
     static final String CLASSIC = "classic";
 
     public static String[] all() {
         String[] out = new String[Shots.KEYS.length + 1];
         out[0] = DEFAULT;
         int at = 1;
-
+        
         for (String key : Shots.KEYS) if (CLASSIC.equals(key)) out[at++] = key;
         for (String key : Shots.KEYS) if (!CLASSIC.equals(key)) out[at++] = key;
         return out;
     }
 
+    
     static final String[] LEGACY = {"materialyou", "material3"};
 
-    private static final String[] REDRAWN = {"margyrialyou", "margyrial3"};
+    
+    private static final String[] REDRAWN = {"airtokrialyou", "airtokrial3"};
 
     private static final String KEY_LEGACY = "icons_legacy";
 
@@ -42,6 +63,7 @@ public final class Launcher {
         return false;
     }
 
+    
     static String[] shown() {
         java.util.List<String> out = new java.util.ArrayList<String>();
         for (String which : all()) {
@@ -56,9 +78,14 @@ public final class Launcher {
         return out.toArray(new String[0]);
     }
 
+    
+
+
+
+
     static void settle(Context context) {
         try {
-            SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
             if (prefs.contains(KEY_LEGACY)) return;
             android.content.pm.PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             boolean updated = info.lastUpdateTime - info.firstInstallTime > 60000L;
@@ -84,6 +111,17 @@ public final class Launcher {
         return indexOf(which) < 0 ? DEFAULT : which;
     }
 
+    
+
+
+
+
+
+
+
+
+
+
     public static void route(android.content.Intent intent) {
         try {
             ComponentName wanted = intent == null ? null : intent.getComponent();
@@ -92,9 +130,16 @@ public final class Launcher {
             if (at < 0 || at >= Shots.COMPONENTS.length) return;
             intent.setComponent(new ComponentName(wanted.getPackageName(), Shots.COMPONENTS[at]));
         } catch (Throwable ignored) {
-
+            
         }
     }
+
+    
+
+
+
+
+
 
     public static void choose(Context context, String which) {
         if (context == null) return;
@@ -126,11 +171,8 @@ public final class Launcher {
                 PackageManager.DONT_KILL_APP);
     }
 
+    
     public static Bitmap preview(String which) {
-        if ("tilcayo".equals(which) || "fasdeq".equals(which) || "avatar".equals(which)) {
-            Bitmap avatar = FasdeqAvatar.get();
-            if (avatar != null) return avatar;
-        }
         int at = indexOf(which);
         String[] png = at < 0 ? Shots.DEFAULT_PNG : Shots.PNG[at];
         if (which == null) return null;
@@ -164,6 +206,6 @@ public final class Launcher {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 }

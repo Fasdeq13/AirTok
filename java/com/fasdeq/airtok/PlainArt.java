@@ -13,6 +13,13 @@ import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+
+
+
+
+
+
+
 final class PlainArt {
 
     private PlainArt() {}
@@ -22,9 +29,10 @@ final class PlainArt {
     private static boolean loaded, dirty, saving;
 
     private static File file(Context context) {
-        return new File(context.getFilesDir(), "margyt/plain-art");
+        return new File(context.getFilesDir(), "airtok/plain-art");
     }
 
+    
     private static int key(Resources resources, int id) {
         boolean night = resources != null
                 && (resources.getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
@@ -45,7 +53,7 @@ final class PlainArt {
         dirty = true;
         if (saving) return;
         saving = true;
-
+        
         new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> Net.away("plain art", PlainArt::save), 15000);
     }
 

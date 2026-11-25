@@ -50,6 +50,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public final class Config {
     public static final int STYLE_SMOKE = 6;
     public static final int STYLE_BUBBLES = 7;
     public static final int STYLE_SPARKS = 8;
-
+    
     public static final int STYLE_CONFETTI = 9;
     public static final int STYLE_HEART = 10;
     public static final int MAX_AMOUNT = 12;
@@ -102,13 +103,14 @@ public final class Config {
         0xFFFE2C55, 0xFF25F4EE
     );
 
+    
     public static final int TILT_LEFT = 0;
     public static final int TILT_RIGHT = 1;
     public static final int TILT_ALTERNATE = 2;
     public static final int TILT_RANDOM = 3;
-
+    
     public static final int DIR_RANDOM = 4;
-
+    
     public static final int BLUR_SOFT = 0;
     public static final int BLUR_LIGHT = 1;
 
@@ -159,24 +161,25 @@ public final class Config {
     public final int smokeHold;
     public final int smokeTone;
 
+    
     public final boolean blur;
     public final int blurDp;
     public final int blurEnd;
     public final int blurMode;
     public final boolean blurErase;
-
+    
     public final int fadeStart;
     public final int stagger;
     public final int jitter;
     public final int tiltDir;
     public final int pivot;
-
+    
     public final int caretMorph;
-
+    
     public final boolean selEffect;
     public final int selStretch;
     public final int selSide;
-
+    
     public final int customA;
     public final int customB;
 
@@ -261,6 +264,7 @@ public final class Config {
         return fromPrefs(prefs, 0);
     }
 
+    
     public static Config fromPrefs(SharedPreferences prefs, int lite) {
         if (prefs == null) {
             return DEFAULT;
@@ -278,7 +282,7 @@ public final class Config {
             prefs.getBoolean("blink", true),
             prefs.getBoolean("liquid", true),
             prefs.getBoolean("haptic", false),
-            prefs.getBoolean("glow", false),
+            prefs.getBoolean("glow", false),   
             prefs.getInt("glow_mode", GLOW_RAINBOW),
             prefs.getBoolean("gradient_text", false),
             prefs.getInt("spark_palette", SPARK_TIKTOK),
@@ -381,6 +385,7 @@ public final class Config {
 
     static final float[] HSV = new float[3];
 
+    
     public static int hsv(int h, int s, int v) {
         return Color.HSVToColor(new float[]{clamp(h, 0, 359), clamp(s, 0, 100) / 100.0f, clamp(v, 20, 100) / 100.0f});
     }

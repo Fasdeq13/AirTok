@@ -6,7 +6,7 @@ final class StreakSchedule {
  static int minute(){try{int v=AccountAppearance.prefs(AirTok.context()).getInt(KEY,-1);return v>=0&&v<1440?v:-1;}catch(Throwable ignored){return -1;}}
  static boolean due(long now,int minute){if(minute<0)return true;Calendar c=Calendar.getInstance();c.setTimeInMillis(now);return c.get(Calendar.HOUR_OF_DAY)*60+c.get(Calendar.MINUTE)>=minute;}
  static long delay(long now,long cadence){int minute=minute();if(minute<0)return cadence;Calendar c=Calendar.getInstance();c.setTimeInMillis(now);c.set(Calendar.HOUR_OF_DAY,minute/60);c.set(Calendar.MINUTE,minute%60);c.set(Calendar.SECOND,0);c.set(Calendar.MILLISECOND,0);long until=c.getTimeInMillis()-now;return until>0?Math.max(1000,Math.min(cadence,until)):cadence;}
-
+ 
  static long next(long now,int minute,boolean retry,long cadence){if(minute<0)return now+cadence;Calendar c=Calendar.getInstance();c.setTimeInMillis(now);c.set(Calendar.HOUR_OF_DAY,minute/60);c.set(Calendar.MINUTE,minute%60);c.set(Calendar.SECOND,0);c.set(Calendar.MILLISECOND,0);long today=c.getTimeInMillis();if(now<today)return today;if(retry&&now<today+3*60*60*1000L)return now+5*60*1000L;c.add(Calendar.DAY_OF_YEAR,1);return c.getTimeInMillis();}
  static boolean sameDay(long a,long b){if(b<=0)return false;Calendar x=Calendar.getInstance(),y=Calendar.getInstance();x.setTimeInMillis(a);y.setTimeInMillis(b);return x.get(Calendar.ERA)==y.get(Calendar.ERA)&&x.get(Calendar.YEAR)==y.get(Calendar.YEAR)&&x.get(Calendar.DAY_OF_YEAR)==y.get(Calendar.DAY_OF_YEAR);}
  static int parse(String value){if(value==null||!value.matches("[0-9]{1,2}:[0-9]{2}"))return -2;String[] p=value.split(":");int h=Integer.parseInt(p[0]),m=Integer.parseInt(p[1]);return h<24&&m<60?h*60+m:-2;}

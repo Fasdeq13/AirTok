@@ -17,6 +17,20 @@ import android.view.animation.AnimationUtils;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class AvatarShape {
 
     private AvatarShape() {}
@@ -26,8 +40,10 @@ public final class AvatarShape {
             "circle", "rounded", "square", "cookie", "clover", "burst", "sun",
             "pentagon", "hexagon", "heart"};
 
+    
     private static final int POINTS = 144;
 
+    
     private static volatile int chosen = -1;
     private static final Path[] UNIT = new Path[ALL.length];
     private static final Matrix PLACE = new Matrix();
@@ -40,7 +56,7 @@ public final class AvatarShape {
         int found = 0;
         for (int i = 0; i < ALL.length; i++) if (ALL[i].equals(shape)) found = i;
         chosen = found;
-        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit()
+        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit()
                 .putString(KEY, ALL[found]).apply();
     }
 
@@ -53,10 +69,10 @@ public final class AvatarShape {
         int known = chosen;
         if (known >= 0) return known;
         Context context = AirTok.context();
-        if (context == null) return 0;
+        if (context == null) return 0;  
         int found = 0;
         try {
-            SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
             String name = prefs.getString(KEY, ALL[0]);
             for (int i = 0; i < ALL.length; i++) if (ALL[i].equals(name)) found = i;
         } catch (Throwable ignored) { }
@@ -64,6 +80,7 @@ public final class AvatarShape {
         return found;
     }
 
+    
     public static void addCircle(Path path, float x, float y, float radius, Path.Direction direction) {
         int shape = index();
         if (shape > 0 && radius > 0) {
@@ -79,16 +96,28 @@ public final class AvatarShape {
                 }
                 return;
             } catch (Throwable error) {
-
+                
             }
         }
         path.addCircle(x, y, radius, direction);
     }
 
+    
+
     private static final Path RING = new Path();
     private static final Path PART = new Path();
     private static final Matrix RING_PLACE = new Matrix();
     private static final RectF INBOX_RING = new RectF();
+
+    
+
+
+
+
+
+
+
+
 
     public static void drawArc(Canvas canvas, RectF oval, float start, float sweep,
                                boolean useCentre, Paint paint) {
@@ -119,7 +148,7 @@ public final class AvatarShape {
                     RING_PLACE.setScale(oval.width() / 2f, oval.height() / 2f);
                     RING_PLACE.postTranslate(oval.centerX(), oval.centerY());
                     RING.addPath(unit(shape), RING_PLACE);
-
+                    
                     float turn = 0;
                     if (spins()) {
                         turn = angle();
@@ -131,7 +160,8 @@ public final class AvatarShape {
                         canvas.drawPath(RING, paint);
                         return;
                     }
-
+                    
+                    
                     android.graphics.PathMeasure measure = new android.graphics.PathMeasure(RING, true);
                     float length = measure.getLength();
                     float from = start + (sweep < 0 ? sweep : 0) + 90f - turn;
@@ -148,17 +178,27 @@ public final class AvatarShape {
                     return;
                 }
             } catch (Throwable error) {
-
+                
             }
         }
         canvas.drawArc(oval, start, sweep, useCentre, paint);
     }
 
-    static final String SPIN_KEY = "avatar_spin";
+    
 
+    static final String SPIN_KEY = "avatar_spin";
+    
     private static final long TURN = 9000;
 
+    
     private static volatile int spin = -1;
+
+    
+
+
+
+
+
 
     private static final WeakHashMap<Path, float[]> SHAPED = new WeakHashMap<>();
 
@@ -168,7 +208,7 @@ public final class AvatarShape {
             Context context = AirTok.context();
             if (context == null) return false;
             try {
-                known = context.getSharedPreferences("margyt", Context.MODE_PRIVATE)
+                known = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE)
                         .getBoolean(SPIN_KEY, false) ? 1 : 0;
             } catch (Throwable error) {
                 known = 0;
@@ -180,18 +220,21 @@ public final class AvatarShape {
 
     static void setSpin(Context context, boolean on) {
         spin = on ? 1 : 0;
-        context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit()
+        context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit()
                 .putBoolean(SPIN_KEY, on).apply();
     }
 
+    
     static float angle() {
         return (AnimationUtils.currentAnimationTimeMillis() % TURN) * 360f / TURN;
     }
 
+    
     static boolean turning() {
         return index() > 0 && spins();
     }
 
+    
     public static void reset(Path path) {
         synchronized (SHAPED) {
             SHAPED.remove(path);
@@ -200,6 +243,12 @@ public final class AvatarShape {
     }
 
     private static Object owner;
+
+    
+
+
+
+
 
     public static void owner(Object who) {
         owner = who;
@@ -216,6 +265,12 @@ public final class AvatarShape {
     private static final Matrix TURN_PLACE = new Matrix();
     private static final RectF WHOLE = new RectF();
     private static final RectF SHAPE = new RectF();
+
+    
+
+
+
+
 
     private static Path turned(Path path) {
         if (!turning()) return path;
@@ -236,7 +291,8 @@ public final class AvatarShape {
                 && Math.abs(WHOLE.right - SHAPE.right) < 1 && Math.abs(WHOLE.bottom - SHAPE.bottom) < 1) {
             TURNED.transform(TURN_PLACE);
         } else {
-
+            
+            
             TURNED.op(PLACED, Path.Op.XOR);
             PLACED.transform(TURN_PLACE);
             TURNED.op(PLACED, Path.Op.XOR);
@@ -244,6 +300,7 @@ public final class AvatarShape {
         return TURNED;
     }
 
+    
     public static void drawPath(Canvas canvas, Path path, Paint paint) {
         Object who = takeOwner();
         synchronized (TURNED) {
@@ -251,13 +308,14 @@ public final class AvatarShape {
             try {
                 drawn = turned(path);
             } catch (Throwable error) {
-
+                
             }
             canvas.drawPath(drawn, paint);
             if (drawn != path) again(who);
         }
     }
 
+    
     public static boolean clipPath(Canvas canvas, Path path) {
         Object who = takeOwner();
         synchronized (TURNED) {
@@ -265,7 +323,7 @@ public final class AvatarShape {
             try {
                 drawn = turned(path);
             } catch (Throwable error) {
-
+                
             }
             boolean left = canvas.clipPath(drawn);
             if (drawn != path) again(who);
@@ -276,12 +334,18 @@ public final class AvatarShape {
     private static final WeakHashMap<Object, Boolean> WAITING = new WeakHashMap<>();
     private static boolean posted;
 
+    
+
+
+
+
     static void again(Object who) {
         if (who == null || Looper.myLooper() != Looper.getMainLooper()) return;
         WAITING.put(who, Boolean.TRUE);
         if (posted) return;
         posted = true;
-
+        
+        
         Choreographer.getInstance().postFrameCallbackDelayed(TICK, 30L);
     }
 
@@ -303,10 +367,12 @@ public final class AvatarShape {
         }
     };
 
+    
     static Path chosenUnit() {
         return unit(index());
     }
 
+    
     static Path unit(int shape) {
         Path known = UNIT[shape];
         if (known != null) return known;
@@ -319,7 +385,10 @@ public final class AvatarShape {
                 made.addRect(-1, -1, 1, 1, Path.Direction.CW);
                 break;
             case "heart":
-
+                
+                
+                
+                
                 made.arcTo(new RectF(-1f, -1f, 0.1f, 0.1f), -35.1f, -174.9f, true);
                 made.cubicTo(-0.70f, 0.25f, -0.28f, 0.70f, 0f, 1f);
                 made.cubicTo(0.28f, 0.70f, 0.70f, 0.25f, 0.926f, -0.175f);
@@ -343,6 +412,7 @@ public final class AvatarShape {
         return made;
     }
 
+    
     static float reach(String shape, double around) {
         switch (shape) {
             case "cookie": return 0.92f + 0.08f * (float) Math.cos(9 * around);
@@ -355,17 +425,20 @@ public final class AvatarShape {
         }
     }
 
+    
     private static float sided(int sides, double around) {
         double slice = 2 * Math.PI / sides;
         double within = around % slice;
         if (within < 0) within += slice;
         double flat = Math.cos(Math.PI / sides) / Math.cos(within - slice / 2);
-
+        
+        
         double cap = 0.93, sharp = 36.0;
         double soft = -Math.log(Math.exp(-sharp * flat) + Math.exp(-sharp * cap)) / sharp;
         return (float) (soft / cap);
     }
 
+    
     static Bitmap picture(String shape, int size, int colour) {
         int which = 0;
         for (int i = 0; i < ALL.length; i++) if (ALL[i].equals(shape)) which = i;

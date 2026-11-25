@@ -19,6 +19,38 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Streaks {
 
     private Streaks() {}
@@ -28,29 +60,50 @@ public final class Streaks {
     public static final String KEY_MODE = "streak_mode";
     public static final String KEY_TEXT = "streak_text";
 
+    
     public static final String BY_STICKER = "sticker";
     public static final String BY_TEXT = "text";
 
     public static final String DEFAULT_TEXT = "Это авто серия!";
 
+    
+
+
+
+
+
+
     private static final String GREY = "SECONDARY_ACTIVE";
 
+    
     private static final int SHOWN_FROM = 3;
 
     private static final long EVERY = 15 * 60 * 1000L;
 
+    
+
+
+
+
+
+
+
+
     private static final int MAX_ATTEMPTS = 1;
-
+    
     private static final long RECHECK = 4 * 60 * 1000L;
-
+    
     private static final long VERIFY = 15000L;
     private static final long DAY = 24 * 60 * 60 * 1000L;
 
+    
     private static final String SOURCE = "AUTO_CONSECUTIVE_SA_STICKERS";
 
+    
     private static final Map<String, StreakData> known =
             new LinkedHashMap<String, StreakData>();
 
+    
     private static final Map<String, StickerItem> seenStickers =
             new LinkedHashMap<String, StickerItem>();
     private static final Map<String, StickerItem> favourites = new LinkedHashMap<String, StickerItem>();
@@ -67,20 +120,10 @@ public final class Streaks {
         if(isEnabled())timer.postDelayed(timedRound,StreakSchedule.delay(System.currentTimeMillis(),EVERY));
     }
 
-    public static boolean isEnabled() {
-        return flag(KEY_ON, true);
-    }
+    
 
-    public static StickerItem fireSticker() {
-        StickerItem item = new StickerItem();
-        item.stickerBase = new StickerBase();
-        item.stickerBase.id = 7099999999999999999L;
-        item.stickerBase.title = "🔥";
-        StickerImage img = new StickerImage();
-        img.uri = "emoji_fire";
-        item.stickerBase.image = img;
-        item.stickerBase.thumbnail = img;
-        return item;
+    public static boolean isEnabled() {
+        return flag(KEY_ON, false);
     }
 
     public static void setEnabled(boolean on) {
@@ -122,46 +165,9 @@ public final class Streaks {
         return prefs == null ? "" : prefs.getString(KEY_STICKER, "");
     }
 
-    private static StickerItem restoreChosenSticker() {
-        SharedPreferences prefs = prefs();
-        if (prefs == null) return null;
-        String idStr = prefs.getString(KEY_STICKER, "");
-        if (idStr == null || idStr.isEmpty()) return null;
-        try {
-            StickerItem item = new StickerItem();
-            item.stickerBase = new StickerBase();
-            try { item.stickerBase.id = Long.parseLong(idStr); } catch (Throwable ignored) {}
-            item.stickerBase.title = prefs.getString(KEY_STICKER + "_title", "🔥");
-            StickerImage img = new StickerImage();
-            img.uri = prefs.getString(KEY_STICKER + "_uri", "");
-            String url = prefs.getString(KEY_STICKER + "_url", "");
-            if (url != null && !url.isEmpty()) {
-                img.urlList = new ArrayList<String>(java.util.Collections.singletonList(url));
-            }
-            item.stickerBase.image = img;
-            item.stickerBase.thumbnail = img;
-            return item;
-        } catch (Throwable ignored) {
-            return null;
-        }
-    }
-
     public static void choose(String id) {
         SharedPreferences prefs = prefs();
-        if (prefs != null) {
-            SharedPreferences.Editor edit = prefs.edit().putString(KEY_STICKER, id).putString(KEY_MODE, BY_STICKER);
-            StickerItem item = sticker(id);
-            if (item != null && item.stickerBase != null) {
-                StickerBase base = item.stickerBase;
-                if (base.title != null) edit.putString(KEY_STICKER + "_title", base.title);
-                StickerImage img = base.thumbnail != null ? base.thumbnail : base.image;
-                if (img != null) {
-                    if (img.uri != null) edit.putString(KEY_STICKER + "_uri", img.uri);
-                    if (img.urlList != null && !img.urlList.isEmpty()) edit.putString(KEY_STICKER + "_url", String.valueOf(img.urlList.get(0)));
-                }
-            }
-            edit.apply();
-        }
+        if (prefs != null) prefs.edit().putString(KEY_STICKER, id).putString(KEY_MODE,BY_STICKER).apply();
     }
 
     private static boolean flag(String key, boolean fallback) {
@@ -176,13 +182,18 @@ public final class Streaks {
     private static SharedPreferences prefs() {
         Context context = AirTok.context();
         if (context == null) return null;
-        return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
     }
 
+    
+
+    
     private static volatile IStreakService service;
 
+    
     private static final Map<String, Long> asked = new LinkedHashMap<String, Long>();
 
+    
     public static StreakData streakOf(IStreakService from, String conversation, boolean fresh) {
         StreakData data = readStreak(from,conversation,fresh);
         note(from, conversation);
@@ -194,60 +205,47 @@ public final class Streaks {
         return data;
     }
 
+    
     public static boolean hasStreak(IStreakService from, String conversation) {
         note(from, conversation);
         return from != null && from.a0(conversation);
     }
 
-    public static boolean hasAnyStreak(String conversation) {
-        if (conversation == null || conversation.trim().isEmpty()) return false;
-        conversation = conversation.trim();
-        IStreakService from = service;
-        if (from != null) {
-            try {
-                if (from.a0(conversation)) return true;
-            } catch (Throwable ignored) {}
-            try {
-                if (from.w(conversation) >= SHOWN_FROM) return true;
-            } catch (Throwable ignored) {}
-            try {
-                Method m = null;
-                try { m = from.getClass().getMethod("n0", String.class, boolean.class); }
-                catch (Throwable e1) {
-                    try { m = from.getClass().getMethod("LJJJI", String.class, boolean.class); }
-                    catch (Throwable ignored) {}
-                }
-                if (m != null) {
-                    m.setAccessible(true);
-                    if (Boolean.TRUE.equals(m.invoke(from, conversation, false))) return true;
-                }
-            } catch (Throwable ignored) {}
-        }
-        StreakData data = ask(conversation);
-        if (data == null) {
-            synchronized (known) {
-                data = known.get(conversation);
+    
+    public static boolean showsStreak(IStreakService from, String conversation, boolean flag) {
+        note(from, conversation);
+        if (from == null) return false;
+        try {
+            Method m = null;
+            for (String name : new String[]{"n0", "LJJJI", "h0"}) {
+                try {
+                    m = from.getClass().getMethod(name, String.class, boolean.class);
+                    if (m != null) break;
+                } catch (NoSuchMethodException ignored) {}
             }
-        }
-        if (data != null) {
-            if (data.streak >= SHOWN_FROM) {
-                String state = statusOf(data);
-                if (GREY.equals(state) || "ACTIVE".equals(state)) {
-                    return true;
-                }
-                long nowSec = System.currentTimeMillis() / 1000L;
-                if (data.endAt > nowSec || data.activeBefore > nowSec) {
-                    return true;
+            if (m == null) {
+                for (Method method : from.getClass().getMethods()) {
+                    if (method.getReturnType() == boolean.class && method.getParameterCount() == 2
+                            && method.getParameterTypes()[0] == String.class
+                            && method.getParameterTypes()[1] == boolean.class) {
+                        m = method;
+                        break;
+                    }
                 }
             }
+            if (m != null) {
+                m.setAccessible(true);
+                return Boolean.TRUE.equals(m.invoke(from, conversation, flag));
+            }
+        } catch (Throwable error) {
+            Diary.note("streak visibility: " + error);
         }
         return false;
     }
 
-    public static boolean showsStreak(IStreakService from, String conversation, boolean flag) {
-        note(from, conversation);
-        try{if(from==null)return false;Method m;try{m=from.getClass().getMethod("n0",String.class,boolean.class);}catch(NoSuchMethodException e){try{m=from.getClass().getMethod("LJJJI",String.class,boolean.class);}catch(NoSuchMethodException e2){m=from.getClass().getMethod("h0",String.class,boolean.class);}}m.setAccessible(true);return Boolean.TRUE.equals(m.invoke(from,conversation,flag));}catch(Throwable error){Diary.note("streak visibility: "+error);return false;}
-    }
+    
+    
+    
 
     public static int streakCount(IStreakService from, String conversation) {
         note(from, conversation);
@@ -271,11 +269,11 @@ public final class Streaks {
 
     public static String streakText(IStreakService from, String conversation) {
         note(from, conversation);
-        return null;
+        return from == null ? null : from.O(conversation);
     }
 
     private static volatile boolean discoveryQueued;
-
+    
     private static void kick() {
         if (!isEnabled() || discoveryQueued) return;
         discoveryQueued = true;
@@ -286,10 +284,20 @@ public final class Streaks {
         }, 1500L);
     }
 
+    
     static boolean ready() {
         NativeStreaks.prepare();
         return service != null && Account.liveId() != null;
     }
+
+    
+
+
+
+
+
+
+
 
     static boolean ready(long waitMillis) {
         long end = System.currentTimeMillis() + waitMillis;
@@ -299,13 +307,17 @@ public final class Streaks {
         return ready();
     }
 
+    
+
+
+
     static boolean runNow(Context context) {
         if (!isEnabled()) return false;
-        if (!roundRunning.compareAndSet(false, true)) return true;
+        if (!streakSending.compareAndSet(false, true)) return true;
         try {
             return roundWorker(context, false);
         } finally {
-            roundRunning.set(false);
+            streakSending.set(false);
         }
     }
     private static void note(IStreakService from, String conversation) {
@@ -326,6 +338,7 @@ public final class Streaks {
         }
     }
 
+    
     public static StickerBase stickerBase(StickerItem sticker) {
         StickerBase base = sticker == null ? null : sticker.stickerBase;
         try {
@@ -359,21 +372,13 @@ public final class Streaks {
     }
     private static String conversationAccount;
     private static synchronized void currentAccount(){
-        String uid = Account.liveId();
-        if (uid != null && !uid.equals(conversationAccount)) {
-            conversationAccount = uid;
-            service = null;
-            status = null;
-            restoreConversations();
-        } else if (asked.isEmpty()) {
-            restoreConversations();
-        }
+        String uid=Account.liveId();if(java.util.Objects.equals(uid,conversationAccount))return;
+        conversationAccount=uid;service=null;status=null;synchronized(asked){asked.clear();}synchronized(known){known.clear();}
+        if(uid!=null)restoreConversations();
     }
-    private static String conversationKey(){
-        String uid = Account.liveId();
-        return (uid != null && uid.length() > 0) ? ("streak_conversations_" + uid) : "streak_conversations_common";
-    }
+    private static String conversationKey(){return "streak_conversations_"+Account.liveId();}
 
+    
     private static String idOf(StickerBase base) {
         if (base == null) return null;
         if (base.id != null) return String.valueOf(base.id);
@@ -381,37 +386,27 @@ public final class Streaks {
         return image == null || image.uri == null ? null : image.uri;
     }
 
+    
     public static List<String> offered() {
         FavouriteStickers.read();
         synchronized (seenStickers) {
             List<String> out = new ArrayList<String>(favourites.keySet());
             java.util.Collections.reverse(out);
-            String ch = chosen();
-            if (ch != null && !ch.isEmpty() && !out.contains(ch)) {
-                out.add(0, ch);
-            }
             return out;
         }
     }
 
     public static StickerItem sticker(String id) {
-        if (id == null || id.isEmpty()) return null;
         synchronized (seenStickers) {
-            StickerItem item = favourites.get(id);
-            if (item == null) item = seenStickers.get(id);
-            if (item != null) return item;
+            return favourites.get(id);
         }
-        if (id.equals(chosen())) {
-            StickerItem restored = restoreChosenSticker();
-            if (restored != null) {
-                synchronized (seenStickers) {
-                    favourites.put(id, restored);
-                }
-                return restored;
-            }
-        }
-        return null;
     }
+
+    
+
+
+
+
 
     public static android.graphics.Bitmap thumbnail(Context context, String id) {
         return thumbnail(context,id,null);
@@ -444,7 +439,7 @@ public final class Streaks {
         });return null;
     }
     private static final java.util.concurrent.ExecutorService thumbnailWorkers=java.util.concurrent.Executors.newFixedThreadPool(2,r->{
-        Thread thread=new Thread(r,"margyt-sticker-thumbnail");thread.setDaemon(true);thread.setPriority(Thread.MIN_PRIORITY);return thread;
+        Thread thread=new Thread(r,"airtok-sticker-thumbnail");thread.setDaemon(true);thread.setPriority(Thread.MIN_PRIORITY);return thread;
     });
     private static final Map<String,android.graphics.Bitmap> thumbnails=new LinkedHashMap<String,android.graphics.Bitmap>();
     private static final java.util.Set<String> loading=new java.util.HashSet<String>();
@@ -456,7 +451,8 @@ public final class Streaks {
             StickerItem sticker = sticker(id);
             StickerBase base = sticker == null ? null : sticker.stickerBase;
             if (base == null) return null;
-
+            
+            
             StickerImage image = base.thumbnail != null ? base.thumbnail : base.image;
             if (image == null || image.urlList == null || image.urlList.isEmpty()) image=base.image;
             if (image == null || image.urlList == null || image.urlList.isEmpty()) return null;
@@ -466,6 +462,8 @@ public final class Streaks {
         }
     }
 
+    
+
     public static synchronized void start(Context context) {
         if (started) return;
         started = true;
@@ -474,28 +472,37 @@ public final class Streaks {
         final Context application = context.getApplicationContext();
         timer=handler;timerContext=application==null?context:application;
         try {
-
+            
+            
+            
             StreakAlarm.channel(application);
-
+            
+            
+            
+            
+            
             if (isEnabled()) StreakAlarm.schedule(application, false);
         } catch (Throwable ignored) { }
         rescheduleForeground();
         handler.postDelayed(()->round(timerContext),30000L);
     }
 
+    
     public static void round(final Context context) {
         if (!isEnabled()) return;
-        if (!roundRunning.compareAndSet(false, true)) return;
+        if (!streakSending.compareAndSet(false, true)) return;
         Net.away("streaks", () -> {
             try { if (roundWorker(context)) StreakAlarm.schedule(context, true); }
             catch (Throwable error) { Diary.note("streaks round: " + error); }
-            finally { roundRunning.set(false); }
+            finally { streakSending.set(false); }
         });
     }
 
-    private static final java.util.concurrent.atomic.AtomicBoolean roundRunning =
+    private static final java.util.concurrent.atomic.AtomicBoolean streakSending =
             new java.util.concurrent.atomic.AtomicBoolean();
+    private static final Map<String, Long> recentlySent = new LinkedHashMap<String, Long>();
 
+    
     private static boolean roundWorker(final Context context) {
         return roundWorker(context, true);
     }
@@ -507,30 +514,21 @@ public final class Streaks {
         if(!StreakAlarm.online(context)){Diary.note("streaks: no network -- waiting for it, nothing marked as sent");return true;}
         FavouriteStickers.read();
         final boolean byText = BY_TEXT.equals(mode());
-        StickerItem sticker = byText ? null : sticker(chosen());
+        final StickerItem sticker = byText ? null : sticker(chosen());
         if (!byText && sticker == null) {
-            String ch = chosen();
-            if (ch != null && !ch.isEmpty()) {
-                sticker = sticker(ch);
+            if (chosen().length() == 0) {
+                Diary.note("streaks: nothing to send -- no sticker chosen yet");
+                return false;
             }
-            if (sticker == null) {
-                synchronized (seenStickers) {
-                    if (!favourites.isEmpty()) {
-                        sticker = favourites.values().iterator().next();
-                    } else if (!seenStickers.isEmpty()) {
-                        sticker = seenStickers.values().iterator().next();
-                    }
-                }
-            }
-            if (sticker == null) {
-                sticker = fireSticker();
-            }
+            Diary.note("streaks: chosen sticker is still loading -- retrying");
+            new Handler(Looper.getMainLooper()).post(() -> FavouriteStickers.load(null));
+            return true;
         }
 
         List<String> all = conversations();
         if (all.isEmpty()) {
             Diary.note("streaks: no conversation has been looked at yet");
-            return true;
+            return true; 
         }
 
         final String owner=Account.liveId();
@@ -547,7 +545,10 @@ public final class Streaks {
                 continue;
             }
             if(data.convId!=null && !conversation.equals(data.convId)){unknown++;again=true;continue;}
-
+            
+            
+            
+            
             if(data.streak<SHOWN_FROM){none++;continue;}
             String state = statusOf(data);
             if (GREY.equals(state)) {
@@ -564,7 +565,8 @@ public final class Streaks {
                 }
             } else if ("ACTIVE".equals(state)) {
                 lit++;
-
+                
+                
                 if (StreakSchedule.minute() >= 0 && automaticAttempts(conversation, now) == 0) due.add(conversation);
             } else if (state == null) {
                 unknown++;
@@ -596,10 +598,16 @@ public final class Streaks {
                 failed = true;
             }
         }
-
+        
+        
         if (!submitted.isEmpty() && (!verifyImmediately || !verify(submitted))) failed = true;
         return failed || again;
     }
+
+    
+
+
+
 
     private static boolean verify(List<String> sent) {
         List<String> left = new ArrayList<String>(sent);
@@ -618,6 +626,15 @@ public final class Streaks {
         if (!left.isEmpty()) Diary.note("streak not confirmed yet, " + left.size() + " still grey -- will look again");
         return left.isEmpty();
     }
+
+    
+
+
+
+
+
+
+
 
     private static String statusOf(StreakData data) {
         IStreakService from = service;
@@ -653,34 +670,22 @@ public final class Streaks {
     private static final java.util.concurrent.atomic.AtomicBoolean allRunning =
             new java.util.concurrent.atomic.AtomicBoolean();
 
+    
+
+
+
+
+
+
     public static void sendAll(final Context context) {
         currentAccount();
-        if (conversations().isEmpty()) restoreConversations();
+        if (Account.liveId() == null) { Screen.say(Text.STREAK_ALL_NONE); return; }
         FavouriteStickers.read();
-        StickerItem sticker = BY_TEXT.equals(mode()) ? null : sticker(chosen());
-        if (sticker == null) {
-            String ch = chosen();
-            if (ch != null && !ch.isEmpty()) {
-                sticker = sticker(ch);
-            }
-        }
-        if (sticker == null) {
-            synchronized (seenStickers) {
-                if (!favourites.isEmpty()) {
-                    sticker = favourites.values().iterator().next();
-                } else if (!seenStickers.isEmpty()) {
-                    sticker = seenStickers.values().iterator().next();
-                }
-            }
-        }
-        if (sticker == null) {
-            sticker = fireSticker();
-        }
-        final StickerItem finalSticker = sticker;
-        NativeStreaks.prepare();
+        final StickerItem sticker = BY_TEXT.equals(mode()) ? null : sticker(chosen());
+        if (!BY_TEXT.equals(mode()) && sticker == null) { Screen.say(Text.STREAK_ALL_NO_STICKER); return; }
         final List<String> all = conversations();
         if (all.isEmpty()) { Screen.say(Text.STREAK_ALL_NO_CHATS); return; }
-        if (!allRunning.compareAndSet(false, true)) { Screen.say(Text.STREAK_ALL_BUSY); return; }
+        if (!streakSending.compareAndSet(false, true)) { Screen.say(Text.STREAK_ALL_BUSY); return; }
         final String owner = Account.liveId();
         Net.away("streak all", new Runnable() {
             @Override
@@ -688,71 +693,87 @@ public final class Streaks {
                 try {
                     List<String> targets = new ArrayList<String>();
                     for (String conversation : all) {
-                        if (conversation == null || conversation.trim().isEmpty()) continue;
-                        if (hasAnyStreak(conversation)) {
-                            targets.add(conversation.trim());
-                        }
+                        if (targets.contains(conversation)) continue;
+                        StreakData data = ask(conversation);
+                        if (data == null) continue;
+                        if (data.convId != null && !conversation.equals(data.convId)) continue;
+                        if (data.streak < 1) continue;
+                        targets.add(conversation);
                     }
-                    Diary.note("streak all: " + targets.size() + " conversation(s)");
+                    Diary.note("streak all: " + targets.size() + " streak(s) among " + all.size() + " conversation(s)");
                     if (targets.isEmpty()) { Screen.say(Text.STREAK_ALL_NONE); return; }
                     int sent = 0;
                     for (String conversation : targets) {
-                        if (owner != null && !owner.equals(Account.liveId())) break;
-                        if (send(context, finalSticker, conversation)) {
+                        if (!owner.equals(Account.liveId())) break;
+                        synchronized (recentlySent) {
+                            Long last = recentlySent.get(conversation);
+                            if (last != null && System.currentTimeMillis() - last < 45000L) continue;
+                        }
+                        if (deliver(context, sticker, conversation)) {
+                            synchronized (recentlySent) {
+                                recentlySent.put(conversation, System.currentTimeMillis());
+                            }
                             remember(conversation);
                             sent++;
                             Diary.note("streak all: request submitted, delivery unconfirmed: " + conversation);
                         } else {
                             Diary.note("streak all: request failed: " + conversation);
                         }
-                        try { Thread.sleep(600L); } catch (InterruptedException e) { break; }
+                        try { Thread.sleep(800L); } catch (InterruptedException e) { break; }
                     }
                     Screen.say(String.format(java.util.Locale.getDefault(), Text.STREAK_ALL_DONE, sent, targets.size()));
                 } catch (Throwable error) {
                     Diary.note("streak all: " + error);
                 } finally {
-                    allRunning.set(false);
+                    streakSending.set(false);
                 }
             }
         });
     }
 
+    
     private static boolean deliver(Context context, StickerItem sticker,
                                    String conversation) {
         if (BY_TEXT.equals(mode())) return sendText(context, conversation, text());
         return send(context, sticker, conversation);
     }
 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static boolean sendText(Context context, String conversation, String words) {
         Diary.note("streak text: not available in this build");
         return false;
     }
 
+    
     private static List<String> conversations() {
-        java.util.Set<String> set = new java.util.LinkedHashSet<String>();
         synchronized (asked) {
-            set.addAll(asked.keySet());
+            List<String> out = new ArrayList<String>(asked.keySet());
+            java.util.Collections.reverse(out);
+            return out;
         }
-        IStreakService from = service;
-        if (from != null) {
-            try {
-                Map<String, ?> streakMap = NativeStreaks.getStreakMap(from);
-                if (streakMap != null && !streakMap.isEmpty()) {
-                    for (String id : streakMap.keySet()) {
-                        if (id != null && !id.isEmpty()) {
-                            set.add(id);
-                            note(from, id);
-                        }
-                    }
-                }
-            } catch (Throwable ignored) {}
-        }
-        List<String> out = new ArrayList<String>(set);
-        java.util.Collections.reverse(out);
-        return out;
     }
 
     private static volatile boolean persistQueued;
+
+    
+
+
+
 
     private static void persistConversations() {
         if (persistQueued) return;
@@ -763,8 +784,7 @@ public final class Streaks {
             if (p == null) return;
             org.json.JSONArray saved = new org.json.JSONArray();
             synchronized (asked) { for (String id : asked.keySet()) saved.put(id); }
-            String val = saved.toString();
-            p.edit().putString(conversationKey(), val).putString("streak_conversations_common", val).apply();
+            p.edit().putString(conversationKey(), saved.toString()).apply();
         }, 2000L);
     }
 
@@ -772,11 +792,8 @@ public final class Streaks {
         SharedPreferences p = prefs();
         if (p == null) return;
         try {
-            String savedJson = p.getString(conversationKey(), null);
-            if (savedJson == null || savedJson.equals("[]")) {
-                savedJson = p.getString("streak_conversations_common", "[]");
-            }
-            org.json.JSONArray saved = new org.json.JSONArray(savedJson);
+            org.json.JSONArray saved = new org.json.JSONArray(
+                    p.getString(conversationKey(), "[]"));
             synchronized (asked) {
                 for (int i = 0; i < saved.length() && i < 200; i++) {
                     String id = saved.optString(i, "");
@@ -788,11 +805,41 @@ public final class Streaks {
         }
     }
 
-    private static StreakData readStreak(IStreakService from,String conversation,boolean fresh){
-        if(from==null)return null;
-        try{return from.O(conversation,fresh);}catch(Throwable ignored){}
-        try{return from.J(conversation,fresh);}catch(Throwable ignored){}
-        try{Method m;try{m=from.getClass().getMethod("O",String.class,boolean.class);}catch(NoSuchMethodException e){try{m=from.getClass().getMethod("LJIJJLI",String.class,boolean.class);}catch(NoSuchMethodException e2){m=from.getClass().getMethod("J",String.class,boolean.class);}}m.setAccessible(true);Object data=m.invoke(from,conversation,fresh);return data instanceof StreakData?(StreakData)data:null;}catch(Throwable error){Diary.note("streak read: "+error);return null;}
+    
+
+
+
+
+
+    private static StreakData readStreak(IStreakService from, String conversation, boolean fresh) {
+        if (from == null) return null;
+        try {
+            Method m = null;
+            for (String name : new String[]{"O", "LJIJJLI", "J"}) {
+                try {
+                    m = from.getClass().getMethod(name, String.class, boolean.class);
+                    if (m != null) break;
+                } catch (NoSuchMethodException ignored) {}
+            }
+            if (m == null) {
+                for (Method method : from.getClass().getMethods()) {
+                    if (method.getReturnType() == StreakData.class && method.getParameterCount() == 2
+                            && method.getParameterTypes()[0] == String.class
+                            && method.getParameterTypes()[1] == boolean.class) {
+                        m = method;
+                        break;
+                    }
+                }
+            }
+            if (m != null) {
+                m.setAccessible(true);
+                Object data = m.invoke(from, conversation, fresh);
+                return data instanceof StreakData ? (StreakData) data : null;
+            }
+        } catch (Throwable error) {
+            Diary.note("streak read: " + error);
+        }
+        return null;
     }
     private static StreakData ask(String conversation) {
         IStreakService from = service;
@@ -808,7 +855,9 @@ public final class Streaks {
             } catch (Throwable ignored) {
             }
         }
-        return null;
+        synchronized (known) {
+            return known.get(conversation);
+        }
     }
 
     private static long lastAttempt(String conversation) {
@@ -822,6 +871,7 @@ public final class Streaks {
     private static int automaticAttempts(String conversation,long now){if(StreakSchedule.minute()<0)return attemptsToday(conversation,now);SharedPreferences p=prefs();if(p==null)return MAX_ATTEMPTS;if(!StreakSchedule.sameDay(now,automaticLast(conversation)))return 0;return p.getInt(automaticKey(conversation)+"_count",1);}
     private static void rememberAutomatic(String conversation){int minute=StreakSchedule.minute();if(minute<0){remember(conversation);return;}SharedPreferences p=prefs();if(p==null)return;long now=System.currentTimeMillis();int count=automaticAttempts(conversation,now)+1;String key=automaticKey(conversation);p.edit().putLong(key+"_at",now).putInt(key+"_count",count).apply();}
 
+    
     private static int attemptsToday(String conversation, long now) {
         SharedPreferences prefs = prefs();
         if (prefs == null || conversation == null) return MAX_ATTEMPTS;
@@ -838,6 +888,17 @@ public final class Streaks {
                     .putInt("streak_attempts_" + Account.liveId()+"_"+conversation, made).apply();
         }
     }
+
+    
+
+    
+
+
+
+
+
+
+
 
     public static boolean send(Context context, StickerItem sticker, String conversation) {
         if (Looper.myLooper() == Looper.getMainLooper())
@@ -884,6 +945,17 @@ public final class Streaks {
                 return false;
             }
 
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             Class<?>[] types = sender.getParameterTypes();
             if (sourceFor(types[3]) == null) {
                 Diary.note("streak send: source enum absent on this release");
@@ -915,6 +987,13 @@ public final class Streaks {
         }
     }
 
+    
+
+
+
+
+
+
     public static void describe() {
         Object service = messageService();
         if (service == null) {
@@ -938,6 +1017,7 @@ public final class Streaks {
         }
     }
 
+    
     private static Object messageService() {
         try {
             Class<?> api = Class.forName("com.ss.android.ugc.aweme.im.sticker.api.IMStickerApi");
@@ -968,42 +1048,34 @@ public final class Streaks {
         }
     }
 
+    
     static Object sourceFor(Class<?> contract) {
-        if (!contract.isEnum() && !contract.isInterface()) return null;
-        Object source = constant(contract, SOURCE);
-        if (source != null) return source;
-        for (String cname : new String[]{"X.0YwO", "X.13GH", "X.1EUj", "X.12qb"}) {
+        if (contract == null) return null;
+        for (String clsName : new String[]{"X.0YwO", "X.13GH"}) {
             try {
-                Class<?> cls = Class.forName(cname);
-                source = constant(cls, SOURCE);
-                if (source != null && (contract.isInstance(source) || contract.isAssignableFrom(cls))) return source;
+                Class<?> c = Class.forName(clsName);
+                if (contract.isAssignableFrom(c)) {
+                    Object source = constant(c, SOURCE);
+                    if (source != null) return source;
+                }
             } catch (Throwable ignored) {}
+        }
+        if (contract.isEnum()) {
+            Object source = constant(contract, SOURCE);
+            if (source != null) return source;
         }
         return null;
     }
-
+    
     private static Object constant(Class<?> type, String name) {
-        if (type == null) return null;
         try {
-            if (type.isEnum()) {
-                return Enum.valueOf((Class<Enum>) type.asSubclass(Enum.class), name);
-            }
-        } catch (Throwable ignored) {}
-        try {
-            Field f = type.getField(name);
-            f.setAccessible(true);
-            return f.get(null);
+            return Enum.valueOf((Class<Enum>) type.asSubclass(Enum.class), name);
         } catch (Throwable ignored) {
-            try {
-                Field f = type.getDeclaredField(name);
-                f.setAccessible(true);
-                return f.get(null);
-            } catch (Throwable ignored2) {
-                return null;
-            }
+            return null;
         }
     }
 
+    
     private static Object blank(Class<?> type) {
         if (!type.isPrimitive()) return null;
         if (type == boolean.class) return Boolean.FALSE;
@@ -1012,6 +1084,7 @@ public final class Streaks {
         return Integer.valueOf(0);
     }
 
+    
     private static Object maybe(Class<?> type) {
         try {
             for (Constructor<?> made : type.getDeclaredConstructors()) {

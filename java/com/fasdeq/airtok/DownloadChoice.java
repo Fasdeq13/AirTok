@@ -2,7 +2,7 @@ package com.fasdeq.airtok;
 import android.app.Dialog;import android.view.View;import android.view.ViewGroup;import android.widget.TextView;
 
 public final class DownloadChoice {
-
+ 
  public static void show(Dialog dialog){dialog.show();if(!VideoActions.windowOn()||dialog.getClass().getName().startsWith("com.fasdeq.airtok.")||dialog.getWindow()==null)return;
   Object found=VideoActions.downloadPost(dialog.getContext());if(found==null)found=SheetPost.of(dialog);if(found==null)return;final Object post=found;guard(dialog,post);View root=dialog.getWindow().getDecorView();root.post(()->bind(root,dialog,post,0,new int[]{512}));for(int delay:new int[]{150,500})root.postDelayed(()->{if(dialog.isShowing())bind(root,dialog,post,0,new int[]{512});},delay);
  }
@@ -15,17 +15,26 @@ public final class DownloadChoice {
   if(view instanceof ViewGroup){ViewGroup group=(ViewGroup)view;for(int i=0;i<group.getChildCount();i++)bind(group.getChildAt(i),dialog,post,depth+1,budget);}
  }
 
+ 
+
+
+
+
+
+
+
+
  static boolean cell(View target){
   View root=target.getRootView();int across=root==null?0:root.getWidth();
   return across<=0||target.getWidth()<=0||target.getWidth()<across*0.45f;
  }
  private static final java.util.Map<Dialog,Boolean> offlineSheets=new java.util.WeakHashMap<>();
-
+ 
  private static boolean offline(Dialog dialog){
   synchronized(offlineSheets){Boolean known=offlineSheets.get(dialog);if(known!=null)return known;}
   android.view.Window window=dialog.getWindow();if(window==null)return false;
   int[] budget={512};boolean found=offlineIn(window.getDecorView(),0,budget);
-
+  
   if(found||budget[0]<500)synchronized(offlineSheets){offlineSheets.put(dialog,found);}
   return found;
  }
@@ -43,11 +52,16 @@ public final class DownloadChoice {
 
  private static final java.util.Map<android.view.Window,Boolean> guarded=new java.util.WeakHashMap<>();
  private static final java.util.Map<android.view.Window,Object> posts=new java.util.WeakHashMap<>();
+ 
+
+
+
+
 
  private static void guard(final Dialog dialog,final Object post){
   final android.view.Window window=dialog.getWindow();if(window==null)return;
   final android.view.Window.Callback base=window.getCallback();if(base==null)return;
-
+  
   synchronized(posts){posts.put(window,post);}
   synchronized(guarded){if(guarded.containsKey(window))return;guarded.put(window,Boolean.TRUE);}
   final float[] down=new float[2];final long[] when={0L};final android.graphics.Rect[] zone={null};
@@ -79,7 +93,7 @@ public final class DownloadChoice {
    try{return method.invoke(base,args);}catch(java.lang.reflect.InvocationTargetException x){throw x.getCause();}
   }));
  }
-
+ 
  private static android.graphics.Rect saveZone(View view,int x,int y,int[] budget){
   if(view==null||budget[0]--<=0||view.getVisibility()!=View.VISIBLE)return null;
   CharSequence label=view instanceof TextView?((TextView)view).getText():view.getContentDescription();

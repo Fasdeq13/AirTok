@@ -14,6 +14,14 @@ import android.widget.SeekBar;
 
 import java.lang.ref.WeakReference;
 
+
+
+
+
+
+
+
+
 final class WavySeek {
 
     private WavySeek() {}
@@ -60,6 +68,7 @@ final class WavySeek {
         }
     }
 
+    
     private static View find(View view, int depth, int[] budget) {
         if (view == null || depth > 40 || budget[0]-- <= 0) return null;
         if (view instanceof SeekBar && "vpz".equals(Names.of(view))) return view;
@@ -116,13 +125,14 @@ final class WavySeek {
             float dt = last == 0 ? 0 : Math.min(0.05f, (now - last) / 1000f);
             last = now;
             boolean moving = playing(seek);
-
+            
             float target = moving ? unit * 3f : 0f;
             amplitude += (target - amplitude) * Math.min(1f, dt * 8f);
             float length = unit * 28f;
             if (moving) phase = (phase + dt * length * 1.2f) % length;
             int accent = Accent.colour();
 
+            
             line.setStrokeWidth(thick);
             line.setColor((accent & 0xFFFFFF) | 0x4D000000);
             float restFrom = Math.min(right, at + gap + unit * 2f);
@@ -132,6 +142,7 @@ final class WavySeek {
             canvas.drawCircle(right - thick / 2, cy, thick / 2.4f, line);
             line.setStyle(Paint.Style.STROKE);
 
+            
             float waveTo = at - gap;
             if (waveTo > left + thick / 2) {
                 path.reset();
@@ -148,12 +159,14 @@ final class WavySeek {
                 canvas.drawPath(path, line);
             }
 
+            
             line.setStyle(Paint.Style.FILL);
             line.setColor(accent);
             float half = unit * (dragging ? 2.5f : 2f), tall = unit * (dragging ? 12f : 9f);
             canvas.drawRoundRect(at - half, cy - tall, at + half, cy + tall, half, half, line);
             line.setStyle(Paint.Style.STROKE);
 
+            
             if (seek.isShown() && (moving || Math.abs(amplitude - target) > 0.1f)) scheduleSelf(this::invalidateSelf, now + 33);
         }
 

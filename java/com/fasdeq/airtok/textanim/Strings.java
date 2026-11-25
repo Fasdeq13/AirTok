@@ -50,12 +50,19 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
+
+
+
 
 public final class Strings {
     public static final int AUTO = 0;
@@ -70,7 +77,7 @@ public final class Strings {
         EN.put("Свой цвет", "Custom color");
         EN.put("Свои цвета", "Custom colors");
         EN.put("Два цвета для свечения, курсора и частиц", "Two colors for glow, cursor and particles");
-        EN.put("Чтобы применить, выбери «Свой цвет» в настройках свечения и курсора, а «Свои цвета» — в цветах частиц", "To use them, pick “Custom color” in glow and cursor settings, and “Custom colors” in particle colors");
+        EN.put("Чтобы применить, выберите «Свой цвет» в настройках свечения и курсора, а «Свои цвета» — в цветах частиц", "To use them, pick “Custom color” in glow and cursor settings, and “Custom colors” in particle colors");
         EN.put("ЦВЕТ 1 · СВЕЧЕНИЕ, КУРСОР, ЧАСТИЦЫ", "COLOR 1 · GLOW, CURSOR, PARTICLES");
         EN.put("ЦВЕТ 2 · ВТОРОЙ ЦВЕТ ЧАСТИЦ", "COLOR 2 · SECOND PARTICLE COLOR");
         EN.put("Оттенок", "Hue");
@@ -288,7 +295,7 @@ public final class Strings {
         EN.put("Подчёркивание", "Underscore");
         EN.put("Блок", "Block");
         EN.put("Нажми на поле и печатай сам", "Tap the field and type yourself");
-        EN.put("Печатаешь сам · нажми сюда, чтобы вернуть демо", "You're typing · tap here to restore the demo");
+        EN.put("Печатаешь сам · нажмите сюда, чтобы вернуть демо", "You're typing · tap here to restore the demo");
         EN.put("ЖИВОЕ ПРЕВЬЮ", "LIVE PREVIEW");
         EN.put("Анимация текста", "Text animation");
         EN.put("Настрой, как оживает набор", "Tune how typing comes alive");
@@ -364,6 +371,7 @@ public final class Strings {
         EN.put("Серый", "Gray");
         EN.put("Тлеющий", "Smoldering");
 
+        
         EN.put("Резкий старт", "Sharp start");
         EN.put("Плавный разгон", "Smooth ease");
         EN.put("Влево", "Left");

@@ -10,6 +10,18 @@ import android.os.ParcelFileDescriptor;
 
 import java.io.File;
 
+
+
+
+
+
+
+
+
+
+
+
+
 public final class AirTokProvider extends ContentProvider {
 
     @Override
@@ -17,9 +29,19 @@ public final class AirTokProvider extends ContentProvider {
         Context context = getContext();
         if (context == null) return true;
         AirTok.attach(context);
+        try {
+            android.content.SharedPreferences spDark = context.getSharedPreferences("sp_dark_mode", Context.MODE_PRIVATE);
+            if (!spDark.contains("dark_mode")) {
+                spDark.edit().putInt("dark_mode", 2).apply();
+            }
+            android.content.SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
+            if (!prefs.contains("force_dark")) {
+                prefs.edit().putBoolean("force_dark", true).apply();
+            }
+        } catch (Throwable ignored) {}
         try { CrashReports.start(context); } catch(Throwable ignored) {}
         if (!Version.LITE) SocialLibrary.start();
-
+        
         if (!Version.LITE) Ghost.start();
         Diary.note("start-up hook ran");
         try {
@@ -27,13 +49,12 @@ public final class AirTokProvider extends ContentProvider {
             if (application instanceof Application) {
                 ((Application) application).registerActivityLifecycleCallbacks(new SettingsRow());
                 Watch.start((Application) application);
-                Lag.watch();
                 Diary.note("watching for the settings screen");
             } else {
                 Diary.note("no application yet: " + application);
             }
         } catch (Throwable error) {
-
+            
             Diary.note("hook failed: " + error);
         }
         try {
@@ -52,11 +73,6 @@ public final class AirTokProvider extends ContentProvider {
             Diary.note("streaks failed to start: " + error);
         }
         try {
-            DevLink.start(context);
-        } catch (Throwable error) {
-            Diary.note("devlink failed to start: " + error);
-        }
-        try {
             Plugins.startAll(context);
         } catch (Throwable error) {
             Diary.note("plugins failed to start: " + error);
@@ -64,10 +80,21 @@ public final class AirTokProvider extends ContentProvider {
         return true;
     }
 
+    
+
+    
+
+
+
+
+
+
+
+
     public static Uri share(Context context, File file) {
         try {
             if (!file.isFile()) return null;
-            return Uri.parse("content://" + context.getPackageName() + ".margyt/"
+            return Uri.parse("content://" + context.getPackageName() + ".airtok/"
                     + file.getName());
         } catch (Throwable ignored) {
             return null;
@@ -80,9 +107,10 @@ public final class AirTokProvider extends ContentProvider {
             Context context = getContext();
             if (context == null) return null;
             String name = uri.getLastPathSegment();
-
+            
+            
             if (name == null || name.contains("/") || name.contains("..")) return null;
-            File file = new File(new File(context.getFilesDir(), "margyt"), name);
+            File file = new File(new File(context.getFilesDir(), "airtok"), name);
             if (!file.isFile()) return null;
             return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
         } catch (Throwable error) {

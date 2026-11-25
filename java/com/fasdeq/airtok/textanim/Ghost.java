@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class Ghost {
     public final int offset;
@@ -65,7 +69,7 @@ public final class Ghost {
     public final float width;
     public final boolean emoji;
     public long time;
-
+    
     public int fadeMs;
 
     public Ghost(int offset, String text, float x, float baseline, float width, boolean emoji) {

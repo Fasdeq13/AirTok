@@ -19,6 +19,16 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.PathInterpolator;
 
+
+
+
+
+
+
+
+
+
+
 final class SettingsArt {
     private SettingsArt() {}
 
@@ -28,6 +38,7 @@ final class SettingsArt {
         return value * context.getResources().getDisplayMetrics().density;
     }
 
+    
     private static final class Eased {
         float value;
         private ValueAnimator animator;
@@ -52,7 +63,18 @@ final class SettingsArt {
         }
     }
 
+    
+
+    
+
+
+
     static final class Phone extends View {
+        
+
+
+
+
 
         private static final java.util.HashMap<String, float[]> MEMORY = new java.util.HashMap<String, float[]>();
         private final float[] memory;
@@ -68,20 +90,27 @@ final class SettingsArt {
         private final float[] wantRail;
         private Bitmap avatar;
 
+        
         interface RailTapped { void tapped(int kind); }
         private RailTapped railTapped;
         private final float[] railCentres = new float[8];
 
+        
         Phone liked(boolean on) { wantLiked = on ? 1f : 0f; return this; }
 
+        
         Phone capsule(boolean on) { wantCapsule = on ? 1f : 0f; return this; }
 
+        
         Phone seekbar(boolean on) { wantSeek = on ? 1f : 0f; return this; }
 
+        
         Phone date(boolean on) { wantDate = on ? 1f : 0f; return this; }
 
+        
         Phone rail(int kind, boolean shown) { wantRail[kind] = shown ? 1f : 0f; return this; }
 
+        
         Phone onRail(RailTapped listener) {
             railTapped = listener;
             setClickable(listener != null);
@@ -109,6 +138,7 @@ final class SettingsArt {
             this(context, skin, "phone");
         }
 
+        
         Phone(Context context, Skin skin, String key) {
             super(context);
             this.skin = skin;
@@ -128,6 +158,7 @@ final class SettingsArt {
             setMinimumHeight(Math.round(dp(context, 250)));
         }
 
+        
         Phone burn(boolean on, int strength, boolean keepBar) {
             float faint = on ? Math.max(0.1f, 1f - strength / 100f) : 1f;
             wantUi = faint;
@@ -136,11 +167,13 @@ final class SettingsArt {
             return this;
         }
 
+        
         Phone simple(boolean on) {
             wantSimple = on ? 1f : 0f;
             return this;
         }
 
+        
         void settle() {
             ui.to(this, wantUi, 320, EMPHASIZED);
             bar.to(this, wantBar, 320, EMPHASIZED);
@@ -169,8 +202,8 @@ final class SettingsArt {
             setMeasuredDimension(MeasureSpec.getSize(widthSpec), Math.round(dp(getContext(), 250)));
         }
 
-        private float u;
-        private float sx, sy;
+        private float u;   
+        private float sx, sy;   
 
         @Override
         protected void onDraw(Canvas canvas) {
@@ -178,7 +211,7 @@ final class SettingsArt {
             float height = getHeight() - 28 * d;
             float width = height * 0.49f;
             float left = (getWidth() - width) / 2f, top = 14 * d;
-
+            
             paint.setShader(null);
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(0xFF2C2C30);
@@ -215,6 +248,7 @@ final class SettingsArt {
             canvas.restore();
         }
 
+        
         private void status(Canvas canvas, float w, float h) {
             words(canvas, "12:00", 7 * u, 6.6f * u, 4.2f * u, 255, true, Paint.Align.LEFT);
             paint.setStyle(Paint.Style.FILL);
@@ -240,6 +274,7 @@ final class SettingsArt {
             canvas.drawRoundRect(box, 0.5f * u, 0.5f * u, paint);
         }
 
+        
         private void video(Canvas canvas, RectF screen) {
             int accent = Accent.colour();
             paint.setShader(new LinearGradient(0, screen.top, 0, screen.bottom,
@@ -269,7 +304,7 @@ final class SettingsArt {
 
         private void top(Canvas canvas, float w, int alpha, float s) {
             float y = 17 * u;
-
+            
             float e = eye.value;
             if (e < 0.999f) {
                 int liveAlpha = Math.round(alpha * (1f - Math.min(1f, e)));
@@ -281,7 +316,7 @@ final class SettingsArt {
                 words(canvas, "LIVE", 11 * u, y + 1.8f * u, 4.6f * u, liveAlpha, true, Paint.Align.CENTER);
             }
             if (e > 0.001f) eyeAt(canvas, 11 * u, y, 6.5f * u * Math.max(0f, e));
-
+            
             int tabs = Math.round(alpha * (1f - s));
             if (tabs > 0) {
                 words(canvas, Local.of("Подписки"), 40 * u, y + 2 * u, 5.6f * u, tabs * 160 / 255, false, Paint.Align.CENTER);
@@ -290,7 +325,7 @@ final class SettingsArt {
                 box.set(60 * u, y + 4.5f * u, 68 * u, y + 5.5f * u);
                 canvas.drawRoundRect(box, u, u, paint);
             }
-
+            
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(1.4f * u);
             paint.setColor(Color.argb(alpha, 255, 255, 255));
@@ -298,6 +333,7 @@ final class SettingsArt {
             canvas.drawLine(91.4f * u, y + 1.9f * u, 93.5f * u, y + 4f * u, paint);
         }
 
+        
         private void eyeAt(Canvas canvas, float cx, float cy, float r) {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(0xFFFFFFFF);
@@ -318,7 +354,7 @@ final class SettingsArt {
             float scale = 1f - 0.15f * s;
             float y = h * 0.5f;
             float step = 14.5f * u;
-
+            
             int author = Math.round(alpha * (1f - s));
             if (author > 0) {
                 float r = 5.6f * u;
@@ -348,7 +384,7 @@ final class SettingsArt {
                 float there = rails[i].value;
                 int a = Math.round(alpha * there);
                 if (railTapped != null && there < 0.99f) {
-
+                    
                     paint.setStyle(Paint.Style.STROKE);
                     paint.setStrokeWidth(0.6f * u);
                     paint.setColor(Color.argb(Math.round(alpha * 0.45f * (1f - there)), 255, 255, 255));
@@ -371,7 +407,7 @@ final class SettingsArt {
                 }
                 words(canvas, counts[i], x, cy + r + 4.6f * u * scale, 3.8f * u * scale, a, true, Paint.Align.CENTER);
             }
-
+            
             int record = Math.round(alpha * (1f - s));
             if (record > 0) {
                 float cy = h * 0.83f;
@@ -428,10 +464,10 @@ final class SettingsArt {
 
         private void caption(Canvas canvas, float w, float h, int alpha, float s) {
             float y = h * (0.74f + 0.03f * s);
-            words(canvas, "@narezany", 5 * u, y, 5f * u, alpha, true, Paint.Align.LEFT);
+            words(canvas, "@fasdeq", 5 * u, y, 5f * u, alpha, true, Paint.Align.LEFT);
             if (date.value > 0.01f) {
                 text.setTextSize(5f * u);
-                float after = 5 * u + text.measureText("@narezany");
+                float after = 5 * u + text.measureText("@fasdeq");
                 words(canvas, " · " + Local.of("3 дня назад"), after, y, 4.2f * u, Math.round(alpha * date.value * 0.8f), false, Paint.Align.LEFT);
             }
             if (seek.value > 0.01f) {
@@ -451,7 +487,7 @@ final class SettingsArt {
             box.set(5 * u, y + 7 * u, 46 * u, y + 7 * u + line);
             canvas.drawRoundRect(box, line, line, paint);
             if (s < 0.999f) {
-
+                
                 int gone = Math.round(alpha * (1f - s));
                 white(gone * 210 / 255);
                 box.set(5 * u, y + 11 * u, 54 * u, y + 11 * u + line);
@@ -492,6 +528,9 @@ final class SettingsArt {
         }
     }
 
+    
+
+    
     static final class Chat extends View {
         private static float lastShown = 0f;
 
@@ -541,14 +580,14 @@ final class SettingsArt {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(skin.page);
             canvas.drawRoundRect(box, 20 * d, 20 * d, paint);
-
+            
             float hy = top + 26 * d;
             if (avatar != null) round(canvas, avatar, left + 30 * d, hy, 14 * d, 255);
-            words(canvas, "narezany", left + 52 * d, hy - 1 * d, 15 * d, skin.text, true);
+            words(canvas, "fasdeq", left + 52 * d, hy - 1 * d, 15 * d, skin.text, true);
             words(canvas, "🔥 128", left + 52 * d, hy + 15 * d, 12 * d, skin.muted(), false);
             paint.setColor(Expressive.mix(skin.page, skin.text, 0.1f));
             canvas.drawRect(left, top + 50 * d, right, top + 50 * d + Math.max(1, d), paint);
-
+            
             float by = top + 76 * d;
             String said = Local.of("продлеваем? 🔥");
             text.setTextSize(14 * d);
@@ -558,11 +597,11 @@ final class SettingsArt {
             paint.setColor(Expressive.mix(skin.page, skin.text, 0.09f));
             canvas.drawRoundRect(box, 16 * d, 16 * d, paint);
             words(canvas, said, left + 26 * d, by + 3 * d, 14 * d, skin.text, false);
-
+            
             float size = 64 * d, cx = right - 18 * d - size / 2f, cy = bottom - 16 * d - size / 2f;
             float t = shown.value;
             if (t < 0.98f) {
-
+                
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(1.5f * d);
                 paint.setPathEffect(new DashPathEffect(new float[] {6 * d, 5 * d}, 0));
@@ -591,7 +630,7 @@ final class SettingsArt {
                 }
                 canvas.restore();
                 text.setTextAlign(Paint.Align.RIGHT);
-                words(canvas, "Fasd-mod", cx + size / 2f, cy + size / 2f + 13 * d, 10 * d,
+                words(canvas, "AirTok", cx + size / 2f, cy + size / 2f + 13 * d, 10 * d,
                         (skin.muted() & 0xFFFFFF) | (alpha << 24), false);
                 text.setTextAlign(Paint.Align.LEFT);
             }
@@ -618,6 +657,9 @@ final class SettingsArt {
         }
     }
 
+    
+
+    
     static final class Profile extends View {
         private static String lastShape;
 
@@ -638,6 +680,7 @@ final class SettingsArt {
             from = lastShape == null ? to : lastShape;
         }
 
+        
         void shape(String shape) {
             if (shape.equals(to)) return;
             from = to;
@@ -671,8 +714,8 @@ final class SettingsArt {
             if (!from.equals(to) && settled < 1f) avatarIn(canvas, from, cx, cy, r, Math.round(255 * (1f - settled)), 1f);
             avatarIn(canvas, to, cx, cy, r, Math.round(255 * settled), 0.85f + 0.15f * t);
             text.setTextAlign(Paint.Align.CENTER);
-            words(canvas, "narezany", cx, cy + r + 24 * d, 17 * d, skin.text, true);
-            words(canvas, "@narezany", cx, cy + r + 42 * d, 13 * d, skin.muted(), false);
+            words(canvas, "fasdeq", cx, cy + r + 24 * d, 17 * d, skin.text, true);
+            words(canvas, "@fasdeq", cx, cy + r + 42 * d, 13 * d, skin.muted(), false);
             float y = cy + r + 72 * d, gap = getWidth() / 4f;
             String[][] stats = {{"17", Local.of("Подписки")}, {"4,2K", Local.of("Подписчики")}, {"52K", Local.of("Лайки")}};
             for (int i = 0; i < 3; i++) {
@@ -716,6 +759,9 @@ final class SettingsArt {
         }
     }
 
+    
+
+    
     static final class Style extends View {
         private final Skin skin;
         private final String mode;
@@ -743,7 +789,7 @@ final class SettingsArt {
             paint.setStyle(Paint.Style.FILL);
             paint.setShader(null);
             boolean glass = "glass".equals(mode), fluent = "fluent".equals(mode);
-
+            
             if (glass) {
                 paint.setShader(new LinearGradient(0, 0, w, h, Expressive.mix(accent, 0xFF2B2250, 0.4f), 0xFF0E3A44, Shader.TileMode.CLAMP));
             } else {
@@ -779,7 +825,7 @@ final class SettingsArt {
                     paint.setColor(skin.card);
                     canvas.drawRoundRect(box, 4 * d, 4 * d, paint);
                 } else {
-
+                    
                     float outer = 12 * d, inner = 3 * d;
                     float[] corners = row == 0 ? new float[] {outer, outer, outer, outer, inner, inner, inner, inner}
                             : new float[] {inner, inner, inner, inner, outer, outer, outer, outer};
@@ -790,7 +836,7 @@ final class SettingsArt {
                 }
                 float cy = (top + bottom) / 2f;
                 int ink = glass ? 0xFFFFFFFF : skin.text;
-
+                
                 paint.setColor(glass ? 0x88FFFFFF : fluent ? accent : Expressive.mix(skin.card, accent, 0.3f));
                 if (fluent) {
                     box.set(left + 7 * d, cy - 5 * d, left + 17 * d, cy + 5 * d);
@@ -798,14 +844,14 @@ final class SettingsArt {
                 } else {
                     canvas.drawCircle(left + 13 * d, cy, 7 * d, paint);
                 }
-
+                
                 paint.setColor((ink & 0xFFFFFF) | 0xCC000000);
                 box.set(left + 25 * d, cy - 5 * d, right - 34 * d, cy - 2 * d);
                 canvas.drawRoundRect(box, 2 * d, 2 * d, paint);
                 paint.setColor((ink & 0xFFFFFF) | 0x66000000);
                 box.set(left + 25 * d, cy + 2 * d, right - 44 * d, cy + 5 * d);
                 canvas.drawRoundRect(box, 2 * d, 2 * d, paint);
-
+                
                 boolean on = row == 0;
                 float sw = fluent ? 18 * d : 22 * d, sh = fluent ? 9 * d : 13 * d;
                 box.set(right - 6 * d - sw, cy - sh / 2f, right - 6 * d, cy + sh / 2f);
@@ -835,6 +881,9 @@ final class SettingsArt {
         }
     }
 
+    
+
+    
     static final class Loader extends View {
         private static float lastOn = 0f;
         private final Skin skin;
@@ -870,7 +919,7 @@ final class SettingsArt {
         protected void onDraw(Canvas canvas) {
             float d = dp(getContext(), 1), w = getWidth(), cy = 56 * d;
             float t = on.value;
-
+            
             float phase = (android.os.SystemClock.uptimeMillis() % 900) / 900f;
             float swing = (float) Math.sin(phase * Math.PI * 2) * 9 * d;
             float lx = w * 0.3f;
@@ -880,7 +929,7 @@ final class SettingsArt {
             canvas.drawCircle(lx - swing, cy, 9 * d, paint);
             paint.setColor((0xFE2C55) | (faintTikTok << 24));
             canvas.drawCircle(lx + swing, cy, 9 * d, paint);
-
+            
             int faintOurs = Math.round(255 * (0.25f + 0.75f * t));
             float size = 46 * d, rx = w * 0.7f;
             canvas.saveLayerAlpha(rx - size, cy - size, rx + size, cy + size, faintOurs);
@@ -893,8 +942,8 @@ final class SettingsArt {
             text.setColor(Expressive.mix(skin.muted(), skin.text, 1f - t));
             canvas.drawText("TikTok", lx, cy + 46 * d, text);
             text.setColor(Expressive.mix(skin.muted(), skin.text, t));
-            canvas.drawText("Fasd-mod", rx, cy + 46 * d, text);
-
+            canvas.drawText("AirTok", rx, cy + 46 * d, text);
+            
             if (isShown() && getGlobalVisibleRect(seen)) postInvalidateOnAnimation();
         }
 

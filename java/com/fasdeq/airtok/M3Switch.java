@@ -10,8 +10,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+
+
+
+
+
+
+
+
+
+
 public final class M3Switch extends View {
 
+    
     public static final long ANIMATION_DURATION_MS = 300L;
 
     public interface OnChanged {
@@ -24,11 +35,13 @@ public final class M3Switch extends View {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF box = new RectF();
 
+    
+    
     private boolean lightSurface;
     private int surface = 0xFF1D1D1D;
 
     private boolean checked;
-    private float position;
+    private float position;  
     private OnChanged listener;
     private ValueAnimator animator;
     private boolean interruptingAnimation;
@@ -44,7 +57,8 @@ public final class M3Switch extends View {
     }
 
     public void colours(int accent, int off, int surface) {
-
+        
+        
         lightSurface = luma(surface) > 0.55f;
         this.surface = surface;
         invalidate();
@@ -57,7 +71,8 @@ public final class M3Switch extends View {
     public void setChecked(boolean value, boolean animate) {
         if (checked == value && (position == (value ? 1f : 0f))) return;
         if (animator != null) {
-
+            
+            
             interruptingAnimation = true;
             animator.cancel();
             animator = null;
@@ -134,6 +149,12 @@ public final class M3Switch extends View {
         }
     }
 
+    
+
+
+
+
+
     @Override
     public boolean performClick() {
         if (!isEnabled()) return false;
@@ -159,12 +180,13 @@ public final class M3Switch extends View {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-
+        
         invalidate();
     }
 
     private final android.graphics.Path tick = new android.graphics.Path();
 
+    
     @Override
     protected void onDraw(Canvas canvas) {
         if(Design.controlsFluent()){drawFluent(canvas);return;}
@@ -173,7 +195,7 @@ public final class M3Switch extends View {
         float eased = position * position * (3f - 2f * position);
         int accent = on(Accent.colour());
         int onAccent = luma(accent) > 0.59f ? 0xFF111111 : 0xFFFFFFFF;
-
+        
         int track = Expressive.mix(surface, lightSurface ? 0xFF000000 : 0xFFFFFFFF, lightSurface ? 0.10f : 0.13f);
         int outline = lightSurface ? 0xFF79797F : 0xFF939399;
 
@@ -199,7 +221,7 @@ public final class M3Switch extends View {
         canvas.drawCircle(cx, cy, dp(size) / 2f, paint);
 
         if (eased > 0.5f) {
-
+            
             float k = dp(16f) / 24f;
             tick.reset();
             tick.moveTo(cx - 6.5f * k, cy + 0.5f * k);
@@ -215,6 +237,11 @@ public final class M3Switch extends View {
             paint.setStyle(Paint.Style.FILL);
         }
     }
+
+    
+
+
+
 
     private int on(int accent) {
         if (Math.abs(luma(accent) - luma(surface)) >= 0.2f) return accent;

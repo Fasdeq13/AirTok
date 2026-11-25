@@ -1,7 +1,19 @@
 package com.fasdeq.airtok;
 
+
 final class Diagnostics {
     private Diagnostics() {}
+
+    
+
+
+
+
+    
+
+
+
+
 
     private static String region(android.content.Context context) {
         StringBuilder out = new StringBuilder();
@@ -27,7 +39,7 @@ final class Diagnostics {
 
     static String fullReport() {
         StringBuilder out = new StringBuilder();
-        out.append("== MargyT full report ==\n");
+        out.append("== AirTok full report ==\n");
         out.append("time: ").append(new java.text.SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss Z", java.util.Locale.US).format(new java.util.Date()))
                 .append('\n');
@@ -60,7 +72,7 @@ final class Diagnostics {
                 .append(" dex, ").append(BuildInfo.STATIC_TARGETS)
                 .append(" version-specific targets\n");
 
-        out.append("\n== lag ==\n").append(Lag.report());
+
 
         out.append("\n== region ==\n").append(region(context));
 
@@ -99,7 +111,7 @@ final class Diagnostics {
 
     static String report() {
         StringBuilder out = new StringBuilder();
-        out.append("MargyT ").append(Version.MOD)
+        out.append("AirTok ").append(Version.MOD)
                 .append(" / TikTok ").append(Version.TIKTOK).append('\n');
         boolean startup = false, activityWatch = false, hookFailure = false;
         for (String line : Diary.lines()) {

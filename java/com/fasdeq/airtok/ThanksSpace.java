@@ -23,8 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
+
+
+
+
+
+
 final class ThanksSpace extends View {
 
+    
     static final class Person {
         final String name, role;
         final Runnable hold;
@@ -34,6 +42,7 @@ final class ThanksSpace extends View {
         }
     }
 
+    
     static final class Planet {
         final String name;
         final int colour;
@@ -48,7 +57,7 @@ final class ThanksSpace extends View {
     private final String hint, supportTitle;
     private final float d;
     private final Random random = new Random(7);
-
+    
     private int top;
 
     private final Paint chalk = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
@@ -65,10 +74,11 @@ final class ThanksSpace extends View {
     private Shader space;
     private final long born = SystemClock.uptimeMillis();
 
-    private final List<float[]> bits = new ArrayList<>();
-    private final List<float[]> cats = new ArrayList<>();
-    private final List<float[]> shards = new ArrayList<>();
-    private final List<float[]> rings = new ArrayList<>();
+    
+    private final List<float[]> bits = new ArrayList<>();      
+    private final List<float[]> cats = new ArrayList<>();      
+    private final List<float[]> shards = new ArrayList<>();    
+    private final List<float[]> rings = new ArrayList<>();     
     private long tilcayoAt = -1, flashAt = -1, shakeAt = -1;
     private long ghostAt = -1;
     private float ghostY;
@@ -76,9 +86,9 @@ final class ThanksSpace extends View {
     private long shooting = -1;
     private float shootX, shootY;
     private final long[] eggAt;
-
+    
     private final boolean[] released;
-    private float[][] scatter;
+    private float[][] scatter;                                  
 
     ThanksSpace(Context context, List<Person> people, List<Planet> planets, String hint, String supportTitle) {
         super(context);
@@ -112,6 +122,7 @@ final class ThanksSpace extends View {
         setContentDescription(hint);
     }
 
+    
     void setTopInset(int px) {
         top = px;
         requestLayout();
@@ -120,14 +131,15 @@ final class ThanksSpace extends View {
     private static Typeface hand(Context context) {
         try {
             if (android.os.Build.VERSION.SDK_INT >= 26)
-                return new Typeface.Builder(context.getAssets(), "margyt/fonts/caveat.ttf")
+                return new Typeface.Builder(context.getAssets(), "airtok/fonts/caveat.ttf")
                         .setFontVariationSettings("'wght' 600").build();
-            return Typeface.createFromAsset(context.getAssets(), "margyt/fonts/caveat.ttf");
+            return Typeface.createFromAsset(context.getAssets(), "airtok/fonts/caveat.ttf");
         } catch (Throwable error) {
             return Typeface.create("casual", Typeface.NORMAL);
         }
     }
 
+    
     private static Bitmap grain() {
         int size = 96;
         Random noise = new Random(3);
@@ -159,7 +171,7 @@ final class ThanksSpace extends View {
             starSize[i] = (.5f + place.nextFloat() * 1.6f) * d;
             starPhase[i] = place.nextFloat() * 6.28f;
         }
-
+        
         float margin = 22 * d;
         float from = top + 56 * d, to = h * .62f;
         float step = (to - from) / Math.max(1, people.size());
@@ -206,6 +218,7 @@ final class ThanksSpace extends View {
         for (int i = 0; i < people.size(); i++) drawName(canvas, i, now);
         drawEggs(canvas, now);
 
+        
         float lanes = h * .68f;
         chalk.setTextSize(28 * d);
         canvas.drawText(supportTitle, 22 * d, lanes, chalk);
@@ -269,6 +282,7 @@ final class ThanksSpace extends View {
         canvas.restore();
     }
 
+    
     private void drawScattered(Canvas canvas, int i, long now, float x, float y) {
         String name = people.get(i).name;
         float p = (now - eggAt[i]) / 2200f;
@@ -301,7 +315,7 @@ final class ThanksSpace extends View {
         box.set(x - radius * 1.7f, y - radius * .5f, x + radius * 1.7f, y + radius * .5f);
         line.setStrokeWidth(2.2f * d);
         line.setColor(0x99FFFFFF);
-
+        
         canvas.drawArc(box, 180, 180, false, line);
         fill.setShader(new RadialGradient(x - radius * .35f, y - radius * .35f, radius * 1.4f,
                 planet.colour | 0xFF000000, darker(planet.colour), Shader.TileMode.CLAMP));
@@ -316,6 +330,8 @@ final class ThanksSpace extends View {
     private static int darker(int colour) {
         return Color.argb(255, Color.red(colour) / 3, Color.green(colour) / 3, Color.blue(colour) / 3);
     }
+
+    
 
     private int pressed = -1;
     private boolean held;
@@ -365,12 +381,14 @@ final class ThanksSpace extends View {
         }
     }
 
+    
+
     private void egg(int i) {
         performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         long now = SystemClock.uptimeMillis();
         switch (people.get(i).egg) {
             case EGG_TILCAYO:
-
+                
                 if (tilcayoAt < 0) tilcayoAt = now + 900;
                 break;
             case EGG_SCATTER:
@@ -402,6 +420,10 @@ final class ThanksSpace extends View {
         }
     }
 
+    
+
+
+
     private boolean constellation(Canvas canvas, RectF at, float since) {
         if (since > 3.4f) return false;
         float cx = Math.min(getWidth() - 90 * d, at.right + 60 * d), cy = at.centerY();
@@ -424,6 +446,7 @@ final class ThanksSpace extends View {
         return true;
     }
 
+    
     private boolean lotus(Canvas canvas, int i, RectF at, float since) {
         if (since > 4.2f) return false;
         float cx = at.centerX(), cy = at.centerY() + 6 * d;
@@ -447,7 +470,7 @@ final class ThanksSpace extends View {
             canvas.drawCircle(cx, cy, 7 * d * open, fill);
         } else if (!released[i]) {
             released[i] = true;
-
+            
             for (int p = 0; p < 22; p++) {
                 double a = random.nextFloat() * Math.PI * 2;
                 float r = random.nextFloat() * 50 * d;
@@ -460,6 +483,7 @@ final class ThanksSpace extends View {
         return true;
     }
 
+    
     private boolean chalkHeart(Canvas canvas, int i, RectF at, float since) {
         if (since > 3.6f) return false;
         float cx = at.centerX(), cy = at.centerY() - 4 * d;
@@ -498,6 +522,7 @@ final class ThanksSpace extends View {
         return 1 - (1 - p) * (1 - p) * (1 - p);
     }
 
+    
     private void sparks(float x, float y, int colour, int count) {
         for (int k = 0; k < count; k++) {
             double a = random.nextFloat() * Math.PI * 2;
@@ -507,6 +532,7 @@ final class ThanksSpace extends View {
         }
     }
 
+    
     private void drawBits(Canvas canvas) {
         for (int i = bits.size() - 1; i >= 0; i--) {
             float[] b = bits.get(i);
@@ -562,40 +588,12 @@ final class ThanksSpace extends View {
         canvas.drawCircle(x + s * .35f, y - s * .25f, 3.5f * d, fill);
     }
 
-    private void drawCats(Canvas canvas, long now, int w, int h) {
-        if (tilcayoAt < 0 || now < tilcayoAt) return;
-        if (tilcayo == null) tilcayo = TilcayoRun.sprite(getContext());
-        if (tilcayo == null) { tilcayoAt = -1; return; }
-        float since = (now - tilcayoAt) / 1000f;
-        if (since < 4.4f) {
-            int want = Math.min(80, Math.round((float) Math.pow(2.7, since) * 2));
-            while (cats.size() < want) {
-                float size = (36 + random.nextFloat() * 34) * d;
-                cats.add(new float[] {random.nextFloat() * (w - size), -size - random.nextFloat() * 80 * d,
-                        (random.nextFloat() - .5f) * 8 * d, (2 + random.nextFloat() * 4) * d,
-                        (random.nextFloat() - .5f) * 9, random.nextFloat() * 360, size});
-            }
-        } else {
-            explode();
-            return;
-        }
+    
 
-        float tremble = since > 3.8f ? (since - 3.8f) / .6f : 0;
-        Rect from = new Rect(0, 0, tilcayo.getWidth(), tilcayo.getHeight());
-        float aspect = tilcayo.getHeight() / (float) tilcayo.getWidth();
-        for (float[] c : cats) {
-            c[0] += c[2]; c[1] += c[3]; c[3] += .38f * d; c[5] += c[4];
-            float size = c[6];
-            if (c[1] + size * aspect > h) { c[1] = h - size * aspect; c[3] = -Math.abs(c[3]) * .84f - 2 * d; }
-            if (c[0] < 0) { c[0] = 0; c[2] = Math.abs(c[2]); }
-            if (c[0] + size > w) { c[0] = w - size; c[2] = -Math.abs(c[2]); }
-            float jx = (random.nextFloat() - .5f) * 6 * d * tremble, jy = (random.nextFloat() - .5f) * 6 * d * tremble;
-            canvas.save();
-            canvas.rotate(c[5], c[0] + size / 2, c[1] + size * aspect / 2);
-            box.set(c[0] + jx, c[1] + jy, c[0] + size + jx, c[1] + size * aspect + jy);
-            canvas.drawBitmap(tilcayo, from, box, sprite);
-            canvas.restore();
-        }
+
+
+
+    private void drawCats(Canvas canvas, long now, int w, int h) {
     }
 
     private void explode() {
@@ -620,6 +618,7 @@ final class ThanksSpace extends View {
         performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
     }
 
+    
     private void drawShards(Canvas canvas, int h) {
         if (shards.isEmpty() || tilcayo == null) return;
         int bw = tilcayo.getWidth() / 2, bh = tilcayo.getHeight() / 2;

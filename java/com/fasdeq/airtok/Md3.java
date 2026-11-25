@@ -20,6 +20,28 @@ import android.view.ViewTreeObserver;
 import java.lang.ref.WeakReference;
 import java.util.IdentityHashMap;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 final class Md3 {
 
     private Md3() {}
@@ -40,14 +62,15 @@ final class Md3 {
             ON[i] = value;
             Context context = AirTok.context();
             if (context != null) {
-                context.getSharedPreferences("margyt", Context.MODE_PRIVATE).edit().putBoolean(key, value).apply();
+                context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(key, value).apply();
             }
         }
     }
 
     private static boolean on(int which) {
         if (Version.LITE) return false;
-
+        
+        
         if (which == ICONS) return false;
         Boolean known = ON[which];
         if (known != null) return known;
@@ -55,30 +78,33 @@ final class Md3 {
         if (context == null) return which == PROFILE || which == INBOX;
         boolean value = which == PROFILE || which == INBOX;
         try {
-            value = context.getSharedPreferences("margyt", Context.MODE_PRIVATE).getBoolean(KEYS[which], value);
+            value = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEYS[which], value);
         } catch (Throwable ignored) {
         }
         ON[which] = value;
         return value;
     }
 
+    
+
     private static final int DISC = 0, CARD = 1, PILL = 2;
 
+    
     private static final class Shape extends Drawable {
         final int kind;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final RectF box = new RectF();
-
+        
         float left, top, right, bottom;
-
+        
         float radius;
-
+        
         float wide;
-
+        
         float foot = -1f;
         private final android.graphics.Path edge = new android.graphics.Path();
         private final float[] corners = new float[8];
-
+        
         WeakReference<View> around;
         WeakReference<View> host;
 
@@ -86,6 +112,7 @@ final class Md3 {
             this.kind = kind;
         }
 
+        
         int role = SHELL;
 
         void tint(int colour) {
@@ -94,6 +121,7 @@ final class Md3 {
             invalidateSelf();
         }
 
+        
         boolean dressed;
 
         void dress(View view, int as) {
@@ -105,6 +133,7 @@ final class Md3 {
             tint(colour(view, as));
         }
 
+        
         void ends(float head, float tail) {
             if (radius == head && foot == tail) return;
             radius = head;
@@ -159,9 +188,14 @@ final class Md3 {
     private static final int OURS = 0x4D61724D, WAS = 0x4D61724E, ROUND = 0x4D61724F, FLAT = 0x4D617250, PUT = 0x4D617252;
     private static final Object NONE = new Object();
 
+    
     private static Shape wear(View view, int kind) {
         return wear(view, kind, false);
     }
+
+    
+
+
 
     private static Shape wear(View view, int kind, boolean under) {
         Object worn = view.getTag(OURS);
@@ -181,6 +215,7 @@ final class Md3 {
         return shape;
     }
 
+    
     private static void strip(View view) {
         Object worn = view.getTag(OURS);
         if (!(worn instanceof Shape)) return;
@@ -194,10 +229,32 @@ final class Md3 {
         }
     }
 
+    
+
     private static final int SHELL = 0, CHOSEN = 1, OVER_VIDEO = 2, CHOSEN_OVER_VIDEO = 3;
+    
+
+
+
+
+
+
+
+
+
 
     private static final java.util.WeakHashMap<View, java.lang.ref.WeakReference<Shape>> WORN =
             new java.util.WeakHashMap<View, java.lang.ref.WeakReference<Shape>>();
+
+    
+
+
+
+
+
+
+
+
 
     static int behind(View view) {
         Object parent = view.getParent();
@@ -213,12 +270,26 @@ final class Md3 {
         return Themes.isDark() ? 0xFF121212 : 0xFFFFFFFF;
     }
 
+    
+
+
+
+
+
+
+
+
+
+
+
+
     static int under(View view) {
         try {
             int[] at = new int[2];
             view.getLocationOnScreen(at);
             int x = at[0] + view.getWidth() / 2, y = at[1] + view.getHeight() / 2;
-
+            
+            
             int[] left = {600, Math.round(view.getWidth() * 0.8f)};
             View child = view;
             Object parent = view.getParent();
@@ -237,11 +308,12 @@ final class Md3 {
                 parent = group.getParent();
             }
         } catch (Throwable ignored) {
-
+            
         }
         return behind(view);
     }
 
+    
     private static int painted(View view, int x, int y, int depth, int[] left, int[] at) {
         if (view == null || depth > 24 || left[0]-- <= 0) return 0;
         if (view.getVisibility() != View.VISIBLE || view.getAlpha() < 0.9f || view.getWidth() == 0) return 0;
@@ -262,6 +334,7 @@ final class Md3 {
         return 0;
     }
 
+    
     static int ink(int ground) {
         boolean dark = NavBar.bright(ground) < 0.5f;
         int ink = dark ? 0xFFFFFFFF : 0xFF161823;
@@ -272,21 +345,24 @@ final class Md3 {
         return ink;
     }
 
+    
     private static int colour(View view, int role) {
         if (role == OVER_VIDEO) return overVideo();
         if (role == CHOSEN_OVER_VIDEO) return chosenOverVideo();
         int ground = behind(view);
-
+        
         int shell = NavBar.mix(ground, ink(ground), 0.07f);
         return role == CHOSEN ? NavBar.mix(shell, Accent.colour() | 0xFF000000, 0.30f) : shell;
     }
 
+    
     private static boolean onDark(View view) {
         return NavBar.bright(behind(view)) < 0.5f;
     }
 
     private static long coloured;
 
+    
     private static void recolour() {
         long now = SystemClock.uptimeMillis();
         if (now - coloured < 500L) return;
@@ -311,14 +387,19 @@ final class Md3 {
         }
     }
 
+    
     private static int overVideo() {
         return (NavBar.mix(0xFF17161B, Accent.colour() | 0xFF000000, 0.10f) & 0x00FFFFFF) | 0x99000000;
     }
 
+    
     private static int chosenOverVideo() {
         return (NavBar.mix(0xFF17161B, Accent.colour() | 0xFF000000, 0.45f) & 0x00FFFFFF) | 0xE6000000;
     }
 
+    
+
+    
     static void rail(View slot, int which) {
         try {
             if (slot == null) return;
@@ -330,6 +411,11 @@ final class Md3 {
         }
     }
 
+    
+
+    
+    
+    
     private static final String LIKE = "M13.35 20.13c-.76.69-1.93.69-2.69-.01l-.11-.1C5.3 15.27 1.87 12.16 2 8.28"
             + "c.06-1.7.93-3.33 2.34-4.29 2.64-1.8 5.9-.96 7.66 1.1 1.76-2.06 5.02-2.91 7.66-1.1 1.41.96 2.28 2.59 2.34 4.29"
             + ".14 3.88-3.3 6.99-8.55 11.76l-.1.09z";
@@ -348,7 +434,7 @@ final class Md3 {
         android.graphics.Path known = DRAWN[which];
         if (known != null) return known;
         final android.graphics.Path path = new android.graphics.Path();
-
+        
         path.setFillType(android.graphics.Path.FillType.EVEN_ODD);
         NavPlan.trace(GLYPHS[which], new NavPlan.Pen() {
             @Override public void move(float x, float y) { path.moveTo(x, y); }
@@ -361,6 +447,12 @@ final class Md3 {
         DRAWN[which] = path;
         return path;
     }
+
+    
+
+
+
+
 
     private static final class Glyph extends Drawable {
         final int which;
@@ -376,10 +468,10 @@ final class Md3 {
             Rect box = getBounds();
             if (box.isEmpty()) return;
             int saved = canvas.save();
-
+            
             float grown = 1.14f, side = Math.min(box.width(), box.height()) * grown;
             canvas.translate(box.exactCenterX() - side / 2f, box.exactCenterY() - side / 2f);
-
+            
             if (which == 3) canvas.scale(-1f, 1f, side / 2f, 0f);
             canvas.scale(side / 24f, side / 24f);
             canvas.drawPath(glyph(which), paint);
@@ -395,9 +487,16 @@ final class Md3 {
     private static final String TUX_ICON = "com.bytedance.tux.drawable.TuxIconDrawable";
     private static java.lang.reflect.Field tuxPicture;
     private static boolean tuxAsked;
-
+    
     private static final java.util.WeakHashMap<Drawable, Drawable> HELD = new java.util.WeakHashMap<Drawable, Drawable>();
     private static final int PICTURE = 0x4D617254;
+
+    
+
+
+
+
+
 
     private static void icon(View view, int which, int depth) {
         if (view == null || depth > 5 || which < 0 || which >= GLYPHS.length) return;
@@ -451,14 +550,16 @@ final class Md3 {
         }
     }
 
+    
     static void icons(View slot, int which) {
         try {
             if (slot != null && slot.getVisibility() == View.VISIBLE) icon(slot, which, 0);
         } catch (Throwable ignored) {
-
+            
         }
     }
 
+    
     private static void forgetIcons(View view, int depth) {
         if (view == null || depth > 5) return;
         view.setTag(PICTURE, null);
@@ -467,6 +568,8 @@ final class Md3 {
             for (int i = 0; i < group.getChildCount(); i++) forgetIcons(group.getChildAt(i), depth + 1);
         }
     }
+
+    
 
     private static final String NAV_BAR = "com.bytedance.tux.navigation.TuxNavBar";
     private static final String ICON = "com.bytedance.tux.icon.TuxIconView";
@@ -487,6 +590,7 @@ final class Md3 {
         return kind;
     }
 
+    
     private static int feedLeft, feedSearch, feedTop, profileRoot, profileTabs, statNumber, profileHead, profileAvatar,
             profileColumn, profileEdit, profileHandle, profileCollege, inboxList, chatRoot;
     private static boolean named;
@@ -518,6 +622,8 @@ final class Md3 {
         }
     }
 
+    
+
     private static final int WATCHED = 0x4D617251;
     private static final long QUIET = 350L;
 
@@ -525,7 +631,7 @@ final class Md3 {
         final WeakReference<View> root;
         long looked;
         boolean owed;
-
+        
         WeakReference<ViewGroup> rows = new WeakReference<ViewGroup>(null), cells = new WeakReference<ViewGroup>(null);
         WeakReference<ViewGroup> tabs = new WeakReference<ViewGroup>(null), feedTabs = new WeakReference<ViewGroup>(null);
         int rowsSeen, cellsSeen, tabChosen = -2, feedChosen = -2;
@@ -572,7 +678,9 @@ final class Md3 {
                 InboxMd3.frame();
                 FeedRail.icons();
                 recolour();
-
+                
+                
+                
                 ViewGroup list = rows.get();
                 if (list != null && list.isAttachedToWindow()) {
                     int many = list.getChildCount();
@@ -583,7 +691,7 @@ final class Md3 {
                             continue;
                         }
                         if (!shown(child)) continue;
-
+                        
                         int above = i - 1, below = i + 1;
                         while (above >= 0 && !shown(list.getChildAt(above))) above--;
                         while (below < many && !shown(list.getChildAt(below))) below++;
@@ -618,11 +726,11 @@ final class Md3 {
                         feedChosen = chosen;
                         pills(strip, on(FEED), 2f, 13f, CHOSEN_OVER_VIDEO);
                     }
-
+                    
                     underline(strip, false);
                 }
             } catch (Throwable ignored) {
-
+                
             }
             return true;
         }
@@ -658,12 +766,12 @@ final class Md3 {
                 return;
             }
             int kind = kind(view);
-            if (kind == K_PAGER) return;
+            if (kind == K_PAGER) return;  
             if (kind == K_ROW) {
                 Object parent = view.getParent();
                 if (parent instanceof ViewGroup) {
                     ViewGroup list = (ViewGroup) parent;
-
+                    
                     if (list.getChildCount() > 2 || rows.get() == null) {
                         if (rows.get() != list) rowsSeen = -1;
                         rows = new WeakReference<ViewGroup>(list);
@@ -683,7 +791,8 @@ final class Md3 {
                 return;
             }
             if (kind == K_NAV) {
-
+                
+                
                 icons(view, 0, inProfile ? on(PROFILE) && onDark(view) : on(INBOX));
                 return;
             }
@@ -693,6 +802,10 @@ final class Md3 {
             }
         }
 
+        
+
+
+
         private void feedTop(ViewGroup row) {
             ViewGroup window = null;
             for (int i = 0; i < row.getChildCount() && window == null; i++) {
@@ -701,7 +814,7 @@ final class Md3 {
                     window = (ViewGroup) child;
                 }
             }
-
+            
             View inner = window == null || window.getChildCount() == 0 ? null : window.getChildAt(0);
             View words = inner instanceof ViewGroup && ((ViewGroup) inner).getChildCount() > 0
                     ? ((ViewGroup) inner).getChildAt(0) : null;
@@ -724,6 +837,7 @@ final class Md3 {
             }
         }
 
+        
         private void tabStrip(ViewGroup holder) {
             ViewGroup strip = holder.getChildCount() == 1 && holder.getChildAt(0) instanceof ViewGroup
                     ? (ViewGroup) holder.getChildAt(0) : null;
@@ -742,7 +856,7 @@ final class Md3 {
                 } catch (Throwable error) {
                     Diary.detail("md3: the line under the tabs stays: " + error);
                 }
-
+                
                 Object parent = holder.getParent();
                 if (parent instanceof ViewGroup) {
                     ViewGroup group = (ViewGroup) parent;
@@ -764,6 +878,7 @@ final class Md3 {
         return -1;
     }
 
+    
     private static void pills(ViewGroup strip, boolean on, float sides, float ends, int role) {
         float unit = strip.getResources().getDisplayMetrics().density;
         for (int i = 0; i < strip.getChildCount(); i++) {
@@ -782,6 +897,7 @@ final class Md3 {
     private static java.lang.reflect.Method linePaint;
     private static boolean lineAsked;
 
+    
     private static void underline(ViewGroup strip, boolean shown) {
         try {
             if (!lineAsked) {
@@ -794,7 +910,7 @@ final class Md3 {
             int wanted = shown ? 255 : 0;
             if (((Paint) paint).getAlpha() != wanted) {
                 ((Paint) paint).setAlpha(wanted);
-
+                
                 if (!shown) ((Paint) paint).clearShadowLayer();
                 strip.invalidate();
             }
@@ -804,6 +920,7 @@ final class Md3 {
         }
     }
 
+    
     private static void disc(View view, boolean on, int role, float radius) {
         if (!on) {
             strip(view);
@@ -813,20 +930,9 @@ final class Md3 {
         Shape disc = wear(view, DISC);
         disc.radius = radius * view.getResources().getDisplayMetrics().density;
         disc.dress(view, role);
-        if (!Themes.isDark() && NavBar.bright(colour(view, role)) > 0.5f) {
-            contrastIcon(view, 0xFF161823);
-        }
     }
 
-    private static void contrastIcon(View view, int color) {
-        if (view instanceof com.bytedance.tux.icon.TuxIconView) {
-            ((com.bytedance.tux.icon.TuxIconView) view).setTintColor(color);
-        } else if (view instanceof ViewGroup) {
-            ViewGroup g = (ViewGroup) view;
-            for (int i = 0; i < g.getChildCount(); i++) contrastIcon(g.getChildAt(i), color);
-        }
-    }
-
+    
     private static void icons(View view, int depth, boolean on) {
         if (depth > 6 || view.getVisibility() != View.VISIBLE) return;
         if (kind(view) == K_ICON) {
@@ -840,20 +946,28 @@ final class Md3 {
         }
     }
 
+    
+
+
+
+
+
     private static void row(View view, int depth, boolean head, boolean tail) {
         if (view == null) return;
         if (kind(view) != K_ROW) {
-
+            
             if (depth == 0 && view instanceof ViewGroup) {
                 ViewGroup group = (ViewGroup) view;
                 for (int i = 0; i < group.getChildCount() && i < 4; i++) row(group.getChildAt(i), 1, true, true);
             }
             return;
         }
-
+        
+        
         strip(view);
     }
 
+    
     private static boolean shown(View row) {
         return row.getVisibility() == View.VISIBLE && row.getHeight() > 0;
     }
@@ -866,6 +980,7 @@ final class Md3 {
         }
     };
 
+    
     private static void cell(View view) {
         if (view == null || kind(view) != K_CELL) return;
         boolean on = on(PROFILE);
@@ -881,6 +996,8 @@ final class Md3 {
         }
     }
 
+    
+    
     private static void stats(View number) {
         Object stat = number.getParent();
         Object line = stat instanceof View ? ((View) stat).getParent() : null;
@@ -888,6 +1005,11 @@ final class Md3 {
     }
 
     private static final int MOVED = 0x4D617260;
+
+    
+
+
+
 
     private static void head(ViewGroup head) {
         View avatar = head.findViewById(profileAvatar);
@@ -916,10 +1038,13 @@ final class Md3 {
         }
     }
 
+    
+
+    
     static void attach(Activity activity) {
         try {
             String name = activity.getClass().getName();
-
+            
             if (!name.endsWith(".SplashActivity") && !name.endsWith(".MainActivity")
                     && !name.endsWith(".UserProfileHostActivity")) return;
             View root = activity.getWindow().getDecorView();
@@ -933,7 +1058,7 @@ final class Md3 {
                 root.getViewTreeObserver().addOnGlobalLayoutListener(screen);
                 root.getViewTreeObserver().addOnPreDrawListener(screen);
             }
-
+            
             screen.rowsSeen = screen.cellsSeen = -1;
             screen.tabChosen = screen.feedChosen = -2;
             root.post(screen.later);

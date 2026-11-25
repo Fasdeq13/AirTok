@@ -8,6 +8,28 @@ import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Brightness {
 
     static final String KEY = "own_brightness";
@@ -18,7 +40,7 @@ public final class Brightness {
     private Brightness() {}
 
     public static boolean isEnabled() {
-
+        
         return true;
     }
 
@@ -32,12 +54,13 @@ public final class Brightness {
         Context context = AirTok.context();
         if (context == null) return null;
         try {
-            return context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+            return context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
         } catch (Throwable ignored) {
             return null;
         }
     }
 
+    
     public static void setAttributes(Window window, WindowManager.LayoutParams wanted) {
         try {
             if (wanted != null && wanted.screenBrightness >= 0f && isEnabled()) {
@@ -48,15 +71,17 @@ public final class Brightness {
                 wanted.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
             }
         } catch (Throwable ignored) {
-
+            
         }
         window.setAttributes(wanted);
     }
 
+    
     public static boolean flat() {
         return isEnabled();
     }
 
+    
     static void apply(Activity activity) {
         if (activity == null || !isEnabled()) return;
         try {
@@ -67,7 +92,8 @@ public final class Brightness {
                 now.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
                 window.setAttributes(now);
             }
-
+            
+            
             if (Build.VERSION.SDK_INT >= 26 && window.getColorMode() == ActivityInfo.COLOR_MODE_HDR) {
                 window.setColorMode(ActivityInfo.COLOR_MODE_DEFAULT);
             }

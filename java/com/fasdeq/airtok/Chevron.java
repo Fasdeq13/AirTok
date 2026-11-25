@@ -1,5 +1,6 @@
 package com.fasdeq.airtok;
 
+
 final class Chevron extends android.view.View {
     private final android.graphics.Paint ink = new android.graphics.Paint(3);
     Chevron(android.content.Context context, int colour, boolean expanded, boolean animate) {

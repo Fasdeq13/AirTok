@@ -7,6 +7,7 @@ import android.view.*;
 import android.graphics.SurfaceTexture;
 import java.lang.ref.WeakReference;
 
+
 public final class GlassVideo {
     private static final Handler MAIN=new Handler(Looper.getMainLooper());
     private static WeakReference<Object> controller=new WeakReference<>(null),manager=new WeakReference<>(null);
@@ -26,7 +27,7 @@ public final class GlassVideo {
         if(Looper.myLooper()!=Looper.getMainLooper()){MAIN.post(()->paused(owner,id));return;}
         if(controller.get()==owner && aid.equals(id)){playing=false;position=Long.MIN_VALUE;GlassBackdrop.videoChanged(false);}
     }
-
+    
     public static void frameUpdated(SurfaceTexture texture){
         if(texture==null || !Design.frosted())return;
         if(Looper.myLooper()!=Looper.getMainLooper()){MAIN.post(()->frameUpdated(texture));return;}
@@ -51,7 +52,7 @@ public final class GlassVideo {
         Object renderer=NativeRead.get(cell,"Q3");
         Object view=NativeRead.get(renderer,"getVideoView");
         Object handle=NativeRead.get(renderer,"getSurface");
-
+        
         Object player=NativeRead.get(cell,"V");
         Object holder=NativeRead.get(player,"getSurfaceHolder");
         Object holderView=NativeRead.get(holder,"getView"),holderSurface=NativeRead.get(holder,"getSurface");
@@ -61,7 +62,7 @@ public final class GlassVideo {
             view=NativeRead.get(player,"getVideoView");handle=NativeRead.get(player,"getSurface");
         }
         if(!(view instanceof View)){
-            if(now-lastDiagnostic>5000){lastDiagnostic=now;android.util.Log.w("MargyTGlass","Current cell has no renderer: cell="+type(cell)+", component="+type(renderer)+", player="+type(player));}
+            if(now-lastDiagnostic>5000){lastDiagnostic=now;android.util.Log.w("AirTokGlass","Current cell has no renderer: cell="+type(cell)+", component="+type(renderer)+", player="+type(player));}
             return;
         }
         View next=surfaceView((View)view,0,new int[]{120});if(next==null)next=(View)view;
@@ -72,7 +73,7 @@ public final class GlassVideo {
             generation++;controller=new WeakReference<>(owner);manager=new WeakReference<>(NativeRead.get(owner,"getPlayerManager"));
             render=new WeakReference<>(next);surface=new WeakReference<>(nextSurface);aid=id;
             textureStamp=Long.MIN_VALUE;textureReady=false;
-            android.util.Log.w("MargyTGlass","Current renderer "+type(next)+", surface="+(nextSurface!=null)+", generation="+generation);
+            android.util.Log.w("AirTokGlass","Current renderer "+type(next)+", surface="+(nextSurface!=null)+", generation="+generation);
         }
         position=time;lastEvent=now;playing=true;lastCheck=0;
         GlassBackdrop.videoChanged(changed);

@@ -11,16 +11,22 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
+
 final class GlassBackdrop {
     private static final WeakHashMap<View,Session> WINDOWS=new WeakHashMap<>();
     private static final Handler MAIN=new Handler(Looper.getMainLooper());
     private static final int SCENE=0x4d674c38;
     static boolean capturing;
-
+    
     private static final float WIDTH=240f;
+    
+
+
+
+
 
     private static final long VIDEO_FRAME_NS=80_000_000L,VIDEO_FRAME_MS=80L,CAPTURE_MS=400L;
-
+    
     static final class Frame {Bitmap bitmap;float scale;int x,y;Canvas canvas;boolean ready;int version;}
 
     static void changed(){for(Session session:new ArrayList<>(WINDOWS.values()))session.dispose();WINDOWS.clear();}
@@ -31,7 +37,7 @@ final class GlassBackdrop {
     static void scene(View view){view.setTag(SCENE,Boolean.TRUE);}
     static void unscene(View view){view.setTag(SCENE,null);}
     static void register(View view){
-
+        
         if(true)return;
         if(!Design.frosted() || capturing)return;
         Session session=session(view);session.owners.put(view,Boolean.TRUE);
@@ -54,7 +60,7 @@ final class GlassBackdrop {
         }
     }
     private static Session session(View view){
-
+        
         View host=view.getRootView(),source=host;
         android.content.Context context=view.getContext();
         for(int i=0;i<12 && context instanceof android.content.ContextWrapper;i++){
@@ -134,7 +140,7 @@ final class GlassBackdrop {
         void animate(){
             if(video.get() instanceof TextureView && textureEvents)return;
             if(!animating && video.get()!=null && videoVisible()){
-
+                
                 if(frame.ready && !(video.get() instanceof TextureView) && GlassVideo.render(root.get())==video.get() && !GlassVideo.playing())return;
                 animating=true;Choreographer.getInstance().postFrameCallback(this);
             }
@@ -142,7 +148,8 @@ final class GlassBackdrop {
         @Override public void doFrame(long time){
             animating=false;
             if(!videoVisible())return;
-
+            
+            
             if(time-vsync>=VIDEO_FRAME_NS && !copying){
                 vsync=time;View source=video.get();
                 if(source instanceof TextureView){
@@ -190,13 +197,16 @@ final class GlassBackdrop {
             if(candidates.contains(verified))selected=verified;
             else if(candidates.size()==1)selected=candidates.get(0);
             String state="sources="+candidates.size()+", selected="+(selected==null?"none":selected.getClass().getSimpleName())+", media="+mediaPresent;
-            if(!state.equals(diagnostic)){diagnostic=state;android.util.Log.w("MargyTGlass","Feed capture "+state);}
-
+            if(!state.equals(diagnostic)){diagnostic=state;android.util.Log.w("AirTokGlass","Feed capture "+state);}
+            
+            
+            
+            
             if(selected==null && holding()){recheck();return;}
             bind(selected);
             if(selected==null || pixels==null){
                 if(holding()){recheck();return;}
-
+                
                 frame.ready=!mediaPresent;base(frame);
             }else publish(selected);
         }
@@ -209,7 +219,7 @@ final class GlassBackdrop {
         private void bind(View source){
             int generation=source!=null && GlassVideo.render(root.get())==source?GlassVideo.generation():-1;
             if(video.get()==source && nativeGeneration==generation)return;
-
+            
             nativeGeneration=generation;if(!holding())frame.ready=false;readyLogged=false;video=new WeakReference<>(source);bound++;spare=null;if(source==null)pixels=null;failures=0;lastTextureStamp=Long.MIN_VALUE;textureEvents=false;
             needsVideo=source!=null;sceneDirty=true;animate();
         }
@@ -217,7 +227,8 @@ final class GlassBackdrop {
             if(!active())return;
             prepare();if(frame.bitmap==null)return;
             if(layout){
-
+                
+                
                 long now=SystemClock.uptimeMillis(),left=CAPTURE_MS-(now-captured);
                 if(left>0){MAIN.removeCallbacks(refresh);queued=true;MAIN.postDelayed(refresh,left);}
                 else{layout=false;captured=now;capture();sceneDirty=true;invalidateOwners();}
@@ -242,11 +253,11 @@ final class GlassBackdrop {
                     PixelCopy.request(surface,destination,result->{
                         copying=false;
                         if(result==PixelCopy.SUCCESS)accept(source,destination,ticket);
-                        else if(failures++<2)android.util.Log.w("MargyTGlass","Current surface copy result="+result);
+                        else if(failures++<2)android.util.Log.w("AirTokGlass","Current surface copy result="+result);
                         if(needsVideo)request(false,false);
                     },MAIN);
                 }
-            }catch(Throwable error){copying=false;if(failures++<2)android.util.Log.w("MargyTGlass","Current renderer copy failed",error);}
+            }catch(Throwable error){copying=false;if(failures++<2)android.util.Log.w("AirTokGlass","Current renderer copy failed",error);}
             animate();
         }
         private void accept(View source,Bitmap destination,int ticket){
@@ -257,7 +268,7 @@ final class GlassBackdrop {
         }
         private void publish(View source){
             if(pixels==null)return;
-            if(!readyLogged){readyLogged=true;android.util.Log.w("MargyTGlass","Backdrop ready: "+source.getClass().getSimpleName());}
+            if(!readyLogged){readyLogged=true;android.util.Log.w("AirTokGlass","Backdrop ready: "+source.getClass().getSimpleName());}
             base(frame);source.getLocationOnScreen(location);
             int save=frame.canvas.save();
             if(source.getGlobalVisibleRect(videoClip))frame.canvas.clipRect((videoClip.left-frame.x)*frame.scale,(videoClip.top-frame.y)*frame.scale,(videoClip.right-frame.x)*frame.scale,(videoClip.bottom-frame.y)*frame.scale);
@@ -266,7 +277,8 @@ final class GlassBackdrop {
             frame.canvas.drawBitmap(pixels,null,box,paint);frame.canvas.restoreToCount(save);
             frame.ready=true;frame.version++;sceneDirty=true;shownVideo=SystemClock.uptimeMillis();invalidateOwners();
         }
-
+        
+        
         private void recheck(){MAIN.removeCallbacks(again);MAIN.postDelayed(again,1250L);}
         private final Runnable again=()->{layout=true;request(false,false);};
         private boolean holding(){return frame.ready && shownVideo!=0 && SystemClock.uptimeMillis()-shownVideo<1200L;}
@@ -278,7 +290,7 @@ final class GlassBackdrop {
             }
             expanded.x=frame.x;expanded.y=frame.y;
             if(sceneDirty){
-
+                
                 Drawable background=page(Design.pageColour(root.get().getContext()));
                 background.setBounds(0,0,expanded.bitmap.getWidth(),expanded.bitmap.getHeight());background.draw(expanded.canvas);expanded.version++;
                 expanded.ready=true;sceneDirty=false;

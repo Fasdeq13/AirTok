@@ -10,6 +10,26 @@ import android.view.View;
 
 import java.lang.reflect.Method;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Loading {
 
     private Loading() {}
@@ -28,8 +48,8 @@ public final class Loading {
         if (known != null) return known;
         try {
             android.content.Context context = AirTok.context();
-            if (context == null) return true;
-            boolean on = context.getSharedPreferences("margyt",
+            if (context == null) return true;  
+            boolean on = context.getSharedPreferences(AirTok.PREFS,
                     android.content.Context.MODE_PRIVATE).getBoolean(KEY, true);
             cached = on;
             return on;
@@ -43,17 +63,24 @@ public final class Loading {
         try {
             android.content.Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences("margyt", android.content.Context.MODE_PRIVATE)
+            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY, enabled).apply();
         } catch (Throwable ignored) {
         }
     }
 
+    
+
+    
     private static boolean asking;
     private static boolean complained;
 
-    public static boolean draw(View view, Canvas canvas) {
+    
 
+
+
+    public static boolean draw(View view, Canvas canvas) {
+        
         if (asking) return false;
         try {
             if (view == null || canvas == null || !isEnabled()) return false;
@@ -66,7 +93,8 @@ public final class Loading {
             if(Design.controlsFluent())fluent(canvas,width,height);
             else if(Design.controlsGlass())glass(canvas,width,height);
             else shape(canvas, width, height);
-
+            
+            
             if (view.isShown()) view.postInvalidateOnAnimation();
             return true;
         } catch (Throwable error) {
@@ -78,6 +106,7 @@ public final class Loading {
         }
     }
 
+    
     static void preview(Canvas canvas, int width, int height) {
         if (Design.controlsFluent()) fluent(canvas, width, height);
         else if (Design.controlsGlass()) glass(canvas, width, height);
@@ -90,6 +119,7 @@ public final class Loading {
     private static final int[] seen = new int[PROBE * PROBE];
     private static Method onDraw;
 
+    
     private static boolean wouldDraw(View view, int width, int height) throws Exception {
         if (probe == null) {
             probe = Bitmap.createBitmap(PROBE, PROBE, Bitmap.Config.ARGB_8888);
@@ -114,10 +144,13 @@ public final class Loading {
         return false;
     }
 
+    
+
+    
     private static final long STEP = 650;
     private static final int SHAPES = 7;
     private static final int POINTS = 96;
-
+    
     private static final float TURN = 50f;
 
     private static final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -152,6 +185,9 @@ public final class Loading {
         int to = (from + 1) % SHAPES;
         float eased = settle(along - from);
 
+        
+        
+        
         long steps = now / STEP;
         float angle = (float) Math.toRadians(((steps % 360) + eased) * TURN);
 
@@ -175,37 +211,50 @@ public final class Loading {
         canvas.drawPath(path, paint);
     }
 
+    
+
+
+
+
     private static float settle(float t) {
         if (t <= 0f) return 0f;
         if (t >= 1f) return 1f;
         return 1f - (float) (Math.exp(-6.0 * t) * Math.cos(8.0 * t));
     }
 
+    
+
+
+
+
+
     private static float radius(int shape, double around) {
         switch (shape) {
-            case 0:
+            case 0:  
                 return 0.89f + 0.11f * (float) Math.cos(10 * around);
-            case 1:
+            case 1:  
                 return 0.91f + 0.09f * (float) Math.cos(9 * around);
-            case 2:
+            case 2:  
                 return sided(5, around);
-            case 3:
+            case 3:  
                 return oval(0.56f, around);
-            case 4:
+            case 4:  
                 return 0.86f + 0.14f * (float) Math.cos(8 * around);
-            case 5:
+            case 5:  
                 return 0.83f + 0.17f * (float) Math.cos(4 * around);
-            default:
+            default: 
                 return oval(0.74f, around);
         }
     }
 
+    
     private static float sided(int sides, double around) {
         double slice = 2 * Math.PI / sides;
         double within = around % slice;
         if (within < 0) within += slice;
         double flat = Math.cos(Math.PI / sides) / Math.cos(within - slice / 2);
-
+        
+        
         double cap = 0.92;
         double sharp = 36.0;
         double soft = -Math.log(Math.exp(-sharp * flat) + Math.exp(-sharp * cap)) / sharp;

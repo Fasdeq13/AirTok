@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 
+
 final class BackdropScene {
     interface Skip { boolean skip(View view); }
     private BackdropScene(){}
@@ -37,7 +38,7 @@ final class BackdropScene {
             canvas.restoreToCount(children);
             Drawable foreground=group.getForeground();if(foreground!=null)foreground.draw(canvas);
         }catch(RuntimeException unsupported){
-
+            
         }finally{canvas.restoreToCount(save);}
     }
 }

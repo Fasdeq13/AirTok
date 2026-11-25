@@ -13,11 +13,35 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public final class SettingsCell {
 
     private SettingsCell() {}
 
-    private static final String CELLS = "X.0MUp", STATE = "X.0MUl", COPY = "margyt";
+    private static final String CELLS = "X.0MUp", STATE = "X.0MUl", COPY = "airtok";
     private static final String TRIED = "settings_cell_tried";
 
     private static volatile Object state;
@@ -25,14 +49,17 @@ public final class SettingsCell {
     private static volatile Object unit;
     private static volatile boolean broken, drawn, counted;
 
+    
     static boolean drawn() {
         return drawn;
     }
 
+    
     static void newScreen() {
         drawn = false;
     }
 
+    
     static boolean likely() {
         if (broken) return false;
         try {
@@ -43,9 +70,16 @@ public final class SettingsCell {
         }
     }
 
+    
     public static String title() {
         return Text.ROW;
     }
+
+    
+
+
+
+
 
     public static boolean draw(boolean first, Object composer) {
         if (broken || composer == null) return first;
@@ -66,7 +100,7 @@ public final class SettingsCell {
             }
             return false;
         } catch (InvocationTargetException inside) {
-
+            
             throw new RuntimeException(inside.getCause());
         } catch (Throwable error) {
             broken = true;
@@ -74,6 +108,11 @@ public final class SettingsCell {
             return first;
         }
     }
+
+    
+
+
+
 
     public static Object again(final Object given, final boolean first, final boolean last, final int changed) {
         try {
@@ -99,7 +138,7 @@ public final class SettingsCell {
     private static Object plain(Object proxy, String name, Object[] args) {
         if (name.equals("hashCode")) return System.identityHashCode(proxy);
         if (name.equals("equals")) return args != null && args.length == 1 && proxy == args[0];
-        if (name.equals("toString")) return "margyt-settings-row";
+        if (name.equals("toString")) return "airtok-settings-row";
         return null;
     }
 
@@ -116,6 +155,7 @@ public final class SettingsCell {
         throw new NoSuchMethodException("this build has no copy of the row to draw");
     }
 
+    
     private static Object state() throws Exception {
         Object known = state;
         if (known != null) return known;
@@ -151,6 +191,7 @@ public final class SettingsCell {
         return made;
     }
 
+    
     private static void open(Object[] args) {
         try {
             Context from = Watch.here();
@@ -176,6 +217,7 @@ public final class SettingsCell {
         }
     }
 
+    
     private static Object unit() throws Exception {
         Object known = unit;
         if (known != null) return known;
@@ -189,10 +231,15 @@ public final class SettingsCell {
         throw new NoSuchFieldException("kotlin.Unit has no instance to give back");
     }
 
+    
+
+
+
+
     private static boolean mayTry() {
         Context context = AirTok.context();
         if (context == null) return false;
-        final SharedPreferences prefs = context.getSharedPreferences("margyt", Context.MODE_PRIVATE);
+        final SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
         final String key = TRIED + "_" + Version.MOD;
         int before = prefs.getInt(key, 0);
         if (before >= 2) {

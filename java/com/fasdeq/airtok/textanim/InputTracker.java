@@ -50,12 +50,16 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import java.lang.ref.WeakReference;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
+
+
+
 
 public final class InputTracker implements TextWatcher {
     final Main main;
@@ -72,9 +76,10 @@ public final class InputTracker implements TextWatcher {
     int insertedCount;
     boolean isApplyingSpans;
     boolean muted;
-
+    
     final boolean originalCursorVisible;
 
+    
     String oldRegion;
     int oldStart;
     int diffPrefix;
@@ -84,12 +89,17 @@ public final class InputTracker implements TextWatcher {
     boolean diffValid;
     static final int SNAPSHOT_LIMIT = 20000;
     String prevText;
-
+    
     static final int QUIET = 0x80000;
 
+    
+    
     final ArrayList<AnimatedSpan> active = new ArrayList<AnimatedSpan>();
     boolean ticking;
 
+    
+    
+    
     final android.text.style.CharacterStyle poke = new PokeSpan();
 
     void pokeText(EditText view) {
@@ -289,6 +299,8 @@ public final class InputTracker implements TextWatcher {
         long now = AnimationUtils.currentAnimationTimeMillis();
         Config config = main.configFor(ref.get());
 
+        
+        
         int delFrom = start;
         int delTo = start + before;
         int insFrom = start + before;
@@ -360,6 +372,8 @@ public final class InputTracker implements TextWatcher {
         Config config = main.configFor(ref.get());
         long now = AnimationUtils.currentAnimationTimeMillis();
 
+        
+        
         if (cur == null || prevText == null) {
             prevText = cur;
             active.clear();
@@ -378,6 +392,7 @@ public final class InputTracker implements TextWatcher {
             if (sf > 0 && sf < cl && Character.isLowSurrogate(cur.charAt(cl - sf))) sf--;
             int delta = cl - pl;
 
+            
             for (int i = active.size() - 1; i >= 0; i--) {
                 AnimatedSpan span = active.get(i);
                 if (span.finished()) {
@@ -404,6 +419,7 @@ public final class InputTracker implements TextWatcher {
                 }
             }
 
+            
             int from = p;
             int to = cl - sf;
             insertedStart = from;
@@ -420,7 +436,7 @@ public final class InputTracker implements TextWatcher {
                 for (int i = from; i < to; ) {
                     int next = clusters.next(i, to);
                     if (!Clusters.blank(cur, i, next) && !Clusters.emoji(cur, i, next)) {
-
+                        
                         long delay = Math.min(1500L, (long) order * config.stagger);
                         order++;
                         AnimatedSpan span = new AnimatedSpan(main, view, cur.substring(i, next), config, now, i, delay);
@@ -439,11 +455,11 @@ public final class InputTracker implements TextWatcher {
     }
 
     void vanish(EditText view, int from, int to, long now) {
-
+        
         float[] sendFrom = view.length() == 0 ? main.takeSendPoint() : null;
         if (sendFrom == null && view.length() == 0 && main.sendGuessEnabled()
                 && to - from >= 2 && !pending.isEmpty()) {
-
+            
             int[] at = new int[2];
             view.getLocationInWindow(at);
             float density = view.getResources().getDisplayMetrics().density;
@@ -458,7 +474,7 @@ public final class InputTracker implements TextWatcher {
                 if (particles.burstSend(view, sendConfig, letters, sendFrom[0], sendFrom[1],
                         main.getSendPreset(), main.getSendPalette(), main.getSendAmount(), main.getSendSpeed())) {
                     particleLayer.attach(view);
-
+                    
                     if (sendConfig.ghosts && !letters.isEmpty()
                             && main.getSendPreset() != Particles.SEND_CLASSIC
                             && main.getSendPreset() != Particles.SEND_FIREWORK

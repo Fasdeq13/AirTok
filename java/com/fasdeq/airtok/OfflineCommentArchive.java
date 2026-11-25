@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.*;
 
+
 final class OfflineCommentArchive {
  static final int MAX_COUNT=1000, MAX_BYTES=16*1024*1024;
  static final class Row {
@@ -41,7 +42,7 @@ final class OfflineCommentArchive {
   File temp=new File(parent,file.getName()+".tmp");
   try{
    try(ZipOutputStream zip=new ZipOutputStream(new FileOutputStream(temp))){entry(zip,"comments.json",json.toString());entry(zip,"comments.txt",plain.toString());}
-
+   
    if(!temp.renameTo(file))throw new IOException("archive commit");
   }finally{if(temp.exists())temp.delete();}
  }

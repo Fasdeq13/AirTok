@@ -1,11 +1,26 @@
 package com.fasdeq.airtok;
 
-final class GhostMode {
-    interface Flags { boolean on(String key); }
-    interface Notice { void log(String message); }
-    GhostMode(Flags f, Notice n) {}
-    void bootstrap() {}
-    void apply() {}
-    void stop() {}
-    String report() { return "отключен"; }
+public final class GhostMode {
+
+    public interface Notice {
+        void log(String message);
+    }
+
+    public interface Flags {
+        boolean on(String key);
+    }
+
+    public GhostMode() {}
+
+    public GhostMode(Flags flags, Notice notice) {}
+
+    public void bootstrap() {}
+
+    public void apply() {}
+
+    public void close() {}
+
+    public String report() {
+        return Ghost.report();
+    }
 }
