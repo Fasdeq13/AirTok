@@ -127,7 +127,7 @@ public class SettingsActivity extends Activity {
             new Shelf(1, "appearance", "palette", Local.of("Оформление"), "", Local.of("Тема"), Local.of("Цвет акцента"), Text.FONT, MOTION_BLUR, Local.of("Экран запуска"), Local.of("Редактор интерфейса")),
             new Shelf(2, "feed_video", "play_circle", Local.of("Лента и видео"), "", Text.REGION, Text.FEED, BeatVibration.TITLE, BURN),
             new Shelf(3, "downloads", "download", Local.of("Скачивание медиа"), "", Text.DOWNLOADS),
-            new Shelf(4, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Local.of("Входящие"), Text.NOTIFICATIONS),
+            new Shelf(4, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Text.NOTIFICATIONS),
             new Shelf(5, "privacy", "lock", Local.of("Защита и приватность"), "", Local.of("Защита входа"), GHOST),
             new Shelf(6, "about", "info", Local.of("О проекте"), "", Local.of("О проекте")),
         };
@@ -854,17 +854,6 @@ public class SettingsActivity extends Activity {
                         Text.CANCEL, null, null, null)));
         column.addView(wrap(streaks));
 
-        column.addView(section(Local.of("Входящие")));
-        LinearLayout inboxCard = card();
-        inboxCard.addView(liveToggleRow("folder", Local.of("Папки чатов во «Входящих»"), ChatFolders.enabled(), on -> {
-            ChatFolders.setEnabled(on);
-            markChanged();
-        }));
-        inboxCard.addView(line());
-        inboxCard.addView(actionRow("add", Local.of("Папки чатов"), ChatFolders.list().size() + " " + Local.of("шт."), () -> ChatFolders.manageFolders(this)));
-        inboxCard.addView(quiet(Local.of("Папки появляются в верхней ленте во «Входящих». Нажмите + или зажмите диалог, чтобы добавить его в папку.")));
-        column.addView(wrap(inboxCard));
-
         column.addView(section(Text.NOTIFICATIONS));
         LinearLayout notifications = card();
         notifications.addView(liveToggleRow("chat", Text.NOTIFY_MESSAGES, ModNotifications.option(0), on -> ModNotifications.set(ModNotifications.MESSAGES, on)));
@@ -1028,9 +1017,6 @@ public class SettingsActivity extends Activity {
         p2.setPadding(0, dp(2), 0, dp(2));
         thanksBox.addView(p2);
 
-        thanksBox.setClickable(true);
-        Motion.press(thanksBox);
-        thanksBox.setOnClickListener(v -> showThanks());
         thanksCard.addView(thanksBox);
         column.addView(wrap(thanksCard));
     }
@@ -3531,82 +3517,6 @@ public class SettingsActivity extends Activity {
         return new View(this);
     }
 
-
-
-    
-
-
-
-
-    private View space() {
-        java.util.List<ThanksSpace.Person> people = new java.util.ArrayList<>();
-        people.add(new ThanksSpace.Person("@fasdeq", Text.THANKS_OWNER, ThanksSpace.EGG_TILCAYO, this::ownerLinks));
-        people.add(new ThanksSpace.Person("Claude Opus 5.5", Text.THANKS_CLAUDE, ThanksSpace.EGG_CONSTELLATION, null));
-        people.add(new ThanksSpace.Person("someone's mf", Text.THANKS_TTCUZ, ThanksSpace.EGG_SCATTER, () -> open(TTCUZ)));
-        people.add(new ThanksSpace.Person("@saintcursed", Local.of("Автор LotusTok: призрак, папки, редактор интерфейса, анимация набора и другое"),
-                ThanksSpace.EGG_LOTUS, () -> open(LOTUSTOK)));
-        people.add(new ThanksSpace.Person("TT Extras", Local.of("Плагин для AirTok: из него призрак и длинные комментарии"),
-                ThanksSpace.EGG_GHOST, null));
-        people.add(new ThanksSpace.Person("санек :3 (санечек)", Local.of("Часть дизайна AirTok"), ThanksSpace.EGG_HEART, () -> open(SANEK)));
-        java.util.List<ThanksSpace.Planet> planets = new java.util.ArrayList<>();
-        planets.add(new ThanksSpace.Planet("Telegram", 0xFF8B5CF6, () -> open(CHANNEL)));
-        planets.add(new ThanksSpace.Planet("GitHub", 0xFFA78BFA, () -> open(GIT)));
-        return new ThanksSpace(this, people, planets,
-                Local.of("нажмите на имя · зажмите, чтобы открыть ссылку"), CHANNEL);
-    }
-
-    
-    private void showThanks() {
-        final android.app.Dialog sky = new android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
-        final ThanksSpace space = (ThanksSpace) space();
-        frame.addView(space, new android.widget.FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        TextView close = new TextView(this);
-        close.setText("\u2715");
-        close.setTextColor(0xDDFFFFFF);
-        close.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        close.setGravity(Gravity.CENTER);
-        close.setContentDescription(Text.CLOSE);
-        close.setOnClickListener(v -> sky.dismiss());
-        android.widget.FrameLayout.LayoutParams corner = new android.widget.FrameLayout.LayoutParams(dp(56), dp(56), Gravity.TOP | Gravity.END);
-        frame.addView(close, corner);
-        frame.setOnApplyWindowInsetsListener((v, insets) -> {
-            int top = insets.getSystemWindowInsetTop();
-            corner.topMargin = top;
-            close.setLayoutParams(corner);
-            space.setTopInset(top + dp(40));
-            return insets;
-        });
-        sky.setContentView(frame);
-        android.view.Window window = sky.getWindow();
-        if (window != null) {
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            window.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(0xFF070A16));
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            window.setStatusBarColor(0);
-            window.setNavigationBarColor(0);
-        }
-        sky.show();
-    }
-
-    
-    private void ownerLinks() {
-        try {
-            new ModDialog.Builder(this, skin)
-                    .setTitle("@fasdeq")
-                    .setItems(new CharSequence[]{"Telegram", "TikTok"}, (dialog, which) ->
-                            open(which == 0 ? OWNER_TELEGRAM : OWNER_TIKTOK))
-                    .setNegativeButton(Text.CANCEL, null)
-                    .show();
-        } catch (Throwable error) {
-            open(OWNER_TELEGRAM);
-        }
-    }
-
-
-
-    
     private View away() {
         
         if (!Design.frosted()) { View none = new View(this); none.setVisibility(View.GONE); return none; }
@@ -4668,7 +4578,7 @@ public class SettingsActivity extends Activity {
         String[] notes = {"", Local.of("Акцент меняет цвет кнопок и вкладок. Тема и шрифты отдельно."),
                 Local.of("Смена региона, скрытие рекламы и трансляций, вибрация в такт видео и анти-выгорание."),
                 Local.of("Скачивание без водяного знака, принудительное сохранение, аватарки."),
-                Local.of("Серии, папки чатов во «Входящих» и уведомления."),
+                Local.of("Серии и уведомления."),
                 Local.of("Защита входа и режим призрака."),
                 Local.of("Создатель, исходный код и благодарности.")};
         Panel.with(this,skin,Local.of("Подсказки")).text(notes[Math.max(0,Math.min(notes.length-1,settingsGroup))])
@@ -4730,8 +4640,6 @@ public class SettingsActivity extends Activity {
             entry.addView(words, grow()); entry.addView(away());
             entry.setMinimumHeight(dp(72)); Motion.touch(entry);
             entry.setOnClickListener(v -> {
-                
-                if ("thanks".equals(one.id)) { showThanks(); return; }
                 if (navigating) return; navigating = true;
                 Motion.navigate(column, 1f, () -> { settingsPage = one.id; page.scrollTo(0, 0); navigate(); navigating = false; });
             });

@@ -41,14 +41,12 @@ final class SponsorBlock {
 
     private SponsorBlock() {}
 
-    static final String KEY_SKIP = "sb_skip", KEY_MARKS = "sb_marks", KEY_ON = "sb_on", KEY_MOBILE = "sb_mobile";
+    static final String KEY_MOBILE = "sb_mobile";
 
-    
     static boolean enabled() {
-        return flag(KEY_ON, true);
+        return Feed.isEnabled();
     }
 
-    
     static boolean mobileOn() {
         return flag(KEY_MOBILE, false);
     }
@@ -62,26 +60,11 @@ final class SponsorBlock {
     }
 
     static boolean skipOn() {
-        try {
-            return AccountAppearance.prefs(AirTok.context()).getBoolean(KEY_SKIP, true);
-        } catch (Throwable ignored) {
-            return true;
-        }
+        return Feed.isEnabled();
     }
 
     static boolean marksOn() {
-        try {
-            return AccountAppearance.prefs(AirTok.context()).getBoolean(KEY_MARKS, true);
-        } catch (Throwable ignored) {
-            return true;
-        }
-    }
-
-    static void set(String key, boolean on) {
-        try {
-            AccountAppearance.prefs(AirTok.context()).edit().putBoolean(key, on).apply();
-        } catch (Throwable ignored) {
-        }
+        return Feed.isEnabled();
     }
 
     
@@ -133,6 +116,7 @@ final class SponsorBlock {
     }
 
     private static void ask(final String aid, boolean again) {
+        if (Badges.SERVER.length() == 0) return;
         synchronized (SponsorBlock.class) {
             if ((!again && known.containsKey(aid)) || !asking.add(aid)) return;
         }
@@ -324,14 +308,8 @@ final class SponsorBlock {
 
     
 
-    static final String KEY_SOUND = "sb_sound";
-
     static boolean soundOn() {
-        try {
-            return AccountAppearance.prefs(AirTok.context()).getBoolean(KEY_SOUND, true);
-        } catch (Throwable ignored) {
-            return true;
-        }
+        return Feed.isEnabled();
     }
 
     private static volatile Hear.Index heard = new Hear.Index();
@@ -367,15 +345,17 @@ final class SponsorBlock {
                 java.io.File file = printsFile();
                 if (file.exists()) all = new JSONObject(new String(java.nio.file.Files.readAllBytes(file.toPath()), "UTF-8"));
                 printsUntil = all.optLong("until");
-                String said = Net.text(Badges.SERVER + "/sb/prints?since=" + printsUntil);
-                if (said != null) {
-                    JSONObject fresh = new JSONObject(said);
-                    JSONArray list = all.optJSONArray("prints");
-                    if (list == null) list = new JSONArray();
-                    JSONArray added = fresh.optJSONArray("prints");
-                    for (int i = 0; added != null && i < added.length(); i++) list.put(added.get(i));
-                    all.put("prints", list).put("until", Math.max(printsUntil, fresh.optLong("until")));
-                    java.nio.file.Files.write(file.toPath(), all.toString().getBytes("UTF-8"));
+                if (Badges.SERVER.length() > 0) {
+                    String said = Net.text(Badges.SERVER + "/sb/prints?since=" + printsUntil);
+                    if (said != null) {
+                        JSONObject fresh = new JSONObject(said);
+                        JSONArray list = all.optJSONArray("prints");
+                        if (list == null) list = new JSONArray();
+                        JSONArray added = fresh.optJSONArray("prints");
+                        for (int i = 0; added != null && i < added.length(); i++) list.put(added.get(i));
+                        all.put("prints", list).put("until", Math.max(printsUntil, fresh.optLong("until")));
+                        java.nio.file.Files.write(file.toPath(), all.toString().getBytes("UTF-8"));
+                    }
                 }
                 Hear.Index index = new Hear.Index();
                 JSONArray list = all.optJSONArray("prints");

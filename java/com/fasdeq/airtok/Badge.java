@@ -135,10 +135,6 @@ public final class Badge {
 
             String key = uid != null ? uid : (uniqueId != null ? uniqueId : name);
             String shown = marked(name, key, false);
-            if (uid != null) {
-                ChatFolders.seen(name, uid);
-                ChatFolders.seen(shown, uid);
-            }
             return shown;
         } catch (Throwable ignored) {
             return name;

@@ -72,7 +72,6 @@ public final class Watch implements Application.ActivityLifecycleCallbacks {
             NavBar.attach(activity);
             Md3.attach(activity);
             CommentStyle.attach(activity);
-            ChatFolders.attach(activity);
             InboxClean.attach(activity);
             ViewEditor.attach(activity);
             Ghost.resumed(activity);
