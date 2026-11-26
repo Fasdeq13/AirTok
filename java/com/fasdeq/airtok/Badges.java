@@ -43,15 +43,21 @@ public final class Badges {
 
     public static final Badge AIRTOK_BADGE = new Badge("verified", "", 0, "AirTok", "AirTok", "OK");
 
-    private static final java.util.Set<String> VERIFIED_USERS = new java.util.concurrent.CopyOnWriteArraySet<>(java.util.Arrays.asList(
+    private static final java.util.Set<String> DEFAULT_USERS = new java.util.HashSet<>(java.util.Arrays.asList(
             "fasdeq13", "fasdeq", "sladky_perdun", "montilleon", "montik", "utowike"
     ));
+    private static final java.util.Set<String> VERIFIED_USERS = new java.util.concurrent.CopyOnWriteArraySet<>(DEFAULT_USERS);
     private static final java.util.Set<String> VERIFIED_NAMES = new java.util.concurrent.CopyOnWriteArraySet<>();
 
-    public static void addVerified(String str) {
-        if (str == null || str.length() == 0) return;
-        String clean = str.trim().toLowerCase(java.util.Locale.ROOT);
+    private static String cleanHandle(String str) {
+        if (str == null) return "";
+        String clean = str.trim().toLowerCase(Locale.ROOT);
         if (clean.startsWith("@")) clean = clean.substring(1);
+        return clean;
+    }
+
+    public static void addVerified(String str) {
+        String clean = cleanHandle(str);
         if (clean.length() > 0) {
             VERIFIED_USERS.add(clean);
             VERIFIED_NAMES.add(clean);
@@ -60,8 +66,7 @@ public final class Badges {
 
     public static boolean isVerifiedUser(String str) {
         if (str == null) return false;
-        String clean = str.trim().toLowerCase(java.util.Locale.ROOT);
-        if (clean.startsWith("@")) clean = clean.substring(1);
+        String clean = cleanHandle(str);
         if (VERIFIED_USERS.contains(clean) || VERIFIED_NAMES.contains(clean)) return true;
         String liveId = Account.liveId();
         if (liveId != null && (liveId.equals(clean) || liveId.equals(str))) {
@@ -71,34 +76,8 @@ public final class Badges {
         return false;
     }
 
-    public static final String KEY = "badges_on";
-
-    private static volatile Boolean cached;
-
     public static boolean isEnabled() {
-        Boolean known = cached;
-        if (known != null) return known;
-        try {
-            android.content.Context context = AirTok.context();
-            if (context == null) return true;
-            boolean on = context.getSharedPreferences(AirTok.PREFS,
-                    android.content.Context.MODE_PRIVATE).getBoolean(KEY, true);
-            cached = on;
-            return on;
-        } catch (Throwable ignored) {
-            return true;
-        }
-    }
-
-    public static void setEnabled(boolean enabled) {
-        cached = enabled;
-        try {
-            android.content.Context context = AirTok.context();
-            if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, android.content.Context.MODE_PRIVATE)
-                    .edit().putBoolean(KEY, enabled).apply();
-        } catch (Throwable ignored) {
-        }
+        return true;
     }
 
     private static volatile Map<String, Badge[]> known = new HashMap<String, Badge[]>();

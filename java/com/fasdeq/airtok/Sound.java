@@ -51,14 +51,13 @@ public final class Sound {
     private static volatile Boolean cached;
 
     public static boolean isEnabled() {
-        
         return true;
     }
 
     public static void setEnabled(boolean enabled) {
-        cached = enabled;
+        cached = Boolean.TRUE;
         SharedPreferences prefs = prefs();
-        if (prefs != null) prefs.edit().putBoolean(KEY, enabled).apply();
+        if (prefs != null) prefs.edit().putBoolean(KEY, true).apply();
     }
 
     private static SharedPreferences prefs() {
@@ -89,5 +88,20 @@ public final class Sound {
     public static int getMuteType(Music music) {
         if (music == null) return NOT_MUTED;
         return isEnabled() ? NOT_MUTED : music.getMuteType();
+    }
+
+    public static int musicStatus(Music music) {
+        if (music == null) return AVAILABLE;
+        return isEnabled() ? AVAILABLE : music.musicStatus;
+    }
+
+    public static boolean muteShare(Music music) {
+        if (music == null) return false;
+        return !isEnabled() && music.muteShare;
+    }
+
+    public static int muteType(Music music) {
+        if (music == null) return NOT_MUTED;
+        return isEnabled() ? NOT_MUTED : music.muteType;
     }
 }

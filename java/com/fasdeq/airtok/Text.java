@@ -1253,11 +1253,6 @@ final class Text {
     static final String TAP_TO_COPY = pick(
             "Нажми, чтобы скопировать", "Натисни, щоб скопіювати", "Tap to copy");
 
-    static final String YOOMONEY = pick("ЮMoney", "ЮMoney", "YooMoney");
-
-    static final String YOOMONEY_NOTE = pick(
-            "Перевод напрямую", "Переказ напряму", "Straight to the transfer page");
-
     
     static final String VERDICT_GOOD = pick("✅ Рекомендуемый", "✅ Рекомендований", "✅ Recommended");
     static final String VERDICT_BAD = pick("⛔ Не рекомендуемый", "⛔ Не рекомендований", "⛔ Not recommended");
@@ -1317,18 +1312,6 @@ final class Text {
         if (reason == null || reason.length() == 0) return said;
         return said + " " + pick("Причина: «", "Причина: «", "Reason: \u201C") + reason + pick("»", "»", "\u201D");
     }
-
-    static final String BOOSTY = pick("Boosty", "Boosty", "Boosty");
-
-    static final String BOOSTY_NOTE = pick(
-            "Подходит для любой страны", "Підходить для будь-якої країни", "Works from any country");
-
-    static final String FUNPAY = pick("FunPay", "FunPay", "FunPay");
-    static final String FUNPAY_NOTE = pick("Покупка через FunPay", "Покупка через FunPay", "Buy it on FunPay");
-    static final String STARS = pick("Звёзды Telegram", "Зірки Telegram", "Telegram Stars");
-    static final String STARS_NOTE = pick("300 ⭐ подарками на аккаунт @fasdeq", "300 ⭐ подарунками на акаунт @fasdeq", "300 ⭐ as gifts to @fasdeq");
-    static final String BANNER_ALWAYS = pick("Всегда показывать плашку", "Завжди показувати плашку", "Always show the banner");
-    static final String BANNER_ALWAYS_NOTE = pick("Даже если значок уже есть.", "Навіть якщо значок уже є.", "Even if you already have the badge.");
 
     static final String NO_BROWSER = pick(
             "Нечем открыть ссылку", "Нема чим відкрити посилання", "Nothing here opens links");

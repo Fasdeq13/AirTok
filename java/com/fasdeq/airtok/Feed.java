@@ -4,8 +4,10 @@ import android.content.SharedPreferences;
 
 import com.ss.android.ugc.aweme.feed.model.Aweme;
 import com.ss.android.ugc.aweme.feed.model.FeedItemList;
+import com.ss.android.ugc.aweme.follow.presenter.FollowFeedList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -37,14 +39,20 @@ public final class Feed {
     private static volatile Boolean cached;
 
     public static boolean isEnabled() {
-        
-        return true;
+        Boolean known = cached;
+        if (known != null) return known.booleanValue();
+        SharedPreferences prefs = prefs();
+        if (prefs == null) return true;
+        boolean on = prefs.getBoolean(KEY, true);
+        cached = Boolean.valueOf(on);
+        return on;
     }
 
     public static void setEnabled(boolean enabled) {
-        cached = enabled;
+        cached = Boolean.valueOf(enabled);
         SharedPreferences prefs = prefs();
         if (prefs != null) prefs.edit().putBoolean(KEY, enabled).apply();
+        Flags.forget();
     }
 
     
@@ -166,13 +174,40 @@ public final class Feed {
     
 
 
-    static boolean advert(Object post){
-        if(!(post instanceof Aweme))return false;
-        return ((Aweme)post).isAd() || Boolean.TRUE.equals(NativeRead.field(post,"_isAd"));
+    static boolean advert(Object post) {
+        if (!(post instanceof Aweme)) return false;
+        Aweme aweme = (Aweme) post;
+        if (aweme.isAd()) return true;
+        if (Boolean.TRUE.equals(NativeRead.field(post, "_isAd"))) return true;
+        if (Boolean.TRUE.equals(NativeRead.field(post, "_isSoftAd"))) return true;
+        if (Boolean.TRUE.equals(NativeRead.get(post, "isSoftAd"))) return true;
+        if (NativeRead.get(post, "getAwemeRawAd") != null) return true;
+        if (NativeRead.field(post, "awemeRawAd") != null) return true;
+        if (NativeRead.number(NativeRead.get(post, "getAdAwemeSource")) > 0) return true;
+        if (NativeRead.number(NativeRead.get(post, "getAdLinkType")) > 0) return true;
+        if (NativeRead.get(post, "getLinkAdData") != null) return true;
+        if (NativeRead.get(post, "getPromoteModel") != null) return true;
+        return false;
     }
-    
-    public static List withoutAds(List items){
+
+    public static List withoutAds(List items) {
         return without(items);
+    }
+
+    public static List noPreloadAds(List items) {
+        return isEnabled() ? Collections.emptyList() : items;
+    }
+
+    public static List noPreloadAdsField(FeedItemList page) {
+        return page == null ? null : noPreloadAds(page.preloadAds);
+    }
+
+    public static boolean noHasAd(boolean has) {
+        return !isEnabled() && has;
+    }
+
+    public static List followItems(FollowFeedList page) {
+        return page == null ? null : without(page.items);
     }
     public static List searchItems(com.ss.android.ugc.aweme.search.pages.result.topsearch.core.model.SearchMixFeedList page){
         Ghost.recordActivity();
@@ -239,7 +274,7 @@ public final class Feed {
         boolean others=!Tags.all().isEmpty();
         boolean dated=FeedDates.active();
         if (!ads && !live && !photos && !stories && !suggestions && !authors && !others && !dated) {
-            return Plugins.feed(items);
+            return items;
         }
         try {
             int out=0,index=0;
@@ -255,12 +290,12 @@ public final class Feed {
                 } else if(kept!=null)kept.add(item);
                 index++;
             }
-            if(kept==null)return Plugins.feed(items);
+            if(kept==null)return items;
             synchronized(Feed.class) {
                 dropped+=out;long now=System.currentTimeMillis();
                 if(now-reportedAt>=1000L){reportedAt=now;Diary.note("feed: " + out + " left out, " + dropped + " so far");}
             }
-            return Plugins.feed(kept);
+            return kept;
         } catch (Throwable error) {
             Diary.note("feed: leaving the page alone, " + error);
             return items;

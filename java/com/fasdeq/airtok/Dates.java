@@ -38,17 +38,13 @@ public final class Dates {
     }
 
     public static boolean isEnabled() {
-        if (on != null) return on;
-        SharedPreferences prefs = prefs();
-        if (prefs == null) return true;
-        on = prefs.getBoolean(KEY, true);
-        return on;
+        return true;
     }
 
     public static void setEnabled(boolean enabled) {
-        on = Boolean.valueOf(enabled);
+        on = Boolean.TRUE;
         SharedPreferences prefs = prefs();
-        if (prefs != null) prefs.edit().putBoolean(KEY, enabled).apply();
+        if (prefs != null) prefs.edit().putBoolean(KEY, true).apply();
         new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> DateOverlay.update());
     }
 

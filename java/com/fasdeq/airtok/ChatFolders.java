@@ -53,13 +53,15 @@ final class ChatFolders {
 
     private static final int TAG_MINE = 0x7e0c0420, TAG_HIDDEN = 0x7e0c0421, TAG_NAME = 0x7e0c0422,
             TAG_HEADER = 0x7e0c0423, TAG_CHIP = 0x7e0c0424, TAG_SWAPPED = 0x7e0c0425,
-            TAG_WATCHED = 0x7e0c0426;
+            TAG_WATCHED = 0x7e0c0426, TAG_MANAGE = 0x7e0c0427;
 
     
 
     static boolean enabled() {
-        
-        return !Version.LITE;
+        if (Version.LITE) return false;
+        Context context = AirTok.context();
+        if (context == null) return true;
+        return AccountAppearance.prefs(context).getBoolean(KEY_ON, true);
     }
 
     static void setEnabled(boolean on) {
@@ -580,7 +582,7 @@ final class ChatFolders {
         poke();
         Folder folder = folder(id);
         if (folder != null && folder.chats.isEmpty()) {
-            tell(Local.of("В папке пока пусто. Удерживайте диалог и выберитете «Добавить в папку»"));
+            tell(Local.of("В папке пока пусто. Удерживайте диалог и выберите «Добавить в папку»"));
         }
     }
 
@@ -919,7 +921,7 @@ final class ChatFolders {
         for (int i = 0; i < holder.getChildCount(); i++) {
             View child = holder.getChildAt(i);
             if (!(child instanceof LinearLayout)) continue;
-            if (child.getTag(TAG_CHIP) != null) mine.add((LinearLayout) child);
+            if (child.getTag(TAG_CHIP) != null || child.getTag(TAG_MANAGE) != null) mine.add((LinearLayout) child);
             else theirs.add((LinearLayout) child);
         }
         if (theirs.isEmpty()) return;
@@ -942,27 +944,35 @@ final class ChatFolders {
         }
 
         
-        List<Folder> wanted = enabled() ? new ArrayList<Folder>(folders) : new ArrayList<Folder>();
-        boolean same = mine.size() == wanted.size();
-        for (int i = 0; same && i < mine.size(); i++) {
+        load();
+        boolean showFolders = enabled();
+        List<Folder> wanted = showFolders ? new ArrayList<Folder>(folders) : new ArrayList<Folder>();
+        boolean same = (!showFolders && mine.isEmpty()) || (showFolders && mine.size() == wanted.size() + 1 && mine.get(mine.size() - 1).getTag(TAG_MANAGE) != null);
+        for (int i = 0; same && i < wanted.size(); i++) {
             Folder folder = wanted.get(i);
             Object tag = mine.get(i).getTag(TAG_CHIP);
             TextView text = firstText(mine.get(i), 0);
             same = folder.id.equals(tag) && text != null && folder.name.contentEquals(text.getText());
         }
+        if (same && showFolders && !mine.isEmpty()) {
+            TextView manageText = firstText(mine.get(mine.size() - 1), 0);
+            String wantLabel = wanted.isEmpty() ? "+ " + Local.of("Папки") : "+";
+            same = manageText != null && wantLabel.contentEquals(manageText.getText());
+        }
         if (!same) {
             for (LinearLayout chip : mine) holder.removeView(chip);
             mine.clear();
             LinearLayout proto = prototype(theirs);
-            if (proto != null) {
-                
-                
+            if (proto != null && showFolders) {
                 int at = Math.min(holder.getChildCount(), holder.indexOfChild(theirs.get(0)) + 1);
                 for (Folder folder : wanted) {
                     LinearLayout chip = chip(activity, proto, folder);
                     holder.addView(chip, at++);
                     mine.add(chip);
                 }
+                LinearLayout manage = manageChip(activity, proto, wanted.isEmpty());
+                holder.addView(manage, at);
+                mine.add(manage);
             }
         }
 
@@ -979,7 +989,8 @@ final class ChatFolders {
             }
         }
         for (LinearLayout chip : mine) {
-            boolean chosen = chip.getTag(TAG_CHIP).equals(active);
+            Object tag = chip.getTag(TAG_CHIP);
+            boolean chosen = tag != null && tag.equals(active);
             Look look = chosen ? selectedLook : idleLook;
             if (look != null) dress(chip, look);
             else if (chosen) {
@@ -992,8 +1003,10 @@ final class ChatFolders {
         }
         for (LinearLayout chip : theirs)
             InboxMd3.folder(chip, active == null && selectedLook != null && inkOf(chip) == selectedLook.ink);
-        for (LinearLayout chip : mine)
-            InboxMd3.folder(chip, chip.getTag(TAG_CHIP).equals(active));
+        for (LinearLayout chip : mine) {
+            Object tag = chip.getTag(TAG_CHIP);
+            InboxMd3.folder(chip, tag != null && tag.equals(active));
+        }
     }
 
     private static int inkOf(View chip) {
@@ -1033,10 +1046,9 @@ final class ChatFolders {
         return best;
     }
 
-    private static LinearLayout chip(final Activity activity, LinearLayout proto, final Folder folder) {
+    private static LinearLayout cloneChip(LinearLayout proto, String labelText, String desc) {
         Context context = proto.getContext();
         LinearLayout chip = new LinearLayout(context);
-        chip.setTag(TAG_CHIP, folder.id);
         chip.setOrientation(proto.getOrientation());
         chip.setGravity(proto.getGravity());
         chip.setPadding(proto.getPaddingLeft(), proto.getPaddingTop(), proto.getPaddingRight(), proto.getPaddingBottom());
@@ -1044,7 +1056,6 @@ final class ChatFolders {
         LinearLayout.LayoutParams place = params instanceof LinearLayout.LayoutParams
                 ? new LinearLayout.LayoutParams((LinearLayout.LayoutParams) params)
                 : new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        
         place.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         place.weight = 0f;
         chip.setLayoutParams(place);
@@ -1054,7 +1065,7 @@ final class ChatFolders {
         }
         TextView sample = firstText(proto, 0);
         TextView text = new TextView(context);
-        text.setText(folder.name);
+        text.setText(labelText);
         text.setTextSize(TypedValue.COMPLEX_UNIT_PX, sample.getTextSize());
         text.setTypeface(sample.getTypeface());
         text.setTextColor(sample.getCurrentTextColor());
@@ -1075,7 +1086,25 @@ final class ChatFolders {
         chip.addView(text, inside);
         chip.setClickable(true);
         chip.setFocusable(true);
-        chip.setContentDescription(folder.name);
+        chip.setContentDescription(desc);
+        return chip;
+    }
+
+    private static LinearLayout manageChip(final Activity activity, LinearLayout proto, boolean empty) {
+        String label = empty ? "+ " + Local.of("Папки") : "+";
+        LinearLayout chip = cloneChip(proto, label, Local.of("Папки чатов"));
+        chip.setTag(TAG_MANAGE, Boolean.TRUE);
+        chip.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                manageFolders(activity);
+            }
+        });
+        return chip;
+    }
+
+    private static LinearLayout chip(final Activity activity, LinearLayout proto, final Folder folder) {
+        LinearLayout chip = cloneChip(proto, folder.name, folder.name);
+        chip.setTag(TAG_CHIP, folder.id);
         chip.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 narrow(folder.id.equals(active) ? null : folder.id);
@@ -1389,9 +1418,32 @@ final class ChatFolders {
         panel.quiet(Local.of("Отмена"), null).show();
     }
 
+    static void manageFolders(final Activity activity) {
+        if (activity == null || activity.isFinishing()) return;
+        load();
+        final Panel panel = Panel.with(activity, Skin.remembered(activity), Local.of("Папки чатов"));
+        if (folders.isEmpty()) {
+            panel.text(Local.of("Папок пока нет. Создайте папку и добавляйте в неё чаты долгим нажатием на диалог."));
+        } else {
+            for (final Folder folder : new ArrayList<Folder>(folders)) {
+                panel.item("folder", folder.name, Local.of("Чатов: ") + folder.chats.size(), new Panel.Click() {
+                    @Override public void on() {
+                        manage(activity, folder);
+                    }
+                });
+            }
+        }
+        panel.item("add", Local.of("Новая папка"), null, new Panel.Click() {
+            @Override public void on() {
+                create(activity, null);
+            }
+        });
+        panel.quiet(Local.of("Закрыть"), null).show();
+    }
+
     private static void members(final Activity activity, final Folder folder) {
         Panel panel = Panel.with(activity, Skin.remembered(activity), folder.name);
-        if (folder.chats.isEmpty()) panel.text(Local.of("В папке нет чатов. Удерживайте диалог в списке и выберитете «Добавить в папку»."));
+        if (folder.chats.isEmpty()) panel.text(Local.of("В папке нет чатов. Удерживайте диалог в списке и выберите «Добавить в папку»."));
         for (final Map.Entry<String, String> chat : new ArrayList<Map.Entry<String, String>>(folder.chats.entrySet())) {
             final String key = chat.getKey();
             String shown = chat.getValue().length() == 0 ? key : chat.getValue();

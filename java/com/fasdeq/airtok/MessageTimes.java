@@ -14,25 +14,15 @@ public final class MessageTimes {
     private static volatile Boolean cached;
 
     public static boolean enabled() {
-        Boolean known = cached;
-        if (known != null) return known;
-        try {
-            Context context = AirTok.context();
-            if (context == null) return true;
-            boolean on = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).getBoolean(KEY, true);
-            cached = on;
-            return on;
-        } catch (Throwable ignored) {
-            return true;
-        }
+        return true;
     }
 
     public static void setEnabled(boolean on) {
-        cached = on;
+        cached = Boolean.TRUE;
         try {
             Context context = AirTok.context();
             if (context == null) return;
-            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, on).apply();
+            context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY, true).apply();
         } catch (Throwable ignored) {
         }
     }

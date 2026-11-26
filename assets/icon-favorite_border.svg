@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="bg-favorite_border" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B1464"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="fg-favorite_border" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#C4B5FD"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#bg-favorite_border)" stroke="#A78BFA" stroke-opacity="0.45" stroke-width="1"/>
+  <g transform="translate(6,6) scale(0.8333333)">
+    <path d="M 11.45 20.4 C 11.267 20.333 11.108 20.233 10.975 20.1 L 9.65 18.875 C 7.583 16.958 5.792 15.129 4.275 13.387 C 2.758 11.646 2 9.825 2 7.925 C 2 6.425 2.504 5.171 3.513 4.162 C 4.521 3.154 5.767 2.65 7.25 2.65 C 8.1 2.65 8.942 2.854 9.775 3.263 C 10.608 3.671 11.35 4.342 12 5.275 C 12.733 4.342 13.492 3.671 14.275 3.263 C 15.058 2.854 15.883 2.65 16.75 2.65 C 18.233 2.65 19.479 3.154 20.488 4.162 C 21.496 5.171 22 6.425 22 7.925 C 22 9.825 21.242 11.646 19.725 13.387 C 18.208 15.129 16.417 16.958 14.35 18.875 L 13.025 20.1 C 12.892 20.233 12.733 20.333 12.55 20.4 C 12.367 20.467 12.183 20.5 12 20.5 C 11.817 20.5 11.633 20.467 11.45 20.4 Z" fill="url(#fg-favorite_border)"/>
+  </g>
+</svg>

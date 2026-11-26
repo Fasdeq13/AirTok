@@ -47,7 +47,6 @@ public final class AccountAppearance {
             Themes.repaintVisible();Accent.refreshLikeViews();
             android.app.Activity activity=Screen.now();
             if(activity instanceof SettingsActivity)((SettingsActivity)activity).accountAppearanceChanged();
-            Plugins.accountChanged(uid);
         });
     }
     public static SharedPreferences prefs(Context context) {

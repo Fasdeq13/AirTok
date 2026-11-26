@@ -149,7 +149,7 @@ public final class Accent {
 
 
     public static int accent() {
-        return Plugins.colour(colour());
+        return colour();
     }
 
     public static void set(int colour) {
@@ -203,7 +203,7 @@ public final class Accent {
         int translated;
         if(colour!=0 && (int)(pair>>>32)==colour)translated=(int)pair;
         else {translated=translate(colour);table.set(index,((long)colour<<32)|(translated&0xFFFFFFFFL));}
-        int out = Plugins.colour(translated);
+        int out = translated;
         memo = ((long) colour << 32) | (out & 0xFFFFFFFFL);
         return out;
     }

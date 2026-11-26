@@ -86,24 +86,15 @@ public class SettingsActivity extends Activity {
     private static boolean pending;
 
     
-    private static final String CHANNEL = "https://t.me/airtokiktok";
-    private static final String FORUM = "https://t.me/airtokforum";
+    private static final String CHANNEL = "https://t.me/airtokmod";
+    private static final String FORUM = "https://t.me/airtokmod";
     private static final String OWNER_TELEGRAM = "https://t.me/fasdeq";
     private static final String OWNER_TIKTOK =
             "https://tiktok.com/@fasdeq?_r=1&_t=ZT-99hPDJ26hji_";
     
-    private static final String CHANNEL_WRITE = "https://t.me/airtokiktok?direct";
+    private static final String CHANNEL_WRITE = "https://t.me/airtokmod";
     private static final String TTCUZ = "https://t.me/ttcuzmod";
-    private static final String GIT = "https://git.narez.xyz/fasdeq/AirTok";
-    private static final String DOCS_PLUGINS =
-            "https://git.narez.xyz/fasdeq/AirTok/src/branch/main/docs/plugins.md";
-    private static final String DOCS_STYLES =
-            "https://git.narez.xyz/fasdeq/AirTok/src/branch/main/docs/mtui.md";
-    private static final String YOOMONEY = "https://yoomoney.ru/to/4100118196133693";
-    private static final String BOOSTY = "https://boosty.to/ega_link";
-    private static final String FUNPAY = "https://funpay.com/lots/offer?id=80127335";
-    
-    private static final String STARS = "https://t.me/fasdeq";
+    private static final String GIT = "https://github.com/Fasdeq13/AirTok";
 
     private boolean countriesOpen;
     private boolean accentOpen;
@@ -134,9 +125,9 @@ public class SettingsActivity extends Activity {
         if (shelves != null) return shelves;
         shelves = new Shelf[] {
             new Shelf(1, "appearance", "palette", Local.of("Оформление"), "", Local.of("Тема"), Local.of("Цвет акцента"), Text.FONT, MOTION_BLUR, Local.of("Экран запуска"), Local.of("Редактор интерфейса")),
-            new Shelf(2, "feed_video", "play_circle", Local.of("Лента и видео"), "", Text.REGION, Text.FEED, BURN, Local.of("Тёмная тема"), Local.of("Регион и время публикации")),
+            new Shelf(2, "feed_video", "play_circle", Local.of("Лента и видео"), "", Text.REGION, Text.FEED, BeatVibration.TITLE, BURN),
             new Shelf(3, "downloads", "download", Local.of("Скачивание медиа"), "", Text.DOWNLOADS),
-            new Shelf(4, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Local.of("Точное время"), Text.NOTIFICATIONS),
+            new Shelf(4, "chats", "chat", Local.of("Чаты, серии, уведомления"), "", Text.STREAKS, Local.of("Входящие"), Text.NOTIFICATIONS),
             new Shelf(5, "privacy", "lock", Local.of("Защита и приватность"), "", Local.of("Защита входа"), GHOST),
             new Shelf(6, "about", "info", Local.of("О проекте"), "", Local.of("О проекте")),
         };
@@ -543,8 +534,6 @@ public class SettingsActivity extends Activity {
     }
 
     
-    static final String OPEN_PLUGIN = "airtok_open_plugin";
-    
     static final String OPEN_STYLE = "airtok_open_style";
 
     private void openStyleFile(Intent intent) {
@@ -562,19 +551,8 @@ public class SettingsActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        openPluginFile(intent);
         openStyleFile(intent);
         openStats(intent);
-    }
-
-    private void openPluginFile(Intent intent) {
-        if (intent == null || !intent.getBooleanExtra(OPEN_PLUGIN, false) || intent.getData() == null) return;
-        final Uri file = intent.getData();
-        intent.removeExtra(OPEN_PLUGIN);
-        settingsGroup = 6;
-        settingsPage = "plugins";
-        rebuild();
-        root.post(() -> reviewPlugin(file));
     }
 
     void tutorialStep(int step) {
@@ -812,6 +790,12 @@ public class SettingsActivity extends Activity {
         feedCard.addView(liveToggleRow("play_circle", Local.of("Скрывать трансляции"), Feed.hides(Feed.KEY_LIVE), on -> Feed.setHides(Feed.KEY_LIVE, on)));
         column.addView(wrap(feedCard));
 
+        column.addView(section(BeatVibration.TITLE));
+        LinearLayout vibrationCard = card();
+        vibrationCard.addView(liveToggleRow("music_note", BeatVibration.TITLE, BeatVibration.isEnabled(), on -> BeatVibration.setEnabled(on)));
+        vibrationCard.addView(quiet(BeatVibration.SUBTITLE));
+        column.addView(wrap(vibrationCard));
+
         column.addView(section(BURN));
         LinearLayout burn = card();
         burn.addView(liveToggleRow("eye_open", BURN, Dim.isConfigured(), on -> {
@@ -825,22 +809,6 @@ public class SettingsActivity extends Activity {
                     value -> Dim.setStrength(value)));
         }
         column.addView(wrap(burn));
-
-        column.addView(section(Local.of("Тёмная тема")));
-        LinearLayout darkCard = card();
-        darkCard.addView(liveToggleRow("contrast", Local.of("Тёмная тема TikTok"), Themes.isForceDark(), on -> {
-            Themes.setForceDark(on);
-            markChanged();
-            rebuildAfterSwitchAnimation();
-        }));
-        darkCard.addView(quiet(Local.of("Тёмная тема включена по умолчанию.")));
-        column.addView(wrap(darkCard));
-
-        column.addView(section(Local.of("Регион и время публикации")));
-        LinearLayout dateCard = card();
-        dateCard.addView(liveToggleRow("schedule", Local.of("Регион и время публикации"), Dates.isEnabled(), on -> Dates.setEnabled(on)));
-        dateCard.addView(quiet(Local.of("Отображать флаг региона и дату/время публикации под видео.")));
-        column.addView(wrap(dateCard));
 
         column.addView(section(Text.DOWNLOADS));
         LinearLayout downloads = card();
@@ -886,14 +854,16 @@ public class SettingsActivity extends Activity {
                         Text.CANCEL, null, null, null)));
         column.addView(wrap(streaks));
 
-        column.addView(section(Local.of("Точное время")));
-        LinearLayout msgTimesCard = card();
-        msgTimesCard.addView(liveToggleRow("schedule", Local.of("Точное время сообщений в чатах"), MessageTimes.enabled(), on -> {
-            MessageTimes.setEnabled(on);
-            MessageTimes.reload();
+        column.addView(section(Local.of("Входящие")));
+        LinearLayout inboxCard = card();
+        inboxCard.addView(liveToggleRow("folder", Local.of("Папки чатов во «Входящих»"), ChatFolders.enabled(), on -> {
+            ChatFolders.setEnabled(on);
+            markChanged();
         }));
-        msgTimesCard.addView(quiet(Local.of("Показывать секунды и точное время отправки сообщений.")));
-        column.addView(wrap(msgTimesCard));
+        inboxCard.addView(line());
+        inboxCard.addView(actionRow("add", Local.of("Папки чатов"), ChatFolders.list().size() + " " + Local.of("шт."), () -> ChatFolders.manageFolders(this)));
+        inboxCard.addView(quiet(Local.of("Папки появляются в верхней ленте во «Входящих». Нажмите + или зажмите диалог, чтобы добавить его в папку.")));
+        column.addView(wrap(inboxCard));
 
         column.addView(section(Text.NOTIFICATIONS));
         LinearLayout notifications = card();
@@ -916,7 +886,7 @@ public class SettingsActivity extends Activity {
         column.addView(wrap(ghost));
 
         column.addView(section(Local.of("О проекте")));
-        column.addView(aboutCard());
+        buildAbout();
     }
 
     private View appLockCard() {
@@ -981,63 +951,63 @@ public class SettingsActivity extends Activity {
         return wrap(box);
     }
 
-    private View aboutCard() {
-        LinearLayout box = card();
-        box.setOrientation(LinearLayout.VERTICAL);
-        box.setPadding(dp(20), dp(20), dp(20), dp(20));
+    private void buildAbout() {
+        LinearLayout headCard = card();
+        LinearLayout hero = new LinearLayout(this);
+        hero.setOrientation(LinearLayout.HORIZONTAL);
+        hero.setGravity(Gravity.CENTER_VERTICAL);
+        hero.setPadding(dp(20), dp(18), dp(20), dp(18));
 
+        ImageView logoView = new ImageView(this);
+        Bitmap noteBmp = Badges.note();
+        if (noteBmp != null) {
+            logoView.setImageBitmap(noteBmp);
+            logoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        } else {
+            logoView.setImageDrawable(SettingsGlyph.make("verified", Accent.colour()));
+        }
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(46), dp(46));
+        logoParams.rightMargin = dp(16);
+        hero.addView(logoView, logoParams);
+
+        LinearLayout titleCol = new LinearLayout(this);
+        titleCol.setOrientation(LinearLayout.VERTICAL);
         TextView appTitle = new TextView(this);
         appTitle.setText("AirTok");
-        appTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        appTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         appTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         appTitle.setTextColor(skin.text);
-        box.addView(appTitle);
+        titleCol.addView(appTitle);
 
         TextView appVer = new TextView(this);
         appVer.setText(Local.of("Версия: ") + Version.TIKTOK);
-        appVer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        appVer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         appVer.setTextColor(skin.muted());
-        appVer.setPadding(0, dp(2), 0, dp(14));
-        box.addView(appVer);
+        appVer.setPadding(0, dp(2), 0, 0);
+        titleCol.addView(appVer);
+        hero.addView(titleCol, grow());
+        headCard.addView(hero);
+        column.addView(wrap(headCard));
 
-        box.addView(line());
+        LinearLayout linksCard = card();
+        linksCard.addView(actionRow("account_circle", Local.of("Создатель: fasdeq13"), "https://github.com/fasdeq13", () -> open("https://github.com/fasdeq13")));
+        linksCard.addView(line());
+        linksCard.addView(actionRow("link", Local.of("Исходный код"), GIT, () -> open(GIT)));
+        linksCard.addView(line());
+        linksCard.addView(actionRow("chat", Local.of("Telegram-канал"), CHANNEL, () -> open(CHANNEL)));
+        column.addView(wrap(linksCard));
 
-        LinearLayout creatorBlock = new LinearLayout(this);
-        creatorBlock.setOrientation(LinearLayout.VERTICAL);
-        creatorBlock.setPadding(0, dp(12), 0, dp(12));
+        LinearLayout keepCard = card();
+        keepCard.addView(actionRow("public", "Keep Android Open", "https://keepandroidopen.org/", () -> open("https://keepandroidopen.org/")));
+        column.addView(wrap(keepCard));
 
-        TextView creatorLabel = new TextView(this);
-        creatorLabel.setText("Создатель: fasdeq13");
-        creatorLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        creatorLabel.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-        creatorLabel.setTextColor(skin.text);
-        creatorBlock.addView(creatorLabel);
-
-        TextView creatorLink = new TextView(this);
-        creatorLink.setText("https://github.com/fasdeq13");
-        creatorLink.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        creatorLink.setTextColor(Accent.colour());
-        creatorLink.setPadding(0, dp(4), 0, dp(10));
-        creatorLink.setOnClickListener(v -> open("https://github.com/fasdeq13"));
-        creatorBlock.addView(creatorLink);
-
-        TextView keepLink = new TextView(this);
-        keepLink.setText("https://keepandroidopen.org/");
-        keepLink.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        keepLink.setTextColor(Accent.colour());
-        keepLink.setPadding(0, 0, 0, dp(4));
-        keepLink.setOnClickListener(v -> open("https://keepandroidopen.org/"));
-        creatorBlock.addView(keepLink);
-
-        box.addView(creatorBlock);
-        box.addView(line());
-
+        LinearLayout thanksCard = card();
         LinearLayout thanksBox = new LinearLayout(this);
         thanksBox.setOrientation(LinearLayout.VERTICAL);
-        thanksBox.setPadding(0, dp(12), 0, dp(4));
+        thanksBox.setPadding(dp(20), dp(16), dp(20), dp(16));
 
         TextView thanksTitle = new TextView(this);
-        thanksTitle.setText("Благодарности:");
+        thanksTitle.setText(Local.of("Благодарности:"));
         thanksTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         thanksTitle.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         thanksTitle.setTextColor(skin.text);
@@ -1045,24 +1015,26 @@ public class SettingsActivity extends Activity {
         thanksBox.addView(thanksTitle);
 
         TextView p1 = new TextView(this);
-        p1.setText("Montik");
+        p1.setText("utowike");
         p1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         p1.setTextColor(skin.muted());
         p1.setPadding(0, dp(2), 0, dp(4));
         thanksBox.addView(p1);
 
         TextView p2 = new TextView(this);
-        p2.setText("utowike");
+        p2.setText("Montik");
         p2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         p2.setTextColor(skin.muted());
-        p2.setPadding(0, dp(2), 0, dp(4));
+        p2.setPadding(0, dp(2), 0, dp(2));
         thanksBox.addView(p2);
 
-        box.addView(thanksBox);
-        return wrap(box);
+        thanksBox.setClickable(true);
+        Motion.press(thanksBox);
+        thanksBox.setOnClickListener(v -> showThanks());
+        thanksCard.addView(thanksBox);
+        column.addView(wrap(thanksCard));
     }
 
-    
     private View fatCat() {
         return new View(this);
     }
@@ -1608,32 +1580,8 @@ public class SettingsActivity extends Activity {
 
     private void donatePage() {
         LinearLayout what = card();
-        what.addView(quiet(Text.DONATE_BANNER_TEXT));
+        what.addView(actionRow("chat", Local.of("Telegram-канал AirTok"), CHANNEL, () -> open(CHANNEL)));
         column.addView(wrap(what));
-
-        column.addView(section(Text.DONATE_STEP_PAY));
-        LinearLayout pay = card();
-        pay.addView(linkRow("star", Text.YOOMONEY, Text.YOOMONEY_NOTE, YOOMONEY));
-        pay.addView(line());
-        pay.addView(linkRow("public", Text.BOOSTY, Text.BOOSTY_NOTE, BOOSTY));
-        pay.addView(line());
-        pay.addView(linkRow("public", Text.FUNPAY, Text.FUNPAY_NOTE, FUNPAY));
-        pay.addView(line());
-        pay.addView(linkRow("star", Text.STARS, Text.STARS_NOTE, STARS));
-        column.addView(wrap(pay));
-
-        column.addView(section(Text.DONATE_STEP_ID));
-        LinearLayout mine = card();
-        mine.addView(idRow(Text.ACCOUNT_ID, Account.id()));
-        mine.addView(quiet(Text.DONATE_ID_NOTE));
-        column.addView(wrap(mine));
-
-        column.addView(section(Text.DONATE_STEP_WRITE));
-        LinearLayout write = card();
-        write.addView(actionRow("chat", Text.DONATE_BANNER_WRITE, Text.DONATE_WRITE_NOTE,
-                () -> open(CHANNEL_WRITE)));
-        write.addView(quiet(Text.DONATE_AFTER));
-        column.addView(wrap(write));
     }
 
     private void rebuildAfterSwitchAnimation() {
@@ -1836,9 +1784,6 @@ public class SettingsActivity extends Activity {
             prove.addView(proveRow());
             column.addView(wrap(prove));
         }
-        column.addView(wrap(getCard(Tester.SUPPORTER,
-                Local.of("Поддержать разработку AirTok. Вместе со значком даётся золотая рамка на аватарку и градиент ника."),
-                Local.of("Поддержать"), this::showDonations)));
         column.addView(wrap(getCard("airtokchat",
                 Local.of("Зарегистрироваться в AirTok Chat, худшей соцсети на свете, и заработать там 30 💎 за посты. Потом взять код в настройках аккаунта AirTok Chat и ввести его здесь. Только для личных аккаунтов, не каналов и не ботов."),
                 Local.of("Ввести код"), this::askChatCode)));
@@ -3509,210 +3454,6 @@ public class SettingsActivity extends Activity {
 
     
 
-    private void showPluginAdd(){
-        Panel panel=Panel.with(this,skin,Local.of("Добавить плагин"));
-        panel.primary(Local.of("Создать из кнопок"),()->ScriptPlugins.edit(this,ScriptPlugins.SAMPLE,this::rebuild));
-        panel.quiet(Local.of("Вставить JSON"),()->ScriptPlugins.edit(this,"",this::rebuild));
-        panel.quiet(Local.of("Документация"),()->startActivity(new Intent(Intent.ACTION_VIEW,android.net.Uri.parse(DOCS_PLUGINS))));
-        panel.quiet(Text.CLOSE,null);panel.show();
-    }
-
-    private static final int PICK_PLUGIN = 0x4D50;  
-
-    
-
-
-
-
-
-    private View pluginSettingRow(final Plugins.Row item,
-                                  final android.content.SharedPreferences store) {
-        switch (item.kind) {
-            case Plugins.Row.SECTION:
-                return caption(item.title);
-            case Plugins.Row.TOGGLE:
-                return toggleRow("extension", item.title,
-                        store.getBoolean(item.key, item.def != 0),
-                        on -> {store.edit().putBoolean(item.key, on).apply();Plugins.settingsChanged(item.plugin,item.key);});
-            case Plugins.Row.CHOICE: {
-                final String[] options = item.options;
-                if (options == null || options.length == 0) return null;
-                int now = Math.max(0, Math.min(options.length - 1,
-                        store.getInt(item.key, item.def)));
-                return actionRow("tune", item.title, options[now], () ->
-                        new ModDialog.Builder(this, skin)
-                                .setTitle(item.title)
-                                .setSingleChoiceItems(options,
-                                        Math.max(0, Math.min(options.length - 1,
-                                                store.getInt(item.key, item.def))),
-                                        (dialog, which) -> {
-                                            store.edit().putInt(item.key, which).apply();
-                                            Plugins.settingsChanged(item.plugin,item.key);
-                                            markChanged();
-                                            dialog.dismiss();
-                                            rebuild();
-                                        })
-                                .show());
-            }
-            case Plugins.Row.SLIDER: {
-                int now = Math.max(item.min, Math.min(item.max,
-                        store.getInt(item.key, item.def)));
-                return slider(item.title, now - item.min, item.max - item.min, item.min, "",
-                        value -> {
-                            store.edit().putInt(item.key, value + item.min).apply();
-                            Plugins.settingsChanged(item.plugin,item.key);
-                            markChanged();
-                        });
-            }
-            default:
-                return actionRow("extension", item.title, item.detail, () -> {
-                    try {
-                        if (item.action != null) item.action.tapped();
-                    } catch (Throwable error) {
-                        Diary.note("plugin " + item.plugin + ": " + error);
-                    }
-                });
-        }
-    }
-
-    private View installRow() {
-        LinearLayout row = row();
-        row.addView(icon("extension"));
-
-        LinearLayout text = new LinearLayout(this);
-        text.setOrientation(LinearLayout.VERTICAL);
-        text.addView(label(Text.PLUGIN_INSTALL));
-        text.addView(detail(Text.PLUGIN_INSTALL_NOTE));
-        row.addView(text, grow());
-
-        TextView plus = new TextView(this);
-        plus.setText("+");
-        plus.setTextColor(Accent.colour());
-        plus.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-        plus.setPadding(dp(12), 0, 0, 0);
-        row.addView(plus);
-
-        row.setOnClickListener(v -> pickPlugin());
-        return sized(row, 60);
-    }
-
-    
-
-
-
-
-
-
-    private View pluginRow(final Plugins.Info info) {
-        LinearLayout row = new LinearLayout(this);
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setPadding(dp(12), dp(8), dp(12), dp(8));
-
-        Bitmap icon = info.icon();
-        if (icon != null) {
-            ImageView view = new ImageView(this);
-            view.setImageBitmap(icon);
-            view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            LinearLayout.LayoutParams size =
-                    new LinearLayout.LayoutParams(dp(40), dp(40));
-            size.rightMargin = dp(14);
-            row.addView(view, size);
-        } else {
-            LinearLayout.LayoutParams size =
-                    new LinearLayout.LayoutParams(dp(40), dp(40));
-            size.rightMargin = dp(14);
-            row.addView(new Dot(this, Accent.colour(), false), size);
-        }
-
-        LinearLayout text = new LinearLayout(this);
-        text.setOrientation(LinearLayout.VERTICAL);
-        text.addView(label(info.name + "  " + info.version));
-
-        String by = info.author;
-        if (!info.description.isEmpty()) by = by + "  ·  " + info.description;
-        text.addView(detail(by));
-        if (info.trouble != null) text.addView(detail(info.trouble));
-        long stalled = 0;
-        if (stalled >= 1000L) {
-            TextView slow = detail(Local.of("Тормозит приложение: подвисаний за этот запуск") + " " + (stalled + 500L) / 1000L + " " + Local.of("с"));
-            slow.setTextColor(0xFFE57373);
-            text.addView(slow);
-        }
-        if(info.safety!=null&&!info.safety.isEmpty())text.addView(detail(Local.of("Удерживайте для действий")));
-        row.addView(text, grow());
-
-        final M3Switch toggle = new M3Switch(this);
-        toggle.colours(Accent.colour(), skin.muted(), skin.card);
-        toggle.setChecked(Plugins.isEnabled(info.id));
-        
-        toggle.setEnabled(true);
-        toggle.setOnChanged(checked -> {
-            activatePlugin(info,checked);
-        });
-        row.addView(toggle);
-
-        row.setOnClickListener(v -> openPluginSettings(info));
-        Motion.press(row);
-        row.setOnLongClickListener(v -> {
-            Panel actions=Panel.with(this,skin,info.name).compact();
-            actions.quiet(Local.of("Удалить с устройства"),()->askToRemove(info));
-            if(AdminAccess.current())actions.quiet(Local.of("Управление магазином"),()->PluginAdmin.show(this));
-            actions.quiet(Text.CLOSE,null);actions.show();
-            return true;
-        });
-        return row;
-    }
-
-    private void activatePlugin(final Plugins.Info info,boolean enabled){
-        
-        
-        
-        if(!enabled){Net.away("plugin stop",()->{Plugins.setEnabled(info.id,false);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});return;}
-        
-        Net.away("plugin start",()->{Plugins.setEnabled(info.id,true);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});});
-    }
-
-    private void openPluginSettings(final Plugins.Info info) {
-        if(Plugins.isEnabled(info.id) && Plugins.openSettings(info.id,this))return;
-        Panel panel=Panel.with(this,skin,info.name);
-        if(info.safety!=null&&!info.safety.isEmpty())panel.text(info.safety);
-        LinearLayout body=new LinearLayout(this);
-        body.setOrientation(LinearLayout.VERTICAL);
-        android.content.SharedPreferences store=getSharedPreferences("airtok_plugin_"+info.id,MODE_PRIVATE);
-        int count=0;
-        if(Plugins.isEnabled(info.id)) for(Plugins.Row item:Plugins.rows()) {
-            if(!info.id.equals(item.plugin))continue;
-            try { View control=pluginSettingRow(item,store); if(control!=null){body.addView(control);count++;} }
-            catch(Throwable error){Diary.note("plugin settings "+info.id+": "+error);}
-        }
-        if(count==0){
-            if(!Plugins.isEnabled(info.id))panel.text(Local.of("Включите плагин, чтобы открыть его настройки."));
-            else if(Plugins.isRunning(info.id))panel.text(Local.of("Плагин не предоставил настройки. Версия ")+info.version);
-            else{
-                String why=Plugins.problem(info.id);
-                panel.text(why!=null?Local.of("Плагин включён, но не запущен: ")+why:Local.of("Плагин включён, но ещё не запущен в этом сеансе."));
-                panel.primary(Local.of("Запустить заново"),()->Net.away("plugin revive",()->{
-                    final boolean ok=Plugins.revive(info.id);
-                    runOnUiThread(()->{if(isFinishing())return;rebuild();if(ok)openPluginSettings(info);});
-                }));
-            }
-        }else panel.view(body);
-        panel.quiet(Local.of("Назад"),null).show();
-    }
-
-    private void pickPlugin() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            
-            intent.setType("*/*");
-            startActivityForResult(intent, PICK_PLUGIN);
-        } catch (Throwable error) {
-            Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
-        }
-    }
-
     @Override
     protected void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
@@ -3768,43 +3509,7 @@ public class SettingsActivity extends Activity {
             rebuild();
             return;
         }
-        if (request != PICK_PLUGIN) return;
-        reviewPlugin(source);
     }
-    private void reviewPlugin(final Uri source){
-        Net.away("plugin inspection",()->{
-            try {final PluginAudit.Report report=Plugins.inspect(this,source);
-                runOnUiThread(()->{
-                    if(isFinishing())return;
-                    Panel panel=Panel.with(this,skin,Text.PLUGIN_REVIEW).text(report.summary());
-                    panel.primary(Text.PLUGIN_INSTALL,()->Net.away("plugin install",()->{
-                        try {Plugins.install(this,source,report.digest);runOnUiThread(()->{if(!isFinishing()){markChanged();rebuild();}});Screen.say(Text.PLUGIN_INSTALLED);}
-                        catch(Throwable error){Screen.say(String.valueOf(error.getMessage()));}
-                    }));
-                    panel.quiet(Local.of("Назад"),null).show();
-                });
-            }catch(Throwable error){runOnUiThread(()->{if(!isFinishing())Panel.with(this,skin,Local.of("Плагин не принят")).text(String.valueOf(error.getMessage())).quiet(Local.of("Назад"),null).show();});}
-        });
-    }
-
-    private void askToRemove(final Plugins.Info info) {
-        try {
-            new ModDialog.Builder(this, skin)
-                    .setTitle(Text.PLUGIN_REMOVE_ASK)
-                    .setMessage(info.name + "  " + info.version)
-                    .setNegativeButton(Text.CANCEL, null)
-                    .setPositiveButton(Text.PLUGIN_REMOVE, (dialog, which) -> {
-                        Plugins.uninstall(this, info.id);
-                        markChanged();
-                        rebuild();
-                    })
-                    .show();
-        } catch (Throwable error) {
-            Toast.makeText(this, String.valueOf(error), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    
 
     private View linkRow(String picture, String title, String handle, final String url) {
         LinearLayout row = row();
@@ -3844,12 +3549,10 @@ public class SettingsActivity extends Activity {
                 ThanksSpace.EGG_GHOST, null));
         people.add(new ThanksSpace.Person("санек :3 (санечек)", Local.of("Часть дизайна AirTok"), ThanksSpace.EGG_HEART, () -> open(SANEK)));
         java.util.List<ThanksSpace.Planet> planets = new java.util.ArrayList<>();
-        planets.add(new ThanksSpace.Planet(Text.YOOMONEY, 0xFF8B5CF6, () -> open(YOOMONEY)));
-        planets.add(new ThanksSpace.Planet(Text.BOOSTY, 0xFFF97316, () -> open(BOOSTY)));
-        planets.add(new ThanksSpace.Planet(Text.FUNPAY, 0xFF38BDF8, () -> open(FUNPAY)));
-        planets.add(new ThanksSpace.Planet(Text.STARS, 0xFFFACC15, () -> open(STARS)));
+        planets.add(new ThanksSpace.Planet("Telegram", 0xFF8B5CF6, () -> open(CHANNEL)));
+        planets.add(new ThanksSpace.Planet("GitHub", 0xFFA78BFA, () -> open(GIT)));
         return new ThanksSpace(this, people, planets,
-                Local.of("нажмите на имя · зажмите, чтобы открыть ссылку"), Text.DONATE);
+                Local.of("нажмите на имя · зажмите, чтобы открыть ссылку"), CHANNEL);
     }
 
     
@@ -4963,11 +4666,11 @@ public class SettingsActivity extends Activity {
 
     private void showSectionHelp() {
         String[] notes = {"", Local.of("Акцент меняет цвет кнопок и вкладок. Тема и шрифты отдельно."),
-                Local.of("Менять регион, регион, лента, анти выгорание и лайк по двойному тапу."),
+                Local.of("Смена региона, скрытие рекламы и трансляций, вибрация в такт видео и анти-выгорание."),
                 Local.of("Скачивание без водяного знака, принудительное сохранение, аватарки."),
-                Local.of("Серии, точное время сообщений, уведомления."),
+                Local.of("Серии, папки чатов во «Входящих» и уведомления."),
                 Local.of("Защита входа и режим призрака."),
-                Local.of("Создатель и благодарности.")};
+                Local.of("Создатель, исходный код и благодарности.")};
         Panel.with(this,skin,Local.of("Подсказки")).text(notes[Math.max(0,Math.min(notes.length-1,settingsGroup))])
                 .primary(Local.of("Понятно"),null).show();
     }

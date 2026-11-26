@@ -1049,37 +1049,17 @@ public final class Themes {
     }
 
     public static boolean isForceDark() {
-        SharedPreferences p = prefs();
-        return p == null || p.getBoolean("force_dark", true);
+        return true;
     }
 
     public static void setForceDark(boolean on) {
         SharedPreferences p = prefs();
-        if (p != null) p.edit().putBoolean("force_dark", on).apply();
+        if (p != null) p.edit().putBoolean("force_dark", true).apply();
         relook();
     }
 
     public static boolean isDark() {
-        SharedPreferences p = prefs();
-        if (p != null && p.getBoolean("force_dark", true)) return true;
-        long now = android.os.SystemClock.uptimeMillis();
-        if (mode != 0 && now - asked < 1000) return mode == 1;
-        Boolean seen = painted();
-        
-        
-        
-        
-        boolean dark = seen != null ? seen.booleanValue() : mode != 0 ? mode == 1 : configured();
-        int was = mode;
-        mode = dark ? 1 : 2;
-        asked = now;
-        if (was != 0 && was != mode) {
-            
-            
-            settled = null;
-            Accent.forget();
-        }
-        return dark;
+        return true;
     }
 
     

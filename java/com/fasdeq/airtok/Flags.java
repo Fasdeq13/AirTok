@@ -322,6 +322,15 @@ public final class Flags {
             
             
             made.put("profile_left_align", on(prefs, KEY_NEW_PROFILE) ? one : none);
+            if (Feed.isEnabled()) {
+                made.put("enable_normal_splash_ad", Boolean.FALSE);
+                made.put("enable_normal_splash_ad_ab", Boolean.FALSE);
+                made.put("splash_ad_enable", Boolean.FALSE);
+                made.put("enable_live_splash", Boolean.FALSE);
+                made.put("search_ad_refactor_enable", Boolean.FALSE);
+                made.put("search_enable_mix_adgap", Boolean.FALSE);
+                made.put("commerce_enable", Boolean.FALSE);
+            }
 
             table = made;
             return made;

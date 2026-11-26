@@ -8,6 +8,10 @@ package com.ss.android.ugc.aweme.music.model;
 
 public class Music {
 
+    public int musicStatus;
+    public boolean muteShare;
+    public int muteType;
+
     public boolean available() {
         throw new UnsupportedOperationException("stub");
     }

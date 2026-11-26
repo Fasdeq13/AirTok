@@ -31,11 +31,11 @@ public final class AirTokProvider extends ContentProvider {
         AirTok.attach(context);
         try {
             android.content.SharedPreferences spDark = context.getSharedPreferences("sp_dark_mode", Context.MODE_PRIVATE);
-            if (!spDark.contains("dark_mode")) {
+            if (spDark.getInt("dark_mode", 0) != 2) {
                 spDark.edit().putInt("dark_mode", 2).apply();
             }
             android.content.SharedPreferences prefs = context.getSharedPreferences(AirTok.PREFS, Context.MODE_PRIVATE);
-            if (!prefs.contains("force_dark")) {
+            if (!prefs.getBoolean("force_dark", false)) {
                 prefs.edit().putBoolean("force_dark", true).apply();
             }
         } catch (Throwable ignored) {}
@@ -71,11 +71,6 @@ public final class AirTokProvider extends ContentProvider {
             if (!Version.LITE) Streaks.start(context);
         } catch (Throwable error) {
             Diary.note("streaks failed to start: " + error);
-        }
-        try {
-            Plugins.startAll(context);
-        } catch (Throwable error) {
-            Diary.note("plugins failed to start: " + error);
         }
         return true;
     }

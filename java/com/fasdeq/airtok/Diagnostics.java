@@ -66,7 +66,6 @@ final class Diagnostics {
         out.append("\n== build ==\n");
         out.append("mod: ").append(Version.MOD).append('\n');
         out.append("tiktok: ").append(Version.TIKTOK).append('\n');
-        out.append("plugin api: ").append(com.fasdeq.airtok.plugin.AirTokPlugin.API).append('\n');
         out.append("rewrites: ").append(BuildInfo.REWRITES).append(" in ")
                 .append(BuildInfo.PATCHED_DEX).append('/').append(BuildInfo.TOTAL_DEX)
                 .append(" dex, ").append(BuildInfo.STATIC_TARGETS)
@@ -88,20 +87,6 @@ final class Diagnostics {
         out.append("anti-burn-in: ").append(Dim.isEnabled() ? "on" : "off").append('\n');
 
         out.append("\n== summary ==\n").append(report()).append('\n');
-
-        out.append("\n== plugins ==\n");
-        java.util.List<Plugins.Info> plugins = Plugins.list();
-        if (plugins.isEmpty()) out.append("none\n");
-        for (Plugins.Info plugin : plugins) {
-            int rows = 0;
-            for (Plugins.Row row : Plugins.rows()) if (row.plugin.equals(plugin.id)) rows++;
-            out.append(plugin.id).append(' ').append(plugin.version)
-                    .append(" min_api=").append(plugin.minApi)
-                    .append(Plugins.isEnabled(plugin.id) ? " on" : " off")
-                    .append(" settings_rows=").append(rows);
-            if (plugin.trouble != null) out.append(" trouble=").append(plugin.trouble);
-            out.append('\n');
-        }
 
         java.util.List<String> lines = Diary.lines();
         out.append("\n== diary (").append(lines.size()).append(" lines) ==\n");
@@ -142,19 +127,6 @@ final class Diagnostics {
                 .append("; Android 10+ required for custom fallback\n");
         out.append("Anti-burn-in: ").append(Dim.isEnabled() ? "enabled" : "disabled")
                 .append("; only named UI leaves are eligible; media exclusions need device check\n");
-        int loaded = 0, disabled = 0, failed = 0, incompatible = 0;
-        for (Plugins.Info plugin : Plugins.list()) {
-            if (plugin.trouble != null) {
-                if (plugin.trouble.contains("TikTok") || plugin.trouble.contains("api"))
-                    incompatible++;
-                else failed++;
-            } else if (Plugins.isEnabled(plugin.id)) loaded++;
-            else disabled++;
-        }
-        out.append("Plugins: ").append(loaded).append(" loaded, ")
-                .append(disabled).append(" disabled, ")
-                .append(incompatible).append(" incompatible, ")
-                .append(failed).append(" failed\n");
         out.append("Streak auto-renew: ")
                 .append(Streaks.isEnabled() ? "enabled; delivery cannot be confirmed"
                         : "disabled")

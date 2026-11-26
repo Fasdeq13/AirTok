@@ -26,45 +26,39 @@ public final class Region {
     private Region() {}
 
     public static String getSimCountryIso(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getSimCountryIso())
                 : AirTok.current()[AirTok.ISO];
-        return Plugins.region("sim_country", answer);
     }
 
     public static String getNetworkCountryIso(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getNetworkCountryIso())
                 : AirTok.current()[AirTok.ISO];
-        return Plugins.region("network_country", answer);
     }
 
     public static String getSimOperator(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getSimOperator())
                 : AirTok.current()[AirTok.MCCMNC];
-        return Plugins.region("sim_operator", answer);
     }
 
     public static String getNetworkOperator(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getNetworkOperator())
                 : AirTok.current()[AirTok.MCCMNC];
-        return Plugins.region("network_operator", answer);
     }
 
     public static String getSimOperatorName(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getSimOperatorName())
                 : AirTok.current()[AirTok.CARRIER];
-        return Plugins.region("sim_operator_name", answer);
     }
 
     public static String getNetworkOperatorName(TelephonyManager tm) {
-        String answer = !AirTok.active()
+        return !AirTok.active()
                 ? (tm == null ? "" : tm.getNetworkOperatorName())
                 : AirTok.current()[AirTok.CARRIER];
-        return Plugins.region("network_operator_name", answer);
     }
 
     

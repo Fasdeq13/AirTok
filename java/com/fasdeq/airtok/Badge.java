@@ -355,7 +355,7 @@ public final class Badge {
 
         Looks.clear(view);
 
-        CharSequence target = Badges.isEnabled() ? attachVerifiedMark(text) : text;
+        CharSequence target = attachVerifiedMark(text);
 
         boolean any = false;
         for (int i = target.length() - 1; i >= 0 && !any; i--) {

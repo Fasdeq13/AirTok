@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="170" height="32" viewBox="0 0 170 32" fill="none">
+  <defs>
+    <linearGradient id="r-badge-base.svg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9333EA"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.5" y="0.5" width="169" height="31" rx="8" fill="#4C1D95" stroke="#A78BFA" stroke-opacity="0.5"/>
+  <rect x="81" y="0.5" width="88.5" height="31" rx="7" fill="url(#r-badge-base.svg)"/>
+  <rect x="81" y="0.5" width="8" height="31" fill="url(#r-badge-base.svg)"/>
+  <g transform="translate(8,7) scale(0.75)">
+    <path d="M 4.775 21 C 4.292 21 3.875 20.825 3.525 20.475 C 3.175 20.125 3 19.7 3 19.2 L 3 16.175 C 3 16.042 3.042 15.933 3.125 15.85 C 3.208 15.767 3.317 15.708 3.45 15.675 C 4.2 15.525 4.829 15.167 5.338 14.6 C 5.846 14.033 6.1 13.35 6.1 12.55 C 6.1 11.75 5.85 11.062 5.35 10.488 C 4.85 9.912 4.225 9.558 3.475 9.425 C 3.342 9.392 3.233 9.333 3.15 9.25 C 3.067 9.167 3.025 9.058 3.025 8.925 L 3.025 5.775 C 3.025 5.275 3.196 4.854 3.538 4.513 C 3.879 4.171 4.3 4 4.8 4 L 8.2 4 C 8.317 3.183 8.683 2.5 9.3 1.95 C 9.917 1.4 10.642 1.125 11.475 1.125 C 12.292 1.125 13.008 1.4 13.625 1.95 C 14.242 2.5 14.617 3.183 14.75 4 L 18.225 4 C 18.725 4 19.146 4.171 19.488 4.513 C 19.829 4.854 20 5.275 20 5.775 L 20 9.45 C 20.633 9.75 21.137 10.162 21.512 10.688 C 21.887 11.213 22.075 11.833 22.075 12.55 C 22.075 13.267 21.887 13.892 21.512 14.425 C 21.137 14.958 20.633 15.367 20 15.65 L 20 19.2 C 20 19.7 19.829 20.125 19.488 20.475 C 19.146 20.825 18.725 21 18.225 21 L 4.775 21 Z" fill="#EDE9FE"/>
+  </g>
+  <text x="55" y="20" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" font-weight="600" fill="#F5F3FF" text-anchor="middle">База</text>
+  <text x="125" y="20" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">MargyT</text>
+</svg>
